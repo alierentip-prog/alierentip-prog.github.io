@@ -1,88 +1,81 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Veridium — Giriş</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --fg:#e9eef5; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.16); --bg:#0b1118 }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui;display:grid;place-items:center}
-  main{width:min(420px,92%);border:1px solid var(--b);background:var(--glass);backdrop-filter:blur(8px);
-       border-radius:16px;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
-  h1{margin:0 0 14px;font-weight:800}
-  label{display:block;margin:12px 0 6px;font-weight:600}
-  input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--b);background:#0b141d;color:var(--fg)}
-  .row{display:flex;gap:10px;margin-top:16px}
-  button{flex:1;appearance:none;border:1px solid var(--b);background:var(--glass);color:var(--fg);
-         padding:12px 14px;border-radius:12px;font-weight:800;cursor:pointer}
-  .muted{opacity:.8;font-size:14px;margin-top:10px}
-  .ok{display:none;margin-top:10px;padding:10px;border:1px solid #1e7;border-radius:12px;background:rgba(30,255,160,.08)}
-  a.link{color:#9cf;text-decoration:none}
+:root{--fg:#e9eef5;--b:rgba(255,255,255,.16);--glass:rgba(255,255,255,.06);--bg:#0b1118}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui;display:grid;place-items:center}
+main{width:min(420px,92%);border:1px solid var(--b);background:var(--glass);backdrop-filter:blur(8px);
+     border-radius:16px;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+h1{margin:0 0 14px;font-weight:800}
+label{display:block;margin:12px 0 6px;font-weight:600}
+input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--b);background:#0b141d;color:var(--fg)}
+.row{display:flex;gap:10px;margin-top:16px}
+button{flex:1;border:1px solid var(--b);background:var(--glass);color:var(--fg);
+       padding:12px 14px;border-radius:12px;font-weight:800;cursor:pointer}
+.ok{display:none;margin-top:10px;padding:10px;border:1px solid #1e7;border-radius:12px;background:rgba(30,255,160,.08)}
 </style>
 </head>
 <body>
 <main>
   <h1>Giriş</h1>
-
   <label for="email">E-posta</label>
   <input id="email" type="email" autocomplete="email" placeholder="ornek@site.com"/>
 
   <label for="pass">Şifre</label>
-  <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••"/>
+  <input id="pass" type="password" autocomplete="current-password" placeholder="••••••"/>
 
   <div class="row">
-    <button id="loginBtn">Giriş Yap</button>
+    <button id="loginBtn" type="button">Giriş Yap</button>
     <button id="signupBtn" type="button">Üye Ol</button>
   </div>
 
-  <div id="ok" class="ok">Tamam! Giriş başarılı, yönlendiriyorum…</div>
-  <p class="muted">Hesabın yoksa <a class="link" href="#signup" id="signupLink">buradan üye ol</a>.</p>
+  <div id="ok" class="ok">Tamam! Yönlendiriyorum…</div>
 </main>
 
-<!-- firebase -->
+<!-- Firebase -->
 <script type="module" src="./firebase.js"></script>
-
-<!-- login işlemleri -->
 <script type="module">
-  import { loginWithEmail, signupWithEmail } from "./firebase.js";
+  const F = window.__VERI__;
+  const email = document.getElementById('email');
+  const pass  = document.getElementById('pass');
+  const ok    = document.getElementById('ok');
 
-  const ok   = document.getElementById("ok");
-  const mail = document.getElementById("email");
-  const pass = document.getElementById("pass");
-
-  // #signup ile geldiyse odağı butona taşı
-  if (location.hash === "#signup") {
-    document.getElementById("signupBtn").focus();
+  function nice(err){
+    switch(err.code){
+      case 'auth/invalid-email': return 'E-posta biçimi geçersiz.';
+      case 'auth/user-not-found': return 'Bu e-postayla kullanıcı yok.';
+      case 'auth/wrong-password': return 'Şifre hatalı.';
+      case 'auth/weak-password':  return 'Şifre en az 6 karakter.';
+      case 'auth/too-many-requests': return 'Çok deneme! Biraz bekle.';
+      default: return err.message||err;
+    }
   }
 
-  document.getElementById("loginBtn").onclick = async (e)=>{
-    e.preventDefault();
+  document.getElementById('loginBtn').onclick = async ()=>{
     try{
-      await loginWithEmail(mail.value.trim(), pass.value);
-      ok.style.display="block";
-      setTimeout(()=>location.href="index.html", 600);
-    }catch(err){
-      alert("Giriş hatası: " + (err.code || err.message));
-    }
+      await F.login(email.value.trim(), pass.value);
+      ok.style.display = 'block';
+      setTimeout(()=>location.href='index.html', 500);
+    }catch(e){ alert('Giriş hatası: ' + nice(e)); }
   };
 
-  document.getElementById("signupBtn").onclick = async (e)=>{
-    e.preventDefault();
+  document.getElementById('signupBtn').onclick = async ()=>{
     try{
-      await signupWithEmail(mail.value.trim(), pass.value);
-      ok.style.display="block";
-      setTimeout(()=>location.href="index.html", 600);
-    }catch(err){
-      alert("Kayıt hatası: " + (err.code || err.message));
-    }
+      await F.signup(email.value.trim(), pass.value);
+      ok.style.display = 'block';
+      setTimeout(()=>location.href='index.html', 500);
+    }catch(e){ alert('Kayıt hatası: ' + nice(e)); }
   };
 
   // Enter ile giriş
-  document.addEventListener("keydown",(ev)=>{
-    if(ev.key==="Enter") document.getElementById("loginBtn").click();
-  });
+  addEventListener('keydown', (ev)=>{ if(ev.key==='Enter') document.getElementById('loginBtn').click(); });
+
+  // Girişliysen otomatik geri dön
+  F.on(u=>{ if(u) location.href='index.html'; });
 </script>
 </body>
 </html>
