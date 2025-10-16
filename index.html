@@ -1,379 +1,359 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>VERIDIUM — Portal</title>
-<meta name="description" content="Veridium — kişisel portal" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VERIDIUM — MAX EDITION</title>
+<meta name="description" content="Veridium · Max Edition · sinematik intro, parallax, neon/glow, cartoon-bahar ve buz-mavisi deniz animasyonları"/>
 <style>
-  :root{
-    --bg:#0b0d10; --fg:#111; --fg-inv:#fff;
-    --ink:#1c1c1c;          /* çizgi film kontur rengi */
-    --muted:#5b6470;
-    --card:#ffffffcc;       /* kartlar için açık cam */
-    --border:#00000022;
-  }
-  html,body{height:100%}
-  body{
-    margin:0; background:#8ad7ff; color:#111;
-    font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-    overflow-x:hidden;
-  }
-  a{color:inherit; text-decoration:none}
+/* ---------------- CORE TOKENS ---------------- */
+:root{
+  --fg:#eaf2ff; --fg-dark:#0a0f14; --muted:#9bb0c4;
+  --ink:#0d1420; --ink2:#101010;
+  --card:rgba(255,255,255,.08); --border:rgba(255,255,255,.14);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
 
-  /* ===== Intro (tam ekran) ===== */
-  #intro{
-    position:fixed; inset:0; z-index:30; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:14px; background:#000; color:#fff;
-  }
-  .intro-title{font-weight:900; font-size:36px; letter-spacing:.06em}
-  .intro-sub{opacity:.85}
-  .intro-btns{display:flex; gap:12px; flex-wrap:wrap; justify-content:center}
-  .btn{
-    padding:12px 16px; border-radius:12px; cursor:pointer;
-    background:#111; color:#fff; border:3px solid #fff; font-weight:800; box-shadow:0 4px 0 #000;
-  }
-  .btn:hover{transform:translateY(-1px)}
-  .btn:active{transform:translateY(1px)}
+  --m1:#8ad7ff; --m2:#3aaed8; --m3:#0b2a40;        /* male sea palette */
+  --f1:#fff0d6; --f2:#ffd7ec; --f3:#b9efb0;        /* female spring palette */
 
-  /* büyüyen emoji efekti */
-  .boom{position:fixed; inset:0; z-index:35; display:grid; place-items:center; pointer-events:none}
-  .boom > div{
-    font-size:64px; text-shadow:0 6px 0 #0007;
-    animation:pop .9s cubic-bezier(.2,.8,.2,1) forwards;
-  }
-  @keyframes pop{from{transform:scale(.25); opacity:.25} to{transform:scale(12); opacity:0}}
-  .hide{opacity:0; pointer-events:none; transition:opacity .6s ease}
+  --glow:#7ad3ff; --hot:#ff66c4;
+}
 
-  /* ===== Arkaplan kanvas ===== */
-  #bg{position:fixed; inset:0; z-index:0; display:block}
+/* site baseline */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--fg); background:#0b0d10; overflow-x:hidden;
+  font:16px/1.6 "Inter",system-ui,Segoe UI,Roboto,Arial,sans-serif;
+}
 
-  /* ===== Site ===== */
-  #site{position:relative; z-index:2; opacity:0; transition:opacity .6s ease}
-  #site.show{opacity:1}
-  .wrap{max-width:1024px; margin:0 auto; padding:22px 16px 100px}
-  .card{
-    background:var(--card); border:3px solid var(--ink); border-radius:18px; padding:16px;
-    box-shadow:0 6px 0 #0003;
-  }
-  .grid{display:grid; gap:16px}
-  @media(min-width:780px){ .grid{grid-template-columns:repeat(2,1fr)} }
+/* ---------------- GLOBAL FX LAYERS ---------------- */
+#bgCanvas{position:fixed; inset:0; z-index:0; display:block}
+#grain{position:fixed; inset:-20vmax; z-index:1; pointer-events:none; opacity:.06;
+  background-image:url('data:image/svg+xml;utf8,\
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">\
+<filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter>\
+<rect width="100%" height="100%" filter="url(%23n)" opacity="0.9"/></svg>');
+  animation:grain 8s linear infinite;
+}
+@keyframes grain{to{transform:translate3d(-10%,5%,0)}}
+#vignette{position:fixed; inset:0; z-index:2; pointer-events:none;
+  box-shadow:inset 0 0 180px 40px rgba(0,0,0,.65);
+}
 
-  .links{display:grid; gap:12px}
-  .link{
-    display:block; padding:14px 16px; border-radius:14px;
-    border:3px solid var(--ink); background:#fff; box-shadow:0 4px 0 #0003;
-    transition:transform .15s ease;
-  }
-  .link:hover{transform:translateY(-2px)}
+/* ---------------- INTRO ---------------- */
+#intro{
+  position:fixed; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;
+  background:radial-gradient(1200px 600px at 50% 35%, rgba(255,255,255,.06), transparent 60%), #000;
+}
+.logo{
+  font-weight:900; font-size:54px; letter-spacing:.14em; text-transform:uppercase;
+  text-shadow:0 0 14px rgba(122,211,255,.35), 0 4px 0 #000;
+}
+.logo .glow{background:linear-gradient(90deg,var(--glow),#aef); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 10px rgba(122,211,255,.5))}
+.sub{opacity:.9; margin-bottom:10px}
+.choices{display:flex; gap:12px; flex-wrap:wrap; justify-content:center}
+.btn{
+  background:#0c1219; color:#eaf6ff; border:1.5px solid #2b3b52; border-radius:14px; padding:12px 16px; cursor:pointer; font-weight:800;
+  box-shadow:0 6px 0 #000a; transform:translateY(0); transition:.15s;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.boom{position:fixed; inset:0; z-index:40; display:grid; place-items:center; pointer-events:none}
+.boom>div{font-size:72px; text-shadow:0 6px 0 #000c; animation:boom .85s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes boom{from{transform:scale(.2);opacity:.2} to{transform:scale(12);opacity:0}}
+.hide{opacity:0; pointer-events:none; transition:opacity .6s ease}
 
-  /* sağ altta enerji butonu */
-  #changeEnergy{
-    position:fixed; right:16px; bottom:16px; z-index:3;
-    background:#fff; color:#111; border:3px solid var(--ink); border-radius:14px; padding:10px 12px; cursor:pointer; font-weight:900;
-    box-shadow:0 4px 0 #0003;
-  }
+/* ---------------- HEADER / CTAS ---------------- */
+.topbar{position:fixed; top:14px; left:0; right:0; z-index:5; display:flex; justify-content:center; pointer-events:none}
+.pill{pointer-events:auto; display:flex; gap:8px; align-items:center; padding:10px 14px; border-radius:999px;
+  background:rgba(255,255,255,.06); border:1px solid var(--border); backdrop-filter:blur(6px); box-shadow:var(--shadow)
+}
+.pill button{all:unset; padding:6px 10px; border-radius:10px; cursor:pointer; font-weight:800; background:rgba(0,0,0,.2); border:1px solid var(--border)}
+.pill button:hover{background:rgba(255,255,255,.1)}
 
-  .muted{color:var(--muted)}
-  .bar{display:flex; justify-content:space-between; align-items:center; margin-top:12px}
-  .badge{padding:6px 10px; border-radius:12px; background:#fff; border:3px solid var(--ink); box-shadow:0 3px 0 #0002}
+/* ---------------- CONTENT ---------------- */
+#site{position:relative; z-index:3; opacity:0; transition:opacity .6s ease}
+#site.show{opacity:1}
+.wrap{max-width:1080px; margin:0 auto; padding:110px 16px 120px}
+.hero{
+  display:grid; grid-template-columns:1fr; gap:14px; margin-bottom:16px;
+}
+.card{
+  background:rgba(255,255,255,.08); border:1px solid var(--border); border-radius:18px; padding:18px; backdrop-filter: blur(4px) saturate(120%);
+  box-shadow:var(--shadow)
+}
+h1{margin:0 0 6px; font-size:38px; letter-spacing:.02em; text-shadow:0 3px 0 #0003}
+h2{margin:0 0 8px}
+.muted{color:var(--muted)}
+.grid{display:grid; gap:16px}
+@media(min-width:860px){ .hero{grid-template-columns:1.4fr .9fr} .grid{grid-template-columns:1fr 1fr} }
 
-  /* Başlıklar çizgi film */
-  h1,h2{margin:0 0 8px; text-shadow:0 3px 0 #0001}
+.links{display:grid; gap:12px}
+.link{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:14px 16px; border-radius:14px; background:rgba(255,255,255,.12); border:1px solid var(--border);
+  transition:transform .12s ease, box-shadow .2s ease;
+}
+.link:hover{transform:translateY(-2px); box-shadow:0 10px 22px rgba(0,0,0,.25)}
+
+/* 3D tilt on hover (desktop) */
+.tilt{transform-style:preserve-3d; perspective:800px}
+.tilt:hover .tilt-i{transform:rotateX(6deg) rotateY(-6deg)}
+.tilt-i{transition:transform .25s ease}
+
+/* ---------------- THEME BADGES ---------------- */
+.badge{display:inline-flex; gap:8px; align-items:center; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:rgba(255,255,255,.08)}
+
+/* ---------------- LIGHT / DARK toggle effect ---------------- */
+[data-mode="dark"] body{}
+[data-mode="light"] body{color:#0b131a}
+[data-mode="light"] .card{background:rgba(255,255,255,.7); border-color:#00000022}
+[data-mode="light"] .link{background:#fff; border-color:#00000022}
+
+/* ---------------- PARALLAX DECOS ---------------- */
+.decors{position:fixed; inset:0; z-index:2; pointer-events:none}
+.layer{position:absolute; will-change:transform; filter:drop-shadow(0 6px 0 rgba(0,0,0,.35))}
+.skull{left:6vw; top:18vh; font-size:86px; opacity:.18}
+.gear{right:8vw; top:12vh; font-size:64px; opacity:.22}
+.sun{right:8vw; top:10vh; font-size:82px; opacity:.27}
+.flower{left:8vw; top:22vh; font-size:70px; opacity:.22}
+
+/* ---------------- RESPONSIVE TWEAK ---------------- */
+@media(max-width:520px){ h1{font-size:28px} .logo{font-size:42px} }
 </style>
 </head>
 <body>
 
-<!-- ===== Arka plan animasyon kanvası ===== -->
-<canvas id="bg" aria-hidden="true"></canvas>
+<!-- FX layers -->
+<canvas id="bgCanvas"></canvas>
+<div id="grain"></div>
+<div id="vignette"></div>
 
-<!-- ===== Intro (her girişte sorar) ===== -->
-<div id="intro" role="dialog" aria-label="Enerjini Seç">
-  <div class="intro-title">VERIDIUM</div>
-  <div class="intro-sub">Enerjini seç</div>
-  <div class="intro-btns">
+<!-- Cinematic Intro -->
+<div id="intro">
+  <div class="logo"><span class="glow">VERIDIUM</span></div>
+  <div class="sub">Enerjini seç ve portalı aç</div>
+  <div class="choices">
     <button id="maleBtn" class="btn">⚙️ Erkek</button>
     <button id="femaleBtn" class="btn">🌸 Kadın</button>
   </div>
 </div>
 
-<!-- ===== Site içeriği ===== -->
+<!-- top controls -->
+<div class="topbar">
+  <div class="pill">
+    <span>Mod:</span>
+    <button id="lightBtn">☀️ Aydınlık</button>
+    <button id="darkBtn">🌙 Karanlık</button>
+    <span style="margin-left:10px">Enerji:</span>
+    <button id="changeBtn">⚡ Değiştir</button>
+  </div>
+</div>
+
+<!-- Parallax décor (swap by theme) -->
+<div class="decors" aria-hidden="true">
+  <div id="d1" class="layer skull">💀</div>
+  <div id="d2" class="layer gear">⚙️</div>
+  <div id="d3" class="layer sun" style="display:none">☀️</div>
+  <div id="d4" class="layer flower" style="display:none">🌸</div>
+</div>
+
+<!-- Site content -->
 <main id="site">
   <div class="wrap">
-    <header class="card" style="background:#fff">
-      <h1 id="hello">Hoş geldin 👋</h1>
-      <p class="muted">Seçimine göre arka plan çizgi-film stili akıyor. İstediğinde alttaki düğmeyle yeniden seçebilirsin.</p>
-    </header>
-
-    <section class="grid" style="margin-top:16px">
-      <article class="card" style="background:#fff">
-        <h2>✨ Günün Sözü</h2>
-        <p id="quote">“Sessiz adımlar en derin izleri bırakır.” — Veridium</p>
-      </article>
-      <aside class="card" style="background:#fff">
-        <h2>🧪 Rastgele Bilgi</h2>
+    <section class="hero tilt">
+      <div class="card tilt-i">
+        <h1 id="hello">Hoş geldin 👋</h1>
+        <p class="muted" id="desc">Enerjine göre arka planda **çok katmanlı** animasyonlar akıyor: parallax + partikül + ışık.</p>
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
+          <span class="badge">🎨 Glow & Noise</span>
+          <span class="badge">🌀 Parallax</span>
+          <span class="badge">💫 Canvas Partikül</span>
+          <span class="badge">🧊 Buz Mavisi / 🌸 Bahar</span>
+        </div>
+      </div>
+      <div class="card tilt-i">
+        <h2>Günün Sözü</h2>
+        <p id="quote">“Sessiz güç, en gürültülü sonuçları doğurur.”</p>
+        <div style="height:8px"></div>
+        <h2>Rastgele Bilgi</h2>
         <p id="fact">MCV↓ + MCHC↓ → demir eksikliğini düşün.</p>
-      </aside>
-    </section>
-
-    <section class="card" style="margin-top:16px; background:#fff">
-      <h2 style="margin:0 0 10px">🔗 Keşfet</h2>
-      <div class="links">
-        <a class="link" href="./notlar.html">📘 Notlar</a>
-        <a class="link" href="./ipuclari.html">💡 İpuçları</a>
-        <a class="link" href="./felsefe.html">⚙️ Felsefe</a>
-        <a class="link" href="./projeler.html">🛠 Projeler</a>
-        <a class="link" href="./echo.html">💭 Echo (bir söz bırak)</a>
-        <a class="link" href="./about.html">👤 Hakkımda</a>
       </div>
     </section>
 
-    <div class="bar">
-      <div class="badge muted">© 2025 <strong>VERIDIUM</strong></div>
-      <span class="muted">Cartoon su-altı & bahar temaları</span>
-    </div>
+    <section class="card">
+      <h2 style="margin:0 0 10px">🔗 Keşfet</h2>
+      <div class="links">
+        <a class="link" href="./notlar.html">📘 Notlar <span>→</span></a>
+        <a class="link" href="./ipuclari.html">💡 İpuçları <span>→</span></a>
+        <a class="link" href="./felsefe.html">⚙️ Felsefe <span>→</span></a>
+        <a class="link" href="./projeler.html">🛠 Projeler <span>→</span></a>
+        <a class="link" href="./echo.html">💭 Echo (bir söz bırak) <span>→</span></a>
+        <a class="link" href="./about.html">👤 Hakkımda <span>→</span></a>
+      </div>
+    </section>
+
+    <section style="margin-top:16px; display:flex; justify-content:space-between; align-items:center">
+      <div class="badge">© 2025 <strong>VERIDIUM</strong></div>
+      <div class="muted">Max Edition • cartoon + neon hibrit</div>
+    </section>
   </div>
 </main>
 
-<button id="changeEnergy">⚡ Enerjiyi değiştir</button>
-
 <script>
-/* ===================== yardımcılar ===================== */
-const qs = s => document.querySelector(s);
-const intro = qs('#intro');
-const site  = qs('#site');
-const hello = qs('#hello');
-const changeBtn = qs('#changeEnergy');
-const maleBtn = qs('#maleBtn');
-const femaleBtn = qs('#femaleBtn');
+/* ---------------- Utility ---------------- */
+const $ = s => document.querySelector(s);
+const intro = $('#intro'), site = $('#site');
+const maleBtn = $('#maleBtn'), femaleBtn = $('#femaleBtn');
+const changeBtn = $('#changeBtn'), lightBtn = $('#lightBtn'), darkBtn = $('#darkBtn');
+const d1=$('#d1'), d2=$('#d2'), d3=$('#d3'), d4=$('#d4');
+const hello=$('#hello'), desc=$('#desc');
+const quoteEl=$('#quote'), factEl=$('#fact');
 
-const bg = qs('#bg');
-const ctx = bg.getContext('2d');
+const QUOTES=[
+  'Disiplin, motivasyon yokken de sürer.',
+  'Derin sular sessiz akar.',
+  'Karanlıkta yol bulmak aklın işidir.',
+  'Zarafet, sessiz gücün adıdır.',
+  'Sabır, zekânın dayanıklılığıdır.'
+];
+const FACTS=[
+  'Bir damla kanda ~5 milyon eritrosit bulunur.',
+  'Fibrillin mikrofibriller elastini organize eder.',
+  'Retikülin tip III kollajendir.',
+  'MCV↓ + MCHC↓ → demir eksikliği.',
+  'Serum ferritin demirde azalır.'
+];
+quoteEl.textContent = '“'+QUOTES[Math.floor(Math.random()*QUOTES.length)]+'”';
+factEl.textContent  = FACTS[Math.floor(Math.random()*FACTS.length)];
+
+function boom(emoji){
+  const b=document.createElement('div'); b.className='boom'; b.innerHTML=`<div>${emoji}</div>`;
+  document.body.appendChild(b); setTimeout(()=>b.remove(), 900);
+}
+function showSite(){ site.classList.add('show'); }
+
+/* ---------------- Parallax ---------------- */
+document.addEventListener('mousemove', (e)=>{
+  const cx=innerWidth/2, cy=innerHeight/2;
+  const dx=(e.clientX-cx)/cx, dy=(e.clientY-cy)/cy;
+  d1.style.transform=`translate(${dx*-20}px, ${dy*-10}px)`;
+  d2.style.transform=`translate(${dx*18}px, ${dy*12}px) rotate(${dx*6}deg)`;
+  d3.style.transform=`translate(${dx*16}px, ${dy*8}px)`;
+  d4.style.transform=`translate(${dx*-16}px, ${dy*6}px) rotate(${dx*4}deg)`;
+});
+
+/* ---------------- Canvas FX ---------------- */
+const cvs=document.getElementById('bgCanvas'), ctx=cvs.getContext('2d');
 function fit(){
-  const dpr = Math.min(2, devicePixelRatio||1);
-  bg.width  = Math.floor(innerWidth * dpr);
-  bg.height = Math.floor(innerHeight* dpr);
+  const dpr=Math.min(2, devicePixelRatio||1);
+  cvs.width=Math.floor(innerWidth*dpr); cvs.height=Math.floor(innerHeight*dpr);
   ctx.setTransform(dpr,0,0,dpr,0,0);
 }
 addEventListener('resize', fit); fit();
+let raf=null;
 
-/* ===================== içerik (söz/bilgi) ===================== */
-const QUOTES = [
-  'Disiplin, motivasyon yokken de devam etmektir.',
-  'Derin sular sessiz akar.',
-  'Karanlıkta da pusula vardır.',
-  'Zarafet, sessiz gücün adıdır.'
-];
-const FACTS  = [
-  'Bir damla kanda ~5 milyon eritrosit bulunur.',
-  'Hemidesmozom: keratinleri bazal laminaya bağlar.',
-  'Elastik lif: elastin + fibrillin mikrofibril.',
-  'MCV↓ + MCHC↓ → demir eksikliğini düşün.'
-];
-qs('#quote').textContent = '“' + QUOTES[Math.floor(Math.random()*QUOTES.length)] + '” — Veridium';
-qs('#fact').textContent  = FACTS[Math.floor(Math.random()*FACTS.length)];
-
-/* ===================== cartoon animasyonlar ===================== */
-let raf=null, t=0;
-
-/* ⚙️ ERKEK — SU ALTI (cartoon) */
-function underwater(){
+/* cartoon SEA */
+function startSea(){
   cancelAnimationFrame(raf); fit();
-  document.body.style.background = 'linear-gradient(180deg,#8ad7ff,#3aaed8)';
+  d1.style.display='block'; d2.style.display='block'; d3.style.display='none'; d4.style.display='none';
+  document.body.style.background='linear-gradient(180deg,var(--m1),var(--m2))';
 
-  const BUB_COLS = ['#ffffff','#e6f7ff','#c8efff'];
-  const WAVE_COLS = ['#a6e3ff','#8fd9ff','#78cfff','#5fc2ee'];
-
-  // dalga şeritleri
-  const waves = [];
-  for (let i=0;i<4;i++){
-    waves.push({
-      y: innerHeight*0.45 + i*26,
-      amp: 10 + i*3,
-      speed: 0.6 + i*0.15,
-      tick: Math.random()*1000,
-      color: WAVE_COLS[i % WAVE_COLS.length]
-    });
+  const waves=[];
+  for(let i=0;i<4;i++){
+    waves.push({y:innerHeight*0.45+i*26,amp:10+i*3,spd:.6+i*.15,t:Math.random()*1000,col:['#a6e3ff','#8fd9ff','#78cfff','#5fc2ee'][i%4]});
   }
-  // kabarcıklar
-  const bubbles = [];
-  for (let i=0;i<70;i++){
-    bubbles.push({
-      x: Math.random()*innerWidth,
-      y: innerHeight + Math.random()*innerHeight,
-      r: 3 + Math.random()*6,
-      spd: 0.5 + Math.random()*0.9,
-      wiggle: Math.random()*200
-    });
+  const bubbles=[];
+  for(let i=0;i<80;i++){
+    bubbles.push({x:Math.random()*innerWidth,y:innerHeight+Math.random()*innerHeight,r:3+Math.random()*6,spd:.5+Math.random()*.9,wg:Math.random()*200});
   }
 
   (function loop(){
-    raf = requestAnimationFrame(loop);
-    // hafif beyaz tazeleme (cartoon hissi)
-    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-    ctx.fillRect(0,0,innerWidth,innerHeight);
+    raf=requestAnimationFrame(loop);
+    ctx.fillStyle='rgba(255,255,255,.22)'; ctx.fillRect(0,0,innerWidth,innerHeight);
 
-    // dalgalar (kalın çizgi + siyah kontur)
     waves.forEach(w=>{
-      w.tick += 0.02*w.speed;
-      ctx.lineWidth = 8;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = w.color;
-      ctx.beginPath();
-      const k = 0.008;
-      for(let x=0;x<=innerWidth;x+=14){
-        const y = w.y + Math.sin(x*k + w.tick)*w.amp;
-        if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      }
+      w.t+=.02*w.spd;
+      ctx.lineWidth=8; ctx.lineCap='round'; ctx.strokeStyle=w.col; ctx.beginPath();
+      const k=.008; for(let x=0;x<=innerWidth;x+=14){ const y=w.y+Math.sin(x*k+w.t)*w.amp; if(x===0)ctx.moveTo(x,y); else ctx.lineTo(x,y); }
       ctx.stroke();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = 'rgba(0,0,0,0.45)';
-      ctx.stroke();
+      ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.45)'; ctx.stroke();
     });
 
-    // kabarcıklar (dolgu + kontur + parlama)
     bubbles.forEach(b=>{
-      b.y -= b.spd;
-      b.x += Math.sin((b.y + b.wiggle)*0.04)*0.9;
-      if (b.y < -10){ b.y = innerHeight + 20; b.x = Math.random()*innerWidth; }
-      // dolgu
-      ctx.beginPath();
-      ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
-      ctx.fillStyle = BUB_COLS[Math.floor(Math.random()*BUB_COLS.length)];
-      ctx.fill();
-      // kontur
-      ctx.lineWidth = 2.5;
-      ctx.strokeStyle = 'rgba(0,0,0,0.55)';
-      ctx.stroke();
-      // parlama
-      ctx.beginPath();
-      ctx.arc(b.x-b.r*0.35, b.y-b.r*0.35, b.r*0.35, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.fill();
+      b.y-=b.spd; b.x+=Math.sin((b.y+b.wg)*.04)*.9;
+      if(b.y<-12){ b.y=innerHeight+20; b.x=Math.random()*innerWidth; }
+      ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+      ctx.fillStyle=['#fff','#e6f7ff','#c8efff'][Math.floor(Math.random()*3)]; ctx.fill();
+      ctx.lineWidth=2.5; ctx.strokeStyle='rgba(0,0,0,.55)'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(b.x-b.r*.35,b.y-b.r*.35,b.r*.35,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,.85)'; ctx.fill();
     });
-
-    t++;
   })();
 }
 
-/* 🌸 KADIN — BAHAR (cartoon) */
-function nature(){
+/* cartoon SPRING */
+function startSpring(){
   cancelAnimationFrame(raf); fit();
-  document.body.style.background = 'linear-gradient(180deg,#fff5d6,#ffd7ec)';
+  d1.style.display='none'; d2.style.display='none'; d3.style.display='block'; d4.style.display='block';
+  document.body.style.background='linear-gradient(180deg,var(--f1),var(--f2))';
 
-  const PETAL_COLS = ['#ffb7d5','#ffd9a0','#b9efb0','#ffffff'];
-  const LEAF_COLS  = ['#9be7a8','#7ddc8c','#b7f1c0'];
-
-  // güneş
-  const sun = { x: innerWidth*0.8, y: innerHeight*0.22, r: Math.min(innerWidth,innerHeight)*0.12, t: Math.random()*1000 };
-
-  // kelebek/yaprak parçacıkları
-  const parts = [];
-  for (let i=0;i<80;i++){
-    parts.push({
-      x: Math.random()*innerWidth,
-      y: Math.random()*innerHeight,
-      r: 4 + Math.random()*10,
-      spd: 0.4 + Math.random()*0.8,
-      drift: 0.6 + Math.random()*0.8,
-      hue: PETAL_COLS[Math.floor(Math.random()*PETAL_COLS.length)],
-      rot: Math.random()*Math.PI*2,
-      rotSpd: (Math.random()-.5)*0.02
-    });
+  const sun={x:innerWidth*.82, y:innerHeight*.2, r:Math.min(innerWidth,innerHeight)*.12, t:Math.random()*1000};
+  const petals=[];
+  for(let i=0;i<90;i++){
+    petals.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:4+Math.random()*10,spd:.4+Math.random()*.8,drift:.6+Math.random()*.8,
+                 hue:['#ffb7d5','#ffd9a0','#b9efb0','#fff'][Math.floor(Math.random()*4)], rot:Math.random()*Math.PI*2, rs:(Math.random()-.5)*.02});
   }
-
-  // ağaç tepeleri
-  const trees = [];
-  for(let i=0;i<6;i++){
-    trees.push({
-      x: (i/5)*innerWidth + (Math.random()*40-20),
-      y: innerHeight-40 + Math.random()*10,
-      w: 140 + Math.random()*120,
-      h: 60 + Math.random()*40,
-      c: LEAF_COLS[i % LEAF_COLS.length]
-    });
-  }
+  const trees=[]; const leaf=['#9be7a8','#7ddc8c','#b7f1c0'];
+  for(let i=0;i<6;i++){ trees.push({x:(i/5)*innerWidth+(Math.random()*40-20), y:innerHeight-40+Math.random()*10, w:140+Math.random()*120,h:60+Math.random()*40, c:leaf[i%leaf.length]}); }
 
   (function loop(){
-    raf = requestAnimationFrame(loop);
-    // hafif beyaz tazeleme
-    ctx.fillStyle = 'rgba(255,255,255,0.35)';
-    ctx.fillRect(0,0,innerWidth,innerHeight);
+    raf=requestAnimationFrame(loop);
+    ctx.fillStyle='rgba(255,255,255,.32)'; ctx.fillRect(0,0,innerWidth,innerHeight);
 
-    // güneş (dolgu + kontur + hale)
-    sun.t += 0.01;
-    const pulse = 1 + Math.sin(sun.t)*0.03;
-    ctx.beginPath(); ctx.arc(sun.x, sun.y, sun.r*pulse, 0, Math.PI*2);
-    ctx.fillStyle = '#ffe277'; ctx.fill();
-    ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.stroke();
+    // sun
+    sun.t+=.01; const pulse=1+Math.sin(sun.t)*.03;
+    ctx.beginPath(); ctx.arc(sun.x,sun.y,sun.r*pulse,0,Math.PI*2); ctx.fillStyle='#ffe277'; ctx.fill();
+    ctx.lineWidth=5; ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.stroke();
+    const halo=ctx.createRadialGradient(sun.x,sun.y,sun.r*.8,sun.x,sun.y,sun.r*1.8);
+    halo.addColorStop(0,'rgba(255,226,119,.45)'); halo.addColorStop(1,'rgba(255,226,119,0)');
+    ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(sun.x,sun.y,sun.r*1.8,0,Math.PI*2); ctx.fill();
 
-    const halo = ctx.createRadialGradient(sun.x, sun.y, sun.r*0.8, sun.x, sun.y, sun.r*1.8);
-    halo.addColorStop(0, 'rgba(255,226,119,0.45)');
-    halo.addColorStop(1, 'rgba(255,226,119,0)');
-    ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(sun.x, sun.y, sun.r*1.8, 0, Math.PI*2); ctx.fill();
+    // trees
+    trees.forEach(tr=>{ ctx.beginPath(); ctx.ellipse(tr.x,tr.y,tr.w/2,tr.h/2,0,0,Math.PI*2); ctx.fillStyle=tr.c; ctx.fill(); ctx.lineWidth=5; ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.stroke(); });
 
-    // ağaç tepeleri
-    trees.forEach(tr=>{
-      ctx.beginPath();
-      ctx.ellipse(tr.x, tr.y, tr.w/2, tr.h/2, 0, 0, Math.PI*2);
-      ctx.fillStyle = tr.c; ctx.fill();
-      ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.stroke();
-    });
-
-    // yaprak/kelebek
-    parts.forEach(p=>{
-      p.y += p.spd;
-      p.x += Math.sin((p.y+p.r)*.02)*p.drift;
-      p.rot += p.rotSpd;
-      if(p.y > innerHeight+20){ p.y=-20; p.x=Math.random()*innerWidth; }
-      ctx.save();
-      ctx.translate(p.x,p.y);
-      ctx.rotate(p.rot);
-      ctx.beginPath();
-      ctx.ellipse(-p.r*0.5, 0, p.r*0.9, p.r*0.55, 0, 0, Math.PI*2);
-      ctx.fillStyle = p.hue; ctx.fill();
-      ctx.lineWidth = 3.5; ctx.strokeStyle='rgba(0,0,0,0.45)'; ctx.stroke();
-      ctx.beginPath();
-      ctx.ellipse(+p.r*0.5, 0, p.r*0.9, p.r*0.55, 0, 0, Math.PI*2);
-      ctx.fillStyle = p.hue; ctx.fill();
-      ctx.lineWidth = 3.5; ctx.strokeStyle='rgba(0,0,0,0.45)'; ctx.stroke();
+    // petals / butterflies
+    petals.forEach(p=>{
+      p.y+=p.spd; p.x+=Math.sin((p.y+p.r)*.02)*p.drift; p.rot+=p.rs;
+      if(p.y>innerHeight+20){ p.y=-20; p.x=Math.random()*innerWidth; }
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.beginPath(); ctx.ellipse(-p.r*.5,0,p.r*.9,p.r*.55,0,0,Math.PI*2); ctx.fillStyle=p.hue; ctx.fill(); ctx.lineWidth=3.5; ctx.strokeStyle='rgba(0,0,0,.45)'; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(+p.r*.5,0,p.r*.9,p.r*.55,0,0,Math.PI*2); ctx.fillStyle=p.hue; ctx.fill(); ctx.lineWidth=3.5; ctx.strokeStyle='rgba(0,0,0,.45)'; ctx.stroke();
       ctx.restore();
     });
-
-    t++;
   })();
 }
 
-/* ===================== seçim & akış ===================== */
-function boom(emoji){
-  const b = document.createElement('div');
-  b.className='boom'; b.innerHTML=`<div>${emoji}</div>`;
-  document.body.appendChild(b);
-  setTimeout(()=>b.remove(), 900);
-}
-function showSite(){ site.classList.add('show'); }
+/* ---------------- Flow ---------------- */
 function choose(kind){
-  if(kind==='male'){ underwater(); boom('⚙️'); hello.textContent='Derin sulara hoş geldin ⚙️'; }
-  else { nature(); boom('🌸'); hello.textContent='Doğanın enerjisine hoş geldin 🌸'; }
-  intro.classList.add('hide');
-  setTimeout(()=> intro.remove(), 650);
-  showSite();
+  if(kind==='male'){ startSea(); boom('⚙️'); hello.textContent='Derin sulara hoş geldin ⚙️'; desc.textContent='Buz-mavisi deniz, kalın çizgili dalga, kabarcık & parallax skull/gear.'; }
+  else { startSpring(); boom('🌸'); hello.textContent='Doğanın enerjisine hoş geldin 🌸'; desc.textContent='Güneş diski, ağaç tepeleri, kelebek-yaprak ve parallax çiçek.'; }
+  intro.classList.add('hide'); setTimeout(()=>intro.remove(),650); showSite();
 }
 
-/* her girişte sor: localStorage kullanmıyoruz */
+/* ask every time (no storage) */
 maleBtn.addEventListener('click', ()=>choose('male'));
 femaleBtn.addEventListener('click', ()=>choose('female'));
 changeBtn.addEventListener('click', ()=>{
-  // intro’yu yeniden göster
   if(!document.body.contains(intro)){
-    document.body.appendChild(Object.assign(document.createElement('div'),{id:'intro',innerHTML:`
-      <div class="intro-title">VERIDIUM</div>
-      <div class="intro-sub">Enerjini seç</div>
-      <div class="intro-btns">
+    const t=document.createElement('div'); t.id='intro'; t.innerHTML=`
+      <div class="logo"><span class="glow">VERIDIUM</span></div>
+      <div class="sub">Enerjini seç ve portalı aç</div>
+      <div class="choices">
         <button id="maleBtn" class="btn">⚙️ Erkek</button>
         <button id="femaleBtn" class="btn">🌸 Kadın</button>
-      </div>`}));
-    // butonlara yeniden dinleyici bağla
+      </div>`;
+    document.body.appendChild(t);
     document.getElementById('maleBtn').addEventListener('click', ()=>choose('male'));
     document.getElementById('femaleBtn').addEventListener('click', ()=>choose('female'));
   } else {
@@ -381,6 +361,16 @@ changeBtn.addEventListener('click', ()=>{
   }
   site.classList.remove('show');
 });
+
+/* light/dark cosmetic (content cards) */
+lightBtn.addEventListener('click', ()=>{
+  document.documentElement.setAttribute('data-mode','light');
+});
+darkBtn.addEventListener('click', ()=>{
+  document.documentElement.setAttribute('data-mode','dark');
+});
+
+/* initial state: wait intro */
 </script>
 </body>
-</html>
+  </html>
