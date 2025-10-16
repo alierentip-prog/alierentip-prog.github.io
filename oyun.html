@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="tr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neon Mini Runner</title>
+<style>
+  :root{--bg:#0b0d10;--fg:#e6f0ff;--brand:#6ee7ff}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);
+    font:16px/1.5 system-ui,Segoe UI,Inter,Roboto,Arial}
+  .wrap{max-width:680px;margin:0 auto;padding:12px}
+  h1{margin:6px 0 10px;font-size:22px;letter-spacing:.4px}
+  #c{width:100%;height:420px;display:block;border:1px solid rgba(255,255,255,.08);
+     border-radius:12px;background:radial-gradient(800px 400px at 50% -120px,
+     rgba(110,231,255,.12),transparent),#0b0d10}
+  .hud{display:flex;gap:10px;margin:10px 0}
+  .pill{padding:6px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px}
+  .btn{display:inline-block;padding:8px 12px;border:1px solid rgba(255,255,255,.2);
+       border-radius:10px;margin-top:8px;cursor:pointer}
+  #over{display:none;text-align:center;margin-top:8px}
+</style>
+<body>
+<div class="wrap">
+  <h1>Neon Mini Runner</h1>
+  <div class="hud">
+    <div class="pill">Skor: <b id="skor">0</b></div>
+    <div class="pill">En iyi: <b id="rekor">0</b></div>
+  </div>
+  <canvas id="c" width="680" height="420"></canvas>
+  <div id="ipucu">Dokun / Boşluk / ↑ ile zıpla</div>
+  <div id="over">
+    <div>💥 Çarptın! Skor: <b id="final">0</b></div>
+    <div>En iyi: <b id="finalBest">0</b></div>
+    <div class="btn" id="again">Yeniden</div>
+  </div>
+</div>
+
+<script>
+(()=> {
+  const can = document.getElementById('c');
+  const ct  = can.getContext('2d');
+  const skorEl = document.getElementById('skor');
+  const rekorEl= document.getElementById('rekor');
+  const ipucu  = document.getElementById('ipucu');
+  const over   = document.getElementById('over');
+  const final  = document.getElementById('final');
+  const finalBest = document.getElementById('finalBest');
+  const again  = document.getElementById('again');
+
+  // Boyutlar
+  const W = can.width, H = can.height, GROUND = H-80;
+
+  // Oyuncu
+  const P = {x:80, y:GROUND-40, w:38, h:38, vy:0};
+  const GRAV = 2000, JUMP = -820;
+
+  // Engeller
+  let obs = [], spawn = 0;
+
+  // Skor
+  let skor = 0, rekor = Number(localStorage.getItem('neon_rekor')||0);
+  rekorEl.textContent = rekor;
+
+  // Durum
+  let run = true; // otomatik başlasın
+  let t0 = performance.now();
+
+  function reset(){
+    skor=0; skorEl.textContent=0;
+    P.y=GROUND-40; P.vy=0;
+    obs.length=0; spawn=0;
+    over.style.display='none';
+    ipucu.style.display='block';
+    run=true; t0=performance.now();
+  }
+
+  function jump(){
+    if(!run) return;
+    if(P.y>=GROUND-40-1) P.vy = JUMP;
+    ipucu.style.display='none';
+  }
+
+  // Giriş
+  can.addEventListener('pointerdown', jump);
+  window.addEventListener('keydown', e=>{
+    if(e.code==='Space'||e.code==='ArrowUp') {e.preventDefault(); jump();}
+  });
+  again.addEventListener('click', reset);
+
+  function rect(a,b){ // AABB çarpışma
+    return !(a.x+a.w<b.x || b.x+b.w<a.x || a.y+a.h<b.y || b.y+b.h<a.y);
+  }
+
+  function loop(t){
+    requestAnimationFrame(loop);
+    const dt = Math.min(0.033,(t - t0)/1000); t0 = t;
+    if(!run) return;
+
+    // Fizik
+    P.vy += GRAV*dt;
+    P.y  += P.vy*dt;
+    if(P.y>GROUND-40) {P.y=GROUND-40; P.vy=0;}
+
+    // Engeller
+    spawn -= dt;
+    if(spawn<=0){
+      const tall = Math.random()<.35;
+      const h = tall?70:40, w = 26;
+      obs.push({x:W+10, y:GROUND-h, w, h, s: 320});
+      spawn = 1.0 + Math.random()*0.8;
+    }
+    for(let i=obs.length-1;i>=0;i--){
+      const o=obs[i]; o.x -= o.s*dt;
+      if(o.x<-40) obs.splice(i,1);
+      if(rect(P,o)){ // game over
+        run=false;
+        final.textContent = Math.floor(skor);
+        if(skor>rekor){ rekor=Math.floor(skor); localStorage.setItem('neon_rekor',rekor); }
+        rekorEl.textContent = rekor; finalBest.textContent = rekor;
+        over.style.display='block';
+      }
+    }
+
+    // Skor
+    skor += dt*10; skorEl.textContent = Math.floor(skor);
+
+    // Çizim
+    ct.clearRect(0,0,W,H);
+    // grid çizgi
+    ct.strokeStyle = 'rgba(255,255,255,.06)';
+    ct.beginPath(); ct.moveTo(0,GROUND); ct.lineTo(W,GROUND); ct.stroke();
+
+    // oyuncu
+    ct.fillStyle = '#67e8f9';
+    ct.shadowColor = 'rgba(110,231,255,.55)';
+    ct.shadowBlur = 18;
+    ct.fillRect(P.x, P.y, P.w, P.h);
+    ct.shadowBlur = 0;
+
+    // engeller
+    ct.fillStyle = '#94a3b8';
+    obs.forEach(o=>ct.fillRect(o.x, o.y, o.w, o.h));
+  }
+
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
