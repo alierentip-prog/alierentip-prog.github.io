@@ -335,5 +335,36 @@
     })();
   </script>
 
+<!-- 🌗 Tema (aydınlık/karanlık) değiştir butonu -->
+<button id="toggleTheme"
+  style="
+    position:fixed; bottom:20px; right:20px;
+    background:var(--glass);
+    border:1px solid var(--glass-b);
+    border-radius:50%; width:48px; height:48px;
+    font-size:22px; cursor:pointer;
+    color:var(--fg); backdrop-filter:blur(6px);
+    box-shadow:0 4px 16px rgba(0,0,0,.3);
+    transition:transform .2s ease;">
+🌗
+</button>
+
+<script>
+const themeBtn = document.getElementById('toggleTheme');
+let darkMode = true;
+
+themeBtn.addEventListener('click', ()=>{
+  darkMode = !darkMode;
+  if(darkMode){
+    document.documentElement.style.setProperty('--bg','#0b0d10');
+    document.body.style.background='var(--bg)';
+    themeBtn.textContent='🌗';
+  } else {
+    document.documentElement.style.setProperty('--bg','#f8f8f8');
+    document.body.style.background='var(--bg)';
+    themeBtn.textContent='☀️';
+  }
+});
+</script>
 </body>
 </html>
