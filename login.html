@@ -82,16 +82,26 @@
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } 
       from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-    // 🔧 BURAYI KENDİ PROJE BİLGİLERİNLE DOLDUR
-    // Firebase konsolunda "Use a <script> tag" ekranındaki config’i KOPYALA-YAPIŞTIR
-    const firebaseConfig = {
-      apiKey: "AI...seninKey...",
-      authDomain: "veridium-site.firebaseapp.com",
-      projectId: "veridium-site",
-      storageBucket: "veridium-site.appspot.com",
-      messagingSenderId: "XXXXXXXXXXXX",
-      appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXX"
-    };
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyC-VlZl1YwSTo1NuBkPXSdt3fqMvFhtCgM",
+    authDomain: "veridium-site.firebaseapp.com",
+    projectId: "veridium-site",
+    storageBucket: "veridium-site.firebasestorage.app",
+    messagingSenderId: "422528394891",
+    appId: "1:422528394891:web:bec929ead94308a86a968e"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
+
 
     // Başlat
     const app  = initializeApp(firebaseConfig);
