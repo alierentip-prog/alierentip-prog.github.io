@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Echo — VERIDIUM</title>
+  <style>
+    :root{--bg:#0b0d10;--fg:#e5e7eb;--border:rgba(255,255,255,.08);}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+    .wrap{max-width:900px;margin:40px auto;padding:0 16px}
+    a{color:var(--fg);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .card{background:rgba(10,12,16,.92);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px}
+    .top{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+    .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;cursor:pointer;color:var(--fg)}
+    textarea{width:100%;min-height:80px;background:#121418;border:1px solid var(--border);border-radius:10px;color:var(--fg);padding:10px;font:inherit;resize:vertical}
+    button{background:#22d3ee;color:#000;border:none;padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:8px}
+    ul{list-style:none;padding:0;margin:0}
+    li{background:rgba(255,255,255,.05);padding:8px 10px;border-radius:8px;margin-top:8px}
+    small{color:#9ca3af;font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="chip" href="index.html">← Ana Sayfa</a>
+      <strong>Echo</strong>
+    </div>
+
+    <div class="card">
+      <h2>Echo</h2>
+      <p>Bir söz bırak. Her yankı anonimdir.</p>
+      <textarea id="echoInput" placeholder="Sözünü yaz..."></textarea>
+      <button id="sendEcho">Yankı Bırak</button>
+    </div>
+
+    <div class="card">
+      <h3>Son Yankılar</h3>
+      <ul id="echoList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const list = JSON.parse(localStorage.getItem('echoes') || '[]');
+    function render(){
+      document.getElementById('echoList').innerHTML =
+        list.map(e=>`<li>${e.text}<br><small>${e.date}</small></li>`).join('');
+    }
+    render();
+
+    document.getElementById('sendEcho').onclick = ()=>{
+      const txt = document.getElementById('echoInput').value.trim();
+      if(!txt) return;
+      list.unshift({text:txt, date:new Date().toLocaleString()});
+      localStorage.setItem('echoes', JSON.stringify(list));
+      document.getElementById('echoInput').value='';
+      render();
+    };
+  </script>
+</body>
+</html>
