@@ -363,5 +363,37 @@
   render();
 })();
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzA...seninki...",
+    authDomain: "veridium-site.firebaseapp.com",
+    projectId: "veridium-site",
+    storageBucket: "veridium-site.appspot.com",
+    messagingSenderId: "422528394891",
+    appId: "1:422528394891:web:........"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Giriş değilse login'e yönlendir
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "/login.html";
+    } else {
+      // örnek: kullanıcı adını doldur
+      const nameEl = document.getElementById("echoName");
+      if (nameEl && !nameEl.value) nameEl.value = user.displayName || user.email || "Misafir";
+      const outBtn = document.getElementById("logoutBtn");
+      outBtn?.addEventListener("click", async () => {
+        await signOut(auth);
+        window.location.href = "/login.html";
+      });
+    }
+  });
+</script>
 </body>
 </html>
