@@ -1,54 +1,48 @@
-<script type="module">
-  // Firebase SDK importları
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+// firebase.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+  createUserWithEmailAndPassword, signOut, setPersistence,
+  browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-  // 🔧 Firebase yapılandırması
-  const firebaseConfig = {
-    apiKey: "AIzaSyCge9-P5yZu0iq44omQ1ndtlMP_o98iDHE",
-    authDomain: "veridium-3ad51.firebaseapp.com",
-    projectId: "veridium-3ad51",
-    storageBucket: "veridium-3ad51.appspot.com", // DÜZELTİLMİŞ
-    messagingSenderId: "910004709745",
-    appId: "1:910004709745:web:d6cd5a71e1e208cebbaed0",
-    measurementId: "G-72X897ZVLG"
-  };
+// 🔧 senin projen (Firebase console'dakiyle aynı)
+const firebaseConfig = {
+  apiKey: "AIzaSyCge9-P5yZu0iq44omQ1ndtlMP_o98iDHE",
+  authDomain: "veridium-3ad51.firebaseapp.com",
+  projectId: "veridium-3ad51",
+  storageBucket: "veridium-3ad51.firebasestorage.app",
+  messagingSenderId: "910004709745",
+  appId: "1:910004709745:web:d6cd5a71e1e208cebbaed0",
+  measurementId: "G-72X897ZVLG"
+};
 
-  // 🚀 Firebase başlatma
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const auth = getAuth(app);
+const app  = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
 
-  // 🧠 Login ve Sign-Up butonları
-  const loginBtn = document.getElementById("loginBtn");
-  const signupBtn = document.getElementById("signupBtn");
+// oturum sayfa yenilemede kalsın
+setPersistence(auth, browserLocalPersistence).catch(console.error);
 
-  // GİRİŞ YAP
-  loginBtn?.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("pass").value;
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-      alert("✅ Giriş başarılı!");
-      window.location.href = "index.html"; // yönlendirme
-    } catch (error) {
-      alert("❌ Giriş başarısız: " + error.message);
-    }
-  });
+// auth durumuna göre UI toggle
+onAuthStateChanged(auth, (user) => {
+  document.querySelectorAll(".guestOnly").forEach(el => el.style.display = user ? "none" : "");
+  document.querySelectorAll(".userOnly").forEach(el => el.style.display  = user ? "" : "none");
+  const mail = document.getElementById("userEmail");
+  if (mail) mail.textContent = user ? user.email : "";
+});
 
-  // ÜYE OL
-  signupBtn?.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("pass").value;
-    try {
-      await createUserWithEmailAndPassword(auth, email, pass);
-      alert("🎉 Kayıt başarılı!");
-    } catch (error) {
-      alert("⚠️ Hata: " + error.message);
-    }
-  });
-</script>
+// çıkış
+document.addEventListener("click", (e) => {
+  if (e.target && e.target.id === "logoutBtn") {
+    signOut(auth).then(()=>{ location.href = "index.html"; })
+                 .catch(err => alert("Çıkış hatası: " + (err.code || err.message)));
+  }
+});
+
+// login.html'in kullanacağı yardımcılar
+export async function loginWithEmail(email, pass) {
+  return signInWithEmailAndPassword(auth, email, pass);
+}
+export async function signupWithEmail(email, pass) {
+  return createUserWithEmailAndPassword(auth, email, pass);
+}
