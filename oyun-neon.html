@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Neon Runner — VERIDIUM</title>
+<meta name="description" content="Neon Runner: parallax arka planlı, çift zıplamalı endless runner.">
+<style>
+  :root{
+    --bg:#0a0f14; --fg:#e6eef5; --muted:#9aa7bd; --card:rgba(13,19,24,.9);
+    --border:rgba(255,255,255,.08); --accent:#6ee7ff; --accent2:#7c6bff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,Segoe UI,Roboto,Inter,Arial}
+  a{color:var(--fg);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:980px;margin:0 auto;padding:16px}
+  .top{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+  .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--fg)}
+  .title{font-weight:800;letter-spacing:.12em}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
+  canvas{display:block;width:100%;max-width:980px;border:1px solid var(--border);border-radius:12px;background:#0c1218}
+  .hud{display:flex;justify-content:center;gap:18px;margin-top:10px;font-weight:800}
+  .hud small{font-weight:600;color:var(--muted)}
+  .btnbar{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+  .btn{background:var(--accent);color:#081018;border:none;padding:10px 16px;border-radius:10px;font-weight:900;cursor:pointer}
+  .btn.alt{background:var(--accent2)}
+  .muted{color:var(--muted)}
+  .hint{ text-align:center; margin:8px 0 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="chip" href="index.html">← Ana Sayfa</a>
+    <span class="title">NEON RUNNER</span>
+    <span class="muted">• PC: Space/↑ zıpla, ↓ kay • Mobil: butonlar</span>
+  </div>
+
+  <div class="card">
+    <canvas id="game" width="960" height="540"></canvas>
+    <div class="hud">
+      <div>Skor: <span id="score">0</span></div>
+      <div>Coin: <span id="coins">0</span></div>
+      <div>Hız: <span id="speed">1.0x</span></div>
+      <div>En iyi: <span id="best">0</span></div>
+    </div>
+    <div class="btnbar">
+      <button id="jumpBtn" class="btn">⬆ Zıpla</button>
+      <button id="slideBtn" class="btn alt">⬇ Kay</button>
+      <button id="pauseBtn" class="btn">⏸︎ Duraklat</button>
+      <button id="restartBtn" class="btn alt">↻ Yeniden</button>
+    </div>
+    <p class="hint muted">Engellerden kaç, coin topla, mor power-up kalkan verir (1 kez çarpmayı emer). Zorluk zamanla artar.</p>
+  </div>
+</div>
+
+<script>
+/* ================= Neon Runner — tek dosya, kütüphane yok ================= */
+const cvs = document.getElementById('game'), ctx = cvs.getContext('2d');
+const W = cvs.width, H = cvs.height;
+
+const hud = {
+  score: document.getElementById('score'),
+  coins: document.getElementById('coins'),
+  speed: document.getElementById('speed'),
+  best:  document.getElementById('best'),
+};
+const bestInit = Number(localStorage.getItem('ver:neonrunner:best')||0);
+hud.best.textContent = bestInit;
+
+const g = {
+  gravity: 0.55,            // yerçekimi
+  groundY: H - 80,          // yer çizgisi
+  baseSpeed: 6,             // dünya kayma hızı
+  speedMul: 1,              // zorluk çarpanı
+  time: 0,
+  paused: false,
+  running: true,
+  score: 0,
+  coins: 0,
+  best: bestInit,
+};
+
+// Parallax katmanları (saf çizim)
+const layers = [
+  {speed: .15, color:'rgba(110,231,255,.06)', items:[]},  // uzak yıldızlar
+  {speed: .30, color:'rgba(124,107,255,.08)', items:[]},  // yakın yıldızlar
+  {speed: .60, color:'rgba(255,255,255,.10)', items:[]}   // sis çizgileri
+];
+function bootLayers(){
+  layers[0].items = Array.from({length:90},()=>({x:Math.random()*W, y:Math.random()*(H-130), s:1+Math.random()*1.5}));
+  layers[1].items = Array.from({length:60},()=>({x:Math.random()*W, y:Math.random()*(H-140), s:1.5+Math.random()*2}));
+  layers[2].items = Array.from({length:30},()=>({x:Math.random()*W, y:Math.random()*(H-180)+40, w:60+Math.random()*120, h:2}));
+}
+bootLayers();
+
+// Oyuncu
+const player = {
+  x: 120, y: 0, w: 38, h: 54, vy: 0,
+  onGround: false,
+  jumps: 0, maxJumps: 2, // çift zıplama
+  sliding: false, slideT: 0,
+  shield: 0, shieldT: 0, // kalkan süre sayacı
+  color: '#6ee7ff'
+};
+player.y = g.groundY - player.h;
+
+// Engeller, coin, powerup
+const obstacles = []; // {x,y,w,h,type}
+const coins = [];     // {x,y,r}
+const powerups = [];  // {x,y,size,type:'shield'}
+
+function spawnStuff(){
+  // Zorluk artırımı
+  const t = g.time/1000;
+  g.speedMul = 1 + Math.min(1.2, t/60); // 1 -> 2.2 arası
+  // Engel (yüksek/düşük)
+  if(Math.random() < 0.04 * g.speedMul){
+    const high = Math.random()<0.45;
+    const w = 26 + Math.random()*28;
+    const h = high ? (40+Math.random()*22) : (26+Math.random()*16);
+    const y = g.groundY - h;
+    obstacles.push({x: W+40, y, w, h, type: high?'high':'low'});
+  }
+  // Coin
+  if(Math.random() < 0.035){
+    const r = 8, y = g.groundY - (60 + Math.random()*120);
+    coins.push({x: W+20, y, r});
+  }
+  // Power-up (shield)
+  if(Math.random() < 0.008){
+    const y = g.groundY - (80 + Math.random()*120);
+    powerups.push({x: W+20, y, size:16, type:'shield'});
+  }
+}
+
+// Kontroller
+let keys = { jump:false, slide:false };
+addEventListener('keydown', e=>{
+  if(e.repeat) return;
+  if(e.code==='Space'||e.code==='ArrowUp'||e.key==='w'||e.key==='W') doJump();
+  if(e.code==='ArrowDown'||e.key==='s'||e.key==='S') doSlide(true);
+  if(e.key==='p'||e.key==='P') togglePause();
+});
+addEventListener('keyup', e=>{
+  if(e.code==='ArrowDown'||e.key==='s'||e.key==='S') doSlide(false);
+});
+document.getElementById('jumpBtn').onclick=()=>doJump();
+document.getElementById('slideBtn').onpointerdown=()=>doSlide(true);
+document.getElementById('slideBtn').onpointerup=()=>doSlide(false);
+document.getElementById('pauseBtn').onclick=()=>togglePause();
+document.getElementById('restartBtn').onclick=()=>reset();
+
+function doJump(){
+  if(!g.running) return;
+  if(player.onGround || player.jumps < player.maxJumps){
+    player.vy = -11.2; player.onGround=false; player.jumps++;
+  }
+}
+function doSlide(on){
+  if(!g.running) return;
+  if(on){
+    player.sliding = true; player.slideT = 260; // ms
+  } else {
+    player.slideT = 0;
+  }
+}
+function togglePause(){
+  g.paused = !g.paused;
+  document.getElementById('pauseBtn').textContent = g.paused ? '▶ Devam' : '⏸︎ Duraklat';
+}
+
+// Çizimler
+function drawParallax(dt){
+  layers.forEach(L=>{
+    ctx.fillStyle = L.color;
+    if(L===layers[2]){
+      // sis çizgileri
+      for(const it of L.items){
+        it.x -= (g.baseSpeed*L.speed*g.speedMul)*dt;
+        if(it.x + it.w < 0){ it.x = W + Math.random()*120; it.y = Math.random()*(H-180)+40; it.w = 60+Math.random()*120; }
+        ctx.fillRect(it.x, it.y, it.w, it.h);
+      }
+    } else {
+      // yıldızlar
+      for(const it of L.items){
+        it.x -= (g.baseSpeed*L.speed)*dt;
+        if(it.x < -2){ it.x = W + 2; it.y = Math.random()*(H-130); }
+        ctx.fillRect(it.x, it.y, it.s, it.s);
+      }
+    }
+  });
+  // zemin çizgisi
+  ctx.strokeStyle='rgba(255,255,255,.12)';
+  ctx.beginPath(); ctx.moveTo(0,g.groundY+.5); ctx.lineTo(W,g.groundY+.5); ctx.stroke();
+}
+
+function drawPlayer(){
+  const ph = player.sliding && player.slideT>0 ? player.h*0.55 : player.h;
+  const py = player.sliding && player.slideT>0 ? g.groundY - ph : player.y;
+  // gövde
+  ctx.fillStyle = player.color;
+  ctx.fillRect(player.x, py, player.w, ph);
+  // neon kenar
+  ctx.strokeStyle = 'rgba(110,231,255,.6)';
+  ctx.strokeRect(player.x+0.5, py+0.5, player.w-1, ph-1);
+  // kalkan
+  if(player.shield>0){
+    ctx.beginPath();
+    ctx.arc(player.x+player.w/2, py+ph/2, 28, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(124,107,255,.75)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.lineWidth = 1;
+  }
+}
+
+function drawRect(x,y,w,h,fill,stroke){
+  ctx.fillStyle = fill; ctx.fillRect(x,y,w,h);
+  if(stroke){ ctx.strokeStyle=stroke; ctx.strokeRect(x+.5,y+.5,w-1,h-1); }
+}
+
+function drawCoin(c){
+  ctx.beginPath();
+  ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
+  ctx.fillStyle = '#ffd166';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.stroke();
+}
+
+function drawPU(p){
+  // mor elmas
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(Math.sin(g.time/250)*0.08);
+  ctx.fillStyle = '#b388ff';
+  ctx.beginPath();
+  ctx.moveTo(0,-p.size);
+  ctx.lineTo(p.size,0);
+  ctx.lineTo(0,p.size);
+  ctx.lineTo(-p.size,0);
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+// Mantık
+function update(dt){
+  if(!g.running || g.paused) return;
+
+  g.time += dt;
+
+  // spawn
+  spawnStuff();
+
+  // dünya kaydırma
+  const worldSpeed = (g.baseSpeed * g.speedMul) * dt;
+
+  for(let i=obstacles.length-1;i>=0;i--){
+    const o=obstacles[i]; o.x -= worldSpeed;
+    if(o.x+o.w < -20) obstacles.splice(i,1);
+  }
+  for(let i=coins.length-1;i>=0;i--){
+    const c=coins[i]; c.x -= worldSpeed;
+    if(c.x + c.r < -20) coins.splice(i,1);
+  }
+  for(let i=powerups.length-1;i>=0;i--){
+    const p=powerups[i]; p.x -= worldSpeed;
+    if(p.x + p.size < -20) powerups.splice(i,1);
+  }
+
+  // oyuncu fizik
+  player.vy += g.gravity;
+  player.y  += player.vy;
+
+  // slide süresi
+  if(player.slideT>0){ player.slideT -= dt; if(player.slideT<=0) { player.sliding=false; } }
+
+  // zemin çarpma
+  const ph = player.sliding && player.slideT>0 ? player.h*0.55 : player.h;
+  let py = player.sliding && player.slideT>0 ? g.groundY - ph : player.y;
+  if(py+ph >= g.groundY){
+    py = g.groundY - ph; player.y = py; player.vy = 0; player.onGround = true; player.jumps = 0;
+  }else{
+    player.onGround = false;
+  }
+
+  // çarpışmalar
+  // coin
+  for(let i=coins.length-1;i>=0;i--){
+    const c=coins[i];
+    if(collideCircleRect(c.x,c.y,c.r, player.x, py, player.w, ph)){
+      coins.splice(i,1);
+      g.coins++; g.score += 5;
+    }
+  }
+  // powerup
+  for(let i=powerups.length-1;i>=0;i--){
+    const p=powerups[i];
+    if(collideRectRect(p.x-p.size,p.y-p.size,p.size*2,p.size*2, player.x, py, player.w, ph)){
+      powerups.splice(i,1);
+      player.shield = 1;
+      player.shieldT = 4000; // ms
+    }
+  }
+
+  // obstacles
+  for(let i=obstacles.length-1;i>=0;i--){
+    const o=obstacles[i];
+    if(collideRectRect(o.x,o.y,o.w,o.h, player.x, py, player.w, ph)){
+      if(player.shield>0){
+        // kalkan çarpışmayı emer
+        player.shield=0; player.shieldT=0;
+        obstacles.splice(i,1);
+      } else {
+        gameOver();
+        break;
+      }
+    }
+  }
+
+  // kalkan süresi
+  if(player.shield>0){
+    player.shieldT -= dt; if(player.shieldT<=0){ player.shield=0; }
+  }
+
+  // skor ve hud
+  g.score += 0.03 * g.speedMul * (dt/16);
+  hud.score.textContent = Math.floor(g.score);
+  hud.coins.textContent = g.coins;
+  hud.speed.textContent = (1*g.speedMul).toFixed(1)+'x';
+}
+
+function gameOver(){
+  g.running = false;
+  // best
+  if(Math.floor(g.score) > g.best){
+    g.best = Math.floor(g.score);
+    localStorage.setItem('ver:neonrunner:best', g.best);
+    hud.best.textContent = g.best;
+  }
+  // overlay
+  ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#e6eef5'; ctx.font='bold 28px system-ui'; ctx.textAlign='center';
+  ctx.fillText('OYUN BİTTİ', W/2, H/2 - 10);
+  ctx.font='16px system-ui';
+  ctx.fillText('↻ Yeniden ile başlat • Space/↑: zıpla • ↓: kay', W/2, H/2 + 18);
+}
+
+function reset(){
+  g.time=0; g.paused=false; g.running=true;
+  g.score=0; g.coins=0; g.speedMul=1;
+  obstacles.length=0; coins.length=0; powerups.length=0;
+  player.y = g.groundY - player.h; player.vy=0; player.jumps=0; player.shield=0; player.slideT=0; player.sliding=false;
+  document.getElementById('pauseBtn').textContent = '⏸︎ Duraklat';
+}
+
+// Basit çarpışmalar
+function collideRectRect(ax,ay,aw,ah, bx,by,bw,bh){
+  return ax<bx+bw && ax+aw>bx && ay<by+bh && ay+ah>by;
+}
+function collideCircleRect(cx,cy,cr, rx,ry,rw,rh){
+  // circle-rect collision
+  const testX = Math.max(rx, Math.min(cx, rx+rw));
+  const testY = Math.max(ry, Math.min(cy, ry+rh));
+  const dx = cx - testX, dy = cy - testY;
+  return (dx*dx + dy*dy) <= cr*cr;
+}
+
+// Ana döngü
+let last=0;
+function loop(ts){
+  const dt = Math.min(34, ts - (last||ts)); last = ts;
+
+  // çiz arka plan
+  ctx.clearRect(0,0,W,H);
+  drawParallax(dt/16);
+
+  if(!g.paused) update(dt);
+
+  // coin/powerup/engel çiz
+  for(const c of coins) drawCoin(c);
+  for(const p of powerups) drawPU(p);
+  for(const o of obstacles) drawRect(o.x,o.y,o.w,o.h,'#9cb6ff','rgba(255,255,255,.25)');
+
+  // oyuncu
+  drawPlayer();
+
+  requestAnimationFrame(loop);
+}
+reset(); requestAnimationFrame(loop);
+</script>
+</body>
+  </html>
