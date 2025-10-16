@@ -1,114 +1,139 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AZURA Portal</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: radial-gradient(circle at top, #091623, #050910);
-      color: #eaf4ff;
-      text-align: center;
-    }
-    h1 {
-      font-family: 'Cinzel', serif;
-      letter-spacing: 4px;
-      margin-top: 80px;
-      color: #a3b2c4;
-    }
-    .cards {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 60px;
-      flex-wrap: wrap;
-    }
-    .card {
-      width: 250px;
-      height: 160px;
-      border-radius: 16px;
-      backdrop-filter: blur(8px);
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      transition: 0.3s;
-    }
-    .card:hover {
-      background: rgba(255, 255, 255, 0.12);
-      transform: scale(1.03);
-    }
-    a {
-      text-decoration: none;
-      color: #eaf4ff;
-      font-weight: 700;
-      margin-top: 8px;
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 8px 14px;
-      border-radius: 10px;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZURA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05090f; --blue:#4db8ff; --white:#eaf4ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:Cinzel,serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* Splash */
+#az-splash{
+  position:fixed; inset:0; z-index:9999;
+  display:grid; place-items:center;
+  background:radial-gradient(1200px 800px at 50% 20%, rgba(80,140,255,.08), transparent 60%), #05090f;
+  animation: splashFade 1.1s ease 1.6s forwards;
+}
+#az-splash .title{
+  font-size:clamp(42px,9vw,140px);
+  background:linear-gradient(90deg,#a7c9ff,#eaf2ff,#a7c9ff);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 12px 45px rgba(0,40,120,.65));
+  transform:scale(.8);
+  animation: popIn .8s ease forwards;
+}
+#az-splash .burst{
+  position:absolute; width:160vmax; height:160vmax; border-radius:50%;
+  background: radial-gradient(circle, rgba(255,255,255,.9) 0%, rgba(140,190,255,.35) 20%, rgba(0,0,0,0) 60%);
+  mix-blend-mode:screen; opacity:.0; transform:scale(.1);
+  animation: burst .9s cubic-bezier(.2,.9,.1,1) .2s forwards;
+}
+#az-splash .ring{
+  position:absolute; width:90vmin; height:90vmin; border-radius:50%;
+  border:2px solid rgba(160,210,255,.45); filter:blur(.3px); opacity:0; transform:scale(.6);
+  animation:ring .9s ease .25s forwards;
+}
+
+.cards{
+  display:flex;
+  justify-content:center;
+  gap:32px;
+  opacity:0;
+  animation:fadeIn .8s ease 2s forwards;
+}
+.card{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.03);
+  border-radius:16px;
+  padding:24px 36px;
+  text-align:center;
+  backdrop-filter:blur(6px);
+  transition:.3s;
+}
+.card:hover{background:rgba(255,255,255,.08);transform:translateY(-4px)}
+.card a{
+  display:inline-block;
+  margin-top:12px;
+  padding:8px 16px;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--white);
+  background:rgba(255,255,255,.06);
+  transition:.3s;
+}
+.card a:hover{background:rgba(255,255,255,.15)}
+h1{font-size:clamp(40px,8vw,80px);margin-bottom:60px;text-align:center;letter-spacing:4px}
+
+/* animasyonlar */
+@keyframes popIn{to{transform:scale(1)}}
+@keyframes burst{to{opacity:.9; transform:scale(1)}}
+@keyframes ring{60%{opacity:1} 100%{opacity:0; transform:scale(1.25)}}
+@keyframes splashFade{to{opacity:0; visibility:hidden}}
+@keyframes fadeIn{to{opacity:1}}
+.az-dots{position:fixed; inset:0; pointer-events:none; z-index:5}
+</style>
 </head>
 <body>
-  <header class="topbar">
-  <div class="clock" id="clock">--:--</div>
-  <h1 class="brand">AZURA</h1>
-  <nav id="authArea">
-    <a class="btn" href="login.html" id="loginLink">Giriş</a>
-    <a class="btn" href="login.html#signup" id="signupLink">Üye Ol</a>
-    <button class="btn" id="logoutBtn" style="display:none">Çıkış</button>
-  </nav>
-</header>
 
-<style>
-  .topbar{
-    position:fixed; top:10px; left:0; right:0; z-index:50;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:0 14px;
-    background:linear-gradient(180deg,rgba(0,0,0,.35),transparent);
-  }
-  .brand{letter-spacing:.18em; font-weight:900; opacity:.9}
-  .btn{
-    display:inline-flex; align-items:center; gap:8px;
-    padding:8px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.16);
-    background:rgba(255,255,255,.06); color:#eaf4ff; font-weight:700;
-    text-decoration:none; backdrop-filter:blur(6px)
-  }
-  #authArea{display:flex; gap:8px}
-</style>
-  <div class="cards">
-    
-    <div class="card">
-      <h2>🌊 Okyanus</h2>
-      <a href="male.html">Giriş</a>
-    </div>
-    <div class="card">
-      <h2>🌿 Doğa</h2>
-      <a href="female.html">Giriş</a>
-    </div>
+<!-- Splash -->
+<div id="az-splash">
+  <div class="burst"></div>
+  <div class="ring"></div>
+  <div class="title">AZURA</div>
+</div>
+
+<!-- Arka plan yıldızları -->
+<canvas class="az-dots" id="azDots"></canvas>
+
+<h1>AZURA</h1>
+<div class="cards">
+  <div class="card">
+    <h2>🌊 Okyanus</h2>
+    <a href="male.html">Giriş</a>
   </div>
-<script type="module" src="./firebase.js"></script>
-<script type="module">
-  const loginLink  = document.getElementById('loginLink');
-  const signupLink = document.getElementById('signupLink');
-  const logoutBtn  = document.getElementById('logoutBtn');
+  <div class="card">
+    <h2>🌿 Doğa</h2>
+    <a href="female.html">Giriş</a>
+  </div>
+</div>
 
-  window.AZ.onAuth(user=>{
-    const logged = !!user;
-    loginLink?.classList.toggle('hide', logged);
-    signupLink?.classList.toggle('hide', logged);
-    if(logged) logoutBtn.style.display='inline-flex';
-    else       logoutBtn.style.display='none';
-  });
-
-  logoutBtn?.addEventListener('click', async ()=>{
-    try{ await window.AZ.logout(); location.reload(); }
-    catch(e){ alert('Çıkış hatası: '+e.message); }
-  });
+<script>
+(()=> {
+  const c = document.getElementById('azDots'), x = c.getContext('2d');
+  const fit = ()=>{c.width=innerWidth;c.height=innerHeight}; addEventListener('resize',fit,{passive:true}); fit();
+  const N=Math.min(180,Math.floor((c.width*c.height)/42000));
+  const dots=Array.from({length:N},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:.6+Math.random()*1.6,v:.2+Math.random()*1.2,h:200+Math.random()*60,a:.2+Math.random()*.6}));
+  let t=0,fade=1;
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    for(const d of dots){
+      d.y+=d.v; d.x+=Math.sin((t+d.y)/80)*.25;
+      if(d.y>c.height+10){d.y=-10;d.x=Math.random()*c.width}
+      x.beginPath(); x.arc(d.x,d.y,d.r,0,Math.PI*2);
+      x.fillStyle=`hsla(${d.h},80%,70%,${d.a*fade})`; x.fill();
+    }
+    t++; requestAnimationFrame(loop);
+  })();
+  setTimeout(()=>fade=.35,1000);
+  setTimeout(()=>fade=1,2400);
+  setTimeout(()=>{const s=document.getElementById('az-splash'); s&&(s.style.display='none');},2200);
+})();
 </script>
 </body>
 </html>
