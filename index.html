@@ -3,307 +3,259 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VERIDIUM — Ali Eren'in Dijital Köşesi</title>
-  <meta name="description" content="Veridium: Günün/Gecenin Sözü, rastgele bilgi, bilgi kartları ve canlı saat.">
-
+  <title>VERIDIUM — Portal</title>
+  <meta name="description" content="Veridium: Enerji seçimi, 3D arka plan, günün sözü ve keşfet linkleri.">
   <style>
-    /* ====== Tema Değişkenleri ====== */
     :root{
       --bg:#0b0d10; --fg:#e5e7eb; --muted:#9ca3af; --card:#111418; --accent:#6ee7ff;
       --border:rgba(255,255,255,.06); --glow:0 8px 24px rgba(110,231,255,.15);
-      --brand1:#6ee7ff; --brand2:#60a5fa; --brand3:#22d3ee;
-      --radius:16px;
-      --trs: 220ms ease;             /* genel geçiş */
-      --trs-slow: 420ms ease;        /* tema geçişi */
+      --brand1:#6ee7ff; --brand2:#60a5fa; --brand3:#22d3ee; --radius:16px; --trs:220ms ease;
     }
     [data-theme="light"]:root{
       --bg:#f7fafc; --fg:#0f172a; --muted:#475569; --card:#ffffff; --accent:#0ea5e9;
       --border:rgba(0,0,0,.06); --glow:0 8px 24px rgba(14,165,233,.15);
       --brand1:#0ea5e9; --brand2:#22d3ee; --brand3:#60a5fa;
     }
-
-    /* ====== Global ====== */
     html,body{height:100%}
     body{
-      margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--fg);
-      background:
-        radial-gradient(1200px 600px at 120% -10%, rgba(110,231,255,.08), transparent 60%),
-        radial-gradient(1000px 500px at -20% 120%, rgba(59,130,246,.08), transparent 60%),
-        linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,.04) 1px, transparent 1px),
-        var(--bg);
-      background-size:auto,auto,26px 26px,26px 26px,auto;
-      transition: background-color var(--trs-slow), color var(--trs-slow);
+      margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial; color:var(--fg);
+      background:var(--bg);
     }
-    @media (prefers-reduced-motion: reduce){
-      *{animation:none !important; transition:none !important}
-    }
-    a{color:var(--accent); text-decoration:none}
-    a:hover{text-decoration:underline}
-    .wrap{ width:min(980px, 100%); margin: 0 auto; padding: 20px 16px 120px }
-    .visually-hidden{position:absolute !important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
-
-    /* ====== Üst Bar ====== */
+    /* 3D canvas arkada */
+    #bg3d{position:fixed; inset:0; z-index:-1; display:block}
     .topbar{
-      position: sticky; top:0; z-index:10; inset-block-start:0;
-      display:flex; align-items:center; gap:12px; justify-content:space-between;
-      padding: 12px 16px; background:rgba(0,0,0,.15);
-      backdrop-filter: blur(8px);
-      border-bottom:1px solid var(--border);
+      position:sticky; top:0; z-index:10; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:12px 16px; background:rgba(0,0,0,.18); backdrop-filter: blur(8px); border-bottom:1px solid var(--border);
     }
-    nav{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
-    .btn, .chip{
-      display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px;
-      background:var(--card); border:1px solid var(--border); box-shadow: var(--glow);
-      color:var(--fg); font-size:14px; line-height:1; transition: transform var(--trs), background var(--trs);
-      -webkit-tap-highlight-color: transparent;
-    }
-    .btn:active, .chip:active{ transform: scale(.98) }
-    .chip{ background: transparent; box-shadow: none; padding:8px 12px }
-
-    /* ====== Işıklı Logo (Brand) ====== */
     .brand{
-      font-weight:900; letter-spacing:.38em; text-transform:uppercase;
-      font-size: clamp(13px, 2.8vw, 16px);
-      background: linear-gradient(90deg,var(--brand1),var(--brand2),var(--brand3));
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      position:relative;
+      font-weight:900; letter-spacing:.38em; text-transform:uppercase; font-size:clamp(13px,2.8vw,16px);
+      background:linear-gradient(90deg,var(--brand1),var(--brand2),var(--brand3));
+      -webkit-background-clip:text; background-clip:text; color:transparent; background-size:200% 100%;
+      animation:shimmer 6s ease-in-out infinite;
     }
-    .brand::after{ /* parıltı */
-      content:""; position:absolute; inset:0; border-radius:8px;
-      box-shadow: 0 0 48px 6px rgba(110,231,255,.12);
-      opacity:.6; filter: blur(8px); pointer-events:none;
+    @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    nav{display:flex; gap:10px; flex-wrap:wrap}
+    .chip{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; background:var(--card); border:1px solid var(--border); color:var(--fg); box-shadow:var(--glow)}
+    .wrap{width:min(980px,100%); margin:0 auto; padding:20px 16px 120px}
+    .title{margin:8px 0 6px; font-size: clamp(26px, 4vw, 36px)}
+    .subtitle{margin:0 0 12px; color:var(--muted)}
+    .grid{display:grid; gap:16px; margin-top:18px}
+    @media(min-width:780px){.grid{grid-template-columns:1.2fr .8fr}}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; box-shadow:var(--glow)}
+    .quote{font-size:clamp(18px,3vw,22px); line-height:1.45; position:relative; padding-left:18px; margin:10px 0 0}
+    .quote::before{content:"“"; position:absolute; left:0; top:-2px; opacity:.4; font-size:28px}
+    .quote-footer{margin-top:8px; color:var(--muted); font-size:14px}
+    /* Keşfet + 3D tilt */
+    .links{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+    @media(max-width:560px){.links{grid-template-columns:1fr}}
+    .linkcard{
+      padding:16px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.02);
+      transform-style: preserve-3d; transform: perspective(800px) rotateX(0) rotateY(0);
+      transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
     }
-    .brand-shimmer{
-      background-size:200% 100%;
-      animation: shimmer 6s ease-in-out infinite;
-    }
-    @keyframes shimmer{
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
-    }
-
-    /* ====== Kartlar & Grid ====== */
-    .grid{ display:grid; gap:16px; margin-top:18px }
-    @media (min-width: 780px){ .grid{ grid-template-columns: 1.2fr .8fr } }
-    .card{
-      background: var(--card); border:1px solid var(--border);
-      border-radius:var(--radius); padding:18px; box-shadow: var(--glow);
-      transition: background var(--trs), border-color var(--trs), box-shadow var(--trs);
-    }
-    .title{ margin:0 0 6px; font-size: clamp(26px, 4vw, 36px) }
-    .subtitle{ margin:0 0 12px; color:var(--muted) }
-
-    .quote{ font-size: clamp(18px, 3vw, 22px); line-height:1.45; position: relative; padding-left: 18px; margin: 10px 0 0}
-    .quote::before{ content:"“"; position:absolute; left:0; top:-2px; opacity:.4; font-size: 28px }
-    .quote-footer{ margin-top:8px; color:var(--muted); font-size:14px }
-
+    .linkcard h4{margin:0 0 6px} .linkcard p{margin:0; color:var(--muted); font-size:14px}
+    .linkcard:hover{background:rgba(255,255,255,.04); box-shadow:0 12px 28px rgba(0,0,0,.25)}
     .clock{
-      position: fixed; right: 16px; bottom: 16px; padding: 11px 14px; border-radius: 12px;
-      background: var(--card); border:1px solid var(--border); box-shadow: var(--glow);
-      font-variant-numeric: tabular-nums; letter-spacing:.6px; min-width: 132px; text-align:center;
-      transition: background var(--trs), border-color var(--trs);
+      position:fixed; right:16px; bottom:16px; padding:11px 14px; border-radius:12px; background:var(--card);
+      border:1px solid var(--border); box-shadow:var(--glow); font-variant-numeric: tabular-nums; min-width:132px; text-align:center;
     }
-
-    /* ====== Knowledge Cards ====== */
-    .kgrid{ display:grid; gap:12px; grid-template-columns: 1fr; margin-top:8px }
-    @media (min-width:720px){ .kgrid{ grid-template-columns: repeat(3, 1fr) } }
-    .k{ background: transparent; border:1px dashed var(--border); border-radius:14px; padding:12px }
-    .k h4{ margin:0 0 6px; font-size:15px }
-    .k p{ margin:0; font-size:14px; color:var(--fg) }
-
-    /* ====== Footer ====== */
     footer{
-      position: fixed; left:0; right:0; bottom:0; padding:10px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      background:rgba(0,0,0,.18); backdrop-filter: blur(8px); border-top:1px solid var(--border);
-      font-size:12.5px; color:var(--muted)
+      position:fixed; left:0; right:0; bottom:0; padding:10px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background:rgba(0,0,0,.18); backdrop-filter: blur(8px); border-top:1px solid var(--border); font-size:12.5px; color:var(--muted)
     }
-
-    /* Mobil küçük iyileştirmeler */
-    @media (max-width:380px){
-      .btn, .chip{ padding:9px 10px; font-size:13px }
-      .clock{ right: 12px; bottom: 12px }
-    }
+    /* Enerji seçimi modal */
+    .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.6); backdrop-filter: blur(4px); z-index:20}
+    .modal.show{display:grid}
+    .panel{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; width:min(520px,92%); box-shadow:var(--glow); text-align:center}
+    .energy{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:12px}
+    .energy button{cursor:pointer; padding:10px 14px; border-radius:999px; border:1px solid var(--border); background:transparent; color:var(--fg)}
   </style>
 </head>
 <body>
-  <!-- Üst bar & marka -->
+  <canvas id="bg3d" aria-hidden="true"></canvas>
+
   <header class="topbar">
-    <div class="brand brand-shimmer" aria-label="Veridium">V E R I D I U M</div>
+    <div class="brand">V E R I D I U M</div>
     <nav>
       <a class="chip" href="./">Ana Sayfa</a>
-      <a class="chip" href="./about.html">Hakkımda</a>
-
-      <!-- Müzik kontrolü -->
-      <button class="btn" id="musicBtn" type="button" aria-pressed="false">▶️ Müzik</button>
-      <label class="visually-hidden" for="vol">Ses</label>
-      <input id="vol" type="range" min="0" max="1" step="0.05" value="0.25"
-             style="accent-color:#6ee7ff;height:6px" aria-label="Ses düzeyi">
-
-      <!-- Tema -->
-      <button class="btn" id="toggleTheme" type="button" aria-pressed="false">🌙 Karanlık</button>
+      <a class="chip" href="./about.html">Hakkında</a>
+      <a class="chip" href="./veridium-echo.html">Echo</a>
+      <button class="chip" id="toggleTheme" type="button">🌙 Karanlık</button>
+      <button class="chip" id="toggle3d" type="button">🧊 3D: Açık</button>
     </nav>
   </header>
 
-  <!-- İçerik -->
+  <!-- Enerji seçimi -->
+  <div class="modal" id="energyModal" role="dialog" aria-modal="true" aria-label="Enerji seçimi">
+    <div class="panel">
+      <h2 style="margin:0 0 8px">Veridium’a hoş geldin</h2>
+      <p class="subtitle" style="text-wrap:balance">Enerjini seç. Seçimin temayı ve sözleri etkiler.</p>
+      <div class="energy">
+        <button data-energy="male">🩵 Erkek Enerjisi</button>
+        <button data-energy="female">🩷 Kadın Enerjisi</button>
+        <button data-energy="neutral">⚫ Nötr Enerji</button>
+      </div>
+    </div>
+  </div>
+
   <main class="wrap">
-    <h1 class="title">Ali Eren'in Dijital Köşesi</h1>
-    <p class="subtitle"><span id="hello">Selam!</span></p>
+    <h1 class="title">Sessizliğin içinde yankılanan bilinç.</h1>
+    <p class="subtitle" id="hello">Selam!</p>
 
     <section class="grid">
-      <!-- Söz kartı -->
       <article class="card">
-        <h2 id="quoteTitle" style="margin:0 0 6px">Günün Sözü</h2>
+        <h3 id="quoteTitle" style="margin:0 0 6px">Günün Sözü</h3>
         <p class="quote" id="quote">Yükleniyor…</p>
         <div class="quote-footer" id="quoteSource"></div>
       </article>
-
-      <!-- Rastgele bilgi -->
       <aside class="card">
         <h3 style="margin:0 0 6px">Rastgele Bilgi</h3>
         <p id="fact">Yükleniyor…</p>
       </aside>
     </section>
 
-    <!-- Knowledge Cards -->
     <section class="card" style="margin-top:16px">
-      <div class="row" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-        <h3 style="margin:0">Knowledge Cards</h3>
-        <span class="chip">mini arşiv</span>
+      <h3 style="margin:0 0 10px">Keşfet</h3>
+      <div class="links" id="links">
+        <a class="linkcard" href="./notlar.html"><h4>📒 Notlar</h4><p>Tıp çalışmaları, kısa özetler.</p></a>
+        <a class="linkcard" href="./kartlar.html"><h4>🧠 Bilgi Kartları</h4><p>Ezberlik mini ipuçları.</p></a>
+        <a class="linkcard" href="./blog.html"><h4>✍️ Blog</h4><p>Felsefe, disiplin, metal.</p></a>
+        <a class="linkcard" href="./projeler.html"><h4>🛠 Projeler</h4><p>Kod ve deneyler.</p></a>
+        <a class="linkcard" href="./veridium-echo.html"><h4>🔊 Veridium Echo</h4><p>Bir söz bırak.</p></a>
+        <a class="linkcard" href="./about.html"><h4>👤 Hakkında</h4><p>Vizyon & manifesto.</p></a>
       </div>
-      <div class="kgrid" id="kgrid"></div>
     </section>
   </main>
 
-  <!-- Saat -->
   <div class="clock" id="clock">--:--:--</div>
 
-  <!-- Footer -->
   <footer>
-    <div>© 2025 <strong>VERIDIUM</strong> — Created by Ali Eren</div>
-    <div> <span style="opacity:.8">/</span> <a href="./about.html">About</a> </div>
+    <div>© 2025 <strong>VERIDIUM</strong> — Created by A.E.</div>
+    <div><span style="opacity:.7">/</span> <a href="./veridium-echo.html">Echo</a></div>
   </footer>
 
-  <!-- Müzik dosyası (isteğe bağlı): repo köküne music.mp3 yükleyebilirsin -->
-  <audio id="bgm" loop preload="none">
-    <!-- Örnek: <source src="music.mp3" type="audio/mpeg"> -->
-  </audio>
+  <!-- Three.js CDN (yalın kullanım) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
   <script>
-    /* ========== Basit Depo ========== */
-    const storage = {
-      get(k, d=null){ try{ return JSON.parse(localStorage.getItem(k)) ?? d }catch{ return d } },
-      set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)) } catch{} }
+    /* ====== Depo & Tema ====== */
+    const store={get:(k,d=null)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+    function applyTheme(pref){const light=pref==='light';document.documentElement.setAttribute('data-theme',light?'light':'dark');document.getElementById('toggleTheme').textContent=light?'☀️ Aydınlık':'🌙 Karanlık'}
+    let theme=store.get('ver:theme','dark');applyTheme(theme);
+    document.getElementById('toggleTheme').onclick=()=>{theme=(theme==='dark')?'light':'dark';store.set('ver:theme',theme);applyTheme(theme)};
+
+    /* ====== Enerji seçimi ====== */
+    const ENERGY_KEY='ver:energy';
+    const energySets={
+      male:{accent:'#60a5fa', quotes:[{t:'Disiplin, motivasyon yokken de çalışmaktır.',a:'Veridium'},{t:'Sessiz adımlar, en derin izleri bırakır.',a:'Veridium'}]},
+      female:{accent:'#ff7ab8', quotes:[{t:'Zarafet, sessiz gücün adıdır.',a:'Veridium'},{t:'Kırılmaz olan, aklı ve sabrıdır.',a:'Veridium'}]},
+      neutral:{accent:'#6ee7ff', quotes:[{t:'Denge, bilginin ritmidir.',a:'Veridium'},{t:'Karanlıkta da pusula vardır.',a:'Veridium'}]},
     };
-
-    /* ========== Tema ========== */
-    function applyTheme(pref){
-      const isLight = pref === 'light';
-      document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-      const btn = document.getElementById('toggleTheme');
-      btn.textContent = isLight ? '☀️ Aydınlık' : '🌙 Karanlık';
-      btn.setAttribute('aria-pressed', (!isLight).toString());
+    function applyEnergy(e){
+      const set = energySets[e] || energySets.neutral;
+      document.documentElement.style.setProperty('--accent', set.accent);
+      const day = new Date().toISOString().slice(0,10);
+      let h=0; for(let i=0;i<day.length;i++) h=(h*31 + day.charCodeAt(i))>>>0;
+      const q=set.quotes[h%set.quotes.length];
+      const hour=new Date().getHours();const isNight=(hour>=20||hour<5);
+      document.getElementById('quoteTitle').textContent=isNight?'Gecenin Sözü':'Günün Sözü';
+      document.getElementById('quote').textContent=q.t;
+      document.getElementById('quoteSource').textContent='— '+q.a;
     }
-    let theme = storage.get('ver:theme','dark'); applyTheme(theme);
-    document.getElementById('toggleTheme').onclick=()=>{
-      theme = (theme === 'dark') ? 'light':'dark';
-      storage.set('ver:theme', theme);
-      applyTheme(theme);
-    };
+    function greeting(){const h=new Date().getHours(); if(h<5)return'Gece devriyesi bitmedi 🦉'; if(h<11)return'Günaydın, yolcu 🌞'; if(h<17)return'Üretkenlik zamanı 💪'; if(h<22)return'Akşam moduna hoş geldin ✨'; return'İyi geceler, metal ruhu unutma 🤘'}
+    document.getElementById('hello').textContent=greeting();
 
-    /* ========== Selamlama ========== */
-    function greeting(){
-      const h = new Date().getHours();
-      if (h < 5)  return 'Gece devriyesi bitmedi 🦉';
-      if (h < 11) return 'Günaydın, Veridium yolcusu 🌞';
-      if (h < 17) return 'Üretkenlik zamanı 💪';
-      if (h < 22) return 'Akşam moduna hoş geldin ✨';
-      return 'İyi geceler, metal ruhu unutma 🤘';
-    }
-    document.getElementById('hello').textContent = greeting();
+    const savedEnergy=store.get(ENERGY_KEY,null);
+    const modal=document.getElementById('energyModal');
+    if(!savedEnergy){ modal.classList.add('show'); }
+    else{ applyEnergy(savedEnergy); }
+    modal?.querySelectorAll('[data-energy]').forEach(b=>b.addEventListener('click',()=>{
+      const e=b.getAttribute('data-energy'); store.set(ENERGY_KEY,e); modal.classList.remove('show'); applyEnergy(e);
+    }));
 
-    /* ========== Sözler (Gün/Gece başlığı) ========== */
-    const QUOTES = [
-      { t: 'Sokaklar av sahası, sessiz kalan av olur.', a: 'Ali Eren' },
-      { t: 'Yarın belki gelir, ama yarım kalan acılar hep bugünle yaşar.', a: 'Ali Eren' },
-      { t: 'Disiplin, motivasyon yokken de çalışmaktır.', a: 'Anonim' },
-      { t: 'Düşün, dene, öğren, yine dene.', a: 'Anonim' }
-    ];
-    const hour = new Date().getHours();
-    const isNight = (hour >= 20 || hour < 5);
-    document.getElementById('quoteTitle').textContent = isNight ? 'Gecenin Sözü' : 'Günün Sözü';
-    const dayStr = new Date().toISOString().slice(0,10);
-    let h = 0; for (let i=0;i<dayStr.length;i++) h = (h*31 + dayStr.charCodeAt(i))>>>0;
-    const q = QUOTES[h % QUOTES.length];
-    document.getElementById('quote').textContent = q.t;
-    document.getElementById('quoteSource').textContent = '— ' + q.a;
-
-    /* ========== Rastgele Bilgi ========== */
-    const FACTS = [
-      'Bir damla kanda yaklaşık 5 milyon eritrosit bulunur.',
-      'Demir eksikliği anemisinde MCV ve MCHC genellikle düşer.',
-      'Elastik lifler: elastin + fibrillin mikrofibrilleri.',
-      'Metallica 1981’de kuruldu; ilk albüm 1983: Kill ’Em All.'
-    ];
+    /* ====== Rastgele bilgi ====== */
+    const FACTS=['Bir damla kanda ~5 milyon eritrosit bulunur.','MCV↓ + MCHC↓ → demir eksikliğini düşün.','Elastik lif: elastin + fibrillin.'];
     document.getElementById('fact').textContent = FACTS[Math.floor(Math.random()*FACTS.length)];
 
-    /* ========== Knowledge Cards (örnek) ========== */
-    const CARDS = [
-      {h:'Hemidesmozom', p:'Keratinleri bazal laminaya bağlar; integrin α6β4 → laminin-332. Klinik: büllöz pemfigoid.'},
-      {h:'Retiküler lamina', p:'Bağ dokusu kaynaklıdır; tip III kollajen ağı içerir.'},
-      {h:'MCV ipucu', p:'MCV↓ + MCHC↓ → demir eksikliğini güçlü düşün.'},
-      {h:'Perisit', p:'Kapiller/venül çevresinde; yara iyileşmesi ve damar stabilitesi.'},
-      {h:'Elastik lif', p:'Elastin çekirdek + fibrillin mikrofibril.'}
-    ];
-    const pick = (arr,n) => arr.slice().sort(()=>Math.random()-0.5).slice(0,n);
-    const kgrid = document.getElementById('kgrid');
-    for (const c of pick(CARDS, 3)){
-      const el = document.createElement('div'); el.className='k';
-      el.innerHTML = `<h4>${c.h}</h4><p>${c.p}</p>`;
-      kgrid.appendChild(el);
-    }
+    /* ====== Saat ====== */
+    function tick(){const n=new Date();const z=x=>String(x).padStart(2,'0');document.getElementById('clock').textContent=`${z(n.getHours())}:${z(n.getMinutes())}:${z(n.getSeconds())}`;}
+    tick(); setInterval(tick,1000);
 
-    /* ========== Saat ========== */
-    function tick(){
-      const now = new Date();
-      const z = x => String(x).padStart(2,'0');
-      document.getElementById('clock').textContent = `${z(now.getHours())}:${z(now.getMinutes())}:${z(now.getSeconds())}`;
-    }
-    tick(); setInterval(tick, 1000);
+    /* ====== 3D Tilt (link kartları) ====== */
+    const cards=[...document.querySelectorAll('.linkcard')];
+    cards.forEach(card=>{
+      card.addEventListener('pointermove',e=>{
+        const r=card.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width; const y=(e.clientY-r.top)/r.height;
+        const rx=(y-.5)*8, ry=(x-.5)*-12;
+        card.style.transform=`perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(10px)`;
+      });
+      card.addEventListener('pointerleave',()=>{card.style.transform='perspective(800px) rotateX(0) rotateY(0)'});
+    });
 
-    /* ========== Müzik Butonu ========== */
-    const audio = document.getElementById('bgm');
-    const musicBtn = document.getElementById('musicBtn');
-    const vol = document.getElementById('vol');
+    /* ====== 3D Arka Plan (Three.js yıldız alanı) ====== */
+    let threeEnabled = store.get('ver:3d', true);
+    const toggle3dBtn = document.getElementById('toggle3d');
+    toggle3dBtn.textContent = threeEnabled ? '🧊 3D: Açık' : '🧊 3D: Kapalı';
 
-    // Kullanıcı bir kere etkileşime geçmeden otomatik çalmayız. (Tarayıcı kuralı)
-    musicBtn.addEventListener('click', async () => {
-      // Eğer kaynak eklenmediyse, repo kökünden music.mp3 dene
-      if (!audio.src){
-        try{
-          audio.src = 'music.mp3'; // depoya yüklersen çalışır
-          audio.load();
-        }catch(e){}
+    const canvas = document.getElementById('bg3d');
+    let scene,camera,renderer,points,animId;
+    function init3D(){
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+      camera.position.z = 8;
+      renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+      renderer.setSize(innerWidth, innerHeight);
+      // yıldız parçacıkları
+      const geo = new THREE.BufferGeometry();
+      const N = 1500;
+      const pos = new Float32Array(N*3);
+      for(let i=0;i<N;i++){
+        pos[i*3+0] = (Math.random()-0.5)*60;
+        pos[i*3+1] = (Math.random()-0.5)*60;
+        pos[i*3+2] = (Math.random()-0.5)*60;
       }
-      if (audio.paused){
-        try{
-          await audio.play();
-          musicBtn.textContent = '⏸️ Müzik';
-          musicBtn.setAttribute('aria-pressed','true');
-        }catch(e){
-          alert('Müzik dosyası bulunamadı (music.mp3). İstersen depoya yükleyebilirsin.');
-        }
-      }else{
-        audio.pause();
-        musicBtn.textContent = '▶️ Müzik';
-        musicBtn.setAttribute('aria-pressed','false');
+      geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+      const mat = new THREE.PointsMaterial({ size: 0.06, color: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6ee7ff' });
+      points = new THREE.Points(geo, mat); scene.add(points);
+      onresize();
+      animate();
+    }
+    function animate(){
+      animId = requestAnimationFrame(animate);
+      points.rotation.y += 0.0009;
+      points.rotation.x += 0.0004;
+      renderer.render(scene,camera);
+    }
+    function dispose3D(){
+      if(animId) cancelAnimationFrame(animId);
+      try{ renderer.dispose(); }catch{}
+      scene=camera=renderer=points=animId=null;
+      const gl=canvas.getContext('webgl'); gl&&gl.getExtension('WEBGL_lose_context')?.loseContext();
+      canvas.width=canvas.height=0;
+    }
+    function onresize(){
+      if(!renderer||!camera) return;
+      renderer.setSize(innerWidth, innerHeight);
+      camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', onresize);
+
+    // tema/enerji değişince yıldız rengi güncelle
+    const obs = new MutationObserver(()=> {
+      if(points){
+        const color = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6ee7ff');
+        points.material.color = color;
       }
     });
-    vol.addEventListener('input', ()=>{ audio.volume = Number(vol.value || 0.25) });
-    audio.volume = Number(vol.value || 0.25);
+    obs.observe(document.documentElement, { attributes:true, attributeFilter:['style','data-theme'] });
+
+    if(threeEnabled) init3D();
+
+    toggle3dBtn.addEventListener('click',()=>{
+      threeEnabled = !threeEnabled; store.set('ver:3d', threeEnabled);
+      toggle3dBtn.textContent = threeEnabled ? '🧊 3D: Açık' : '🧊 3D: Kapalı';
+      if(threeEnabled) init3D(); else dispose3D();
+    });
   </script>
 </body>
 </html>
