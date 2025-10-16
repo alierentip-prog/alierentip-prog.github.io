@@ -1,59 +1,77 @@
 <script type="module">
-// firebase.js
+// ===== firebase.js =====
+// 1) Firebase Console > Project settings > "Your apps" > Web'den aldığın snippet'i DOLDUR:
+const firebaseConfig = {
+  apiKey:        "PASTE_API_KEY_HERE",
+  authDomain:    "your-project-id.firebaseapp.com",
+  projectId:     "your-project-id",
+  // DİKKAT: appspot.com olmalı (firebasestorage.app DEĞİL!)
+  storageBucket: "your-project-id.appspot.com",
+  messagingSenderId: "PASTE_SENDER_ID",
+  appId:            "PASTE_APP_ID",
+  measurementId:    "PASTE_MEAS_ID"   // opsiyonel
+};
+
+// 2) Modüller (aynı sürüm!)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, signOut, setPersistence, browserLocalPersistence
+  createUserWithEmailAndPassword, signOut, setPersistence,
+  browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {
-  getFirestore, collection, addDoc, getDocs, query, orderBy,
-  serverTimestamp, doc, updateDoc, arrayUnion, onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-// 🔧 Senin proje ayarların
-const firebaseConfig = {
-  apiKey: "AIzaSyCge9-P5yZu0iq44omQ1ndtlMP_o98iDHE",
-  authDomain: "veridium-3ad51.firebaseapp.com",
-  projectId: "veridium-3ad51",
-  storageBucket: "veridium-3ad51.appspot.com",
-  messagingSenderId: "910004709745",
-  appId: "1:910004709745:web:d6cd5a71e1e208cebbaed0",
-  measurementId: "G-72X897ZVLG"
-};
-
-let app, auth, db;
+// 3) Init
+let app, auth;
 try {
   app  = initializeApp(firebaseConfig);
   auth = getAuth(app);
-  db   = getFirestore(app);
   await setPersistence(auth, browserLocalPersistence);
-} catch(e){
-  console.warn("Firebase init uyarı:", e?.message||e);
+} catch (e) {
+  console.error("Firebase init hatası:", e);
+  alert("Firebase kurulamadı: " + (e.code || e.message));
 }
 
-// UI toggle (login/guest)
-onAuthStateChanged(auth, (user)=>{
-  document.querySelectorAll(".guestOnly").forEach(el=> el.style.display = user ? "none" : "");
-  document.querySelectorAll(".userOnly").forEach(el=> el.style.display  = user ? "" : "none");
+// 4) UI toggle (guest/user)
+//   Sayfanda .guestOnly ve .userOnly varsa otomatik gizle/gösterir.
+//   <span id="userEmail"> dolarsa girişlisindir.
+//   Çıkış butonu id="logoutBtn" ise çalışır.
+onAuthStateChanged(auth, (user) => {
+  document.querySelectorAll(".guestOnly").forEach(el => el.style.display = user ? "none" : "");
+  document.querySelectorAll(".userOnly").forEach(el => el.style.display  = user ? "" : "none");
   const mail = document.getElementById("userEmail");
   if (mail) mail.textContent = user ? user.email : "";
 });
 
-// Çıkış yakala
+// 5) Çıkış
 document.addEventListener("click",(e)=>{
-  const t = e.target;
-  if (t && t.id === "logoutBtn"){
-    signOut(auth).then(()=>location.href="index.html")
-      .catch(err=>alert("Çıkış hatası: "+(err.code||err.message)));
+  if (e.target && e.target.id === "logoutBtn") {
+    signOut(auth).then(()=>location.href = "index.html")
+      .catch(err => alert("Çıkış hatası: " + (err.code || err.message)));
   }
 });
 
-// Dışa aktar (app.js kullanacak)
-window.__VERIDIUM__ = { auth, db, // auth helpers
-  login:  (email,pass)=>signInWithEmailAndPassword(auth,email,pass),
-  signup: (email,pass)=>createUserWithEmailAndPassword(auth,email,pass),
-  onAuthStateChanged, signOut,
-  // firestore helpers
-  addDoc, getDocs, query, orderBy, serverTimestamp, collection, doc, updateDoc, arrayUnion, onSnapshot
+// 6) Login/Signup helper'ları global ver (login.html kullanacak)
+window.__VERI__ = {
+  auth,
+  login:  (email, pass) => signInWithEmailAndPassword(auth, email, pass),
+  signup: (email, pass) => createUserWithEmailAndPassword(auth, email, pass),
+  on:     (cb) => onAuthStateChanged(auth, cb)
 };
+
+// 7) 30 sn’lik tanı bandı (isteğe bağlı, sorun ayıklama için)
+//   Kullanmak istemezsen aşağıdaki blok yorum satırına alın.
+{
+  const bar = document.createElement('div');
+  Object.assign(bar.style,{
+    position:'fixed',left:'10px',top:'10px',zIndex:9999,padding:'8px 12px',
+    border:'1px solid rgba(255,255,255,.2)',borderRadius:'10px',
+    background:'rgba(0,0,0,.45)',backdropFilter:'blur(6px)',color:'#fff',font:'600 12px system-ui'
+  });
+  document.body.appendChild(bar);
+  if (!auth) { bar.textContent = '⚠️ Firebase yüklenmedi'; }
+  else {
+    bar.textContent = '🟡 Misafir';
+    onAuthStateChanged(auth, (u)=> bar.textContent = u ? `✅ ${u.email}` : '🟡 Misafir');
+  }
+}
 </script>
