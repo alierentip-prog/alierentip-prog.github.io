@@ -1,28 +1,51 @@
-<!-- ES Module olarak kullanacağız -->
+<!-- firebase.js -->
 <script type="module">
-// Firebase SDK'ları
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {
-  getAuth, onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import {
+    getAuth,
+    setPersistence,
+    browserLocalPersistence,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-// 🔐 BU BLOĞU Firebase ekranındaki kendi config'inle doldur
-const firebaseConfig = {
-  apiKey: "AIzaSyCymtjBWJ2cH2k6gzXr-wzj6vJVkwEcZE",
-  authDomain: "azura-portal.firebaseapp.com",
-  projectId: "azura-portal",
-  storageBucket: "azura-portal.firebasestorage.app",
-  messagingSenderId: "773402450419",
-  appId: "1:773402450419:web:3c0888f055d98c8e5bda86"
-};
+  // TODO: BURAYA KENDİ CONFIG'İNİ YAPIŞTIR
+  // Firebase console > Project settings > Web app > "Use a <script> tag" bölümündeki config
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+    messagingSenderId: "XXXX",
+    appId: "XXXX"
+  };
 
-// Başlat
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  // Init
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-// Global export (login.html içinde import edeceğiz)
-export { auth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut };
+  // Oturum kalıcı olsun (sayfa yenilemede düşmesin)
+  await setPersistence(auth, browserLocalPersistence);
+
+  // Header’daki “Giriş / Çıkış” butonunu dinamik güncelle (isteğe bağlı)
+  const headerLogin = document.querySelector('[data-login-link]');
+  if (headerLogin) {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        headerLogin.textContent = "Çıkış";
+        headerLogin.onclick = async (e) => {
+          e.preventDefault();
+          await signOut(auth);
+          location.reload();
+        };
+      } else {
+        headerLogin.textContent = "Giriş";
+        headerLogin.setAttribute("href","/login.html");
+        headerLogin.onclick = null;
+      }
+    });
+  }
+
+  // Global export (diğer sayfalarda kullanabilelim)
+  window.__firebase = { app, auth };
 </script>
