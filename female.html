@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Veridium — Kadın</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0e0b10; --fg:#fff7fb; --rose:#ff7ab6; --leaf:#7ee3a1; --b:rgba(255,255,255,.16); --glass:rgba(255,255,255,.06) }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 Inter,system-ui}
+  header{
+    position:fixed; inset:0 0 auto 0; height:72px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 16px; background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));
+    z-index:5
+  }
+  .brand{ font-family:Cinzel,serif; font-weight:900; letter-spacing:.16em; text-transform:uppercase;
+    background:linear-gradient(90deg,#ffd1dc,#ff9fcd,#fff1a8); -webkit-background-clip:text; color:transparent; }
+  .clock{font-weight:700; opacity:.9}
+  .actions a{
+    margin-left:10px; padding:10px 14px; border-radius:12px; text-decoration:none; color:var(--fg);
+    border:1px solid var(--b); background:var(--glass); backdrop-filter:blur(6px); font-weight:700
+  }
+  canvas{position:fixed; inset:0; z-index:0; display:block}
+  main{ position:relative; z-index:2; padding:100px 16px 32px; max-width:1100px; margin:0 auto }
+  .card{ border:1px solid var(--b); background:var(--glass); border-radius:16px; padding:16px; margin-bottom:14px; backdrop-filter:blur(8px) }
+</style>
+</head>
+<body>
+  <header>
+    <div class="clock" id="clock">--:-- — --.--.----</div>
+    <h1 class="brand">VERIDIUM</h1>
+    <div class="actions">
+      <a href="login.html">Giriş Yap</a>
+      <a href="login.html#signup">Üye Ol</a>
+    </div>
+  </header>
+
+  <canvas id="field"></canvas>
+
+  <main>
+    <section class="card">
+      <h2>Doğanın Işığı’na hoş geldin 🌸</h2>
+      <p>Yumuşak <strong>çiçek yaprakları</strong> süzülür, uzakta dağların üzerinde güneş parıldar; sağ altta bir <strong>tavşan</strong> durmadan kıpırdanır.</p>
+    </section>
+    <section class="card">
+      <h2>Ne var burada?</h2>
+      <ul>
+        <li>Çiçek/petal partikülleri, güneş ışıması.</li>
+        <li>Minik tavşan silueti ve uçan kuşcuklar.</li>
+        <li>Sol üstte canlı saat & tarih, sağ üstte giriş/üye ol.</li>
+      </ul>
+    </section>
+  </main>
+
+<script>
+/* Saat */
+(function(){
+  const z=n=>String(n).padStart(2,'0');
+  const el=document.getElementById('clock');
+  function tick(){ const d=new Date(); el.textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`; requestAnimationFrame(tick) }
+  tick();
+})();
+
+/* Doğa sahnesi */
+(function(){
+  const c=document.getElementById('field'), x=c.getContext('2d');
+  function fit(){ c.width=innerWidth; c.height=innerHeight }
+  fit(); addEventListener('resize',fit);
+  const W=()=>c.width, H=()=>c.height;
+
+  const petals=Array.from({length:Math.floor(W()*H()/26000)},()=>({
+    x:Math.random()*W(), y:Math.random()*H(), r:1+Math.random()*3,
+    hue:330+Math.random()*40, s:.4+.7*Math.random(), drift:(Math.random()-.5)*.7
+  }));
+  const birds=Array.from({length:6},()=>({ x:Math.random()*W(), y: H()*(.15+.25*Math.random()), v:.8+Math.random()*1.2 }));
+
+  let t=0;
+  (function loop(){
+    // arka gökyüzü ve dağlar
+    x.fillStyle='rgba(14,11,16,1)'; x.fillRect(0,0,W(),H());
+    // güneş ışıması
+    const sx=W()*.82, sy=H()*.18;
+    const g1=x.createRadialGradient(sx,sy,10, sx,sy, 220);
+    g1.addColorStop(0,'rgba(255,240,180,.85)');
+    g1.addColorStop(.6,'rgba(255,205,140,.20)');
+    g1.addColorStop(1,'rgba(255,205,140,0)');
+    x.fillStyle=g1; x.fillRect(0,0,W(),H());
+
+    // dağ katmanları
+    drawMountain(H()*.65, '#16211c'); drawMountain(H()*.72, '#121a16');
+    function drawMountain(h, color){
+      x.fillStyle=color; x.beginPath();
+      x.moveTo(0,H());
+      for(let i=0;i<=8;i++){
+        const px=(i/8)*W();
+        const py=h + Math.sin((t*0.01)+i)*6 + (i%2? -28: -40);
+        x.lineTo(px, py);
+      }
+      x.lineTo(W(),H()); x.closePath(); x.fill();
+    }
+
+    // kuşlar
+    x.strokeStyle='rgba(255,255,255,.45)'; x.lineWidth=1.2;
+    for(const b of birds){
+      b.x += b.v; if(b.x>W()+30){ b.x=-30; b.y=H()*(.12+.3*Math.random()) }
+      x.beginPath();
+      x.moveTo(b.x-6,b.y); x.quadraticCurveTo(b.x-1,b.y-3,b.x+6,b.y);
+      x.stroke();
+    }
+
+    // çiçek yaprakları
+    for(const p of petals){
+      p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.drift;
+      if(p.y>H()+10){ p.y=-10; p.x=Math.random()*W() }
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
+      x.fillStyle=`hsla(${p.hue},85%,70%,.9)`; x.fill();
+    }
+
+    // tavşan
+    const bx=W()*0.82, by=H()*0.82;
+    x.save();
+    x.translate(bx,by+Math.sin(t/30)*2);
+    x.scale(1.25,1.25);
+    x.fillStyle='rgba(255,122,182,.45)';
+    x.beginPath(); x.ellipse(0,0,22,16,0,0,Math.PI*2); x.fill();
+    x.beginPath(); x.arc(-16,-10,9,0,Math.PI*2); x.fill();
+    x.beginPath(); x.ellipse(-20,-22,4,12,0,0,Math.PI*2); x.ellipse(-10,-22,4,12,0,0,Math.PI*2); x.fill();
+    x.restore();
+
+    t++; requestAnimationFrame(loop);
+  })();
+})();
+</script>
+</body>
+</html>
