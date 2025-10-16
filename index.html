@@ -1,166 +1,91 @@
-<!doctype html>
-<html lang="tr">
+<!doctype html><html lang="tr">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>𝕍𝔼ℝ𝕀𝔻𝕀𝕌𝕄</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VERIDIUM</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --fg:#eaf4ff; --muted:#a3b2c4;
-  --b:rgba(255,255,255,.14); --glass:rgba(255,255,255,.06);
-  --bg:#06080c; --blue:#4dd0ff; --pink:#ff7ab6; --green:#9af2a2;
-}
-*{box-sizing:border-box} html,body{height:100%;margin:0;font:16px/1.6 Inter,system-ui;color:var(--fg);background:var(--bg);overflow-x:hidden;}
-/* splash */
-#splash{
-  position:fixed; inset:0; display:grid; place-items:center;
-  background:#05070b; z-index:1000;
-  animation: fadeOut 1s ease 2.2s forwards;
-}
-.word{
-  font-family:"Cinzel",serif; font-weight:900;
-  font-size:clamp(44px,9vw,120px);
-  letter-spacing:.1em;
-  background:linear-gradient(90deg,#59c4ff,#e6e9ff,#59c4ff);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  animation:flow 6s linear infinite, pop 1s ease;
-}
-@keyframes flow{0%{background-position:0%}100%{background-position:200%}}
-@keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
-@keyframes fadeOut{to{opacity:0;visibility:hidden}}
-header{
-  position:fixed; top:16px; left:0; right:0;
-  display:flex; justify-content:space-between; align-items:center;
-  padding:0 18px; z-index:20;
-  background:rgba(0,0,0,.25); backdrop-filter:blur(6px);
-}
-.clock{font-weight:800; letter-spacing:.1em; opacity:.9}
-.actions{display:flex; gap:8px}
-.btn{
-  border:1px solid var(--b); background:var(--glass);
-  color:var(--fg); padding:8px 14px; border-radius:10px;
-  font-weight:700; text-decoration:none;
-  transition:transform .15s, background .3s;
-}
-.btn:hover{transform:translateY(-2px); background:rgba(255,255,255,.1);}
-.brand{
-  font-family:"Cinzel",serif; font-weight:900;
-  letter-spacing:.18em; text-align:center;
-  margin-top:120px; font-size:clamp(34px,6vw,90px);
-  background:linear-gradient(90deg,#63d2ff,#88f,#3ef);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  animation:flow 7s linear infinite;
-}
-main{max-width:1100px; margin:0 auto; padding:20px; margin-top:60px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:40px;}
-.card{
-  border:1px solid var(--b); background:var(--glass);
-  border-radius:16px; min-height:480px; position:relative;
-  overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.4);
-}
-.head{
-  position:absolute; top:18px; left:18px; right:18px;
-  padding:10px 14px; border-radius:14px;
-  background:rgba(255,255,255,.05); border:1px solid var(--b);
-  font-weight:900;
-}
-.go{position:absolute; bottom:18px; right:18px;}
-canvas{position:absolute; inset:0; width:100%; height:100%;}
-footer{text-align:center; margin:40px 0; opacity:.75;}
-/* modal */
-#genderModal{
-  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
-  background:rgba(0,0,0,.55); z-index:900; animation:fade .3s ease;
-}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-.sheet{
-  width:min(860px,92%); border:1px solid var(--b); background:rgba(10,12,16,.9);
-  border-radius:24px; padding:28px; box-shadow:0 12px 60px rgba(0,0,0,.45); text-align:center;
-}
-.sheet h2{
-  font-family:"Cinzel",serif; font-weight:900; margin:0 0 8px;
-  background:linear-gradient(90deg,#91d5ff,#f0f2ff); -webkit-background-clip:text; color:transparent;
-}
-.sheet p{opacity:.8;margin:0 0 22px;}
-.choice{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
-.choice button{
-  border:1px solid var(--b); background:var(--glass); color:var(--fg);
-  border-radius:12px; padding:12px 16px; font-weight:800; cursor:pointer;
-  transition:transform .15s, background .2s;
-}
-.choice button:hover{transform:scale(1.05); background:rgba(255,255,255,.08);}
+  :root{--fg:#e9eef5;--mut:#aeb8c6;--glass:rgba(255,255,255,.06);--gb:rgba(255,255,255,.16);
+        --sea1:#0e2231;--sea2:#07141e;--for1:#1a0f1a;--for2:#0c0a0f;--shadow:0 10px 40px rgba(0,0,0,.35)}
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;background:radial-gradient(1200px 800px at 50% 0%,rgba(0,180,255,.05),transparent 60%),#07090d;color:var(--fg);font:16px/1.55 Inter,system-ui}
+  header{position:fixed;inset:0 0 auto 0;height:74px;display:flex;align-items:center;justify-content:center;z-index:10}
+  .brand{position:absolute;top:18px;left:50%;transform:translateX(-50%);font-family:Cinzel,serif;font-weight:900;letter-spacing:.18em;
+    background:linear-gradient(90deg,#8ec5ff,#31b1ff,#7cf,#b5e1ff);background-size:240% 100%;-webkit-background-clip:text;color:transparent;animation:flow 9s linear infinite}
+  .bar{position:absolute;inset:14px 14px auto 14px;display:flex;justify-content:space-between;align-items:center}
+  .clock{font-weight:800;letter-spacing:.12em;opacity:.9}
+  .actions{display:flex;gap:10px}
+  .btn{appearance:none;border:1px solid var(--gb);background:var(--glass);color:var(--fg);padding:10px 16px;border-radius:12px;text-decoration:none;font-weight:700;backdrop-filter:blur(6px)}
+  main{max-width:1100px;margin:120px auto 80px;padding:0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .card{position:relative;min-height:520px;border:1px solid var(--gb);background:#0f131a;border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .head{position:absolute;inset:18px auto auto 18px;border:1px solid var(--gb);background:rgba(255,255,255,.04);backdrop-filter:blur(6px);font-weight:900;letter-spacing:.08em;padding:12px 14px;border-radius:14px}
+  .go{position:absolute;inset:auto 18px 18px auto}
+  .go .btn{padding:14px 26px;font-weight:800}
+  canvas{position:absolute;inset:0;width:100%;height:100%}
+  footer{opacity:.75;text-align:center;margin:36px 0 22px}
+  @keyframes flow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 </style>
 </head>
 <body>
-<div id="splash"><div class="word">𝕍𝔼ℝ𝕀𝔻𝕀𝕌𝕄</div></div>
-
 <header>
-  <div class="clock" id="clock">--:--:-- — --.--.----</div>
-  <div class="actions">
-    <a class="btn" href="login.html">Giriş Yap</a>
-    <a class="btn" href="signup.html">Üye Ol</a>
+  <div class="bar">
+    <div class="clock" id="clock">--:--:-- — --.--.----</div>
+    <div class="actions">
+      <a class="btn" id="loginLink" href="login.html">Giriş Yap</a>
+      <a class="btn" id="logoutLink" style="display:none" href="javascript:void(0)">Çıkış</a>
+    </div>
   </div>
+  <h1 class="brand">VERIDIUM</h1>
 </header>
-
-<h1 class="brand">VERIDIUM</h1>
 
 <main>
   <div class="grid">
-    <!-- ERKEK -->
-    <section class="card" style="background:linear-gradient(180deg,#0e2231,#07141e)">
+    <section class="card" style="background:linear-gradient(180deg,var(--sea1),var(--sea2))">
       <div class="head">⚙️ ERKEK • DERİN SULAR</div>
       <canvas id="sea"></canvas>
       <div class="go"><a class="btn" href="male.html">Giriş →</a></div>
     </section>
-
-    <!-- KADIN -->
-    <section class="card" style="background:linear-gradient(180deg,#1a0f1a,#0c0a0f)">
-      <div class="head">🌸 KADIN • DOĞA &amp; IŞIK</div>
+    <section class="card" style="background:linear-gradient(180deg,var(--for1),var(--for2))">
+      <div class="head">🌸 KADIN • DOĞA &amp; ÇİÇEK</div>
       <canvas id="forest"></canvas>
       <div class="go"><a class="btn" href="female.html">Giriş →</a></div>
     </section>
   </div>
 </main>
 
-<div id="genderModal">
-  <div class="sheet">
-    <h2>Ruhunu seç 🌗</h2>
-    <p>Veridium’un enerjisi seninle şekillensin.</p>
-    <div class="choice">
-      <button id="malePick">🌊 Okyanus (Erkek)</button>
-      <button id="femalePick">🌿 Orman (Kadın)</button>
-    </div>
-  </div>
-</div>
+<footer>© 2025 Veridium</footer>
 
-<footer>© 2025 Veridium — <a href="echo.html" class="btn">Echo</a> <a href="felsefe.html" class="btn">Felsefe</a> <a href="tip.html" class="btn">Tıp</a></footer>
-
+<!-- Firebase -->
+<script type="module" src="firebase.js"></script>
 <script>
-(function tick(){
-  const d=new Date(); const z=n=>String(n).padStart(2,'0');
-  document.getElementById('clock').textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`;
-  requestAnimationFrame(tick);
-})();
-const modal=document.getElementById("genderModal");
-document.getElementById("malePick").onclick=()=>{modal.style.display="none";location.href="male.html"};
-document.getElementById("femalePick").onclick=()=>{modal.style.display="none";location.href="female.html"};
-</script>
+  // saat
+  (function tick(){const d=new Date(),z=n=>String(n).padStart(2,'0');
+    document.getElementById('clock').textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`;
+    requestAnimationFrame(tick);
+  })();
 
-<!-- Baloncuk & Çiçek efektleri -->
-<script>
-(function sea(){
-  const c=document.getElementById("sea"),x=c.getContext("2d");
-  function size(){c.width=c.clientWidth;c.height=c.clientHeight} size(); addEventListener("resize",size);
-  const b=[];for(let i=0;i<120;i++)b.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*3,s:.3+.9*Math.random()});
-  (function loop(){x.clearRect(0,0,c.width,c.height);for(const p of b){p.y-=p.s;if(p.y<-10){p.y=c.height+10;p.x=Math.random()*c.width}x.globalAlpha=.3;x.fillStyle="#6ee4ff";x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fill()}requestAnimationFrame(loop)})();
-})();
-(function forest(){
-  const c=document.getElementById("forest"),x=c.getContext("2d");
-  function size(){c.width=c.clientWidth;c.height=c.clientHeight} size(); addEventListener("resize",size);
-  const f=[];for(let i=0;i<100;i++)f.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:320+Math.random()*40});
-  (function loop(){x.clearRect(0,0,c.width,c.height);for(const p of f){p.y+=.3;p.x+=Math.sin(p.y/50)*.4;if(p.y>c.height+10){p.y=-10;p.x=Math.random()*c.width}x.fillStyle=`hsla(${p.h},80%,70%,.9)`;x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fill()}requestAnimationFrame(loop)})();
-})();
+  // auth UI
+  window.addEventListener("veridium-auth", (e)=>{
+    const user=e.detail.user, login=document.getElementById('loginLink'), logout=document.getElementById('logoutLink');
+    if(user){ login.style.display='none'; logout.style.display='inline-block'; logout.onclick=()=>window.__VERI__.logout(); }
+    else{ login.style.display='inline-block'; logout.style.display='none'; }
+  });
+
+  // deniz
+  (function(){
+    const c=document.getElementById('sea'),x=c.getContext('2d');
+    function size(){c.width=c.clientWidth;c.height=c.clientHeight} addEventListener('resize',size,{passive:true}); size();
+    const B=120,a=[];for(let i=0;i<B;i++)a.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
+    (function loop(){x.clearRect(0,0,c.width,c.height);for(const p of a){p.y-=p.s;if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
+      x.globalAlpha=.28;x.fillStyle='#6ee4ff';x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fill();}requestAnimationFrame(loop);})();
+  })();
+  // orman
+  (function(){
+    const c=document.getElementById('forest'),x=c.getContext('2d');
+    function size(){c.width=c.clientWidth;c.height=c.clientHeight} addEventListener('resize',size,{passive:true}); size();
+    const N=100,p=[];for(let i=0;i<N;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40});
+    (function loop(){x.clearRect(0,0,c.width,c.height);for(const s of p){s.y+=.4;s.x+=Math.sin(s.y/45)*.4;if(s.y>c.height+10){s.y=-10;s.x=Math.random()*c.width}
+      x.fillStyle=`hsla(${s.h},80%,72%,.9)`;x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fill();}requestAnimationFrame(loop);})();
+  })();
 </script>
-</body>
-</html>
+</body></html>
