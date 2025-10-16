@@ -251,6 +251,11 @@ function goFemale(){
   document.getElementById("genderModal").style.opacity="0";
   setTimeout(()=>{ location.href="female.html"; },500);
 }
+  window.addEventListener("load", ()=>{
+  const choice = confirm("🌊 Erkek misin? Kadınsan İptal'e bas 🌸");
+  if(choice) location.href="male.html";
+  else location.href="female.html";
+});
 </script>
 
 <style>
