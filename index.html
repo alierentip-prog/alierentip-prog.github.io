@@ -7,34 +7,41 @@
 <meta name="description" content="Veridium — kişisel portal" />
 <style>
   :root{
-    --bg:#0b0d10; --fg:#e8eef3; --muted:#a7b1ba;
-    --card:rgba(255,255,255,.04); --border:rgba(255,255,255,.10);
-    --brand-m:#6ccfff; /* erkek buz mavisi */
-    --brand-f:#ffb8da; /* kadın bahar pembe */
+    --bg:#0b0d10; --fg:#111; --fg-inv:#fff;
+    --ink:#1c1c1c;          /* çizgi film kontur rengi */
+    --muted:#5b6470;
+    --card:#ffffffcc;       /* kartlar için açık cam */
+    --border:#00000022;
   }
   html,body{height:100%}
   body{
-    margin:0; background:var(--bg); color:var(--fg);
-    font:16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+    margin:0; background:#8ad7ff; color:#111;
+    font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
     overflow-x:hidden;
   }
   a{color:inherit; text-decoration:none}
+
   /* ===== Intro (tam ekran) ===== */
   #intro{
     position:fixed; inset:0; z-index:30; display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:14px; background:#000; color:#fff;
   }
-  .intro-title{font-weight:800; font-size:32px; letter-spacing:.06em}
+  .intro-title{font-weight:900; font-size:36px; letter-spacing:.06em}
   .intro-sub{opacity:.85}
   .intro-btns{display:flex; gap:12px; flex-wrap:wrap; justify-content:center}
   .btn{
     padding:12px 16px; border-radius:12px; cursor:pointer;
-    background:#111; color:#fff; border:1px solid #333; font-weight:700;
+    background:#111; color:#fff; border:3px solid #fff; font-weight:800; box-shadow:0 4px 0 #000;
   }
-  .btn:hover{border-color:#777}
-  /* büyüyen simge efekti */
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(1px)}
+
+  /* büyüyen emoji efekti */
   .boom{position:fixed; inset:0; z-index:35; display:grid; place-items:center; pointer-events:none}
-  .boom > div{font-size:56px; filter:drop-shadow(0 10px 24px rgba(0,0,0,.55)); animation:pop .9s cubic-bezier(.2,.8,.2,1) forwards}
+  .boom > div{
+    font-size:64px; text-shadow:0 6px 0 #0007;
+    animation:pop .9s cubic-bezier(.2,.8,.2,1) forwards;
+  }
   @keyframes pop{from{transform:scale(.25); opacity:.25} to{transform:scale(12); opacity:0}}
   .hide{opacity:0; pointer-events:none; transition:opacity .6s ease}
 
@@ -44,31 +51,35 @@
   /* ===== Site ===== */
   #site{position:relative; z-index:2; opacity:0; transition:opacity .6s ease}
   #site.show{opacity:1}
-  .wrap{max-width:1024px; margin:0 auto; padding:22px 16px 80px}
+  .wrap{max-width:1024px; margin:0 auto; padding:22px 16px 100px}
   .card{
-    background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; backdrop-filter:saturate(120%) blur(2px);
+    background:var(--card); border:3px solid var(--ink); border-radius:18px; padding:16px;
+    box-shadow:0 6px 0 #0003;
   }
-  .grid{display:grid; gap:14px}
+  .grid{display:grid; gap:16px}
   @media(min-width:780px){ .grid{grid-template-columns:repeat(2,1fr)} }
 
   .links{display:grid; gap:12px}
   .link{
-    display:block; padding:14px 16px; border-radius:12px; border:1px solid var(--border);
-    background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.06));
-    transition:transform .15s ease, border-color .2s ease;
+    display:block; padding:14px 16px; border-radius:14px;
+    border:3px solid var(--ink); background:#fff; box-shadow:0 4px 0 #0003;
+    transition:transform .15s ease;
   }
-  .link:hover{transform:translateY(-2px); border-color:rgba(255,255,255,.2)}
+  .link:hover{transform:translateY(-2px)}
 
   /* sağ altta enerji butonu */
   #changeEnergy{
     position:fixed; right:16px; bottom:16px; z-index:3;
-    background:#111; color:#fff; border:1px solid var(--border); border-radius:12px; padding:10px 12px; cursor:pointer; font-weight:800;
+    background:#fff; color:#111; border:3px solid var(--ink); border-radius:14px; padding:10px 12px; cursor:pointer; font-weight:900;
+    box-shadow:0 4px 0 #0003;
   }
 
-  /* küçük metin */
   .muted{color:var(--muted)}
   .bar{display:flex; justify-content:space-between; align-items:center; margin-top:12px}
-  .badge{padding:6px 10px; border-radius:10px; background:var(--card); border:1px solid var(--border)}
+  .badge{padding:6px 10px; border-radius:12px; background:#fff; border:3px solid var(--ink); box-shadow:0 3px 0 #0002}
+
+  /* Başlıklar çizgi film */
+  h1,h2{margin:0 0 8px; text-shadow:0 3px 0 #0001}
 </style>
 </head>
 <body>
@@ -89,23 +100,23 @@
 <!-- ===== Site içeriği ===== -->
 <main id="site">
   <div class="wrap">
-    <header class="card">
+    <header class="card" style="background:#fff">
       <h1 id="hello">Hoş geldin 👋</h1>
-      <p class="muted">Seçimine göre arka plan akıyor. İstediğin zaman aşağıdaki düğmeyle yeniden seçebilirsin.</p>
+      <p class="muted">Seçimine göre arka plan çizgi-film stili akıyor. İstediğinde alttaki düğmeyle yeniden seçebilirsin.</p>
     </header>
 
-    <section class="grid" style="margin-top:14px">
-      <article class="card">
+    <section class="grid" style="margin-top:16px">
+      <article class="card" style="background:#fff">
         <h2>✨ Günün Sözü</h2>
         <p id="quote">“Sessiz adımlar en derin izleri bırakır.” — Veridium</p>
       </article>
-      <aside class="card">
+      <aside class="card" style="background:#fff">
         <h2>🧪 Rastgele Bilgi</h2>
         <p id="fact">MCV↓ + MCHC↓ → demir eksikliğini düşün.</p>
       </aside>
     </section>
 
-    <section class="card" style="margin-top:14px">
+    <section class="card" style="margin-top:16px; background:#fff">
       <h2 style="margin:0 0 10px">🔗 Keşfet</h2>
       <div class="links">
         <a class="link" href="./notlar.html">📘 Notlar</a>
@@ -119,7 +130,7 @@
 
     <div class="bar">
       <div class="badge muted">© 2025 <strong>VERIDIUM</strong></div>
-      <span class="muted">Buz mavisi & bahar temaları</span>
+      <span class="muted">Cartoon su-altı & bahar temaları</span>
     </div>
   </div>
 </main>
@@ -137,7 +148,7 @@ const maleBtn = qs('#maleBtn');
 const femaleBtn = qs('#femaleBtn');
 
 const bg = qs('#bg');
-const ctx = bg.getContext('2d', {alpha:true});
+const ctx = bg.getContext('2d');
 function fit(){
   const dpr = Math.min(2, devicePixelRatio||1);
   bg.width  = Math.floor(innerWidth * dpr);
@@ -162,84 +173,173 @@ const FACTS  = [
 qs('#quote').textContent = '“' + QUOTES[Math.floor(Math.random()*QUOTES.length)] + '” — Veridium';
 qs('#fact').textContent  = FACTS[Math.floor(Math.random()*FACTS.length)];
 
-/* ===================== arka plan animasyonları ===================== */
-let raf=null, parts=[], t=0;
-function stop(){ cancelAnimationFrame(raf); parts.length=0; t=0; }
+/* ===================== cartoon animasyonlar ===================== */
+let raf=null, t=0;
 
-function underwater(){ // ⚙️ erkek: su altı (buz mavisi)
-  stop(); fit();
-  document.body.style.background = 'linear-gradient(180deg,#06151f,#0b2a40)';
-  for(let i=0;i<120;i++){
-    parts.push({
-      x: Math.random()*innerWidth,
-      y: Math.random()*innerHeight,
-      len: 40+Math.random()*120,
-      w: 1.5+Math.random()*2.5,
-      a: Math.random()*Math.PI*2,
-      s: .3+Math.random()*1.2
+/* ⚙️ ERKEK — SU ALTI (cartoon) */
+function underwater(){
+  cancelAnimationFrame(raf); fit();
+  document.body.style.background = 'linear-gradient(180deg,#8ad7ff,#3aaed8)';
+
+  const BUB_COLS = ['#ffffff','#e6f7ff','#c8efff'];
+  const WAVE_COLS = ['#a6e3ff','#8fd9ff','#78cfff','#5fc2ee'];
+
+  // dalga şeritleri
+  const waves = [];
+  for (let i=0;i<4;i++){
+    waves.push({
+      y: innerHeight*0.45 + i*26,
+      amp: 10 + i*3,
+      speed: 0.6 + i*0.15,
+      tick: Math.random()*1000,
+      color: WAVE_COLS[i % WAVE_COLS.length]
     });
   }
+  // kabarcıklar
+  const bubbles = [];
+  for (let i=0;i<70;i++){
+    bubbles.push({
+      x: Math.random()*innerWidth,
+      y: innerHeight + Math.random()*innerHeight,
+      r: 3 + Math.random()*6,
+      spd: 0.5 + Math.random()*0.9,
+      wiggle: Math.random()*200
+    });
+  }
+
   (function loop(){
     raf = requestAnimationFrame(loop);
-    ctx.clearRect(0,0,innerWidth,innerHeight);
-    ctx.globalCompositeOperation='lighter';
-    for(const p of parts){
-      p.x += Math.cos(p.a)*p.s;
-      p.y += Math.sin(p.a)*p.s*.6;
-      if(p.x<-60) p.x=innerWidth+60;
-      if(p.x>innerWidth+60) p.x=-60;
-      if(p.y<-60) p.y=innerHeight+60;
-      if(p.y>innerHeight+60) p.y=-60;
-      const gx = p.x + Math.cos(p.a)*p.len;
-      const gy = p.y + Math.sin(p.a)*p.len;
-      const hue = 195 + Math.sin((t+p.x)*.002)*8; // buz mavisi varyasyon
-      ctx.strokeStyle = `hsla(${hue}, 85%, 65%, .10)`;
-      ctx.lineWidth = p.w;
-      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(gx,gy); ctx.stroke();
-    }
-    // kabarcıklar
-    for(let i=0;i<18;i++){
-      const x = (t*0.9 + i*80) % (innerWidth+80) - 40;
-      const y = innerHeight - (t*0.6 + i*120) % (innerHeight+120);
-      ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(160,220,255,.35)'; ctx.fill();
-    }
+    // hafif beyaz tazeleme (cartoon hissi)
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fillRect(0,0,innerWidth,innerHeight);
+
+    // dalgalar (kalın çizgi + siyah kontur)
+    waves.forEach(w=>{
+      w.tick += 0.02*w.speed;
+      ctx.lineWidth = 8;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = w.color;
+      ctx.beginPath();
+      const k = 0.008;
+      for(let x=0;x<=innerWidth;x+=14){
+        const y = w.y + Math.sin(x*k + w.tick)*w.amp;
+        if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(0,0,0,0.45)';
+      ctx.stroke();
+    });
+
+    // kabarcıklar (dolgu + kontur + parlama)
+    bubbles.forEach(b=>{
+      b.y -= b.spd;
+      b.x += Math.sin((b.y + b.wiggle)*0.04)*0.9;
+      if (b.y < -10){ b.y = innerHeight + 20; b.x = Math.random()*innerWidth; }
+      // dolgu
+      ctx.beginPath();
+      ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+      ctx.fillStyle = BUB_COLS[Math.floor(Math.random()*BUB_COLS.length)];
+      ctx.fill();
+      // kontur
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+      ctx.stroke();
+      // parlama
+      ctx.beginPath();
+      ctx.arc(b.x-b.r*0.35, b.y-b.r*0.35, b.r*0.35, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.fill();
+    });
+
     t++;
   })();
 }
 
-function nature(){ // 🌸 kadın: bahar/çiçek/kelebek
-  stop(); fit();
-  document.body.style.background = 'linear-gradient(180deg,#f3ffe9,#ffeaf6)';
-  for(let i=0;i<90;i++){
+/* 🌸 KADIN — BAHAR (cartoon) */
+function nature(){
+  cancelAnimationFrame(raf); fit();
+  document.body.style.background = 'linear-gradient(180deg,#fff5d6,#ffd7ec)';
+
+  const PETAL_COLS = ['#ffb7d5','#ffd9a0','#b9efb0','#ffffff'];
+  const LEAF_COLS  = ['#9be7a8','#7ddc8c','#b7f1c0'];
+
+  // güneş
+  const sun = { x: innerWidth*0.8, y: innerHeight*0.22, r: Math.min(innerWidth,innerHeight)*0.12, t: Math.random()*1000 };
+
+  // kelebek/yaprak parçacıkları
+  const parts = [];
+  for (let i=0;i<80;i++){
     parts.push({
       x: Math.random()*innerWidth,
       y: Math.random()*innerHeight,
-      r: 3+Math.random()*9,
-      s: .2+.8*Math.random(),
-      drift: .5 + Math.random(),
-      hue: Math.random()<.5 ? 330 : 120 // pembe / yeşil
+      r: 4 + Math.random()*10,
+      spd: 0.4 + Math.random()*0.8,
+      drift: 0.6 + Math.random()*0.8,
+      hue: PETAL_COLS[Math.floor(Math.random()*PETAL_COLS.length)],
+      rot: Math.random()*Math.PI*2,
+      rotSpd: (Math.random()-.5)*0.02
     });
   }
+
+  // ağaç tepeleri
+  const trees = [];
+  for(let i=0;i<6;i++){
+    trees.push({
+      x: (i/5)*innerWidth + (Math.random()*40-20),
+      y: innerHeight-40 + Math.random()*10,
+      w: 140 + Math.random()*120,
+      h: 60 + Math.random()*40,
+      c: LEAF_COLS[i % LEAF_COLS.length]
+    });
+  }
+
   (function loop(){
     raf = requestAnimationFrame(loop);
-    ctx.fillStyle='rgba(255,255,255,.35)'; ctx.fillRect(0,0,innerWidth,innerHeight);
-    // güneş parıltısı
-    const cx = innerWidth*0.8, cy = innerHeight*0.2, g = ctx.createRadialGradient(cx,cy,10,cx,cy,220);
-    g.addColorStop(0,'rgba(255,255,200,.45)'); g.addColorStop(1,'rgba(255,255,200,0)');
-    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,220,0,Math.PI*2); ctx.fill();
+    // hafif beyaz tazeleme
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.fillRect(0,0,innerWidth,innerHeight);
 
-    for(const p of parts){
-      p.y += p.s;
-      p.x += Math.sin((p.y+p.r)*.02)*p.drift;
-      if(p.y>innerHeight+20){ p.y=-20; p.x=Math.random()*innerWidth; }
-      // yaprak/kelebek kanadı gibi ikili elips
-      ctx.fillStyle=`hsla(${p.hue},85%,70%,.9)`;
+    // güneş (dolgu + kontur + hale)
+    sun.t += 0.01;
+    const pulse = 1 + Math.sin(sun.t)*0.03;
+    ctx.beginPath(); ctx.arc(sun.x, sun.y, sun.r*pulse, 0, Math.PI*2);
+    ctx.fillStyle = '#ffe277'; ctx.fill();
+    ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.stroke();
+
+    const halo = ctx.createRadialGradient(sun.x, sun.y, sun.r*0.8, sun.x, sun.y, sun.r*1.8);
+    halo.addColorStop(0, 'rgba(255,226,119,0.45)');
+    halo.addColorStop(1, 'rgba(255,226,119,0)');
+    ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(sun.x, sun.y, sun.r*1.8, 0, Math.PI*2); ctx.fill();
+
+    // ağaç tepeleri
+    trees.forEach(tr=>{
       ctx.beginPath();
-      ctx.ellipse(p.x-p.r*.35, p.y, p.r*.75, p.r*.45, 0, 0, Math.PI*2);
-      ctx.ellipse(p.x+p.r*.35, p.y, p.r*.75, p.r*.45, 0, 0, Math.PI*2);
-      ctx.fill();
-    }
+      ctx.ellipse(tr.x, tr.y, tr.w/2, tr.h/2, 0, 0, Math.PI*2);
+      ctx.fillStyle = tr.c; ctx.fill();
+      ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.stroke();
+    });
+
+    // yaprak/kelebek
+    parts.forEach(p=>{
+      p.y += p.spd;
+      p.x += Math.sin((p.y+p.r)*.02)*p.drift;
+      p.rot += p.rotSpd;
+      if(p.y > innerHeight+20){ p.y=-20; p.x=Math.random()*innerWidth; }
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot);
+      ctx.beginPath();
+      ctx.ellipse(-p.r*0.5, 0, p.r*0.9, p.r*0.55, 0, 0, Math.PI*2);
+      ctx.fillStyle = p.hue; ctx.fill();
+      ctx.lineWidth = 3.5; ctx.strokeStyle='rgba(0,0,0,0.45)'; ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(+p.r*0.5, 0, p.r*0.9, p.r*0.55, 0, 0, Math.PI*2);
+      ctx.fillStyle = p.hue; ctx.fill();
+      ctx.lineWidth = 3.5; ctx.strokeStyle='rgba(0,0,0,0.45)'; ctx.stroke();
+      ctx.restore();
+    });
+
     t++;
   })();
 }
@@ -265,14 +365,22 @@ maleBtn.addEventListener('click', ()=>choose('male'));
 femaleBtn.addEventListener('click', ()=>choose('female'));
 changeBtn.addEventListener('click', ()=>{
   // intro’yu yeniden göster
-  intro.classList.remove('hide');
-  document.body.appendChild(intro);
-  // siteyi şeffaf yapıp tekrar seçim al
+  if(!document.body.contains(intro)){
+    document.body.appendChild(Object.assign(document.createElement('div'),{id:'intro',innerHTML:`
+      <div class="intro-title">VERIDIUM</div>
+      <div class="intro-sub">Enerjini seç</div>
+      <div class="intro-btns">
+        <button id="maleBtn" class="btn">⚙️ Erkek</button>
+        <button id="femaleBtn" class="btn">🌸 Kadın</button>
+      </div>`}));
+    // butonlara yeniden dinleyici bağla
+    document.getElementById('maleBtn').addEventListener('click', ()=>choose('male'));
+    document.getElementById('femaleBtn').addEventListener('click', ()=>choose('female'));
+  } else {
+    intro.classList.remove('hide');
+  }
   site.classList.remove('show');
 });
-
-/* sayfa açılışında intro açık, arka plan nötr olsun */
-site.classList.remove('show');
 </script>
 </body>
-  </html>
+</html>
