@@ -1,71 +1,228 @@
 <!doctype html>
-<html lang="tr" data-theme="system">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ali Eren'in Dijital Köşesi</title>
+  <title>VERIDIUM — Ali Eren'in Dijital Köşesi</title>
+  <meta name="description" content="Veridium: Günün/Gecenin Sözü, rastgele bilgi, bilgi kartları ve canlı saat.">
   <style>
+    /* ====== Tema Değişkenleri ====== */
     :root{
-      --bg: #0b0d10; --fg: #e5e7eb; --muted: #9ca3af; --card: #111418;
-      --accent: #6ee7ff; --glow: 0 8px 24px rgba(110,231,255,.15);
+      --bg: #0b0d10; --fg:#e5e7eb; --muted:#9ca3af; --card:#111418; --accent:#6ee7ff;
+      --border: rgba(255,255,255,.06); --glow: 0 8px 24px rgba(110,231,255,.15);
     }
     [data-theme="light"]:root{
-      --bg:#f8fafc; --fg:#0f172a; --muted:#475569;
-      --card:#ffffff; --accent:#0ea5e9; --glow:0 8px 24px rgba(14,165,233,.15);
+      --bg:#f7fafc; --fg:#0f172a; --muted:#475569; --card:#ffffff; --accent:#0ea5e9;
+      --border: rgba(0,0,0,.06); --glow: 0 8px 24px rgba(14,165,233,.15);
     }
+
+    /* ====== Global ====== */
     html,body{height:100%}
     body{
-      margin:0; font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background:var(--bg); color:var(--fg); padding:24px;
+      margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--fg); background:
+        radial-gradient(1200px 600px at 120% -10%, rgba(110,231,255,.08), transparent 60%),
+        radial-gradient(1000px 500px at -20% 120%, rgba(59,130,246,.08), transparent 60%),
+        /* hafif grid */
+        linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.04) 1px, transparent 1px),
+        var(--bg);
+      background-size: auto, auto, 26px 26px, 26px 26px, auto;
+      background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
     }
-    .topbar{position:fixed;inset:16px auto auto 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;width:calc(100% - 32px);}
-    .hello{font-weight:600;}
-    .theme-toggle{margin-left:auto;cursor:pointer;background:var(--card);padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.06);box-shadow:var(--glow);}
-    .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px;box-shadow:var(--glow);}
-    .grid{display:grid;gap:16px;margin-top:70px;}
-    @media(min-width:720px){.grid{grid-template-columns:1.3fr .7fr;}}
-    .quote{font-size:18px;line-height:1.4;position:relative;padding-left:18px}
-    .quote::before{content:"“";position:absolute;left:0;top:-2px;opacity:.4;font-size:28px}
-    .quote-footer{margin-top:8px;color:var(--muted);font-size:14px}
-    .clock{position:fixed;right:16px;bottom:16px;padding:10px 14px;border-radius:12px;background:var(--card);box-shadow:var(--glow);font-variant-numeric:tabular-nums;}
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{ width:min(980px, 100%); margin: 0 auto; padding: 20px 16px 120px }
+
+    /* ====== Üst Bar ====== */
+    .topbar{
+      position: sticky; top:0; z-index:10;
+      display:flex; align-items:center; gap:12px; justify-content:space-between;
+      padding: 12px 16px; background:rgba(0,0,0,.15);
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid var(--border);
+    }
+    .brand{
+      font-weight:800; letter-spacing:.38em; text-transform:uppercase;
+      font-size: clamp(14px, 2.8vw, 16px);
+    }
+    nav{display:flex; align-items:center; gap:14px}
+    .btn, .chip{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:12px;
+      background:var(--card); border:1px solid var(--border); box-shadow: var(--glow);
+      color:var(--fg); font-size:14px;
+    }
+    .chip{ background: transparent; box-shadow: none }
+
+    /* ====== Kartlar & Grid ====== */
+    .grid{ display:grid; gap:16px; margin-top:18px }
+    @media (min-width: 780px){ .grid{ grid-template-columns: 1.2fr .8fr } }
+    .card{
+      background: var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:18px; box-shadow: var(--glow);
+    }
+    .title{ margin:0 0 6px; font-size: clamp(26px, 4vw, 36px) }
+    .subtitle{ margin:0 0 12px; color:var(--muted) }
+
+    .quote{ font-size: clamp(18px, 3vw, 22px); line-height:1.45; position: relative; padding-left: 18px; margin: 10px 0 0}
+    .quote::before{ content:"“"; position:absolute; left:0; top:-2px; opacity:.4; font-size: 28px }
+    .quote-footer{ margin-top:8px; color:var(--muted); font-size:14px }
+
+    .clock{
+      position: fixed; right: 16px; bottom: 16px; padding: 10px 14px; border-radius: 12px;
+      background: var(--card); border:1px solid var(--border); box-shadow: var(--glow);
+      font-variant-numeric: tabular-nums; letter-spacing:.6px; min-width: 132px; text-align:center;
+    }
+
+    /* ====== Knowledge Cards ====== */
+    .kgrid{ display:grid; gap:12px; grid-template-columns: 1fr; margin-top:8px }
+    @media (min-width:720px){ .kgrid{ grid-template-columns: repeat(3, 1fr) } }
+    .k{ background: transparent; border:1px dashed var(--border); border-radius:14px; padding:12px }
+    .k h4{ margin:0 0 6px; font-size:15px }
+    .k p{ margin:0; font-size:14px; color:var(--fg) }
+
+    /* ====== Footer ====== */
+    footer{
+      position: fixed; left:0; right:0; bottom:0; padding:10px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background:rgba(0,0,0,.18); backdrop-filter: blur(8px); border-top:1px solid var(--border);
+      font-size:12.5px; color:var(--muted)
+    }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="hello" id="hello">Merhaba! 👋</div>
-    <div class="theme-toggle" id="toggleTheme">🌙 Karanlık</div>
-  </div>
+  <!-- Üst bar & marka -->
+  <header class="topbar">
+    <div class="brand">V E R I D I U M</div>
+    <nav>
+      <a class="chip" href="./">Ana Sayfa</a>
+      <a class="chip" href="./about.html">Hakkımda</a>
+      <button class="btn" id="toggleTheme" type="button" aria-pressed="false">🌙 Karanlık</button>
+    </nav>
+  </header>
 
-  <main class="grid">
-    <article class="card">
-      <h2>Günün Sözü</h2>
-      <p class="quote" id="quote">Yükleniyor…</p>
-      <div class="quote-footer" id="quoteSource"></div>
-    </article>
-    <aside class="card">
-      <h3>Rastgele Bilgi</h3>
-      <p id="fact">Yükleniyor…</p>
-    </aside>
+  <!-- İçerik -->
+  <main class="wrap">
+    <h1 class="title">Ali Eren'in Dijital Köşesi</h1>
+    <p class="subtitle"><span id="hello">Selam!</span></p>
+
+    <section class="grid">
+      <!-- Söz kartı -->
+      <article class="card">
+        <h2 id="quoteTitle" style="margin:0 0 6px">Günün Sözü</h2>
+        <p class="quote" id="quote">Yükleniyor…</p>
+        <div class="quote-footer" id="quoteSource"></div>
+      </article>
+
+      <!-- Rastgele bilgi -->
+      <aside class="card">
+        <h3 style="margin:0 0 6px">Rastgele Bilgi</h3>
+        <p id="fact">Yükleniyor…</p>
+      </aside>
+    </section>
+
+    <!-- Knowledge Cards -->
+    <section class="card" style="margin-top:16px">
+      <div class="row" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <h3 style="margin:0">Knowledge Cards</h3>
+        <span class="chip">mini arşiv</span>
+      </div>
+      <div class="kgrid" id="kgrid"></div>
+    </section>
   </main>
 
+  <!-- Saat -->
   <div class="clock" id="clock">--:--:--</div>
 
+  <!-- Footer -->
+  <footer>
+    <div>© 2025 <strong>VERIDIUM</strong> — Created by Ali Eren</div>
+    <div> <span style="opacity:.8">/</span> <a href="./about.html">About</a> </div>
+  </footer>
+
   <script>
-    const storage={get(k,d=null){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+    /* ========== Basit Depo ========== */
+    const storage = {
+      get(k, d=null){ try{ return JSON.parse(localStorage.getItem(k)) ?? d }catch{ return d } },
+      set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)) } catch{} }
+    };
+
+    /* ========== Tema ========== */
     function applyTheme(pref){
-      if(pref==='light'){document.documentElement.setAttribute('data-theme','light');document.getElementById('toggleTheme').textContent='☀️ Aydınlık'}
-      else{document.documentElement.setAttribute('data-theme','dark');document.getElementById('toggleTheme').textContent='🌙 Karanlık'}
+      const isLight = pref === 'light';
+      document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+      const btn = document.getElementById('toggleTheme');
+      btn.textContent = isLight ? '☀️ Aydınlık' : '🌙 Karanlık';
+      btn.setAttribute('aria-pressed', (!isLight).toString());
     }
-    let theme=storage.get('ae:theme','dark');applyTheme(theme);
-    document.getElementById('toggleTheme').onclick=()=>{theme=theme==='dark'?'light':'dark';storage.set('ae:theme',theme);applyTheme(theme);};
-    const h=new Date().getHours();let greet='Selam!';if(h<5)greet='Gece devriyesi bitmedi 🦉';else if(h<11)greet='Günaydın Ali Eren 🌞';else if(h<17)greet='Üretken bir gün olsun 💪';else if(h<22)greet='Akşam moduna hoş geldin ✨';else greet='İyi geceler, metal ruhu unutma 🤘';document.getElementById('hello').textContent=greet;
-    const QUOTES=[{t:'Sokaklar av sahası, sessiz kalan av olur.',a:'Ali Eren'},{t:'Yarın belki gelir, ama yarım kalan acılar hep bugünle yaşar.',a:'Ali Eren'},{t:'Başlamak bitirmenin yarısıdır.',a:'Anonim'},{t:'Disiplin, motivasyon yokken de çalışmaktır.',a:'Anonim'}];
-    const FACTS=['Bir damla kanda yaklaşık 5 milyon eritrosit bulunur.','Metallica 1981’de kuruldu.','Demir eksikliği anemisinde MCV ve MCHC düşer.','Elastik lifler elastin + fibrillin içerir.'];
-    const dayKey=new Date().toISOString().slice(0,10);let hash=0;for(let i=0;i<dayKey.length;i++)hash=(hash*31+dayKey.charCodeAt(i))>>>0;const q=QUOTES[hash%QUOTES.length];
-    document.getElementById('quote').textContent=q.t;document.getElementById('quoteSource').textContent='— '+q.a;
-    document.getElementById('fact').textContent=FACTS[Math.floor(Math.random()*FACTS.length)];
-    function tick(){const n=new Date();const z=x=>String(x).padStart(2,'0');document.getElementById('clock').textContent=`${z(n.getHours())}:${z(n.getMinutes())}:${z(n.getSeconds())}`;}
-    tick();setInterval(tick,1000);
+    let theme = storage.get('ver:theme','dark'); applyTheme(theme);
+    document.getElementById('toggleTheme').onclick = () => {
+      theme = (theme === 'dark') ? 'light':'dark';
+      storage.set('ver:theme', theme);
+      applyTheme(theme);
+    };
+
+    /* ========== Selamlama ========== */
+    function greeting(){
+      const h = new Date().getHours();
+      if (h < 5)  return 'Gece devriyesi bitmedi 🦉';
+      if (h < 11) return 'Günaydın, Veridium yolcusu 🌞';
+      if (h < 17) return 'Üretkenlik zamanı 💪';
+      if (h < 22) return 'Akşam moduna hoş geldin ✨';
+      return 'İyi geceler, metal ruhu unutma 🤘';
+    }
+    document.getElementById('hello').textContent = greeting();
+
+    /* ========== Sözler (Gün/Gece başlığı) ========== */
+    const QUOTES = [
+      { t: 'Sokaklar av sahası, sessiz kalan av olur.', a: 'Ali Eren' },
+      { t: 'Yarın belki gelir, ama yarım kalan acılar hep bugünle yaşar.', a: 'Ali Eren' },
+      { t: 'Disiplin, motivasyon yokken de çalışmaktır.', a: 'Anonim' },
+      { t: 'Düşün, dene, öğren, yine dene.', a: 'Anonim' }
+    ];
+    const hour = new Date().getHours();
+    const isNight = (hour >= 20 || hour < 5);
+    document.getElementById('quoteTitle').textContent = isNight ? 'Gecenin Sözü' : 'Günün Sözü';
+
+    // deterministik günlük seçim
+    const dayStr = new Date().toISOString().slice(0,10);
+    let h = 0; for (let i=0;i<dayStr.length;i++) h = (h*31 + dayStr.charCodeAt(i))>>>0;
+    const q = QUOTES[h % QUOTES.length];
+    document.getElementById('quote').textContent = q.t;
+    document.getElementById('quoteSource').textContent = '— ' + q.a;
+
+    /* ========== Rastgele Bilgi ========== */
+    const FACTS = [
+      'Bir damla kanda yaklaşık 5 milyon eritrosit bulunur.',
+      'Demir eksikliği anemisinde MCV ve MCHC genellikle düşer.',
+      'Elastik lifler: elastin + fibrillin mikrofibrilleri.',
+      'Metallica 1981’de kuruldu; ilk albüm 1983: Kill ’Em All.'
+    ];
+    document.getElementById('fact').textContent = FACTS[Math.floor(Math.random()*FACTS.length)];
+
+    /* ========== Knowledge Cards (örnek) ========== */
+    const CARDS = [
+      {h:'Hemidesmozom', p:'Keratinleri bazal laminaya bağlar; integrin α6β4 → laminin-332. Klinik: büllöz pemfigoid.'},
+      {h:'Retiküler lamina', p:'Bağ dokusu kaynaklıdır; tip III kollajen ağı içerir.'},
+      {h:'MCV ipucu', p:'MCV↓ + MCHC↓ → demir eksikliğini güçlü düşün.'},
+      {h:'Perisit', p:'Kapiller/venül çevresinde; yara iyileşmesi ve damar stabilitesi.'},
+      {h:'Elastik lif', p:'Elastin çekirdek + fibrillin mikrofibril.'}
+    ];
+    const pick = (arr,n) => arr.slice().sort(()=>Math.random()-0.5).slice(0,n);
+    const kgrid = document.getElementById('kgrid');
+    for (const c of pick(CARDS, 3)){
+      const el = document.createElement('div'); el.className='k';
+      el.innerHTML = `<h4>${c.h}</h4><p>${c.p}</p>`;
+      kgrid.appendChild(el);
+    }
+
+    /* ========== Saat ========== */
+    function tick(){
+      const now = new Date();
+      const z = x => String(x).padStart(2,'0');
+      document.getElementById('clock').textContent = `${z(now.getHours())}:${z(now.getMinutes())}:${z(now.getSeconds())}`;
+    }
+    tick(); setInterval(tick, 1000);
   </script>
 </body>
 </html>
