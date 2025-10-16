@@ -1,237 +1,208 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>𝕍𝔼ℝ𝕀𝔻𝕀𝕌𝕄</title>
-  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --male-bg: linear-gradient(180deg, #b3e5ff 0%, #0077b6 100%);
-      --female-bg: linear-gradient(180deg, #ffecb3 0%, #81c784 100%);
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VERIDIUM — Giriş</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07090d; --fg:#e9eef7;
+    --glass:rgba(255,255,255,.06);
+    --b:rgba(255,255,255,.14);
+    --male:#19b7ff; --female:#ff7ab6;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:radial-gradient(1200px 800px at 50% 50%,rgba(0,140,255,.08),transparent 60%), var(--bg);
+    color:var(--fg); font:16px/1.5 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    overflow:hidden;
+  }
 
-    body {
-      margin: 0;
-      overflow: hidden;
-      height: 100vh;
-      color: #fff;
-      background: #f8f8f8;
-      font-family: 'UnifrakturCook', cursive;
-    }
+  /* --- Sinematik giriş --- */
+  .intro{
+    position:fixed; inset:0; display:grid; place-items:center; z-index:20;
+    background:radial-gradient(1200px 800px at 50% 50%, rgba(0,0,0,.55), rgba(0,0,0,.85));
+    transition:opacity .8s ease;
+  }
+  .logo{
+    font-family:"Cinzel", serif;
+    font-weight:900;
+    letter-spacing:.18em;
+    font-size: clamp(42px, 9vw, 132px);
+    color:transparent;
+    background:conic-gradient(from 0deg, #79a0ff, #19b7ff, #6df, #9cf, #79a0ff);
+    -webkit-background-clip:text; background-clip:text;
+    filter: drop-shadow(0 0 18px rgba(25,183,255,.35));
+    animation:logoIn .9s cubic-bezier(.2,.9,.2,1) both, hue 10s linear infinite;
+    text-transform:uppercase;
+  }
+  @keyframes logoIn{
+    0%{ transform:scale(.75); opacity:.0 }
+    60%{ transform:scale(1.06); opacity:1 }
+    100%{ transform:scale(1.0); }
+  }
+  @keyframes hue{ to{ filter:hue-rotate(360deg) drop-shadow(0 0 22px rgba(25,183,255,.38)); } }
 
-    header {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 32px;
-      z-index: 5;
-    }
+  /* --- Seçim sahnesi --- */
+  .stage{
+    position:fixed; inset:0; display:grid; place-items:center; z-index:10;
+    opacity:0; pointer-events:none; transition:opacity .7s ease;
+  }
+  .stage.show{ opacity:1; pointer-events:auto }
+  .chooser{
+    width:min(1000px, 92vw); display:grid; gap:16px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .card{
+    position:relative; height:64vh; min-height:420px; border-radius:20px; overflow:hidden;
+    border:1px solid var(--b); background:var(--glass);
+    box-shadow:0 12px 40px rgba(0,0,0,.35); cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .card:hover{ transform:translateY(-4px); box-shadow:0 18px 56px rgba(0,0,0,.48); border-color:rgba(255,255,255,.28) }
+  .label{
+    position:absolute; left:16px; top:14px; z-index:2;
+    font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    padding:8px 12px; border-radius:12px; background:rgba(0,0,0,.35); backdrop-filter:blur(6px);
+  }
+  .go{
+    position:absolute; right:16px; bottom:16px; z-index:2;
+    font-weight:800; padding:12px 16px; border-radius:12px; border:1px solid var(--b);
+    background:rgba(0,0,0,.35); backdrop-filter:blur(6px); color:var(--fg); text-decoration:none;
+    transition:transform .12s ease, background .2s ease;
+  }
+  .go:hover{ transform:scale(1.05); background:rgba(255,255,255,.08) }
 
-    #clock {
-      font-size: 20px;
-      color: #333;
-      text-shadow: 0 0 6px rgba(0,0,0,0.15);
-      font-family: monospace;
-    }
+  /* Erkek önizleme */
+  .maleBG, .femaleBG{position:absolute; inset:0}
+  canvas{position:absolute; inset:0; width:100%; height:100%}
 
-    .auth {
-      display: flex;
-      gap: 12px;
-    }
+  /* Erkek renkleri */
+  .card.male .label{ color:#bfeeff; border:1px solid rgba(25,183,255,.35) }
+  .card.male .go{ border-color:rgba(25,183,255,.35) }
+  .card.male::after{
+    content:""; position:absolute; inset:-20% -10% auto -10%; height:60%;
+    background:radial-gradient(closest-side, rgba(25,183,255,.25), transparent 70%);
+    filter:blur(30px); opacity:.7; animation:floatA 9s ease-in-out infinite;
+  }
+  @keyframes floatA{ 50%{ transform:translateY(18px)} }
 
-    .btn {
-      background: rgba(255,255,255,0.25);
-      border: 1px solid rgba(0,0,0,0.15);
-      padding: 8px 14px;
-      border-radius: 8px;
-      color: #222;
-      cursor: pointer;
-      font-family: sans-serif;
-      font-weight: 600;
-      backdrop-filter: blur(6px);
-      transition: .25s;
-    }
+  /* Kadın renkleri */
+  .card.female{ background:linear-gradient(180deg, rgba(255,122,182,.05), rgba(120,220,160,.05)) }
+  .card.female .label{ color:#ffe6f2; border:1px solid rgba(255,122,182,.38) }
+  .card.female .go{ border-color:rgba(255,122,182,.38) }
+  .card.female::after{
+    content:""; position:absolute; inset:auto -15% -18% -15%; height:60%;
+    background:radial-gradient(closest-side, rgba(255,122,182,.25), transparent 70%);
+    filter:blur(26px); opacity:.8; animation:floatB 10s ease-in-out infinite;
+  }
+  @keyframes floatB{ 50%{ transform:translateY(-16px)} }
 
-    .btn:hover {
-      background: rgba(255,255,255,0.5);
-      transform: scale(1.05);
-    }
-
-    h1 {
-      text-align: center;
-      font-size: clamp(64px, 10vw, 120px);
-      background: linear-gradient(90deg,#00bfff,#8b5cf6,#ff79c6);
-      -webkit-background-clip: text;
-      color: transparent;
-      filter: drop-shadow(0 0 12px rgba(0,0,0,.4));
-      animation: glow 6s ease-in-out infinite alternate;
-      margin-top: 60px;
-    }
-
-    @keyframes glow {
-      from { filter: drop-shadow(0 0 10px #00bfff); }
-      to { filter: drop-shadow(0 0 22px #ff79c6); }
-    }
-
-    .selector {
-      position: absolute;
-      bottom: 100px;
-      width: 100%;
-      text-align: center;
-      font-family: 'Cinzel', serif;
-    }
-
-    .selector button {
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #111;
-      font-weight: 700;
-      font-size: 20px;
-      border-radius: 14px;
-      margin: 0 16px;
-      padding: 10px 26px;
-      backdrop-filter: blur(6px);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .selector button:hover {
-      transform: scale(1.08);
-      background: rgba(255,255,255,0.35);
-    }
-
-    footer {
-      position: absolute;
-      bottom: 10px;
-      width: 100%;
-      text-align: center;
-      font-size: 14px;
-      color: #333;
-      font-family: monospace;
-    }
-
-    canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-    }
-
-    #scene { background: var(--female-bg); transition: background 1s ease; }
-  </style>
+  /* küçük dipnot */
+  footer{ position:fixed; left:0; right:0; bottom:12px; text-align:center; opacity:.55; font-size:14px }
+</style>
 </head>
 <body>
-  <header>
-    <div id="clock">--:-- — -- -- ----</div>
-    <div class="auth">
-      <button class="btn">Giriş Yap</button>
-      <button class="btn">Üye Ol</button>
-    </div>
-  </header>
 
-  <h1>𝕍𝔼ℝ𝕀𝔻𝕀𝕌𝕄</h1>
+<!-- SİNEMATİK LOGO -->
+<section class="intro" id="intro">
+  <div class="logo">VERIDIUM</div>
+</section>
 
-  <div class="selector">
-    <button id="male">⚙️ Erkek</button>
-    <button id="female">🌸 Kadın</button>
+<!-- SEÇİM SAHNESİ -->
+<section class="stage" id="stage">
+  <div class="chooser">
+    <!-- Erkek -->
+    <a class="card male" href="male.html" aria-label="Erkek dünyasına gir">
+      <div class="label">⚙️ Erkek • Derin Sular</div>
+      <canvas id="malePreview"></canvas>
+      <span class="go">Giriş →</span>
+    </a>
+    <!-- Kadın -->
+    <a class="card female" href="female.html" aria-label="Kadın dünyasına gir">
+      <div class="label">🌸 Kadın • Doğa & Çiçek</div>
+      <canvas id="femalePreview"></canvas>
+      <span class="go">Giriş →</span>
+    </a>
   </div>
+</section>
 
-  <canvas id="scene"></canvas>
+<footer>© 2025 Veridium</footer>
 
-  <footer>© 2025 Veridium</footer>
+<script>
+/* 1) Logo bitince sahneyi aç */
+setTimeout(()=>{
+  const intro=document.getElementById('intro');
+  const stage=document.getElementById('stage');
+  intro.style.opacity='0';
+  setTimeout(()=>{ intro.style.display='none'; stage.classList.add('show'); }, 800);
+}, 1500);
 
-  <script>
-    // === SAAT ===
-    const clock = document.getElementById("clock");
-    function tick() {
-      const d = new Date();
-      const day = d.getDate().toString().padStart(2,"0");
-      const month = (d.getMonth()+1).toString().padStart(2,"0");
-      const year = d.getFullYear();
-      const time = d.toLocaleTimeString('tr-TR', {hour12:false});
-      clock.textContent = `${time} — ${day}.${month}.${year}`;
+/* 2) Erkek önizleme: su baloncukları */
+(function(){
+  const c=document.getElementById('malePreview'), ctx=c.getContext('2d');
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight }
+  fit(); addEventListener('resize',fit);
+  const W=()=>c.width, H=()=>c.height;
+  const bubbles=Array.from({length:60},()=>({
+    x:Math.random()*W(), y:H()+Math.random()*H(), r:1+Math.random()*3,
+    s:.3+.9*Math.random(), drift:(Math.random()-.5)*.3, a:.25+.35*Math.random()
+  }));
+  (function loop(){
+    ctx.fillStyle='rgba(3,12,20,.6)'; ctx.fillRect(0,0,W(),H());
+    for(const b of bubbles){
+      b.y-=b.s; b.x+=b.drift;
+      if(b.y<-10){ b.y=H()+10; b.x=Math.random()*W() }
+      const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r*8);
+      g.addColorStop(0,`rgba(25,183,255,${b.a})`);
+      g.addColorStop(1,'rgba(25,183,255,0)');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
     }
-    setInterval(tick, 1000); tick();
+    requestAnimationFrame(loop);
+  })();
+})();
 
-    // === ARKA PLAN ===
-    const canvas = document.getElementById('scene');
-    const ctx = canvas.getContext('2d');
-    let W, H; function resize(){ W=canvas.width=innerWidth; H=canvas.height=innerHeight; }
-    window.addEventListener('resize', resize); resize();
-
-    let mode = 'female';
-    let particles = [];
-
-    function createParticles(){
-      particles = [];
-      if(mode === 'male'){
-        for(let i=0;i<80;i++){
-          particles.push({
-            x: Math.random()*W,
-            y: Math.random()*H,
-            r: Math.random()*3+1,
-            s: Math.random()*1.5+0.5
-          });
-        }
-      } else {
-        for(let i=0;i<50;i++){
-          particles.push({
-            x: Math.random()*W,
-            y: Math.random()*H,
-            r: Math.random()*3+1,
-            s: Math.random()*0.6+0.2,
-            color:`hsl(${Math.random()*40+120},70%,70%)`
-          });
-        }
-      }
+/* 3) Kadın önizleme: yaprak & çiçek tanecikleri + ufak tavşan silueti */
+(function(){
+  const c=document.getElementById('femalePreview'), ctx=c.getContext('2d');
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight }
+  fit(); addEventListener('resize',fit);
+  const W=()=>c.width, H=()=>c.height;
+  const petals=Array.from({length:55},()=>({
+    x:Math.random()*W(), y:Math.random()*H(), r:1+Math.random()*3,
+    hue: 330+Math.random()*40, s:.4+.7*Math.random(), drift:(Math.random()-.5)*.7
+  }));
+  let t=0;
+  (function loop(){
+    ctx.fillStyle='rgba(12,14,12,.6)'; ctx.fillRect(0,0,W(),H());
+    for(const p of petals){
+      p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.drift;
+      if(p.y>H()+10){ p.y=-10; p.x=Math.random()*W() }
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${p.hue},85%,70%,.85)`; ctx.fill();
     }
-
-    function animate(){
-      ctx.clearRect(0,0,W,H);
-      if(mode==='male'){
-        ctx.fillStyle='rgba(0,119,182,0.2)';
-        ctx.fillRect(0,0,W,H);
-        for(const b of particles){
-          ctx.beginPath();
-          ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
-          ctx.fillStyle='rgba(173,216,230,0.5)';
-          ctx.fill();
-          b.y-=b.s;
-          if(b.y<-10){ b.y=H+10; b.x=Math.random()*W; }
-        }
-      } else {
-        ctx.fillStyle='rgba(150,200,150,0.15)';
-        ctx.fillRect(0,0,W,H);
-        for(const p of particles){
-          ctx.beginPath();
-          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-          ctx.fillStyle=p.color;
-          ctx.fill();
-          p.y+=p.s;
-          if(p.y>H+10){ p.y=-10; p.x=Math.random()*W; }
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-    createParticles();
-
-    // === MOD DEĞİŞTİR ===
-    document.getElementById('male').addEventListener('click', ()=>{
-      mode='male';
-      document.body.style.background='var(--male-bg)';
-      createParticles();
-    });
-    document.getElementById('female').addEventListener('click', ()=>{
-      mode='female';
-      document.body.style.background='var(--female-bg)';
-      createParticles();
-    });
-  </script>
+    // basit tavşan silueti (alt sağda usul usul hareket)
+    const bx=W()*0.82, by=H()*0.82;
+    ctx.save();
+    ctx.translate(bx,by+Math.sin(t/30)*2);
+    ctx.scale(1.2,1.2);
+    ctx.fillStyle='rgba(255,122,182,.35)';
+    ctx.beginPath(); // gövde
+    ctx.ellipse(0,0,22,16,0,0,Math.PI*2);
+    ctx.fill();
+    ctx.beginPath(); // kafa
+    ctx.arc(-16,-10,9,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); // kulaklar
+    ctx.ellipse(-20,-22,4,12,0,0,Math.PI*2);
+    ctx.ellipse(-10,-22,4,12,0,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+    t++;
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
 </body>
-  </html>
+</html>
