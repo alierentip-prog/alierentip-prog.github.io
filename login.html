@@ -1,0 +1,48 @@
+<script type="module">
+import { auth,
+         signInWithEmailAndPassword,
+         createUserWithEmailAndPassword,
+         onAuthStateChanged,
+         signOut } from './firebase.js';
+
+// GİRİŞ
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const email = document.getElementById('email').value.trim();
+  const pass  = document.getElementById('pass').value;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    alert('Giriş başarılı!');
+    location.href = 'index.html';
+  } catch (e) {
+    alert('Giriş hatası: ' + e.message);
+  }
+});
+
+// ÜYE OL
+document.getElementById('signupBtn').addEventListener('click', async () => {
+  const email = document.getElementById('email').value.trim();
+  const pass  = document.getElementById('pass').value;
+  try {
+    await createUserWithEmailAndPassword(auth, email, pass);
+    alert('Hesap oluşturuldu, giriş yapıldı!');
+    location.href = 'index.html';
+  } catch (e) {
+    alert('Kayıt hatası: ' + e.message);
+  }
+});
+
+// ÇIKIŞ (sayfanda varsa)
+const logout = document.getElementById('logoutBtn');
+if (logout) {
+  logout.addEventListener('click', async () => {
+    await signOut(auth);
+    location.reload();
+  });
+}
+
+// Durum takibi (opsiyonel)
+onAuthStateChanged(auth, (user) => {
+  // user varsa girişli, yoksa değil
+  // burada UI'ı ayarlayabilirsin
+});
+</script>
