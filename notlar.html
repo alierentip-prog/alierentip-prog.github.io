@@ -1,0 +1,30 @@
+<!doctype html><html lang="tr"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Veridium — Notlar</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#e9eef5;--b:rgba(255,255,255,.16);--glass:rgba(255,255,255,.06);--bg:#0b1118}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;position:sticky;top:0;background:rgba(0,0,0,.35);backdrop-filter:blur(8px)}
+.btn{border:1px solid var(--b);background:var(--glass);color:var(--fg);padding:8px 12px;border-radius:10px;text-decoration:none;font-weight:800}
+main{max-width:980px;margin:16px auto;padding:0 14px}
+textarea{width:100%;min-height:70vh;padding:14px;border-radius:14px;border:1px solid var(--b);background:#0c1520;color:var(--fg)}
+</style></head><body>
+<header>
+  <a class="btn" href="index.html">← Ana sayfa</a>
+  <div>
+    <button id="saveBtn" class="btn">💾 Kaydet</button>
+    <button id="clearBtn" class="btn">🧹 Temizle</button>
+  </div>
+</header>
+<main>
+  <textarea id="pad" placeholder="Notlarını yaz... (tarayıcına kaydedilir)"></textarea>
+</main>
+<script type="module">
+const KEY="veridium_notes_v1";
+const pad=document.getElementById("pad");
+pad.value=localStorage.getItem(KEY)||"";
+document.getElementById("saveBtn").onclick=()=>{localStorage.setItem(KEY,pad.value);alert("Kaydedildi ✅")};
+document.getElementById("clearBtn").onclick=()=>{if(confirm("Hepsini sil?")){localStorage.removeItem(KEY);pad.value="";}};
+</script>
+</body></html>
