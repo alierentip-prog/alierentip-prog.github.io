@@ -1,62 +1,367 @@
 <!doctype html>
-<html lang="tr" data-theme="dark">
+<html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Echo — VERIDIUM</title>
-  <style>
-    :root{--bg:#0b0d10;--fg:#e5e7eb;--border:rgba(255,255,255,.08);}
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, Arial;}
-    .wrap{max-width:900px;margin:40px auto;padding:0 16px}
-    a{color:var(--fg);text-decoration:none}
-    a:hover{text-decoration:underline}
-    .card{background:rgba(10,12,16,.92);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px}
-    .top{display:flex;gap:12px;align-items:center;margin-bottom:16px}
-    .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;cursor:pointer;color:var(--fg)}
-    textarea{width:100%;min-height:80px;background:#121418;border:1px solid var(--border);border-radius:10px;color:var(--fg);padding:10px;font:inherit;resize:vertical}
-    button{background:#22d3ee;color:#000;border:none;padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:8px}
-    ul{list-style:none;padding:0;margin:0}
-    li{background:rgba(255,255,255,.05);padding:8px 10px;border-radius:8px;margin-top:8px}
-    small{color:#9ca3af;font-size:12px}
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Echo — Söz Paylaş</title>
+<meta name="description" content="Ziyaretçi söz duvarı — Veridium"/>
+<style>
+  :root{
+    --bg:#081118; --fg:#eaf6ff; --muted:#9fb2c8;
+    --glass:rgba(255,255,255,.05); --glass-b:rgba(255,255,255,.12);
+    --brand:#2ac0ff; --brand2:#ff79c6;
+    --ok:#7dd3ff; --love:#ff6b9f; --warn:#ffb86b;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f7fafc; --fg:#0c1824; --muted:#5f6b78; --glass:rgba(0,0,0,.03); --glass-b:rgba(0,0,0,.12) }
+  }
+  *{box-sizing:border-box}
+  body{ margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,Segoe UI,Roboto,Arial }
+  .wrap{max-width:860px;margin:0 auto;padding:28px 16px 64px}
+  header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  header a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--fg);
+    padding:8px 10px;border:1px solid var(--glass-b);background:var(--glass);border-radius:10px}
+  h1{margin:0;font-weight:900;letter-spacing:.04em}
+  .sub{margin-top:4px;color:var(--muted);font-size:14px}
+
+  .card{border:1px solid var(--glass-b);background:var(--glass);border-radius:16px;padding:14px;backdrop-filter:blur(8px);box-shadow:0 10px 28px rgba(0,0,0,.25)}
+  form.echo{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
+  .row{display:flex;gap:10px}
+  input,textarea,select{
+    width:100%;color:var(--fg);background:rgba(255,255,255,.04);border:1px solid var(--glass-b);
+    border-radius:12px;padding:10px 12px;font:inherit;outline:none
+  }
+  textarea{min-height:72px;resize:vertical}
+  button{
+    appearance:none;cursor:pointer;border:none;border-radius:12px;font-weight:800;color:#04131b;
+    background:linear-gradient(90deg,var(--brand),#7dd3ff); padding:12px 16px;box-shadow:0 8px 22px rgba(0,0,0,.25)
+  }
+  button:hover{transform:translateY(-1px)}
+  .muted{color:var(--muted)} .small{font-size:13px}
+  .flex{display:flex;align-items:center;gap:10px}
+  .count{margin-left:auto;font-size:12px;opacity:.8}
+
+  /* Liste */
+  .list{margin-top:16px;display:grid;gap:12px}
+  .item{border:1px solid var(--glass-b);background:rgba(255,255,255,.04);border-radius:14px;padding:12px}
+  .meta{font-size:12px;opacity:.78;margin-bottom:6px;display:flex;gap:8px;flex-wrap:wrap}
+  .chip{padding:4px 8px;border-radius:10px;border:1px solid var(--glass-b);background:var(--glass);font-size:12px}
+  .text{white-space:pre-wrap}
+
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .btn{padding:8px 10px;border-radius:10px;border:1px solid var(--glass-b);background:var(--glass);color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .btn:hover{background:rgba(255,255,255,.08)}
+  .btn .num{opacity:.9}
+  .like.on{border-color:var(--love);background:rgba(255,107,159,.18)}
+  .cmt.on{border-color:var(--ok);background:rgba(125,211,255,.15)}
+
+  .empty{padding:16px;text-align:center;border:1px dashed var(--glass-b);border-radius:12px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .filters .btn.active{border-color:#7dd3ff;background:rgba(125,211,255,.15)}
+
+  /* Yorum paneli */
+  .cmts{margin-top:10px;border-top:1px dashed var(--glass-b);padding-top:8px;display:none}
+  .cmts.show{display:block}
+  .cform{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:6px}
+  .citem{padding:8px;border:1px solid var(--glass-b);background:rgba(255,255,255,.03);border-radius:10px;margin-top:8px}
+  .cmeta{font-size:12px;opacity:.75;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .cactions{display:flex;gap:6px;margin-top:6px}
+  .del{color:#fff;background:linear-gradient(90deg,#ff9bb7,#ff6b9f)}
+  .warn{color:#141;background:linear-gradient(90deg,#ffe08a,#ffd36b)}
+</style>
 </head>
 <body>
   <div class="wrap">
-    <div class="top">
-      <a class="chip" href="index.html">← Ana Sayfa</a>
-      <strong>Echo</strong>
+    <header>
+      <a class="back" href="./index.html">← Ana sayfa</a>
+      <div>
+        <h1>Echo — Söz Paylaş</h1>
+        <div class="sub">Kısa ve etkili yaz; herkes görür. Saygılı ol. (Şimdilik veri tarayıcıda tutulur.)</div>
+      </div>
+    </header>
+
+    <section class="card">
+      <form id="echoForm" class="echo" onsubmit="return false;">
+        <div>
+          <div class="row">
+            <input id="name" type="text" placeholder="İsim (takma ad olur)" maxlength="30" />
+            <select id="energy" class="chip" title="Enerji">
+              <option value="mix">Karışık</option>
+              <option value="male">⚙️ Erkek</option>
+              <option value="female">🌸 Kadın</option>
+            </select>
+          </div>
+          <div style="height:8px"></div>
+          <textarea id="text" placeholder="Bir söz bırak (maks. 180 karakter)" maxlength="180"></textarea>
+          <div class="flex small">
+            <label><input type="checkbox" id="allowShare"/> Paylaşılabilir olsun</label>
+            <span id="counter" class="count">180</span>
+          </div>
+        </div>
+        <div style="display:grid;gap:8px">
+          <button id="send" type="submit">Yayınla</button>
+          <button id="clearMine" type="button" class="btn warn">Sadece benimkileri temizle</button>
+        </div>
+      </form>
+    </section>
+
+    <div class="filters">
+      <button class="btn active" data-filter="all">Tümü</button>
+      <button class="btn" data-filter="male">⚙️ Erkek</button>
+      <button class="btn" data-filter="female">🌸 Kadın</button>
+      <button class="btn" data-filter="mix">Karışık</button>
+      <button class="btn" data-filter="mine">Benimkiler</button>
+      <span class="small muted" id="stats"></span>
     </div>
 
-    <div class="card">
-      <h2>Echo</h2>
-      <p>Bir söz bırak. Her yankı anonimdir.</p>
-      <textarea id="echoInput" placeholder="Sözünü yaz..."></textarea>
-      <button id="sendEcho">Yankı Bırak</button>
-    </div>
-
-    <div class="card">
-      <h3>Son Yankılar</h3>
-      <ul id="echoList"></ul>
-    </div>
+    <section id="list" class="list"></section>
   </div>
-
   <script>
-    const list = JSON.parse(localStorage.getItem('echoes') || '[]');
-    function render(){
-      document.getElementById('echoList').innerHTML =
-        list.map(e=>`<li>${e.text}<br><small>${e.date}</small></li>`).join('');
-    }
-    render();
+(() => {
+  const KEY = 'veridium_echo_v3';
+  const UID = getUID();
+  const $  = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
 
-    document.getElementById('sendEcho').onclick = ()=>{
-      const txt = document.getElementById('echoInput').value.trim();
-      if(!txt) return;
-      list.unshift({text:txt, date:new Date().toLocaleString()});
-      localStorage.setItem('echoes', JSON.stringify(list));
-      document.getElementById('echoInput').value='';
-      render();
+  // DOM
+  const form = $('#echoForm'), nameI = $('#name'), txtI = $('#text'),
+        sendBtn = $('#send'), list = $('#list'), counter = $('#counter'),
+        energySel = $('#energy'), allowShare = $('#allowShare'),
+        clearMine = $('#clearMine'), stats = $('#stats');
+  const filters = $$('.filters .btn');
+  let currentFilter = 'all';
+
+  // helpers
+  const esc = s => String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));
+  const now  = () => Date.now();
+
+  // state io
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(_){ return []; } }
+  function save(arr){ try{ localStorage.setItem(KEY, JSON.stringify(arr)); }catch(_){} }
+
+  // counter
+  txtI.addEventListener('input', ()=> counter.textContent = 180 - txtI.value.length);
+
+  // create post
+  function makePost(){
+    const name = (nameI.value.trim() || 'Anonim').slice(0,30);
+    const text = txtI.value.trim(); if(!text) return null;
+    return {
+      id: Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+      uid: UID, name, text,
+      energy: energySel.value, share: !!allowShare.checked,
+      likes: 0, cmts: [], t: now()
     };
-  </script>
+  }
+
+  // render
+  function render(){
+    const all = load();
+    const view = all.filter(p=>{
+      if(currentFilter==='all')  return true;
+      if(currentFilter==='mine') return p.uid===UID;
+      return p.energy===currentFilter;
+    }).slice().reverse();
+
+    stats.textContent = `Toplam ${all.length} söz · Gösterilen ${view.length}`;
+    list.innerHTML = view.length ? '' : `<div class="empty small muted">Henüz kayıt yok.</div>`;
+
+    for(const p of view){
+      const el = document.createElement('div'); el.className = 'item'; el.dataset.id = p.id;
+      const liked = localStorage.getItem(likeKey(p.id))==='1';
+      const cOpen = false;
+
+      el.innerHTML = `
+        <div class="meta">
+          <span><strong>${esc(p.name)}</strong></span>
+          <span class="chip">${labelOf(p.energy)}</span>
+          <span>${new Date(p.t).toLocaleString()}</span>
+          ${p.uid===UID?'<span class="chip">benim</span>':''}
+        </div>
+        <div class="text">${esc(p.text)}</div>
+        <div class="toolbar">
+          <button class="btn like ${liked?'on':''}" data-act="like"><span>❤️</span><span class="num">${p.likes}</span></button>
+          <button class="btn cmt" data-act="toggle-cmts"><span>💬</span><span class="num">${p.cmts.length}</span></button>
+          <button class="btn share" data-act="share">🔗 Paylaş</button>
+          ${p.uid===UID?`<button class="btn del" data-act="del">🗑 Sil</button>`:''}
+        </div>
+        <div class="cmts" data-cmts style="display:none"></div>
+      `;
+      list.appendChild(el);
+    }
+  }
+
+  function labelOf(e){ return e==='male'?'⚙️ Erkek': e==='female'?'🌸 Kadın':'Karışık'; }
+  function likeKey(id){ return `like_${UID}_${id}` }
+  function cLikeKey(cid){ return `clike_${UID}_${cid}` }
+
+  // Delegation — tek listener ile tüm butonlar
+  list.addEventListener('click', (ev)=>{
+    const btn = ev.target.closest('button'); if(!btn) return;
+    const itemEl = ev.target.closest('.item'); if(!itemEl) return;
+    const id = itemEl.dataset.id;
+    const act = btn.dataset.act;
+
+    if(act==='like')          return toggleLike(id, itemEl, btn);
+    if(act==='share')         return sharePost(id);
+    if(act==='del')           return deletePost(id);
+    if(act==='toggle-cmts')   return toggleComments(id, itemEl);
+    if(act==='c-add')         return addComment(id, itemEl);
+    if(act==='c-del')         return deleteComment(id, itemEl, btn.dataset.cid);
+    if(act==='c-like')        return likeComment(id, itemEl, btn.dataset.cid, btn);
+  });
+
+  // Like post
+  function toggleLike(id, itemEl, btn){
+    const arr = load();
+    const p = arr.find(x=>x.id===id); if(!p) return;
+    const k = likeKey(id), liked = localStorage.getItem(k)==='1';
+    if(liked){ p.likes=Math.max(0,p.likes-1); localStorage.removeItem(k); btn.classList.remove('on'); }
+    else    { p.likes+=1; localStorage.setItem(k,'1'); btn.classList.add('on'); }
+    save(arr);
+    btn.querySelector('.num').textContent = p.likes;
+  }
+
+  // Toggle comments panel
+  function toggleComments(id, itemEl){
+    const box = itemEl.querySelector('[data-cmts]');
+    const opened = box.classList.toggle('show');
+    box.style.display = opened ? 'block' : 'none';
+    if(opened) renderComments(id, box);
+    const cmtBtn = itemEl.querySelector('.cmt');
+    if(opened) cmtBtn.classList.add('on'); else cmtBtn.classList.remove('on');
+  }
+
+  // Render comments of post
+  function renderComments(id, box){
+    const p = load().find(x=>x.id===id); if(!p) return;
+    box.innerHTML = `
+      <form class="cform" onsubmit="return false">
+        <input data-cname type="text" placeholder="İsim" maxlength="30"/>
+        <input data-ctext type="text" placeholder="Yorum yaz..." maxlength="160"/>
+        <button class="btn" data-act="c-add">Ekle</button>
+      </form>
+      <div data-clist></div>
+    `;
+    const clist = box.querySelector('[data-clist]');
+    if(p.cmts.length===0){
+      clist.innerHTML = `<div class="small muted">İlk yorumu sen yaz.</div>`;
+      return;
+    }
+    clist.innerHTML = '';
+    for(const c of p.cmts.slice().sort((a,b)=>a.t-b.t)){ // eskiden yeniye
+      const cel = document.createElement('div'); cel.className='citem'; cel.dataset.cid=c.cid;
+      const you = c.uid===UID;
+      const liked = localStorage.getItem(cLikeKey(c.cid))==='1';
+      cel.innerHTML = `
+        <div class="cmeta">
+          <span><strong>${esc(c.name)}</strong></span>
+          <span>${new Date(c.t).toLocaleString()}</span>
+          ${you?'<span class="chip">benim</span>':''}
+        </div>
+        <div class="text">${esc(c.text)}</div>
+        <div class="cactions">
+          <button class="btn ${liked?'like on':'like'}" data-act="c-like" data-cid="${c.cid}">❤️ <span class="num">${c.likes||0}</span></button>
+          ${you?`<button class="btn del" data-act="c-del" data-cid="${c.cid}">🗑 Sil</button>`:''}
+        </div>
+      `;
+      clist.appendChild(cel);
+    }
+  }
+
+  // Add comment
+  function addComment(id, itemEl){
+    const box = itemEl.querySelector('[data-cmts]');
+    const name = (box.querySelector('[data-cname]').value.trim() || 'Anonim').slice(0,30);
+    const text = box.querySelector('[data-ctext]').value.trim();
+    if(!text) return;
+
+    const arr = load();
+    const p = arr.find(x=>x.id===id); if(!p) return;
+    p.cmts.push({ cid: Date.now().toString(36)+Math.random().toString(36).slice(2,5), uid: UID, name, text, t: now(), likes:0 });
+    save(arr);
+
+    // update UI
+    renderComments(id, box);
+    // üstteki sayacı güncelle (💬)
+    const cmtBtn = itemEl.querySelector('.cmt .num'); if(cmtBtn) cmtBtn.textContent = p.cmts.length;
+    box.querySelector('[data-ctext]').value='';
+  }
+
+  // Delete comment (only owner)
+  function deleteComment(id, itemEl, cid){
+    const arr = load();
+    const p = arr.find(x=>x.id===id); if(!p) return;
+    const c = p.cmts.find(x=>x.cid===cid); if(!c || c.uid!==UID) return alert('Bu yorumu silemezsin.');
+    if(!confirm('Yorum silinsin mi?')) return;
+    p.cmts = p.cmts.filter(x=>x.cid!==cid);
+    save(arr);
+    const box = itemEl.querySelector('[data-cmts]');
+    renderComments(id, box);
+    itemEl.querySelector('.cmt .num').textContent = p.cmts.length;
+  }
+
+  // Like comment
+  function likeComment(id, itemEl, cid, btn){
+    const arr = load();
+    const p = arr.find(x=>x.id===id); if(!p) return;
+    const c = p.cmts.find(x=>x.cid===cid); if(!c) return;
+    const k = cLikeKey(cid), liked = localStorage.getItem(k)==='1';
+    if(liked){ c.likes=Math.max(0,(c.likes||0)-1); localStorage.removeItem(k); btn.classList.remove('on'); }
+    else    { c.likes=(c.likes||0)+1; localStorage.setItem(k,'1'); btn.classList.add('on'); }
+    save(arr);
+    btn.querySelector('.num').textContent = c.likes||0;
+  }
+
+  // share post
+  function sharePost(id){
+    const p = load().find(x=>x.id===id); if(!p) return;
+    if(!p.share) return alert('Yazar paylaşımı kapatmış.');
+    const text = `${p.text} — ${p.name} #Veridium`;
+    if(navigator.share){ navigator.share({title:'Echo — Veridium', text}).catch(()=>{}); }
+    else { navigator.clipboard && navigator.clipboard.writeText(text); alert('Kopyalandı:\n'+text); }
+  }
+
+  // delete post (owner)
+  function deletePost(id){
+    let arr = load();
+    const p = arr.find(x=>x.id===id);
+    if(!p || p.uid!==UID) return alert('Bu kaydı silemezsin.');
+    if(!confirm('Silinsin mi?')) return;
+    arr = arr.filter(x=>x.id!==id);
+    save(arr); render();
+  }
+
+  // filters
+  filters.forEach(b=> b.addEventListener('click', ()=>{
+    filters.forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); currentFilter = b.dataset.filter; render();
+  }));
+
+  // send
+  sendBtn.addEventListener('click', ()=>{
+    const post = makePost(); if(!post) return;
+    const arr = load(); arr.push(post); save(arr);
+    txtI.value=''; counter.textContent='180';
+    render();
+  });
+
+  clearMine.addEventListener('click', ()=>{
+    if(!confirm('Sadece sana ait sözler silinecek, emin misin?')) return;
+    const arr = load().filter(p=>p.uid!==UID); save(arr); render();
+  });
+
+  function getUID(){
+    try{
+      const k='veridium_uid'; let v=localStorage.getItem(k);
+      if(!v){ v=(Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(0,16); localStorage.setItem(k,v); }
+      return v;
+    }catch(_){ return (Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(0,16); }
+  }
+
+  // first render
+  render();
+})();
+</script>
 </body>
 </html>
