@@ -1,184 +1,268 @@
-<!DOCTYPE html>
-<html lang="tr">
+<!doctype html>
+<html lang="tr" data-theme="neutral">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Veridium</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>VERIDIUM — Portal</title>
+<meta name="description" content="Veridium — kişisel portal"/>
+<style>
+/* ====== Tema Değişkenleri ====== */
+:root{
+  --bg:#0b0d10; --fg:#e7e2db; --muted:#bdb7b0;
+  --brand-m:#59c2ff;   /* erkek su altı vurgusu */
+  --brand-f:#ffd1e6;   /* kadın doğa vurgusu */
+  --card:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.08);
+}
+html[data-theme="male"]   { --brand-m:#7ad3ff; --bg:#071018; --fg:#e6f7ff; --card:rgba(90,180,255,.06); }
+html[data-theme="female"] { --brand-f:#ffe0ef; --bg:#0b0d10; --fg:#fff6f9; --card:rgba(255,180,220,.06); }
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+}
 
-    body {
-      background: #000;
-      color: #f5f5f5;
-      overflow: hidden;
-      transition: background 1.5s ease;
-    }
+/* ====== Global ====== */
+.wrap{max-width:980px;margin:0 auto;padding:24px}
+h1,h2{margin:0 0 10px}
+a{color:inherit;text-decoration:none}
+.grid{display:grid;gap:14px}
+@media(min-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
+.card{
+  background:var(--card); border:1px solid var(--border);
+  padding:16px;border-radius:14px; backdrop-filter:saturate(120%) blur(2px);
+}
 
-    /* Intro ekranı */
-    #introScreen {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, #111, #000);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      z-index: 10;
-      animation: fadeIn 1s ease;
-    }
+/* Link kartları */
+.links{display:grid;gap:12px}
+.link{display:block;padding:14px 16px;border-radius:12px;border:1px solid var(--border);
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.12));
+  transition:transform .12s ease, border-color .2s ease;
+}
+.link:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.18)}
 
-    #introScreen h1 {
-      font-size: 2.8em;
-      letter-spacing: 2px;
-    }
+/* footer & ufak buton */
+.small{font-size:.9rem;color:var(--muted)}
 
-    #introScreen p {
-      opacity: 0.8;
-      font-size: 1.2em;
-    }
+/* ====== Intro Overlay ====== */
+#intro{
+  position:fixed; inset:0; z-index:30; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:18px;
+  background:radial-gradient(1200px 600px at 50% 30%, rgba(255,255,255,.05), transparent 60%), #0008;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+}
+.intro-title{font-weight:700; font-size:40px; letter-spacing:.5px}
+.intro-sub{opacity:.9}
+.intro-btns{display:flex; gap:12px}
+.btn{
+  background:var(--card); border:1px solid var(--border); color:var(--fg);
+  padding:12px 16px; border-radius:12px; font-weight:600; cursor:pointer;
+}
+.btn:hover{border-color:rgba(255,255,255,.2)}
+/* büyüyen patlama efekti */
+.boom{
+  position:fixed; inset:0; display:grid; place-items:center; z-index:35;
+  pointer-events:none; animation:fadeOut .7s .35s ease forwards;
+}
+.boom > div{
+  font-size:56px; filter:drop-shadow(0 10px 24px rgba(0,0,0,.5));
+  animation:pop .7s cubic-bezier(.2,.8,.2,1) forwards;
+}
+@keyframes pop{ from{transform:scale(.2); opacity:.2} to{transform:scale(10); opacity:0} }
+@keyframes fadeOut{ to{opacity:0} }
 
-    #introScreen button {
-      background: #222;
-      border: 2px solid #555;
-      color: #fff;
-      font-size: 1em;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin: 10px;
-      transition: 0.3s;
-    }
+/* site görünürlük kontrolü */
+#site{opacity:0; transition:opacity .6s ease}
+#site.show{opacity:1}
 
-    #introScreen button:hover {
-      transform: scale(1.05);
-      border-color: #0ff;
-    }
+/* ====== Arka Plan Canvas ====== */
+#bg{position:fixed; inset:0; z-index:0; display:block}
 
-    /* Arka plan animasyonu */
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-
-    /* Ana içerik */
-    main {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding-top: 40vh;
-    }
-
-    main h2 {
-      font-size: 2em;
-      opacity: 0.9;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-  </style>
+/* Saat & telif */
+.bar{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.badge{padding:6px 10px;border-radius:10px;background:var(--card);border:1px solid var(--border)}
+</style>
 </head>
-
 <body>
-  <!-- Giriş ekranı -->
-  <div id="introScreen">
-    <h1>Veridium</h1>
-    <p>Enerjini Seç</p>
-    <div>
-      <button id="maleBtn">⚙️ Erkek</button>
-      <button id="femaleBtn">🌸 Kadın</button>
+
+<canvas id="bg"></canvas>
+
+<!-- ============ INTRO ============ -->
+<div id="intro" role="dialog" aria-label="Enerjini seç">
+  <div class="intro-title">Veridium</div>
+  <div class="intro-sub">Enerjini Seç</div>
+  <div class="intro-btns">
+    <button id="maleBtn"   class="btn">⚙️ Erkek</button>
+    <button id="femaleBtn" class="btn">🌸 Kadın</button>
+  </div>
+</div>
+
+<!-- ============ SITE ============ -->
+<main id="site">
+  <div class="wrap">
+    <header class="card">
+      <h1 id="hello">Merhaba 👋</h1>
+      <p class="small">Seçimine göre arka plan akıyor. İstersen aşağıdan sıfırlayabilirsin.</p>
+    </header>
+
+    <section class="grid" style="margin-top:14px">
+      <article class="card">
+        <h2>Günün Sözü</h2>
+        <p id="quote">“Sessiz adımlar, en derin izleri bırakır.”</p>
+      </article>
+
+      <aside class="card">
+        <h2>Rastgele Bilgi</h2>
+        <p id="fact">Bir damla kanda ~5 milyon eritrosit bulunur.</p>
+      </aside>
+    </section>
+
+    <section class="card" style="margin-top:14px">
+      <h2 style="margin:0 0 10px">Keşfet</h2>
+      <div class="links">
+        <a class="link" href="./notlar.html">🧠 Notlar</a>
+        <a class="link" href="./ipuçları.html">🧩 İpuçları</a>
+        <a class="link" href="./felsefe.html">📚 Felsefe</a>
+        <a class="link" href="./projeler.html">🛠️ Projeler</a>
+        <a class="link" href="./echo.html">📝 Echo (misafir defteri)</a>
+        <a class="link" href="./about.html">👤 Hakkımda</a>
+      </div>
+    </section>
+
+    <div class="bar">
+      <div class="badge small">© 2025 <strong>VERIDIUM</strong></div>
+      <button id="reset" class="btn small">Enerjiyi sıfırla</button>
     </div>
   </div>
+</main>
 
-  <!-- Arka plan -->
-  <canvas id="bgCanvas"></canvas>
+<script>
+/* ================== UTIL ================== */
+const CHOICE_KEY = 'veridium_choice';
+const qs = s => document.querySelector(s);
+const bg = qs('#bg');
+const ctx = bg.getContext('2d', { alpha:true });
 
-  <!-- Ana içerik -->
-  <main>
-    <h2 id="welcomeText">Hoş geldin.</h2>
-  </main>
+function fitCanvas(){
+  const dpr = Math.min(2, window.devicePixelRatio||1);
+  bg.width = Math.floor(innerWidth * dpr);
+  bg.height= Math.floor(innerHeight* dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
 
-  <script>
-    const canvas = document.getElementById("bgCanvas");
-    const ctx = canvas.getContext("2d");
-    let width, height, particles = [];
+/* ================== INTRO ================== */
+function boom(emoji){
+  const el = document.createElement('div');
+  el.className = 'boom';
+  el.innerHTML = `<div>${emoji}</div>`;
+  document.body.appendChild(el);
+  setTimeout(()=> el.remove(), 950);
+}
+function showSite(){ qs('#site').classList.add('show'); }
 
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resize);
-    resize();
+function choose(kind){
+  if(kind==='male'){
+    document.documentElement.dataset.theme='male';
+    localStorage.setItem(CHOICE_KEY,'male');
+    startUnderwater();
+    boom('⚙️');
+    qs('#hello').textContent = 'Derin sulara hoş geldin ⚙️';
+  }else{
+    document.documentElement.dataset.theme='female';
+    localStorage.setItem(CHOICE_KEY,'female');
+    startNature();
+    boom('🌸');
+    qs('#hello').textContent = 'Doğanın enerjisine hoş geldin 🌸';
+  }
+  qs('#intro').remove();
+  showSite();
+}
 
-    // Basit partikül yapısı
-    class Particle {
-      constructor(x, y, color) {
-        this.x = x;
-        this.y = y;
-        this.size = Math.random() * 4 + 1;
-        this.color = color;
-        this.speedX = Math.random() * 2 - 1;
-        this.speedY = Math.random() * 2 - 1;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > width) this.speedX *= -1;
-        if (this.y < 0 || this.y > height) this.speedY *= -1;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-      }
-    }
+qs('#maleBtn')  .addEventListener('click',()=>choose('male'));
+qs('#femaleBtn').addEventListener('click',()=>choose('female'));
+qs('#reset').addEventListener('click',()=>{
+  localStorage.removeItem(CHOICE_KEY);
+  location.reload();
+});
 
-    function createParticles(colorSet) {
-      particles = [];
-      for (let i = 0; i < 80; i++) {
-        const color = colorSet[Math.floor(Math.random() * colorSet.length)];
-        particles.push(new Particle(Math.random() * width, Math.random() * height, color));
-      }
-    }
+/* ================== BG ANIMATIONS ================== */
+let rafId=null, particles=[], tick=0;
 
-    function animate() {
-      ctx.fillStyle = "rgba(0,0,0,0.15)";
-      ctx.fillRect(0, 0, width, height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
-      requestAnimationFrame(animate);
-    }
+function stopAnim(){ cancelAnimationFrame(rafId); particles.length=0; tick=0; }
 
-    animate();
-
-    const intro = document.getElementById("introScreen");
-    const maleBtn = document.getElementById("maleBtn");
-    const femaleBtn = document.getElementById("femaleBtn");
-    const welcomeText = document.getElementById("welcomeText");
-
-    maleBtn.addEventListener("click", () => {
-      document.body.style.background = "linear-gradient(180deg, #001f3f, #004f7a)";
-      createParticles(["#00aaff", "#33ddff", "#0077b6"]);
-      welcomeText.innerText = "Derin sulara hoş geldin ⚙️";
-      intro.style.display = "none";
+function startUnderwater(){
+  stopAnim(); fitCanvas();
+  // mavi ışık çubukları (su altı hissi)
+  for(let i=0;i<120;i++){
+    particles.push({
+      x: Math.random()*innerWidth,
+      y: Math.random()*innerHeight,
+      len: 40+Math.random()*120,
+      spd: .4+Math.random()*1.2,
+      ang: Math.random()*Math.PI*2,
+      w: 2+Math.random()*3
     });
+  }
+  (function loop(){
+    rafId = requestAnimationFrame(loop);
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    ctx.globalCompositeOperation='lighter';
+    for(const p of particles){
+      p.x += Math.cos(p.ang)*p.spd;
+      p.y += Math.sin(p.ang)*p.spd;
+      if(p.x<-50) p.x=innerWidth+50;
+      if(p.x>innerWidth+50) p.x=-50;
+      if(p.y<-50) p.y=innerHeight+50;
+      if(p.y>innerHeight+50) p.y=-50;
+      const gx = p.x + Math.cos(p.ang)*p.len;
+      const gy = p.y + Math.sin(p.ang)*p.len;
+      const alpha = .08 + p.w*.03;
+      const hue = 190 + Math.sin((tick+p.x)*.002)*10; // mavi ton
+      ctx.strokeStyle = `hsla(${hue}, 100%, 60%, ${alpha})`;
+      ctx.lineWidth = p.w;
+      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(gx,gy); ctx.stroke();
+    }
+    tick++;
+  })();
+}
 
-    femaleBtn.addEventListener("click", () => {
-      document.body.style.background = "linear-gradient(180deg, #e0ffe0, #ffe0f0)";
-      createParticles(["#ffb6c1", "#ffe4e1", "#e6ffe6", "#ffecb3"]);
-      welcomeText.innerText = "Doğanın enerjisine hoş geldin 🌸";
-      intro.style.display = "none";
+function startNature(){
+  stopAnim(); fitCanvas();
+  // pembe/yeşil yaprak/kelebek parçacıkları
+  for(let i=0;i<80;i++){
+    particles.push({
+      x: Math.random()*innerWidth,
+      y: Math.random()*innerHeight,
+      r: 4+Math.random()*10,
+      spd: .2+Math.random()*0.8,
+      drift: .5+Math.random(),
+      hue: Math.random()<.5 ? 330 : 120 // pembe & yeşil
     });
-  </script>
+  }
+  (function loop(){
+    rafId = requestAnimationFrame(loop);
+    ctx.fillStyle='rgba(0,0,0,.35)';
+    ctx.fillRect(0,0,innerWidth,innerHeight);
+    for(const p of particles){
+      p.y += p.spd;
+      p.x += Math.sin((p.y+p.r)*.02)*p.drift;
+      if(p.y>innerHeight+20){ p.y=-20; p.x=Math.random()*innerWidth; }
+      ctx.beginPath();
+      ctx.fillStyle=`hsla(${p.hue},80%,70%,.85)`;
+      // basit “yaprak” şekli: iki daire
+      ctx.ellipse(p.x-p.r*.35,p.y,p.r*.7,p.r*.4,0,0,Math.PI*2);
+      ctx.ellipse(p.x+p.r*.35,p.y,p.r*.7,p.r*.4,0,0,Math.PI*2);
+      ctx.fill();
+    }
+  })();
+}
+
+/* ================== BOOT ================== */
+addEventListener('resize', fitCanvas);
+fitCanvas();
+const saved = localStorage.getItem(CHOICE_KEY);
+if(saved==='male'){ document.documentElement.dataset.theme='male'; qs('#intro').remove(); startUnderwater(); showSite(); }
+else if(saved==='female'){ document.documentElement.dataset.theme='female'; qs('#intro').remove(); startNature(); showSite(); }
+</script>
 </body>
 </html>
