@@ -1,51 +1,34 @@
 <!-- firebase.js -->
 <script type="module">
+  // Firebase SDK (v12 modülleri)
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
   import {
-    getAuth,
-    setPersistence,
-    browserLocalPersistence,
-    onAuthStateChanged,
-    signOut
+    getAuth, setPersistence, browserLocalPersistence,
+    onAuthStateChanged, signInWithEmailAndPassword,
+    createUserWithEmailAndPassword, signOut
   } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-  // TODO: BURAYA KENDİ CONFIG'İNİ YAPIŞTIR
-  // Firebase console > Project settings > Web app > "Use a <script> tag" bölümündeki config
+  // 🔐 Senin AZURA projenin config'i
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-    messagingSenderId: "XXXX",
-    appId: "XXXX"
+    apiKey: "AIzaSyCymtjBWJ2cH2k6gzXr-wzj6vJVkwEcZE",
+    authDomain: "azura-portal.firebaseapp.com",
+    projectId: "azura-portal",
+    storageBucket: "azura-portal.firebasestorage.app",
+    messagingSenderId: "773402450419",
+    appId: "1:773402450419:web:3c0888f055d98c8e5bda86"
   };
 
   // Init
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-
-  // Oturum kalıcı olsun (sayfa yenilemede düşmesin)
   await setPersistence(auth, browserLocalPersistence);
 
-  // Header’daki “Giriş / Çıkış” butonunu dinamik güncelle (isteğe bağlı)
-  const headerLogin = document.querySelector('[data-login-link]');
-  if (headerLogin) {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        headerLogin.textContent = "Çıkış";
-        headerLogin.onclick = async (e) => {
-          e.preventDefault();
-          await signOut(auth);
-          location.reload();
-        };
-      } else {
-        headerLogin.textContent = "Giriş";
-        headerLogin.setAttribute("href","/login.html");
-        headerLogin.onclick = null;
-      }
-    });
-  }
+  // Küçük yardımcılar
+  const login  = (email, pass) => signInWithEmailAndPassword(auth, email, pass);
+  const signup = (email, pass) => createUserWithEmailAndPassword(auth, email, pass);
+  const logout = () => signOut(auth);
+  const onAuth = (cb) => onAuthStateChanged(auth, cb);
 
-  // Global export (diğer sayfalarda kullanabilelim)
-  window.__firebase = { app, auth };
+  // Global yayımla (import uğraştırmasın)
+  window.AZ = { app, auth, login, signup, logout, onAuth };
 </script>
