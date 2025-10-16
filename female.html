@@ -106,9 +106,26 @@
     color:#fff; border-radius:12px; padding:8px 12px; font-weight:800; cursor:pointer; backdrop-filter:blur(6px);
   }
   #storyViewport{ position:relative; overflow:hidden }
-  #storyInner{ position:absolute; left:0; right:0; transform:translateY(100%); padding:0 18px 40px; color:#fff7fb; font:16px/1.7 Inter,system-ui }
-  #storyInner p{ margin:0 0 16px; text-wrap:pretty }
-  #storyInner p.lead{ font-weight:800; color:#ffe0f0 }
+  #storyInner{
+  position:absolute;
+  left:0; right:0;
+  transform:translateY(100%);
+  padding:0 22px 60px;
+  color:#fff7fb;
+  font:22px/1.9 "Playfair Display", "Cinzel", serif;
+  letter-spacing:0.02em;
+  text-shadow:0 0 10px rgba(255,200,255,.25);
+}
+#storyInner p{
+  margin:0 0 24px;
+  text-wrap:pretty;
+}
+#storyInner p.lead{
+  font-size:26px;
+  font-weight:900;
+  color:#ffe0f8;
+  text-shadow:0 0 14px rgba(255,150,255,.35);
+    }
   #storyViewport::before,#storyViewport::after{
     content:""; position:absolute; left:0; right:0; height:80px; pointer-events:none; z-index:1
   }
