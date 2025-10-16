@@ -1,252 +1,227 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AZURA</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --fg:#dfe7ff; --muted:#aab7d4; --blue:#7fc4ff; --pink:#ff9bd6;
-    --card:#0f1622; --b:rgba(255,255,255,.14); --glass:rgba(255,255,255,.06);
+    --fg:#eaf1ff; --mut:#b9c7db;
+    --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14);
+    --blue:#55c8ff; --pink:#ff9ad0; --green:#9ff2b1;
+    --bg:#050b12;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0; color:var(--fg); background:#070c12;
-    font:16px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-    overflow-x:hidden;
-    animation:bgFlow 16s linear infinite;
-    background-image:
-      radial-gradient(1200px 800px at 50% -10%, rgba(0,140,255,.08), transparent 60%),
-      radial-gradient(800px 600px at 90% 10%, rgba(255,60,160,.06), transparent 65%),
-      radial-gradient(900px 700px at 10% 90%, rgba(60,255,200,.05), transparent 60%),
-      linear-gradient(180deg,#07121c,#0a121a 40%,#0a0f16 100%);
-  }
-  @keyframes bgFlow{
-    0%{filter:hue-rotate(0deg)} 100%{filter:hue-rotate(24deg)}
+    margin:0; color:var(--fg); font:16px/1.55 Inter,system-ui;
+    background: radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.07), transparent 60%), var(--bg);
+    overflow:hidden;
   }
 
-  /* marka */
-  h1.brand{
-    position:fixed; left:50%; top:64px; transform:translateX(-50%);
-    z-index:5; margin:0; font-family:Cinzel,serif; letter-spacing:.22em; font-weight:900;
-    font-size: clamp(38px,6.4vw,90px);
-    background:linear-gradient(90deg,#b7d3ff,#88bfff,#b7d3ff);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    filter:drop-shadow(0 10px 40px rgba(0,0,0,.5));
-    animation:shine 8s linear infinite;
-  }
-  @keyframes shine{0%{background-position:0%}100%{background-position:200%}}
-
-  /* kart grid (biraz aşağıdan başlat) */
-  main{max-width:1100px; margin:240px auto 80px; padding:0 16px; position:relative; z-index:2}
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:18px}
-  .card{
-    position:relative; min-height:220px; border:1px solid var(--b); background:var(--card);
-    border-radius:18px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.35);
-  }
-  .card h2{
-    position:absolute; left:18px; top:18px; margin:0; font-weight:900; letter-spacing:.06em
-  }
-  .card .go{
-    position:absolute; right:18px; bottom:18px;
-    padding:10px 16px; border-radius:12px; border:1px solid var(--b); background:var(--glass);
-    color:var(--fg); text-decoration:none; font-weight:800; backdrop-filter:blur(6px)
-  }
-  .card canvas{position:absolute; inset:0; width:100%; height:100%}
-
-  /* sol (erkek) kart aşağıya 12px daha alçak */
-  .card.male{transform:translateY(12px)}
-  .card.female{transform:translateY(12px)}
-
-  /* --- Splash (halka + yıldız patlaması) --- */
-  #splash{
-    position:fixed; inset:0; display:grid; place-items:center; z-index:999;
-    background:radial-gradient(1400px 900px at 50% 50%, rgba(15,35,60,.9), rgba(4,7,10,.96));
-  }
-  #ring{
-    width:180px; aspect-ratio:1; border-radius:50%;
-    box-shadow:0 0 0 4px rgba(140,200,255,.35) inset, 0 0 80px rgba(80,180,255,.35);
+  /* arka plan aurora */
+  body:before{
+    content:""; position:fixed; inset:-20% -10% auto -10%; height:70%;
     background:
-      radial-gradient(circle at 50% 50%, rgba(255,255,255,.35) 0 2px, transparent 3px 100%),
-      conic-gradient(from 0deg,#7fc4ff,#ff9bd6,#7fc4ff);
-    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 52%, #000 53%);
-    mask: radial-gradient(circle at 50% 50%, transparent 52%, #000 53%);
-    animation:ringPop 2.2s ease-in-out forwards, rotate 6s linear infinite;
-    filter:saturate(1.2);
+      radial-gradient(800px 500px at 15% 20%, rgba(85,200,255,.25), transparent 60%),
+      radial-gradient(700px 450px at 85% 10%, rgba(255,154,208,.22), transparent 60%),
+      radial-gradient(900px 520px at 50% 0%, rgba(159,242,177,.18), transparent 60%);
+    filter: blur(34px);
+    animation: aurora 16s linear infinite alternate;
+    pointer-events:none; z-index:0;
   }
-  @keyframes ringPop{
-    0%{transform:scale(.2); opacity:0}
-    35%{transform:scale(1.2); opacity:1}
-    60%{transform:scale(.7)}
-    100%{transform:scale(14)}
+  @keyframes aurora{
+    0%{transform:translateY(0)} 100%{transform:translateY(40px)}
   }
-  @keyframes rotate{to{transform:rotate(360deg)}}
-  #burst{position:fixed; inset:0; pointer-events:none}
-  #welcome{
-    position:fixed; inset:auto 0 24vh 0; text-align:center; z-index:1000;
-    font-family:Cinzel,serif; font-size:clamp(26px,5vw,46px); letter-spacing:.14em; font-weight:900;
-    opacity:0; transform:translateY(20px);
-  }
-  #welcome.show{opacity:1; transform:none; transition:opacity .6s ease, transform .6s ease}
-  #splash.hide{opacity:0; visibility:hidden; transition:opacity .7s ease .4s, visibility .7s linear .4s}
 
-  /* link tıklayınca ekranı karartan geçiş */
-  .wipe{
-    position:fixed; inset:0; background:radial-gradient(1200px 900px at 50% 50%, #0b1220, #060a12);
-    transform:scale(0); border-radius:50%; z-index:998; pointer-events:none;
-    transition:transform .55s ease-in;
+  /* üst marka */
+  h1.brand{
+    margin:120px 0 0; text-align:center; font-family:Cinzel,serif;
+    font-weight:900; letter-spacing:.18em; font-size:clamp(34px,6vw,74px);
+    background:linear-gradient(90deg,#dfefff,#bfe0ff,#9fd8ff); -webkit-background-clip:text; color:transparent;
+    text-shadow:0 12px 40px rgba(0,0,0,.5); z-index:1; position:relative;
+    animation: brandpop .9s ease both .1s;
   }
-  .wipe.show{transform:scale(5)}
-  /* küçük ekran */
-  @media (max-width:720px){ .grid{grid-template-columns:1fr; margin-top:-14px} h1.brand{top:40px} }
+  @keyframes brandpop{ from{transform:translateY(-10px); opacity:0} to{transform:none;opacity:1} }
+
+  /* kart grid */
+  main{position:relative; z-index:1}
+  .cards{
+    display:flex; justify-content:center; gap:28px; margin-top:54px;
+  }
+  .card{
+    width:min(360px,44vw); height:280px;
+    border:1px solid var(--b); background:var(--glass); backdrop-filter: blur(8px);
+    border-radius:18px; position:relative; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.35);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{ transform:translateY(-2px); box-shadow:0 14px 56px rgba(0,0,0,.45) }
+  .card .head{
+    position:absolute; left:16px; top:16px; padding:10px 14px; border:1px solid var(--b);
+    border-radius:12px; background:rgba(255,255,255,.05); font-weight:900; letter-spacing:.04em
+  }
+  .go{position:absolute; right:16px; bottom:16px}
+  .btn{
+    appearance:none; border:1px solid var(--b); background:var(--glass);
+    color:var(--fg); padding:12px 18px; border-radius:12px; font-weight:900; text-decoration:none;
+    display:inline-flex; gap:8px; align-items:center; backdrop-filter: blur(6px);
+  }
+
+  /* erkek solda biraz aşağıda, kadın sağda aynı hizada */
+  .male { transform: translate(-22px, 40px); }
+  .female { transform: translate(22px, 40px); }
+
+  /* parçacık kanvası */
+  canvas.tile{position:absolute; inset:0; width:100%; height:100%}
+
+  /* geçiş sönme (beyaz) */
+  #wipe{ position:fixed; inset:0; background:#ffffff; z-index:100; pointer-events:none;
+         opacity:0; transform:scale(1.05); transition:opacity .45s ease, transform .45s ease }
+  #wipe.show{ opacity:1; transform:scale(1) }
+
+  /* ======= SPLASH: beyaz kalın halka içinde AZURA, beyaza patlayıp sönme ======= */
+  #splash{
+    position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:var(--bg);
+  }
+  /* halka + yazı konteyneri */
+  .ringWrap{
+    position:relative; width:220px; aspect-ratio:1/1; border-radius:50%;
+    display:grid; place-items:center;
+    /* kalın beyaz halka */
+    box-shadow: 0 0 0 14px #fff inset, 0 0 40px rgba(255,255,255,.45), 0 0 120px rgba(255,255,255,.35);
+    animation:ringPulse 3.4s ease-in-out forwards;
+  }
+  /* AZURA yazısı (gradient) */
+  .ringWrap .title{
+    font: 900 36px/1 Cinzel,serif; letter-spacing:.18em;
+    background:linear-gradient(90deg,#ffffff,#e9f4ff,#bfe0ff,#ffffff);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow: 0 0 14px rgba(255,255,255,.45);
+  }
+  @keyframes ringPulse{
+    0%  { transform:scale(.35); filter:blur(0px); }
+    33% { transform:scale(1.15) }
+    60% { transform:scale(.75) }
+    100%{ transform:scale(26) } /* devleşip ekranı kaplar */
+  }
+
+  /* beyaz patlama perdesi */
+  #flash{
+    position:fixed; inset:0; background:#ffffff; z-index:199; opacity:0; pointer-events:none;
+    animation: flashRise 3.4s ease-in-out forwards;
+  }
+  @keyframes flashRise{
+    0%{opacity:0}
+    55%{opacity:.2}
+    70%{opacity:.65}
+    100%{opacity:0} /* sönme */
+  }
+
+  /* Hoş geldiniz metni: patlama sonuna doğru belirip sönsün */
+  #hello{
+    position:fixed; inset:auto 0 24vh 0; text-align:center; z-index:201;
+    font-family:Cinzel,serif; font-size:clamp(22px,4.2vw,42px); letter-spacing:.12em; font-weight:900;
+    color:#ffffff; text-shadow:0 0 22px rgba(255,255,255,.65);
+    opacity:0; transform:translateY(8px);
+    animation: helloIn .8s ease 3.0s forwards, helloOut .7s ease 4.2s forwards;
+  }
+  @keyframes helloIn{ to{opacity:1; transform:none} }
+  @keyframes helloOut{ to{opacity:0; transform:translateY(-6px)} }
+
+  /* Mobil */
+  @media (max-width:720px){
+    .cards{flex-direction:column; align-items:center}
+    .male,.female{ transform: translate(0,18px); }
+  }
 </style>
 </head>
 <body>
+
+  <!-- SPLASH -->
+  <div id="splash">
+    <div class="ringWrap"><div class="title">AZURA</div></div>
+  </div>
+  <div id="flash"></div>
+  <div id="hello">Hoş geldiniz 🩵🩷</div>
+
+  <!-- Wipe (sayfa geçişi: sönerek beyaza) -->
+  <div id="wipe"></div>
+
+  <!-- Marka -->
   <h1 class="brand">AZURA</h1>
 
-  <!-- Splash -->
-  <div id="splash">
-    <div id="ring"></div>
-    <canvas id="burst"></canvas>
-    <div id="welcome">Hoş geldiniz 🩵🩷</div>
-  </div>
-  <div class="wipe" id="wipe"></div>
-
+  <!-- Kartlar -->
   <main>
-    <div class="grid">
+    <div class="cards">
       <!-- ERKEK -->
       <section class="card male">
-        <h2>🌊 Okyanus • Karizmatik</h2>
-        <canvas id="sea"></canvas>
-        <a class="go transition" href="male.html">Giriş</a>
+        <div class="head">🌊 Okyanus • Karizmatik</div>
+        <canvas class="tile" id="sea"></canvas>
+        <div class="go"><a class="btn nav" href="male.html">Giriş →</a></div>
       </section>
 
       <!-- KADIN -->
       <section class="card female">
-        <h2>🌿 Doğa • İç ısıtan</h2>
-        <canvas id="forest"></canvas>
-        <a class="go transition" href="female.html">Giriş</a>
+        <div class="head">🌿 Doğa • İç ısıtan</div>
+        <canvas class="tile" id="forest"></canvas>
+        <div class="go"><a class="btn nav" href="female.html">Giriş →</a></div>
       </section>
     </div>
   </main>
 
 <script>
-/* -------- Splash zamanlaması (3–4 sn) + yıldız patlaması -------- */
+/* ---------- SPLASH zamanlama: 3.4s halka animasyonu + beyaz patlama ---------- */
 (() => {
-  const splash = document.getElementById('splash');
-  const cv = document.getElementById('burst'), cx = cv.getContext('2d');
-  function fit(){ cv.width = innerWidth; cv.height = innerHeight }
-  addEventListener('resize',fit,{passive:true}); fit();
-
-  // yıldız parçacıkları
-  const P = Array.from({length: 120}, () => ({
-    x: cv.width/2, y: cv.height/2,
-    a: Math.random()*Math.PI*2,
-    v: 1.5 + Math.random()*3.5,
-    r: .6 + Math.random()*1.6,
-    h: 180 + Math.random()*120
-  }));
-  let t = 0;
-  (function loop(){
-    cx.clearRect(0,0,cv.width,cv.height);
-    cx.globalCompositeOperation = 'lighter';
-    for(const p of P){
-      const k = Math.min(1, t/120);
-      const spd = p.v * (1 + k*6); // dışa ivmelenerek
-      p.x += Math.cos(p.a)*spd;
-      p.y += Math.sin(p.a)*spd;
-      cx.fillStyle = `hsla(${p.h}, 90%, ${70-k*40}%, ${.9-k*.8})`;
-      cx.beginPath(); cx.arc(p.x,p.y,p.r*(1+k*2),0,Math.PI*2); cx.fill();
-    }
-    t++; if(t<160) requestAnimationFrame(loop);
-  })();
-
-  // yazıyı göster, sonra splash'i kapat
-  setTimeout(()=>document.getElementById('welcome').classList.add('show'), 2200);
-  setTimeout(()=>splash.classList.add('hide'), 3500);
+  // Splash sonunda tüm overlay'leri kaldır
+  setTimeout(()=>{
+    document.getElementById('splash')?.remove();
+    document.getElementById('flash')?.remove();
+    document.getElementById('hello')?.remove();
+  }, 4800); // hoş geldiniz de söndükten biraz sonra
 })();
 
-/* -------- Kart arkaplan animasyonları -------- */
-(() => {
-  // erkek: deniz kabarcıkları
-  const c1 = document.getElementById('sea'), x1 = c1.getContext('2d');
-  const c2 = document.getElementById('forest'), x2 = c2.getContext('2d');
-  function size(c){ c.width=c.clientWidth; c.height=c.clientHeight }
-  const rs = ()=>{ size(c1); size(c2) }; addEventListener('resize',rs,{passive:true}); rs();
-
-  const bubbles = Array.from({length:120},()=>({
-    x:Math.random()*c1.width, y:c1.height+Math.random()*c1.height,
-    r:1+Math.random()*3, s:.4+.9*Math.random()
-  }));
-  const petals = Array.from({length:110},()=>({
-    x:Math.random()*c2.width, y:Math.random()*c2.height, r:.8+Math.random()*1.8, h:330+Math.random()*40
-  }));
-
+/* ---------- kart içi mini animasyonlar ---------- */
+(function sea(){
+  const c=document.getElementById('sea'), x=c.getContext('2d');
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
+  const B=120, b=[];
+  for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
   (function loop(){
-    // sea
-    x1.clearRect(0,0,c1.width,c1.height);
-    for(const b of bubbles){
-      b.y-=b.s; if(b.y<-10){ b.y=c1.height+10; b.x=Math.random()*c1.width }
-      x1.fillStyle='rgba(120,210,255,.30)'; x1.beginPath(); x1.arc(b.x,b.y,b.r,0,Math.PI*2); x1.fill();
+    x.clearRect(0,0,c.width,c.height);
+    for(const p of b){
+      p.y-=p.s; if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
+      x.globalAlpha=.28; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
     }
-    // forest
-    x2.clearRect(0,0,c2.width,c2.height);
-    for(const p of petals){
-      p.y+=.36; p.x+=Math.sin(p.y/44)*.45; if(p.y>c2.height+10){p.y=-10; p.x=Math.random()*c2.width}
-      x2.fillStyle=`hsla(${p.h},80%,72%,.9)`; x2.beginPath(); x2.arc(p.x,p.y,p.r,0,Math.PI*2); x2.fill();
+    requestAnimationFrame(loop);
+  })();
+})();
+(function forest(){
+  const c=document.getElementById('forest'), x=c.getContext('2d');
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
+  const N=100, p=[];
+  for(let i=0;i<N;i++) p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40});
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    for(const s of p){
+      s.y+=.4; s.x+=Math.sin(s.y/45)*.4; if(s.y>c.height+10){s.y=-10; s.x=Math.random()*c.width}
+      x.fillStyle=`hsla(${s.h},80%,72%,.9)`; x.beginPath(); x.arc(s.x,s.y,s.r,0,Math.PI*2); x.fill();
     }
     requestAnimationFrame(loop);
   })();
 })();
 
-/* -------- Sayfa geçişi (kararma/zoom) -------- */
+/* ---------- linklerde “sönerek” beyaz geçiş ---------- */
 (() => {
   const wipe = document.getElementById('wipe');
-  for(const a of document.querySelectorAll('a.transition')){
-    a.addEventListener('click', e=>{
+  for (const a of document.querySelectorAll('a.nav')) {
+    a.addEventListener('click', e => {
       e.preventDefault();
       wipe.classList.add('show');
-      setTimeout(()=>location.href=a.href, 520);
+      setTimeout(()=> location.href = a.href, 420);
     });
   }
 })();
 </script>
-  <script>
-  // Basit oturum göstergesi (Firebase yoksa da çalışır)
-  const logoutBtn = document.getElementById('logoutBtn');
-  const loginLink = document.querySelector('#authBar a[href="login.html"]');
-  const signupLink = document.querySelector('#authBar a[href="login.html#signup"]');
-
-  function refreshAuthUI(){
-    const u = sessionStorage.getItem('azuraUser'); // demo oturum
-    const logged = !!u;
-    loginLink.style.display = logged ? 'none' : '';
-    signupLink.style.display = logged ? 'none' : '';
-    logoutBtn.style.display = logged ? '' : 'none';
-  }
-  logoutBtn.onclick = ()=>{ sessionStorage.removeItem('azuraUser'); refreshAuthUI(); };
-  refreshAuthUI();
-  </script>
 </body>
-  <header id="authBar" style="
-  position:fixed; right:12px; top:12px; z-index:50; display:flex; gap:8px;">
-  <a href="login.html" class="btn" style="
-    padding:8px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
-    background:rgba(255,255,255,.06); color:#dfe7ff; text-decoration:none; font-weight:800;">
-    Giriş
-  </a>
-  <a href="login.html#signup" class="btn" style="
-    padding:8px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
-    background:rgba(255,255,255,.06); color:#dfe7ff; text-decoration:none; font-weight:800;">
-    Üye Ol
-  </a>
-  <button id="logoutBtn" style="
-    display:none; padding:8px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
-    background:rgba(255,255,255,.06); color:#dfe7ff; font-weight:800; cursor:pointer;">
-    Çıkış
-  </button>
-  </header>
-  </html>
+      </html>
