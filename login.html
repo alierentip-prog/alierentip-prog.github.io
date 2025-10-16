@@ -1,104 +1,128 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Veridium Giriş</title>
-  <style>
-    body {
-      font-family: Poppins, sans-serif;
-      background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .card {
-      background: rgba(0,0,0,0.6);
-      padding: 30px;
-      border-radius: 16px;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 0 15px #0ff;
-    }
-    input {
-      width: 90%;
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-    }
-    button {
-      width: 95%;
-      margin-top: 12px;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      background: #00c6ff;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0072ff;
-    }
-    .switch {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #bbb;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Veridium · Giriş</title>
+<style>
+  :root{--ink:#081118;--fg:#eaf6ff;--muted:#9bb0c6;--b:rgba(255,255,255,.14)}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--fg); font:16px/1.6 system-ui,Segoe UI,Roboto,Arial;
+    background: radial-gradient(1200px 800px at 50% 30%, rgba(122,92,246,.15), transparent 55%), #0b0d10;
+    overflow:hidden; display:grid; place-items:center;
+  }
+  /* arka plan partikül */
+  canvas{position:fixed; inset:0; z-index:0}
+  .card{
+    position:relative; z-index:1; width:min(420px,92vw);
+    border:1px solid var(--b); background:rgba(255,255,255,.06); backdrop-filter:blur(10px);
+    border-radius:18px; padding:22px; box-shadow:0 18px 44px rgba(0,0,0,.45)
+  }
+  h1{margin:0 0 6px; text-align:center; font-weight:900; letter-spacing:.06em}
+  .sub{margin:0 0 14px; text-align:center; color:var(--muted); font-size:14px}
+  .row{display:flex; gap:10px}
+  input{
+    width:100%; padding:12px; border-radius:12px; border:1px solid var(--b);
+    background:rgba(255,255,255,.05); color:var(--fg); outline:none
+  }
+  button{
+    cursor:pointer; border:none; border-radius:12px; padding:12px; font-weight:800; color:#052031
+  }
+  .primary{background:linear-gradient(90deg,#2ac0ff,#7dd3ff)}
+  .ghost{background:rgba(255,255,255,.08); color:var(--fg); border:1px solid var(--b)}
+  .link{display:inline-block; text-decoration:none; color:#9be2ff; text-align:center}
+  .hint{margin-top:8px; text-align:center; font-size:13px; opacity:.85; min-height:20px}
+  .toplinks{display:flex; gap:10px; margin-bottom:10px}
+</style>
 </head>
 <body>
-  <div class="card">
-    <h2>Veridium 🌿</h2>
-    <input type="email" id="email" placeholder="E-posta">
-    <input type="password" id="password" placeholder="Şifre">
-    <button id="loginBtn">Giriş Yap</button>
-    <button id="registerBtn">Kayıt Ol</button>
-    <p class="switch" id="toggleMode">Kayıt moduna geç</p>
+<canvas id="bg"></canvas>
+
+<div class="card">
+  <h1>VERIDIUM</h1>
+  <p class="sub">Giriş yap veya yeni hesap oluştur</p>
+
+  <div class="toplinks">
+    <button id="googleBtn" class="ghost" style="flex:1">🔒 Google ile</button>
+    <a class="ghost link" href="index.html" style="flex:1;display:grid;place-items:center">← Ana sayfa</a>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  <div style="height:6px"></div>
 
-    // 🔧 Firebase config – kendi projenin kodunu buraya koy
-    const firebaseConfig = {
-      apiKey: "AIzaSyC-VlZ1lYwSTo1NuBkPXSdt...",
-      authDomain: "veridium-site.firebaseapp.com",
-      projectId: "veridium-site",
-      storageBucket: "veridium-site.appspot.com",
-      messagingSenderId: "422528394891",
-      appId: "1:422528394891:web:bec929ead9..."
-    };
+  <div class="row">
+    <input id="email" type="email" placeholder="E-posta" />
+  </div>
+  <div class="row" style="margin-top:8px">
+    <input id="pass" type="password" placeholder="Şifre (min 6)" minlength="6"/>
+  </div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  <div class="row" style="margin-top:10px">
+    <button id="loginBtn"  class="primary" style="flex:1">Giriş yap</button>
+    <button id="signupBtn" class="ghost"   style="flex:1">Kayıt ol</button>
+  </div>
 
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const loginBtn = document.getElementById("loginBtn");
-    const registerBtn = document.getElementById("registerBtn");
+  <div class="row" style="margin-top:8px">
+    <button id="resetBtn" class="ghost" style="flex:1">Şifremi sıfırla</button>
+  </div>
 
-    registerBtn.onclick = () => {
-      createUserWithEmailAndPassword(auth, email.value, password.value)
-        .then(() => alert("Kayıt başarılı! Giriş yapabilirsin."))
-        .catch(e => alert(e.message));
-    };
+  <div id="msg" class="hint"></div>
+</div>
 
-    loginBtn.onclick = () => {
-      signInWithEmailAndPassword(auth, email.value, password.value)
-        .then(() => {
-          alert("Giriş başarılı!");
-          window.location.href = "echo.html";
-        })
-        .catch(e => alert(e.message));
-    };
-  </script>
+<!-- Firebase (modüler SDK) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+  // 🔧 BURAYA KENDİ CONFIG’İNİ KOY
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "veridium-site.firebaseapp.com",
+    projectId: "veridium-site",
+    storageBucket: "veridium-site.appspot.com",
+    messagingSenderId: "422528394891",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const $ = s => document.querySelector(s);
+  const say = t => $('#msg').textContent = t||'';
+
+  $('#googleBtn').addEventListener('click', async ()=>{
+    try{ await signInWithPopup(auth, new GoogleAuthProvider()); say('Giriş başarılı, yönlendiriyorum…'); setTimeout(()=>location.href='echo.html',500); }
+    catch(e){ say(err(e)); }
+  });
+  $('#loginBtn').addEventListener('click', async ()=>{
+    try{ await signInWithEmailAndPassword(auth, $('#email').value.trim(), $('#pass').value); say('Giriş başarılı…'); setTimeout(()=>location.href='echo.html',500); }
+    catch(e){ say(err(e)); }
+  });
+  $('#signupBtn').addEventListener('click', async ()=>{
+    try{ await createUserWithEmailAndPassword(auth, $('#email').value.trim(), $('#pass').value); say('Kayıt başarılı, yönlendiriyorum…'); setTimeout(()=>location.href='echo.html',500); }
+    catch(e){ say(err(e)); }
+  });
+  $('#resetBtn').addEventListener('click', async ()=>{
+    try{ await sendPasswordResetEmail(auth, $('#email').value.trim()); say('Sıfırlama e-postası gönderildi.'); }
+    catch(e){ say(err(e)); }
+  });
+  onAuthStateChanged(auth, (u)=>{ if(u) { say('Zaten giriş yapmışsın, yönlendiriyorum…'); setTimeout(()=>location.href='echo.html',500); } });
+
+  function err(e){ return (e && e.message) ? e.message.replace('Firebase: ','') : 'Hata'; }
+</script>
+
+<!-- Basit arka plan partikül animasyonu -->
+<script>
+  const c=document.getElementById('bg'), g=c.getContext('2d'); let W,H; const P=[];
+  function fit(){ W=c.width=innerWidth; H=c.height=innerHeight; }
+  addEventListener('resize',fit); fit();
+  for(let i=0;i<90;i++) P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.6,vy:(Math.random()-.5)*.6,r:1+Math.random()*2,a:.25+.4*Math.random()});
+  (function loop(){
+    requestAnimationFrame(loop);
+    g.fillStyle='rgba(8,12,16,.28)'; g.fillRect(0,0,W,H);
+    P.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+      g.beginPath(); g.arc(p.x,p.y,p.r,0,Math.PI*2); g.fillStyle=`rgba(155,226,255,${p.a})`; g.fill();
+    });
+  })();
+</script>
 </body>
 </html>
