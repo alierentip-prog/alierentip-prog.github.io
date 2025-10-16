@@ -4,111 +4,85 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Veridium — Giriş</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#0b0f14; --fg:#e9eef5; --muted:#aab6c5; --b:rgba(255,255,255,.14); --glass:rgba(255,255,255,.06) }
+  :root{ --fg:#e9eef5; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.16); --bg:#0b1118 }
   *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0; background:radial-gradient(900px 600px at 50% -10%, rgba(50,160,255,.08), transparent 60%), var(--bg); color:var(--fg); font:16px/1.5 Inter,system-ui}
-  header{position:fixed; inset:0 0 auto 0; height:72px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;
-    background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0)); z-index:5}
-  .brand{font-family:Cinzel,serif; font-weight:900; letter-spacing:.16em; background:linear-gradient(90deg,#9ad,#eaf,#9ad);
-    -webkit-background-clip:text; color:transparent}
-  .clock{font-weight:800; opacity:.9}
-  main{min-height:100%; display:grid; place-items:center; padding-top:60px}
-  .panel{width:min(520px,92%); border:1px solid var(--b); background:var(--glass); border-radius:20px; padding:24px; backdrop-filter:blur(8px); box-shadow:0 10px 50px rgba(0,0,0,.35)}
-  h1{margin:0 0 14px; font-size:22px}
-  label{display:block; font-weight:700; margin:12px 0 6px}
-  input{width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--b); background:rgba(255,255,255,.04); color:var(--fg)}
-  .row{display:flex; gap:10px; margin-top:16px}
-  button{flex:1; padding:12px 14px; border-radius:12px; border:1px solid var(--b); background:rgba(255,255,255,.08); color:var(--fg); font-weight:800; cursor:pointer}
-  .muted{color:var(--muted); font-size:14px; margin-top:10px}
-  .link{color:#8fd3ff; text-decoration:none; font-weight:700}
-  .ok{display:none; margin-top:12px; padding:10px 12px; border-radius:12px; background:rgba(100,255,180,.1); border:1px solid rgba(100,255,180,.3)}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui;display:grid;place-items:center}
+  main{width:min(420px,92%);border:1px solid var(--b);background:var(--glass);backdrop-filter:blur(8px);
+       border-radius:16px;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+  h1{margin:0 0 14px;font-weight:800}
+  label{display:block;margin:12px 0 6px;font-weight:600}
+  input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--b);background:#0b141d;color:var(--fg)}
+  .row{display:flex;gap:10px;margin-top:16px}
+  button{flex:1;appearance:none;border:1px solid var(--b);background:var(--glass);color:var(--fg);
+         padding:12px 14px;border-radius:12px;font-weight:800;cursor:pointer}
+  .muted{opacity:.8;font-size:14px;margin-top:10px}
+  .ok{display:none;margin-top:10px;padding:10px;border:1px solid #1e7;border-radius:12px;background:rgba(30,255,160,.08)}
+  a.link{color:#9cf;text-decoration:none}
 </style>
 </head>
 <body>
-<header>
-  <div class="clock" id="clock">--:-- — --.--.----</div>
-  <div class="brand">VERIDIUM</div>
-  <div></div>
-</header>
-
 <main>
-  <form class="panel" onsubmit="return false;">
-    <h1>Giriş</h1>
-    <label for="email">E-posta</label>
-    <input id="email" type="email" autocomplete="username" placeholder="ornek@mail.com"/>
-    <label for="pass">Şifre</label>
-    <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••"/>
-    <div class="row">
-      <button id="loginBtn">Giriş Yap</button>
-      <button id="signupBtn" type="button">Üye Ol</button>
-    </div>
-    <p class="muted">Henüz gerçek kimlik doğrulama yok. (Şimdilik görsel demo.)</p>
-    <div id="ok" class="ok">Tamam! (Demo)</div>
-    <p id="signup" class="muted">Hesabın yok mu? <a class="link" href="#signup">Buradan üye ol</a>.</p>
-  </form>
+  <h1>Giriş</h1>
+
+  <label for="email">E-posta</label>
+  <input id="email" type="email" autocomplete="email" placeholder="ornek@site.com"/>
+
+  <label for="pass">Şifre</label>
+  <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••"/>
+
+  <div class="row">
+    <button id="loginBtn">Giriş Yap</button>
+    <button id="signupBtn" type="button">Üye Ol</button>
+  </div>
+
+  <div id="ok" class="ok">Tamam! Giriş başarılı, yönlendiriyorum…</div>
+  <p class="muted">Hesabın yoksa <a class="link" href="#signup" id="signupLink">buradan üye ol</a>.</p>
 </main>
 
-<script>
-  // saat
-  (function(){
-    const z=n=>String(n).padStart(2,'0'); const el=document.getElementById('clock');
-    function t(){ const d=new Date(); el.textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`; requestAnimationFrame(t) }
-    t();
-  })();
+<!-- firebase -->
+<script type="module" src="./firebase.js"></script>
 
-  // demo davranış
-  const ok=document.getElementById('ok');
-  document.getElementById('loginBtn').onclick=()=>{ ok.style.display='block'; ok.textContent='Giriş denemesi tamam (demo)'; };
-  document.getElementById('signupBtn').onclick=()=>{ ok.style.display='block'; ok.textContent='Üyelik denemesi tamam (demo)'; };
-</script>
-  <!-- Firebase bağlantısı -->
+<!-- login işlemleri -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import { loginWithEmail, signupWithEmail } from "./firebase.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCge9-P5yZu0iq44omQ1ndtlMP_o98iDHE",
-    authDomain: "veridium-3ad51.firebaseapp.com",
-    projectId: "veridium-3ad51",
-    storageBucket: "veridium-3ad51.firebasestorage.app",
-    messagingSenderId: "910004709745",
-    appId: "1:910004709745:web:d6cd5a71e1e208cebbaed0",
-    measurementId: "G-72X897ZVLG"
+  const ok   = document.getElementById("ok");
+  const mail = document.getElementById("email");
+  const pass = document.getElementById("pass");
+
+  // #signup ile geldiyse odağı butona taşı
+  if (location.hash === "#signup") {
+    document.getElementById("signupBtn").focus();
+  }
+
+  document.getElementById("loginBtn").onclick = async (e)=>{
+    e.preventDefault();
+    try{
+      await loginWithEmail(mail.value.trim(), pass.value);
+      ok.style.display="block";
+      setTimeout(()=>location.href="index.html", 600);
+    }catch(err){
+      alert("Giriş hatası: " + (err.code || err.message));
+    }
   };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  const email = document.getElementById('email');
-  const pass = document.getElementById('pass');
-  const loginBtn = document.getElementById('loginBtn');
-  const signupBtn = document.getElementById('signupBtn');
-
-  // 🔑 Giriş
-  loginBtn.addEventListener('click', async () => {
-    try {
-      const user = await signInWithEmailAndPassword(auth, email.value, pass.value);
-      alert('Hoş geldin: ' + user.user.email);
-      location.href = 'index.html';
-    } catch (e) {
-      alert('Giriş hatası: ' + e.message);
+  document.getElementById("signupBtn").onclick = async (e)=>{
+    e.preventDefault();
+    try{
+      await signupWithEmail(mail.value.trim(), pass.value);
+      ok.style.display="block";
+      setTimeout(()=>location.href="index.html", 600);
+    }catch(err){
+      alert("Kayıt hatası: " + (err.code || err.message));
     }
-  });
+  };
 
-  // ✨ Üye Ol
-  signupBtn.addEventListener('click', async () => {
-    try {
-      const user = await createUserWithEmailAndPassword(auth, email.value, pass.value);
-      alert('Kayıt başarılı: ' + user.user.email);
-      location.href = 'index.html';
-    } catch (e) {
-      alert('Kayıt hatası: ' + e.message);
-    }
+  // Enter ile giriş
+  document.addEventListener("keydown",(ev)=>{
+    if(ev.key==="Enter") document.getElementById("loginBtn").click();
   });
-        </script>
-<script type="module" src="firebase.js"></script>
+</script>
 </body>
 </html>
