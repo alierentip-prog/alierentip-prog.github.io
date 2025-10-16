@@ -4,98 +4,110 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Veridium — Erkek</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#061018; --fg:#e8f6ff; --accent:#19b7ff; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.15) }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 Inter,system-ui}
-  header{
-    position:fixed; inset:0 0 auto 0; height:72px; display:flex; align-items:center; justify-content:space-between;
-    padding:0 16px; background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));
-    z-index:5
-  }
-  .brand{ font-family:Cinzel,serif; font-weight:900; letter-spacing:.16em; text-transform:uppercase;
-    background:linear-gradient(90deg,#7dd3ff,#19b7ff,#7bdfff); -webkit-background-clip:text; color:transparent; }
-  .clock{font-weight:700; opacity:.9}
-  .actions a{
-    margin-left:10px; padding:10px 14px; border-radius:12px; text-decoration:none; color:var(--fg);
-    border:1px solid var(--b); background:var(--glass); backdrop-filter:blur(6px); font-weight:700
-  }
-  canvas{position:fixed; inset:0; z-index:0; display:block}
-  main{ position:relative; z-index:2; padding:100px 16px 32px; max-width:1100px; margin:0 auto }
-  .card{ border:1px solid var(--b); background:var(--glass); border-radius:16px; padding:16px; margin-bottom:14px; backdrop-filter:blur(8px) }
+:root{--fg:#e9eef5;--b:rgba(255,255,255,.16);--glass:rgba(255,255,255,.06);--bg:#071018}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui;overflow:hidden}
+header{position:fixed;top:12px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:20;background:rgba(0,0,0,.25);backdrop-filter:blur(6px)}
+.brand{font-family:"Cinzel",serif;font-weight:900;letter-spacing:.18em;background:linear-gradient(90deg,#7dd3ff,#31b1ff,#b5e1ff);-webkit-background-clip:text;color:transparent}
+.clock{font-weight:800;letter-spacing:.1em;opacity:.9}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid var(--b);background:var(--glass);color:var(--fg);padding:8px 12px;border-radius:10px;text-decoration:none;font-weight:800}
+main{position:relative;z-index:2;max-width:1100px;margin:110px auto 24px;padding:0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{border:1px solid var(--b);background:rgba(255,255,255,.05);border-radius:16px;padding:14px;backdrop-filter:blur(8px)}
+canvas#sea{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+canvas#fx{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+footer{text-align:center;opacity:.8;margin:18px 0}
 </style>
 </head>
 <body>
-  <header>
-    <div class="clock" id="clock">--:-- — --.--.----</div>
-    <h1 class="brand">VERIDIUM</h1>
-    <div class="actions">
-      <a href="login.html">Giriş Yap</a>
-      <a href="login.html#signup">Üye Ol</a>
-    </div>
-  </header>
+<header>
+  <div class="clock" id="clock">--:--:-- — --.--.----</div>
+  <h1 class="brand">VERIDIUM</h1>
+  <div class="actions">
+    <span class="guestOnly">
+      <a class="btn" href="login.html">Giriş Yap</a>
+      <a class="btn" href="login.html#signup">Üye Ol</a>
+    </span>
+    <span class="userOnly" style="display:none">
+      <span id="userEmail" class="btn" style="pointer-events:none"></span>
+      <button id="logoutBtn" class="btn" type="button">Çıkış Yap</button>
+    </span>
+  </div>
+</header>
 
-  <canvas id="ocean"></canvas>
+<canvas id="sea"></canvas>
+<canvas id="fx"></canvas>
 
-  <main>
+<main>
+  <div class="grid">
     <section class="card">
-      <h2>Derin Sular’a hoş geldin ⚙️</h2>
-      <p>Rüzgârın sürüklediği <strong>hava kabarcıkları</strong> sahnenin üzerinde usulca yükselir. Gözlerini yormayan, sinema tadında bir hareket.</p>
+      <h2>⚙️ Derin Sular</h2>
+      <p>Su altı koridorunda akış çizgileri, neon şeritler ve kabarcıklar… Soğuk, net, karizmatik bir atmosfer.</p>
     </section>
     <section class="card">
-      <h2>Ne var burada?</h2>
-      <ul>
-        <li>Akıcı deniz efekti, baloncuklar.</li>
-        <li>Sol üstte canlı saat & tarih.</li>
-        <li>Sağ üstte giriş/üye ol.</li>
-      </ul>
+      <h2>🔗 Keşfet</h2>
+      <p><a class="btn" href="echo.html">Echo (konuk defteri)</a>
+         <a class="btn" href="felsefe.html">Felsefe</a>
+         <a class="btn" href="notlar.html">Notlar</a>
+         <a class="btn" href="tip.html">Tıp Bilgileri</a>
+         <a class="btn" href="profile.html">Profil</a></p>
     </section>
-  </main>
+    <section class="card">
+      <h2>Günün Sözü</h2>
+      <div id="quote">“Sessiz güç en çok yankılanır.”</div>
+    </section>
+  </div>
+</main>
+
+<footer>© 2025 Veridium</footer>
 
 <script>
-/* Saat */
-(function(){
-  const z=n=>String(n).padStart(2,'0');
-  const el=document.getElementById('clock');
-  function tick(){ const d=new Date(); el.textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`; requestAnimationFrame(tick) }
-  tick();
-})();
+// saat
+(function tick(){const d=new Date(),z=n=>String(n).padStart(2,'0');
+document.getElementById('clock').textContent=
+`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`;requestAnimationFrame(tick)})();
 
-/* Deniz baloncukları */
+// su altı animasyonu
 (function(){
-  const c=document.getElementById('ocean'), x=c.getContext('2d');
-  function fit(){ c.width=innerWidth; c.height=innerHeight }
-  fit(); addEventListener('resize',fit);
-  const W=()=>c.width, H=()=>c.height;
-  const trails=Array.from({length:Math.floor(W()*H()/22000)},()=>({
-    x:Math.random()*W(), y:Math.random()*H(), vx:(.3+.9*Math.random()), vy:(Math.random()-.5)*.4,
-    l:50+Math.random()*140, w:.8+Math.random()*1.8, a:.25+.25*Math.random()
+  const c=document.getElementById('sea'),x=c.getContext('2d');
+  const f=document.getElementById('fx'),y=f.getContext('2d');
+  function size(){c.width=innerWidth;c.height=innerHeight;f.width=innerWidth;f.height=innerHeight}
+  size(); addEventListener('resize',size);
+
+  // akış şeritleri
+  const trails=Array.from({length:Math.floor(innerWidth*innerHeight/24000)},()=>({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:.7+Math.random()*1.2,vy:(Math.random()-.5)*.4,
+    l:80+Math.random()*160,w:1+Math.random()*2,a:.35+.2*Math.random()
   }));
-  const bubbles=Array.from({length:80},()=>({x:Math.random()*W(), y:H()+Math.random()*H(), r:1+Math.random()*3, s:.3+.9*Math.random()}));
-  (function loop(){
-    x.fillStyle='rgba(3,10,18,.3)'; x.fillRect(0,0,W(),H());
+  // kabarcıklar
+  const bubbles=Array.from({length:48},()=>({x:Math.random()*innerWidth,y:innerHeight+Math.random()*innerHeight,r:1+Math.random()*3,s:.4+Math.random()}));
 
-    // izler
+  (function loop(){
+    // arka akış
+    x.fillStyle='rgba(5,15,24,0.18)'; x.fillRect(0,0,c.width,c.height);
     for(const t of trails){
-      t.x+=t.vx; t.y+=t.vy; if(t.x>W()+60) t.x=-60; if(t.y<-40) t.y=H()+40; if(t.y>H()+40) t.y=-40;
+      t.x+=t.vx; t.y+=t.vy;
+      if(t.x>c.width+80) t.x=-80;
+      if(t.y<-40) t.y=c.height+40; if(t.y>c.height+40) t.y=-40;
       const g=x.createLinearGradient(t.x-t.l,t.y,t.x,t.y);
-      g.addColorStop(0,'rgba(25,183,255,0)');
-      g.addColorStop(1,`rgba(25,183,255,${t.a})`);
+      g.addColorStop(0,'rgba(0,180,255,0)'); g.addColorStop(1,`rgba(0,180,255,${t.a})`);
       x.strokeStyle=g; x.lineWidth=t.w; x.beginPath(); x.moveTo(t.x-t.l,t.y); x.lineTo(t.x,t.y); x.stroke();
     }
-
-    // baloncuklar
+    // üst parıltı/kabarcık
+    y.clearRect(0,0,f.width,f.height);
     for(const b of bubbles){
-      b.y-=b.s; if(b.y<-12){ b.y=H()+12; b.x=Math.random()*W() }
-      const g=x.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r*8);
-      g.addColorStop(0,'rgba(109,233,255,.35)'); g.addColorStop(1,'rgba(109,233,255,0)');
-      x.fillStyle=g; x.beginPath(); x.arc(b.x,b.y,b.r,0,Math.PI*2); x.fill();
+      b.y-=b.s; if(b.y<-20){b.y=f.height+20;b.x=Math.random()*f.width}
+      y.globalAlpha=.28; y.fillStyle='#6de0ff'; y.beginPath(); y.arc(b.x,b.y,b.r,0,6.283); y.fill();
     }
-
     requestAnimationFrame(loop);
   })();
 })();
 </script>
+
+<!-- firebase -->
+<script type="module" src="./firebase.js"></script>
 </body>
 </html>
