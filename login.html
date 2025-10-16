@@ -1,81 +1,92 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Veridium — Giriş</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--fg:#e9eef5;--b:rgba(255,255,255,.16);--glass:rgba(255,255,255,.06);--bg:#0b1118}
-*{box-sizing:border-box} html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui;display:grid;place-items:center}
-main{width:min(420px,92%);border:1px solid var(--b);background:var(--glass);backdrop-filter:blur(8px);
-     border-radius:16px;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
-h1{margin:0 0 14px;font-weight:800}
-label{display:block;margin:12px 0 6px;font-weight:600}
-input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--b);background:#0b141d;color:var(--fg)}
-.row{display:flex;gap:10px;margin-top:16px}
-button{flex:1;border:1px solid var(--b);background:var(--glass);color:var(--fg);
-       padding:12px 14px;border-radius:12px;font-weight:800;cursor:pointer}
-.ok{display:none;margin-top:10px;padding:10px;border:1px solid #1e7;border-radius:12px;background:rgba(30,255,160,.08)}
+  :root{ --bg:#0b0f14; --fg:#e9eef5; --mut:#a9b3c2; --b:rgba(255,255,255,.16); --glass:rgba(255,255,255,.06) }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0; background:linear-gradient(180deg,#070a0f,#0b0f14); color:var(--fg); font:15px/1.55 Inter,system-ui}
+  header{display:flex; align-items:center; justify-content:center; padding:26px 16px}
+  .brand{font:900 34px/1 Cinzel,serif; letter-spacing:.18em;
+    background:linear-gradient(90deg,#8ec5ff,#31b1ff,#bfe3ff); -webkit-background-clip:text; color:transparent}
+  main{max-width:480px; margin:30px auto; padding:0 16px}
+  .panel{border:1px solid var(--b); background:var(--glass); backdrop-filter:blur(8px);
+    border-radius:16px; padding:22px; box-shadow:0 12px 50px rgba(0,0,0,.35)}
+  h1{margin:0 0 14px; font-size:22px}
+  label{display:block; margin:12px 0 6px; color:var(--mut); font-weight:600}
+  input{width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--b); background:#0e141b; color:var(--fg)}
+  .row{display:flex; gap:10px; margin-top:16px}
+  button{flex:1; padding:12px 14px; border-radius:10px; border:1px solid var(--b); background:#0f1822; color:var(--fg); font-weight:800; cursor:pointer}
+  button.primary{background:#0e3a5a}
+  .ok{display:none; margin-top:10px; padding:10px; border:1px solid #2a7; color:#bff; background:rgba(0,255,170,.06); border-radius:10px}
+  .muted{color:var(--mut)}
 </style>
 </head>
 <body>
+<header><div class="brand">VERIDIUM</div></header>
+
 <main>
-  <h1>Giriş</h1>
-  <label for="email">E-posta</label>
-  <input id="email" type="email" autocomplete="email" placeholder="ornek@site.com"/>
+  <form class="panel" onsubmit="return false;">
+    <h1>Giriş</h1>
+    <label for="email">E-posta</label>
+    <input id="email" type="email" autocomplete="username" required>
 
-  <label for="pass">Şifre</label>
-  <input id="pass" type="password" autocomplete="current-password" placeholder="••••••"/>
+    <label for="pass">Şifre</label>
+    <input id="pass" type="password" autocomplete="current-password" required>
 
-  <div class="row">
-    <button id="loginBtn" type="button">Giriş Yap</button>
-    <button id="signupBtn" type="button">Üye Ol</button>
-  </div>
+    <div class="row">
+      <button id="loginBtn" class="primary">Giriş Yap</button>
+      <button id="signupBtn" type="button">Üye Ol</button>
+    </div>
 
-  <div id="ok" class="ok">Tamam! Yönlendiriyorum…</div>
+    <div id="ok" class="ok">Tamam! 😊</div>
+    <p class="muted" style="margin-top:10px">Hesabın yoksa “Üye Ol” ile anında oluşturulur.</p>
+  </form>
 </main>
 
-<!-- Firebase -->
+<!-- 1) Firebase betiği ÖNCE yüklenir -->
 <script type="module" src="./firebase.js"></script>
+
+<!-- 2) Giriş mantığı SONRA -->
 <script type="module">
   const F = window.__VERI__;
+  if(!F){ alert("Firebase yüklenemedi!"); throw new Error("firebase.js bulunamadı"); }
+
   const email = document.getElementById('email');
   const pass  = document.getElementById('pass');
   const ok    = document.getElementById('ok');
 
-  function nice(err){
-    switch(err.code){
-      case 'auth/invalid-email': return 'E-posta biçimi geçersiz.';
-      case 'auth/user-not-found': return 'Bu e-postayla kullanıcı yok.';
-      case 'auth/wrong-password': return 'Şifre hatalı.';
-      case 'auth/weak-password':  return 'Şifre en az 6 karakter.';
-      case 'auth/too-many-requests': return 'Çok deneme! Biraz bekle.';
-      default: return err.message||err;
-    }
+  function showOK(msg="Tamam! 😊"){
+    ok.textContent = msg; ok.style.display='block';
+    setTimeout(()=> ok.style.display='none', 2000);
   }
+  function nice(e){ return F.err(e); }
 
+  // Giriş
   document.getElementById('loginBtn').onclick = async ()=>{
     try{
       await F.login(email.value.trim(), pass.value);
-      ok.style.display = 'block';
-      setTimeout(()=>location.href='index.html', 500);
-    }catch(e){ alert('Giriş hatası: ' + nice(e)); }
+      showOK("Giriş başarılı!");
+      setTimeout(()=> location.href = "index.html", 600);
+    }catch(e){ alert("Giriş hatası: " + nice(e)); }
   };
 
+  // Kayıt
   document.getElementById('signupBtn').onclick = async ()=>{
     try{
       await F.signup(email.value.trim(), pass.value);
-      ok.style.display = 'block';
-      setTimeout(()=>location.href='index.html', 500);
-    }catch(e){ alert('Kayıt hatası: ' + nice(e)); }
+      showOK("Kayıt tamam! Oturum açıldı.");
+      setTimeout(()=> location.href = "index.html", 600);
+    }catch(e){ alert("Kayıt hatası: " + nice(e)); }
   };
 
-  // Enter ile giriş
-  addEventListener('keydown', (ev)=>{ if(ev.key==='Enter') document.getElementById('loginBtn').click(); });
-
-  // Girişliysen otomatik geri dön
-  F.on(u=>{ if(u) location.href='index.html'; });
+  // Enter ile gönder
+  addEventListener('keydown', e=>{
+    if(e.key === 'Enter') document.getElementById('loginBtn').click();
+  });
 </script>
 </body>
 </html>
