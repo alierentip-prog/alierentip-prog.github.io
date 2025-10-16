@@ -124,5 +124,86 @@
     });
   })();
 </script>
+<script type="module">
+  /* Firebase SDK importları */
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    GoogleAuthProvider,
+    signInWithPopup,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+  /* 🔧 Buraya kendi firebaseConfig nesneni koy (Firebase konsolunda gördüğün) */
+  const firebaseConfig = {
+    apiKey: "AIzA...seninki...",
+    authDomain: "veridium-site.firebaseapp.com",
+    projectId: "veridium-site",
+    storageBucket: "veridium-site.appspot.com",
+    messagingSenderId: "422528394891",
+    appId: "1:422528394891:web:........"
+  };
+
+  // Başlat
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // ---- Form elemanları (login.html’deki id’ler bunlar olmalı) ----
+  const emailIn   = document.getElementById("email");
+  const passIn    = document.getElementById("password");
+  const nameIn    = document.getElementById("displayName");   // varsa
+  const signUpBtn = document.getElementById("emailSignUp");   // Kayıt ol
+  const signInBtn = document.getElementById("emailLogin");    // Giriş yap
+  const googleBtn = document.getElementById("googleLogin");   // Google ile
+  const outBtn    = document.getElementById("logoutBtn");     // (varsa) Çıkış
+
+  // ---- Email/Şifre Kayıt ----
+  signUpBtn?.addEventListener("click", async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, emailIn.value, passIn.value);
+      window.location.href = "/echo.html";
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+
+  // ---- Email/Şifre Giriş ----
+  signInBtn?.addEventListener("click", async () => {
+    try {
+      await signInWithEmailAndPassword(auth, emailIn.value, passIn.value);
+      window.location.href = "/echo.html";
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+
+  // ---- Google ile Giriş ----
+  googleBtn?.addEventListener("click", async () => {
+    try {
+      await signInWithPopup(auth, provider);
+      window.location.href = "/echo.html";
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+
+  // ---- (opsiyonel) Çıkış ----
+  outBtn?.addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "/login.html";
+  });
+
+  // Zaten girişliyse login sayfasında bekletme, direkt echo’ya gönder
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // kullanıcı girişliyse:
+      // window.location.href = "/echo.html"; // istersen aç
+    }
+  });
+      </script>
 </body>
 </html>
