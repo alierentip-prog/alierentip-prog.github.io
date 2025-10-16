@@ -133,7 +133,7 @@
     ctx.globalAlpha=.25; ctx.strokeStyle='#6ee7ff'; ctx.beginPath();
     ctx.moveTo(0,FLOOR+36); ctx.lineTo(cvs.width, FLOOR+36); ctx.stroke(); ctx.globalAlpha=1;
 
-    t++; if(running) requestAnimationFrame(tick);
+    t++; if requestAnimationFrame(tick);
   }
 
   function gameOver(){
