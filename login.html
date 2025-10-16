@@ -1,71 +1,76 @@
-<!doctype html>
-<html lang="tr">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Giriş • AZURA</title>
+<!doctype html><html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZURA • Giriş / Üyelik</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --b:rgba(255,255,255,.15); --glass:rgba(255,255,255,.06); --fg:#eaf4ff; --bg:#0b1117 }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Inter,system-ui;display:grid;place-items:center}
-  .card{width:min(420px,92%);border:1px solid var(--b);background:var(--glass);backdrop-filter:blur(8px);
-        padding:20px 18px;border-radius:16px}
-  h1{margin:.2em 0 12px;font-size:24px}
-  label{display:block;margin:10px 0 6px;font-weight:600;opacity:.9}
-  input{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--b);background:#0e151c;color:var(--fg)}
-  .row{display:flex;gap:10px;margin-top:14px}
-  button{flex:1;padding:11px 14px;border-radius:12px;border:1px solid var(--b);background:#15202b;color:var(--fg);
-         font-weight:800;cursor:pointer}
-  button:hover{filter:brightness(1.08)}
-  .msg{margin-top:10px;font-size:14px;min-height:22px}
-  .ok{color:#8ff0a6} .err{color:#ff9ab0}
-  a.back{display:inline-block;margin-top:14px;text-decoration:none;color:#a7c8ff}
+  :root{--b:rgba(255,255,255,.16);--g:rgba(255,255,255,.06);--fg:#eaf4ff;--bg:#0b1218}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Inter,system-ui}
+  .wrap{max-width:420px;margin:40px auto;padding:20px}
+  .card{border:1px solid var(--b);background:var(--g);backdrop-filter:blur(8px);border-radius:16px;padding:20px}
+  input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--b);background:#0d151c;color:var(--fg);margin:8px 0 12px}
+  button{width:100%;padding:12px;border:1px solid var(--b);border-radius:12px;background:var(--g);color:var(--fg);font-weight:800;cursor:pointer}
+  .row{display:flex;gap:8px}
+  .msg{margin-top:10px;opacity:.85}
+  a{color:#bfe1ff}
 </style>
-</head>
-<body>
-
-<div class="card">
-  <h1>Giriş</h1>
-  <label for="email">E-posta</label>
-  <input id="email" type="email" autocomplete="email" placeholder="ornek@mail.com" required>
-  <label for="pass">Şifre</label>
-  <input id="pass" type="password" autocomplete="current-password" placeholder="••••••" required>
-  <div class="row">
+</head><body>
+<div class="wrap">
+  <h1>AZURA</h1>
+  <div class="card">
+    <h3>Giriş</h3>
+    <input id="lemail" type="email" placeholder="E-posta">
+    <input id="lpass"  type="password" placeholder="Şifre">
     <button id="loginBtn">Giriş Yap</button>
-    <button id="signupBtn" type="button">Üye Ol</button>
+    <p class="msg" id="lmsg"></p>
   </div>
-  <div id="msg" class="msg"></div>
-  <a class="back" href="index.html">← Ana sayfa</a>
+  <br>
+  <div class="card" id="signupBox">
+    <h3>Üye Ol</h3>
+    <input id="semail" type="email" placeholder="E-posta">
+    <input id="spass"  type="password" placeholder="Şifre (min 6)">
+    <button id="signupBtn">Üye Ol</button>
+    <p class="msg" id="smsg"></p>
+  </div>
+  <p style="margin-top:16px"><a href="index.html">← Ana sayfa</a></p>
 </div>
 
-<!-- AZURA Firebase -->
+<!-- Firebase entegrasyonu -->
 <script type="module" src="./firebase.js"></script>
+<script type="module">
+  const lmsg = document.getElementById('lmsg');
+  const smsg = document.getElementById('smsg');
 
-<script>
-  const $ = (id)=>document.getElementById(id);
-  const msg = $("msg");
-  const ok  = (t)=>{ msg.className="msg ok";  msg.textContent=t; };
-  const err = (e)=>{ const m=e?.code? e.code.replace("auth/","").replaceAll("-"," ") : (e?.message||"Hata");
-                      msg.className="msg err"; msg.textContent="Hata: "+m; alert("Hata: "+m); };
-
-  // Butonlar
-  $("loginBtn").onclick  = async ()=>{
-    try{ await AZ.login( $("email").value.trim(), $("pass").value );
-         ok("Giriş başarılı, yönlendiriliyor…"); setTimeout(()=>location.href="index.html",600); }
-    catch(e){ err(e); }
+  // Giriş
+  document.getElementById('loginBtn').onclick = async ()=>{
+    lmsg.textContent = "Giriş deneniyor…";
+    try{
+      await window.AZ.login(
+        document.getElementById('lemail').value.trim(),
+        document.getElementById('lpass').value
+      );
+      lmsg.textContent = "Giriş başarılı, yönlendiriliyor…";
+      location.href = "index.html";
+    }catch(e){
+      lmsg.textContent = "Hata: "+(e.code||e.message);
+      alert("Giriş hatası: "+(e.message||e));
+    }
   };
-  $("signupBtn").onclick = async ()=>{
-    try{ await AZ.signup( $("email").value.trim(), $("pass").value );
-         ok("Üyelik oluşturuldu, giriş yapıldı."); setTimeout(()=>location.href="index.html",600); }
-    catch(e){ err(e); }
-  };
 
-  // Zaten girişliyse buraya gelince gönder
-  (function waitAZ(){
-    if(!window.AZ) return setTimeout(waitAZ,50);
-    AZ.onAuth((u)=>{ if(u) location.replace("index.html"); });
-  })();
+  // Üyelik
+  document.getElementById('signupBtn').onclick = async ()=>{
+    smsg.textContent = "Kayıt oluşturuluyor…";
+    try{
+      await window.AZ.signup(
+        document.getElementById('semail').value.trim(),
+        document.getElementById('spass').value
+      );
+      smsg.textContent = "Kayıt başarılı! Giriş yapıldı.";
+      location.href = "index.html";
+    }catch(e){
+      smsg.textContent = "Hata: "+(e.code||e.message);
+      alert("Üyelik hatası: "+(e.message||e));
+    }
+  };
 </script>
-</body>
-</html>
+</body></html>
