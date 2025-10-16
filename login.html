@@ -39,54 +39,33 @@
   <a class="back" href="index.html">← Ana sayfa</a>
 </div>
 
-<!-- Firebase compat CDN (modül değil) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<!-- AZURA Firebase -->
+<script type="module" src="./firebase.js"></script>
 
 <script>
-  // TODO: Firebase config (Firebase Console > Project settings > Web app)
-  const firebaseConfig = {
-    apiKey: "API_KEY",
-    authDomain: "PROJE_ID.firebaseapp.com",
-    projectId: "PROJE_ID",
-    storageBucket: "PROJE_ID.firebasestorage.app",
-    messagingSenderId: "XXXX",
-    appId: "XXXX"
+  const $ = (id)=>document.getElementById(id);
+  const msg = $("msg");
+  const ok  = (t)=>{ msg.className="msg ok";  msg.textContent=t; };
+  const err = (e)=>{ const m=e?.code? e.code.replace("auth/","").replaceAll("-"," ") : (e?.message||"Hata");
+                      msg.className="msg err"; msg.textContent="Hata: "+m; alert("Hata: "+m); };
+
+  // Butonlar
+  $("loginBtn").onclick  = async ()=>{
+    try{ await AZ.login( $("email").value.trim(), $("pass").value );
+         ok("Giriş başarılı, yönlendiriliyor…"); setTimeout(()=>location.href="index.html",600); }
+    catch(e){ err(e); }
+  };
+  $("signupBtn").onclick = async ()=>{
+    try{ await AZ.signup( $("email").value.trim(), $("pass").value );
+         ok("Üyelik oluşturuldu, giriş yapıldı."); setTimeout(()=>location.href="index.html",600); }
+    catch(e){ err(e); }
   };
 
-  // Init
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
-  const email = document.getElementById('email');
-  const pass  = document.getElementById('pass');
-  const msg   = document.getElementById('msg');
-  const ok = t => { msg.className='msg ok'; msg.textContent=t };
-  const err = e => {
-    const m = (e && e.code) ? e.code.replace('auth/','').replaceAll('-',' ') : (e?.message||'Hata');
-    msg.className='msg err'; msg.textContent = 'Hata: ' + m; alert('Giriş hatası: ' + m);
-  };
-
-  document.getElementById('loginBtn').onclick = async (e)=>{
-    e.preventDefault();
-    try{
-      await auth.signInWithEmailAndPassword(email.value.trim(), pass.value);
-      ok('Giriş başarılı, yönlendiriliyor…');
-      setTimeout(()=>location.href='index.html', 600);
-    }catch(e2){ err(e2); }
-  };
-
-  document.getElementById('signupBtn').onclick = async ()=>{
-    try{
-      await auth.createUserWithEmailAndPassword(email.value.trim(), pass.value);
-      ok('Üyelik oluşturuldu, giriş yapıldı.');
-      setTimeout(()=>location.href='index.html', 600);
-    }catch(e2){ err(e2); }
-  };
-
-  // Zaten girişliyse direkt geri yolla
-  auth.onAuthStateChanged(u=>{ if(u){ location.replace('index.html'); } });
+  // Zaten girişliyse buraya gelince gönder
+  (function waitAZ(){
+    if(!window.AZ) return setTimeout(waitAZ,50);
+    AZ.onAuth((u)=>{ if(u) location.replace("index.html"); });
+  })();
 </script>
 </body>
 </html>
