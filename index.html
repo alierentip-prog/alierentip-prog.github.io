@@ -5,61 +5,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>VERIDIUM — Ali Eren'in Dijital Köşesi</title>
   <meta name="description" content="Veridium: Günün/Gecenin Sözü, rastgele bilgi, bilgi kartları ve canlı saat.">
+
   <style>
     /* ====== Tema Değişkenleri ====== */
     :root{
-      --bg: #0b0d10; --fg:#e5e7eb; --muted:#9ca3af; --card:#111418; --accent:#6ee7ff;
-      --border: rgba(255,255,255,.06); --glow: 0 8px 24px rgba(110,231,255,.15);
+      --bg:#0b0d10; --fg:#e5e7eb; --muted:#9ca3af; --card:#111418; --accent:#6ee7ff;
+      --border:rgba(255,255,255,.06); --glow:0 8px 24px rgba(110,231,255,.15);
+      --brand1:#6ee7ff; --brand2:#60a5fa; --brand3:#22d3ee;
+      --radius:16px;
+      --trs: 220ms ease;             /* genel geçiş */
+      --trs-slow: 420ms ease;        /* tema geçişi */
     }
     [data-theme="light"]:root{
       --bg:#f7fafc; --fg:#0f172a; --muted:#475569; --card:#ffffff; --accent:#0ea5e9;
-      --border: rgba(0,0,0,.06); --glow: 0 8px 24px rgba(14,165,233,.15);
+      --border:rgba(0,0,0,.06); --glow:0 8px 24px rgba(14,165,233,.15);
+      --brand1:#0ea5e9; --brand2:#22d3ee; --brand3:#60a5fa;
     }
 
     /* ====== Global ====== */
     html,body{height:100%}
     body{
       margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--fg); background:
+      color:var(--fg);
+      background:
         radial-gradient(1200px 600px at 120% -10%, rgba(110,231,255,.08), transparent 60%),
         radial-gradient(1000px 500px at -20% 120%, rgba(59,130,246,.08), transparent 60%),
-        /* hafif grid */
         linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255,255,255,.04) 1px, transparent 1px),
         var(--bg);
-      background-size: auto, auto, 26px 26px, 26px 26px, auto;
-      background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+      background-size:auto,auto,26px 26px,26px 26px,auto;
+      transition: background-color var(--trs-slow), color var(--trs-slow);
+    }
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important; transition:none !important}
     }
     a{color:var(--accent); text-decoration:none}
     a:hover{text-decoration:underline}
     .wrap{ width:min(980px, 100%); margin: 0 auto; padding: 20px 16px 120px }
+    .visually-hidden{position:absolute !important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
 
     /* ====== Üst Bar ====== */
     .topbar{
-      position: sticky; top:0; z-index:10;
+      position: sticky; top:0; z-index:10; inset-block-start:0;
       display:flex; align-items:center; gap:12px; justify-content:space-between;
       padding: 12px 16px; background:rgba(0,0,0,.15);
       backdrop-filter: blur(8px);
       border-bottom:1px solid var(--border);
     }
-    .brand{
-      font-weight:800; letter-spacing:.38em; text-transform:uppercase;
-      font-size: clamp(14px, 2.8vw, 16px);
-    }
-    nav{display:flex; align-items:center; gap:14px}
+    nav{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
     .btn, .chip{
-      display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:12px;
+      display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px;
       background:var(--card); border:1px solid var(--border); box-shadow: var(--glow);
-      color:var(--fg); font-size:14px;
+      color:var(--fg); font-size:14px; line-height:1; transition: transform var(--trs), background var(--trs);
+      -webkit-tap-highlight-color: transparent;
     }
-    .chip{ background: transparent; box-shadow: none }
+    .btn:active, .chip:active{ transform: scale(.98) }
+    .chip{ background: transparent; box-shadow: none; padding:8px 12px }
+
+    /* ====== Işıklı Logo (Brand) ====== */
+    .brand{
+      font-weight:900; letter-spacing:.38em; text-transform:uppercase;
+      font-size: clamp(13px, 2.8vw, 16px);
+      background: linear-gradient(90deg,var(--brand1),var(--brand2),var(--brand3));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      position:relative;
+    }
+    .brand::after{ /* parıltı */
+      content:""; position:absolute; inset:0; border-radius:8px;
+      box-shadow: 0 0 48px 6px rgba(110,231,255,.12);
+      opacity:.6; filter: blur(8px); pointer-events:none;
+    }
+    .brand-shimmer{
+      background-size:200% 100%;
+      animation: shimmer 6s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
 
     /* ====== Kartlar & Grid ====== */
     .grid{ display:grid; gap:16px; margin-top:18px }
     @media (min-width: 780px){ .grid{ grid-template-columns: 1.2fr .8fr } }
     .card{
       background: var(--card); border:1px solid var(--border);
-      border-radius:16px; padding:18px; box-shadow: var(--glow);
+      border-radius:var(--radius); padding:18px; box-shadow: var(--glow);
+      transition: background var(--trs), border-color var(--trs), box-shadow var(--trs);
     }
     .title{ margin:0 0 6px; font-size: clamp(26px, 4vw, 36px) }
     .subtitle{ margin:0 0 12px; color:var(--muted) }
@@ -69,9 +101,10 @@
     .quote-footer{ margin-top:8px; color:var(--muted); font-size:14px }
 
     .clock{
-      position: fixed; right: 16px; bottom: 16px; padding: 10px 14px; border-radius: 12px;
+      position: fixed; right: 16px; bottom: 16px; padding: 11px 14px; border-radius: 12px;
       background: var(--card); border:1px solid var(--border); box-shadow: var(--glow);
       font-variant-numeric: tabular-nums; letter-spacing:.6px; min-width: 132px; text-align:center;
+      transition: background var(--trs), border-color var(--trs);
     }
 
     /* ====== Knowledge Cards ====== */
@@ -88,15 +121,29 @@
       background:rgba(0,0,0,.18); backdrop-filter: blur(8px); border-top:1px solid var(--border);
       font-size:12.5px; color:var(--muted)
     }
+
+    /* Mobil küçük iyileştirmeler */
+    @media (max-width:380px){
+      .btn, .chip{ padding:9px 10px; font-size:13px }
+      .clock{ right: 12px; bottom: 12px }
+    }
   </style>
 </head>
 <body>
   <!-- Üst bar & marka -->
   <header class="topbar">
-    <div class="brand">V E R I D I U M</div>
+    <div class="brand brand-shimmer" aria-label="Veridium">V E R I D I U M</div>
     <nav>
       <a class="chip" href="./">Ana Sayfa</a>
       <a class="chip" href="./about.html">Hakkımda</a>
+
+      <!-- Müzik kontrolü -->
+      <button class="btn" id="musicBtn" type="button" aria-pressed="false">▶️ Müzik</button>
+      <label class="visually-hidden" for="vol">Ses</label>
+      <input id="vol" type="range" min="0" max="1" step="0.05" value="0.25"
+             style="accent-color:#6ee7ff;height:6px" aria-label="Ses düzeyi">
+
+      <!-- Tema -->
       <button class="btn" id="toggleTheme" type="button" aria-pressed="false">🌙 Karanlık</button>
     </nav>
   </header>
@@ -140,6 +187,11 @@
     <div> <span style="opacity:.8">/</span> <a href="./about.html">About</a> </div>
   </footer>
 
+  <!-- Müzik dosyası (isteğe bağlı): repo köküne music.mp3 yükleyebilirsin -->
+  <audio id="bgm" loop preload="none">
+    <!-- Örnek: <source src="music.mp3" type="audio/mpeg"> -->
+  </audio>
+
   <script>
     /* ========== Basit Depo ========== */
     const storage = {
@@ -156,7 +208,7 @@
       btn.setAttribute('aria-pressed', (!isLight).toString());
     }
     let theme = storage.get('ver:theme','dark'); applyTheme(theme);
-    document.getElementById('toggleTheme').onclick = () => {
+    document.getElementById('toggleTheme').onclick=()=>{
       theme = (theme === 'dark') ? 'light':'dark';
       storage.set('ver:theme', theme);
       applyTheme(theme);
@@ -183,8 +235,6 @@
     const hour = new Date().getHours();
     const isNight = (hour >= 20 || hour < 5);
     document.getElementById('quoteTitle').textContent = isNight ? 'Gecenin Sözü' : 'Günün Sözü';
-
-    // deterministik günlük seçim
     const dayStr = new Date().toISOString().slice(0,10);
     let h = 0; for (let i=0;i<dayStr.length;i++) h = (h*31 + dayStr.charCodeAt(i))>>>0;
     const q = QUOTES[h % QUOTES.length];
@@ -223,6 +273,37 @@
       document.getElementById('clock').textContent = `${z(now.getHours())}:${z(now.getMinutes())}:${z(now.getSeconds())}`;
     }
     tick(); setInterval(tick, 1000);
+
+    /* ========== Müzik Butonu ========== */
+    const audio = document.getElementById('bgm');
+    const musicBtn = document.getElementById('musicBtn');
+    const vol = document.getElementById('vol');
+
+    // Kullanıcı bir kere etkileşime geçmeden otomatik çalmayız. (Tarayıcı kuralı)
+    musicBtn.addEventListener('click', async () => {
+      // Eğer kaynak eklenmediyse, repo kökünden music.mp3 dene
+      if (!audio.src){
+        try{
+          audio.src = 'music.mp3'; // depoya yüklersen çalışır
+          audio.load();
+        }catch(e){}
+      }
+      if (audio.paused){
+        try{
+          await audio.play();
+          musicBtn.textContent = '⏸️ Müzik';
+          musicBtn.setAttribute('aria-pressed','true');
+        }catch(e){
+          alert('Müzik dosyası bulunamadı (music.mp3). İstersen depoya yükleyebilirsin.');
+        }
+      }else{
+        audio.pause();
+        musicBtn.textContent = '▶️ Müzik';
+        musicBtn.setAttribute('aria-pressed','false');
+      }
+    });
+    vol.addEventListener('input', ()=>{ audio.volume = Number(vol.value || 0.25) });
+    audio.volume = Number(vol.value || 0.25);
   </script>
 </body>
 </html>
