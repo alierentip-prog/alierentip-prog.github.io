@@ -142,5 +142,35 @@ document.getElementById('pickForest').onclick= ()=>{ modal.style.display='none';
   })();
 })();
 </script>
+...
+</main>
+
+<!-- Firebase bağlantısı burada olacak -->
+<script type="module" src="./firebase.js"></script>
+<script type="module">
+  import { auth, onAuthStateChanged, signOut } from './firebase.js';
+
+  const loginLink = document.getElementById('loginLink');
+  const logoutLink = document.getElementById('logoutLink');
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      if (loginLink) loginLink.style.display = 'none';
+      if (logoutLink) {
+        logoutLink.style.display = 'inline-flex';
+        logoutLink.onclick = async () => {
+          await signOut(auth);
+          location.reload();
+        };
+      }
+    } else {
+      if (loginLink) loginLink.style.display = 'inline-flex';
+      if (logoutLink) logoutLink.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>
 </body>
   </html>
