@@ -1,16 +1,67 @@
-<!doctype html><meta charset="utf-8">
-<title>Giriş • Veridium</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Veridium — Giriş</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  body{margin:0;background:#0b0f14;color:#e9eef5;font:16px/1.6 Inter,system-ui}
-  .wrap{max-width:520px;margin:12vh auto;padding:28px;border:1px solid rgba(255,255,255,.12);
-        background:rgba(255,255,255,.04);border-radius:16px}
-  a{color:#9ad;text-decoration:none}
-  .btn{display:inline-block;margin-top:12px;padding:10px 16px;border-radius:10px;
-       border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#e9eef5}
+  :root{ --bg:#0b0f14; --fg:#e9eef5; --muted:#aab6c5; --b:rgba(255,255,255,.14); --glass:rgba(255,255,255,.06) }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0; background:radial-gradient(900px 600px at 50% -10%, rgba(50,160,255,.08), transparent 60%), var(--bg); color:var(--fg); font:16px/1.5 Inter,system-ui}
+  header{position:fixed; inset:0 0 auto 0; height:72px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;
+    background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0)); z-index:5}
+  .brand{font-family:Cinzel,serif; font-weight:900; letter-spacing:.16em; background:linear-gradient(90deg,#9ad,#eaf,#9ad);
+    -webkit-background-clip:text; color:transparent}
+  .clock{font-weight:800; opacity:.9}
+  main{min-height:100%; display:grid; place-items:center; padding-top:60px}
+  .panel{width:min(520px,92%); border:1px solid var(--b); background:var(--glass); border-radius:20px; padding:24px; backdrop-filter:blur(8px); box-shadow:0 10px 50px rgba(0,0,0,.35)}
+  h1{margin:0 0 14px; font-size:22px}
+  label{display:block; font-weight:700; margin:12px 0 6px}
+  input{width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--b); background:rgba(255,255,255,.04); color:var(--fg)}
+  .row{display:flex; gap:10px; margin-top:16px}
+  button{flex:1; padding:12px 14px; border-radius:12px; border:1px solid var(--b); background:rgba(255,255,255,.08); color:var(--fg); font-weight:800; cursor:pointer}
+  .muted{color:var(--muted); font-size:14px; margin-top:10px}
+  .link{color:#8fd3ff; text-decoration:none; font-weight:700}
+  .ok{display:none; margin-top:12px; padding:10px 12px; border-radius:12px; background:rgba(100,255,180,.1); border:1px solid rgba(100,255,180,.3)}
 </style>
-<div class="wrap">
-  <h1>Giriş</h1>
-  <p>Buraya sonra Firebase ile gerçek giriş gelecek.</p>
-  <a class="btn" href="index.html">← Ana sayfa</a>
-</div>
+</head>
+<body>
+<header>
+  <div class="clock" id="clock">--:-- — --.--.----</div>
+  <div class="brand">VERIDIUM</div>
+  <div></div>
+</header>
+
+<main>
+  <form class="panel" onsubmit="return false;">
+    <h1>Giriş</h1>
+    <label for="email">E-posta</label>
+    <input id="email" type="email" autocomplete="username" placeholder="ornek@mail.com"/>
+    <label for="pass">Şifre</label>
+    <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••"/>
+    <div class="row">
+      <button id="loginBtn">Giriş Yap</button>
+      <button id="signupBtn" type="button">Üye Ol</button>
+    </div>
+    <p class="muted">Henüz gerçek kimlik doğrulama yok. (Şimdilik görsel demo.)</p>
+    <div id="ok" class="ok">Tamam! (Demo)</div>
+    <p id="signup" class="muted">Hesabın yok mu? <a class="link" href="#signup">Buradan üye ol</a>.</p>
+  </form>
+</main>
+
+<script>
+  // saat
+  (function(){
+    const z=n=>String(n).padStart(2,'0'); const el=document.getElementById('clock');
+    function t(){ const d=new Date(); el.textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`; requestAnimationFrame(t) }
+    t();
+  })();
+
+  // demo davranış
+  const ok=document.getElementById('ok');
+  document.getElementById('loginBtn').onclick=()=>{ ok.style.display='block'; ok.textContent='Giriş denemesi tamam (demo)'; };
+  document.getElementById('signupBtn').onclick=()=>{ ok.style.display='block'; ok.textContent='Üyelik denemesi tamam (demo)'; };
+</script>
+</body>
+</html>
