@@ -4,62 +4,42 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>VERIDIUM</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700..900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --fg:#e9eef5; --muted:#b9c2cf;
     --card:#0f131a; --glass:rgba(255,255,255,.06); --glass-b:rgba(255,255,255,.16);
     --sea1:#0e2231; --sea2:#07141e;
     --forest1:#1a0f1a; --forest2:#0c0a0f;
-    --blue:#58c3ff; --pink:#ff9ad0; --green:#8ff0a6;
-    --radius:18px; --shadow:0 10px 40px rgba(0,0,0,.35);
+    --blue:#58c3ff; --pink:#ff9ad0; --radius:18px; --shadow:0 10px 40px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0; color:var(--fg); background: radial-gradient(1200px 800px at 50% 0%, rgba(0,180,255,.05), transparent 60%), #07090d;
-    font:16px/1.55 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    overflow-x:hidden;
+    margin:0; color:var(--fg); background:#07090d;
+    font:16px/1.55 Inter,system-ui; overflow-x:hidden;
   }
 
-  /* splash */
-  #splash{
-    position:fixed; inset:0; display:grid; place-items:center; background:#06080c; z-index:1000;
-    animation: fadeOut .9s ease 1.6s forwards;
-  }
-  .word{
-    font-family:"Cinzel",serif; font-weight:900; letter-spacing:.08em;
-    font-size: clamp(40px, 9vw, 120px);
-    background:linear-gradient(90deg,#9ad,#eaf,#9ad); background-size:250% 100%;
-    -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 12px 40px rgba(0,0,0,.6));
-    animation: flow 6s linear infinite, pop 1s ease;
-  }
-  @keyframes flow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-  @keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
-  @keyframes fadeOut{to{opacity:0;visibility:hidden}}
-
-  /* header */
-  header{position:fixed; inset:auto 0 0 0; top:14px; z-index:20; pointer-events:none}
+  header{position:fixed; inset:auto 0 0 0; top:14px; z-index:20}
   .bar{max-width:1100px; margin:0 auto; padding:0 14px; display:flex; align-items:center; justify-content:space-between}
-  .clock{pointer-events:auto; font-weight:800; letter-spacing:.12em; opacity:.9}
-  .actions{display:flex; gap:10px; pointer-events:auto}
+  .clock{font-weight:800; letter-spacing:.12em; opacity:.9}
+  .actions{display:flex; gap:10px}
   .btn{
     appearance:none; border:1px solid var(--glass-b); background:var(--glass);
     padding:10px 16px; border-radius:12px; color:var(--fg); font-weight:700; text-decoration:none;
-    backdrop-filter: blur(6px); box-shadow:var(--shadow); transition:transform .15s ease, background .2s, border .2s;
+    backdrop-filter:blur(6px); box-shadow:var(--shadow);
   }
-  .btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.1)}
+
   .brand{
     position:fixed; left:50%; transform:translateX(-50%);
     top:64px; z-index:10; font-family:"Cinzel",serif; letter-spacing:.18em; font-weight:900;
     font-size: clamp(34px, 6.5vw, 80px);
     background:linear-gradient(90deg,#8ec5ff,#31b1ff,#7cf,#b5e1ff); background-size:240% 100%;
-    -webkit-background-clip:text; background-clip:text; color:transparent; animation:flow 9s linear infinite;
+    -webkit-background-clip:text; color:transparent; animation:flow 9s linear infinite;
     filter: drop-shadow(0 8px 28px rgba(0,0,0,.45));
   }
+  @keyframes flow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 
-  /* grid */
   main{max-width:1100px; margin:220px auto 80px; padding:0 14px}
   .grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:18px}
   .card{
@@ -75,51 +55,31 @@
   .go .btn{padding:14px 26px; font-weight:800}
 
   canvas{position:absolute; inset:0; width:100%; height:100%}
-
-  /* female bunny */
   .bunny{position:absolute; right:28px; bottom:110px; width:120px; height:120px; opacity:.85; filter:blur(.2px)}
   .bunny div{position:absolute; background:#ff8fbd; border-radius:50%}
   .bunny .body{width:96px;height:64px;left:12px;bottom:18px;box-shadow:0 0 40px rgba(255,150,200,.35) inset}
   .bunny .head{width:56px;height:50px;left:50px;bottom:52px}
   .bunny .ear1{width:20px;height:44px;left:66px;bottom:100px}
   .bunny .ear2{width:20px;height:44px;left:86px;bottom:100px}
-
-  /* modal */
-  #genderModal{
-    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
-    background:rgba(0,0,0,.55); z-index:900; animation:fade .25s ease;
-  }
-  @keyframes fade{from{opacity:0}to{opacity:1}}
-  .sheet{
-    width:min(860px,92%); border:1px solid var(--glass-b); background:rgba(10,12,16,.9);
-    border-radius:24px; padding:28px; box-shadow:0 12px 60px rgba(0,0,0,.45); text-align:center;
-  }
-  .sheet h2{
-    margin:0 0 8px; font-family:"Cinzel",serif; letter-spacing:.14em; font-weight:900;
-    background:linear-gradient(90deg,#a6d0ff,#f7f0ff); -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .sheet p{margin:0 0 22px; color:var(--muted)}
-  .choice{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
-  .choice button{
-    appearance:none; border:1px solid var(--glass-b); background:var(--glass);
-    color:var(--fg); padding:12px 16px; border-radius:12px; font-weight:800; cursor:pointer;
-    transition:transform .12s ease, background .2s, border .2s; backdrop-filter: blur(6px);
-  }
-  .choice button:hover{transform:translateY(-1px); background:rgba(255,255,255,.1)}
   footer{opacity:.8; text-align:center; margin:36px 0 22px}
 </style>
 </head>
 <body>
 
-<!-- splash -->
-<div id="splash"><div class="word">𝕍𝔼ℝ𝕀𝔻𝕀𝕌𝕄</div></div>
-
 <header>
   <div class="bar">
     <div class="clock" id="clock">--:--:-- — --.--.----</div>
+
     <div class="actions">
-      <a class="btn" href="login.html">Giriş Yap</a>
-      <a class="btn" href="signup.html">Üye Ol</a>
+      <span class="guestOnly">
+        <a class="btn" href="login.html">Giriş Yap</a>
+        <a class="btn" href="login.html#signup">Üye Ol</a>
+      </span>
+
+      <span class="userOnly" style="display:none">
+        <span id="userEmail" class="btn" style="pointer-events:none"></span>
+        <button id="logoutBtn" class="btn" type="button">Çıkış Yap</button>
+      </span>
     </div>
   </div>
 </header>
@@ -128,14 +88,12 @@
 
 <main>
   <div class="grid">
-    <!-- ERKEK -->
     <section class="card" style="background:linear-gradient(180deg,var(--sea1),var(--sea2))">
       <div class="head">⚙️ ERKEK • DERİN SULAR</div>
       <canvas id="sea"></canvas>
       <div class="go"><a class="btn" href="male.html">Giriş →</a></div>
     </section>
 
-    <!-- KADIN -->
     <section class="card" style="background:linear-gradient(180deg,var(--forest1),var(--forest2))">
       <div class="head">🌸 KADIN • DOĞA &amp; ÇİÇEK</div>
       <canvas id="forest"></canvas>
@@ -147,68 +105,32 @@
   </div>
 </main>
 
-<!-- Cinsiyet seçimi MODAL (her yenilemede açılır) -->
-<div id="genderModal">
-  <div class="sheet">
-    <h2>VERIDIUM seni tanımak istiyor ⚡</h2>
-    <p>Enerjini seç; portalın ruhuna akalım.</p>
-    <div class="choice">
-      <button id="malePick">🌊 Okyanus (Erkek)</button>
-      <button id="femalePick">🌿 Orman (Kadın)</button>
-    </div>
-  </div>
-</div>
-
 <footer>© 2025 Veridium</footer>
 
 <script>
-  /* saat-tarih */
-  (function tick(){
-    const d=new Date();
-    const z=n=>String(n).padStart(2,'0');
-    document.getElementById('clock').textContent=
-      `${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`;
-    requestAnimationFrame(tick);
-  })();
-
-  /* modal davranışı – alert YOK */
-  const modal = document.getElementById('genderModal');
-  document.getElementById('malePick').onclick = ()=>{ modal.style.display='none'; location.href='male.html'; };
-  document.getElementById('femalePick').onclick = ()=>{ modal.style.display='none'; location.href='female.html'; };
-
-  /* deniz baloncukları */
-  (function(){
-    const c=document.getElementById('sea'), x=c.getContext('2d');
-    function size(){c.width=c.clientWidth; c.height=c.clientHeight}
-    addEventListener('resize',size,{passive:true}); size();
-    const N=120, b=[];
-    for(let i=0;i<N;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
-    (function loop(){
-      x.clearRect(0,0,c.width,c.height);
-      for(const p of b){
-        p.y-=p.s; if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
-        x.globalAlpha=.28; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
-      }
-      requestAnimationFrame(loop);
-    })();
-  })();
-
-  /* orman çiçek tozları */
-  (function(){
-    const c=document.getElementById('forest'), x=c.getContext('2d');
-    function size(){c.width=c.clientWidth; c.height=c.clientHeight}
-    addEventListener('resize',size,{passive:true}); size();
-    const N=100, p=[];
-    for(let i=0;i<N;i++) p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40});
-    (function loop(){
-      x.clearRect(0,0,c.width,c.height);
-      for(const s of p){
-        s.y+=.4; s.x+=Math.sin(s.y/45)*.4; if(s.y>c.height+10){s.y=-10; s.x=Math.random()*c.width}
-        x.fillStyle=`hsla(${s.h},80%,72%,.9)`; x.beginPath(); x.arc(s.x,s.y,s.r,0,Math.PI*2); x.fill();
-      }
-      requestAnimationFrame(loop);
-    })();
-  })();
+(function tick(){
+  const d=new Date(); const z=n=>String(n).padStart(2,'0');
+  document.getElementById('clock').textContent=
+    `${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`;
+  requestAnimationFrame(tick);
+})();
+(function(){
+  const c=document.getElementById('sea'),x=c.getContext('2d');
+  function s(){c.width=c.clientWidth;c.height=c.clientHeight}addEventListener('resize',s);s();
+  const a=[];for(let i=0;i<120;i++)a.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
+  !function l(){x.clearRect(0,0,c.width,c.height);for(const p of a){p.y-=p.s;if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
+  x.globalAlpha=.28;x.fillStyle='#6ee4ff';x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fill()}requestAnimationFrame(l)}();
+})();
+(function(){
+  const c=document.getElementById('forest'),x=c.getContext('2d');
+  function s(){c.width=c.clientWidth;c.height=c.clientHeight}addEventListener('resize',s);s();
+  const a=[];for(let i=0;i<100;i++)a.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40});
+  !function l(){x.clearRect(0,0,c.width,c.height);for(const p of a){p.y+=.4;p.x+=Math.sin(p.y/45)*.4;if(p.y>c.height+10){p.y=-10;p.x=Math.random()*c.width}
+  x.fillStyle=`hsla(${p.h},80%,72%,.9)`;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fill()}requestAnimationFrame(l)}();
+})();
 </script>
+
+<!-- firebase -->
+<script type="module" src="./firebase.js"></script>
 </body>
-  </html>
+</html>
