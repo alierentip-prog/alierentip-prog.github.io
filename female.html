@@ -1,83 +1,73 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AZURA • Doğa</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root{ --fg:#fff6fb; --b:rgba(255,255,255,.14); --glass:rgba(255,255,255,.06) }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:var(--fg); background:#0c0a10; font:16px/1.6 Inter,system-ui;
-    overflow:hidden;
-    background-image: radial-gradient(1200px 800px at 75% -10%, rgba(255,170,200,.11), transparent 60%), linear-gradient(180deg,#0d0b12,#110b14 50%,#0b0a0f);
-  }
-  header{
-    position:fixed; inset:0 0 auto 0; height:72px; display:flex; align-items:center; justify-content:space-between;
-    padding:0 16px; z-index:3; background:linear-gradient(180deg, rgba(0,0,0,.45), transparent);
-  }
-  .brand{font-family:Cinzel,serif; letter-spacing:.18em; font-weight:900}
-  .actions a{margin-left:10px; padding:10px 14px; border-radius:12px; border:1px solid var(--b); background:var(--glass); color:var(--fg); text-decoration:none; font-weight:800}
+  :root{ --b:rgba(255,255,255,.16); --glass:rgba(255,255,255,.06); --fg:#fff7fb; --bg:#0c0a0f }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(255,154,208,.09), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui; overflow:hidden}
+  header{position:fixed; inset:12px 12px auto auto; z-index:3}
+  a.btn{padding:10px 14px; border-radius:12px; border:1px solid var(--b); background:var(--glass); color:var(--fg); text-decoration:none; font-weight:900}
+  h1{position:fixed; left:50%; transform:translateX(-50%); top:24px; margin:0; font-family:Cinzel,serif; letter-spacing:.16em}
   canvas{position:fixed; inset:0; z-index:0}
-  main{position:relative; z-index:1; max-width:1100px; margin:110px auto 60px; padding:0 16px}
-  .hero{
-    border:1px solid var(--b); background:rgba(255,255,255,.05); backdrop-filter:blur(6px);
-    border-radius:16px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,.45)
-  }
+  .sheet{position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(920px,92%); border:1px solid var(--b); background:rgba(12,10,15,.78); border-radius:20px; padding:22px; z-index:1; backdrop-filter: blur(8px)}
+  /* girişte beyazdan sönerek görünme */
+  #enter{position:fixed; inset:0; background:#ffffff; z-index:5; opacity:1; transform:scale(1.05); animation:fadeIn .55s ease forwards}
+  @keyframes fadeIn{to{opacity:0; transform:scale(1)}}
+  /* çıkışta sönerek beyaz */
+  #leave{position:fixed; inset:0; background:#ffffff; z-index:5; opacity:0; transform:scale(1.05); transition:opacity .45s ease, transform .45s ease}
+  #leave.show{opacity:1; transform:scale(1)}
 </style>
 </head>
 <body>
-<header>
-  <div class="brand">AZURA</div>
-  <div class="actions"><a href="index.html" class="transition">Ana Menü</a></div>
-</header>
+  <div id="enter"></div>
+  <div id="leave"></div>
 
-<canvas id="field"></canvas>
+  <header><a class="btn back" href="index.html">← Ana Menü</a></header>
+  <h1>DOĞA</h1>
+  <canvas id="field"></canvas>
 
-<main>
-  <section class="hero">
-    <h2>🌿 Doğa — iç ısıtan alan</h2>
-    <p>Yumuşak yaprak tozları süzülür; sağ üstte ılık bir ışık parlar. “Ana Menü” ile geri dönebilirsin.</p>
+  <section class="sheet">
+    <h2>Doğanın Işığı’na hoş geldin 🌸</h2>
+    <p>Uzakta gün ışığı parıldar; pembe yapraklar havada süzülür, yumuşak bir esintiyle seni içine çeker.</p>
   </section>
-</main>
-
-<div class="wipe" id="wipe"></div>
 
 <script>
-/* arkaplan — yaprak tozları + güneş halesi */
-(() => {
-  const c=document.getElementById('field'), x=c.getContext('2d'); let t=0;
-  function fit(){ c.width=innerWidth; c.height=innerHeight } addEventListener('resize',fit,{passive:true}); fit();
-  const petals = Array.from({length:180},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:.8+Math.random()*2,h:330+Math.random()*40}));
-  (function loop(){
-    x.clearRect(0,0,c.width,c.height);
-    const sx=c.width*.78, sy=c.height*.22;
-    const g=x.createRadialGradient(sx,sy,8, sx,sy, 260);
-    g.addColorStop(0,'rgba(255,220,160,.9)');
-    g.addColorStop(.5,'rgba(255,180,140,.18)');
-    g.addColorStop(1,'rgba(255,180,140,0)');
-    x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
-
-    for(const p of petals){
-      p.y+=.35; p.x+=Math.sin((t+p.y)/48)*.45; if(p.y>c.height+12){p.y=-12; p.x=Math.random()*c.width}
-      x.fillStyle=`hsla(${p.h},85%,76%,.9)`; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
-    }
-    t++; requestAnimationFrame(loop);
+  // güneş ışıması + yapraklar + minik tavşan
+  (()=>{ const c=field, x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
+    const petals=Array.from({length: Math.floor(c.width*c.height/26000)},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*3,h:330+Math.random()*40,s:.4+.7*Math.random(),d:(Math.random()-.5)*.7}));
+    let t=0; (function loop(){
+      x.fillStyle= getComputedStyle(document.body).getPropertyValue('--bg').trim() || '#0c0a0f';
+      x.fillRect(0,0,c.width,c.height);
+      // güneş
+      const sx=c.width*.82, sy=c.height*.18; const g=x.createRadialGradient(sx,sy,10,sx,sy,220);
+      g.addColorStop(0,'rgba(255,240,180,.85)'); g.addColorStop(.6,'rgba(255,205,140,.20)'); g.addColorStop(1,'rgba(255,205,140,0)');
+      x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
+      // yapraklar
+      for(const p of petals){
+        p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.d; if(p.y>c.height+10){p.y=-10; p.x=Math.random()*c.width}
+        x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fillStyle=`hsla(${p.h},85%,70%,.9)`; x.fill();
+      }
+      // tavşan
+      const bx=c.width*0.82, by=c.height*0.82; x.save(); x.translate(bx,by+Math.sin(t/30)*2); x.scale(1.25,1.25);
+      x.fillStyle='rgba(255,122,182,.45)'; x.beginPath(); x.ellipse(0,0,22,16,0,0,Math.PI*2); x.fill();
+      x.beginPath(); x.arc(-16,-10,9,0,Math.PI*2); x.fill();
+      x.beginPath(); x.ellipse(-20,-22,4,12,0,0,Math.PI*2); x.ellipse(-10,-22,4,12,0,0,Math.PI*2); x.fill();
+      x.restore();
+      t++; requestAnimationFrame(loop);
+    })();
   })();
-})();
 
-/* geçiş geri */
-(() => {
-  const wipe = document.getElementById('wipe');
-  const back = document.querySelector('a.transition');
-  back.addEventListener('click',(e)=>{ e.preventDefault(); wipe.classList.add('show'); setTimeout(()=>location.href=back.href,520); });
-})();
+  // geri dönüşte sönerek beyaz
+  (()=> {
+    const leave=document.getElementById('leave');
+    document.querySelector('.back').addEventListener('click',e=>{
+      e.preventDefault(); leave.classList.add('show'); setTimeout(()=>location.href='index.html', 420);
+    });
+  })();
 </script>
-<style>
-  .wipe{position:fixed; inset:0; background:#060a12; transform:scale(0); border-radius:50%; z-index:5; transition:transform .55s ease-in}
-  .wipe.show{transform:scale(5)}
-</style>
 </body>
 </html>
