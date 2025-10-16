@@ -204,10 +204,60 @@ setTimeout(()=>{
   })();
 })();
 </script>
-window.addEventListener("load", ()=>{
-  const choice = confirm("🌊 Erkek misin? Kadınsan İptal'e bas 🌸");
-  if(choice) location.href="male.html";
-  else location.href="female.html";
-});
+<!-- 🌗 Cinsiyet seçimi modalı -->
+<div id="genderModal" style="
+  position:fixed; inset:0; background:rgba(0,0,0,.75);
+  display:flex; align-items:center; justify-content:center;
+  z-index:3000; backdrop-filter:blur(10px);">
+  <div style="
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:16px; padding:40px 24px;
+    text-align:center; max-width:320px;
+    box-shadow:0 0 30px rgba(0,0,0,.6);
+    animation:fadeIn .7s ease;">
+    <h2 style="font-family:'Cinzel',serif;font-weight:900;letter-spacing:.05em;
+      background:linear-gradient(90deg,#19b7ff,#8b5cf6,#ff79c6);
+      -webkit-background-clip:text;color:transparent;
+      font-size:26px;margin-top:0;">
+      VERIDIUM seni tanımak istiyor ⚡
+    </h2>
+    <p style="color:#ccc;margin:10px 0 28px;font-size:15px;">
+      Enerjini seç ve portalın ruhuna adım at.
+    </p>
+    <div style="display:flex;gap:14px;justify-content:center;">
+      <button onclick="goMale()" style="
+        background:linear-gradient(135deg,#19b7ff,#8b5cf6);
+        border:none;border-radius:12px;padding:10px 16px;
+        color:white;font-weight:700;cursor:pointer;
+        box-shadow:0 0 14px rgba(25,183,255,.35);
+        transition:transform .2s;">🌊 Erkek</button>
+      <button onclick="goFemale()" style="
+        background:linear-gradient(135deg,#ff79c6,#ffb5a8);
+        border:none;border-radius:12px;padding:10px 16px;
+        color:white;font-weight:700;cursor:pointer;
+        box-shadow:0 0 14px rgba(255,121,198,.35);
+        transition:transform .2s;">🌸 Kadın</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function goMale(){
+  document.getElementById("genderModal").style.opacity="0";
+  setTimeout(()=>{ location.href="male.html"; },500);
+}
+function goFemale(){
+  document.getElementById("genderModal").style.opacity="0";
+  setTimeout(()=>{ location.href="female.html"; },500);
+}
+</script>
+
+<style>
+@keyframes fadeIn {
+  from { opacity:0; transform: translateY(6px) scale(.98); }
+  to { opacity:1; transform:none; }
+}
+</style>
 </body>
 </html>
