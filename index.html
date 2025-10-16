@@ -291,8 +291,182 @@
         requestAnimationFrame(loop);
       })();
     }
-  </script>
-</body>
+      <!-- ===================== -->
+<!-- 🎬 VERIDIUM INTRO     -->
+<!-- ===================== -->
+<div id="introScreen">
+  <div class="intro-content">
+    <h1 class="intro-title">Veridium</h1>
+    <p class="intro-sub">Enerjini Seç</p>
+    <div class="intro-buttons">
+      <button id="maleBtn">⚙️ Erkek</button>
+      <button id="femaleBtn">💐 Kadın</button>
+    </div>
+  </div>
+  <canvas id="bgCanvas"></canvas>
+</div>
+
+<style>
+  /* ==== Intro Sahnesi ==== */
+  #introScreen {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, #0a0a0a 60%, #000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    color: white;
+    transition: opacity 1.5s ease;
+    overflow: hidden;
+  }
+  #bgCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  .intro-content {
+    text-align: center;
+    animation: fadeIn 1.2s ease;
+  }
+  .intro-title { font-size: 2.4em; margin-bottom: 0.2em; letter-spacing: 2px; }
+  .intro-sub { opacity: 0.8; margin-bottom: 20px; }
+  .intro-buttons button {
+    margin: 10px;
+    font-size: 1.1em;
+    background: transparent;
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+  }
+  .intro-buttons button:hover {
+    background: white;
+    color: black;
+  }
+
+  /* büyüme animasyonu */
+  .growEffect {
+    font-size: 5em;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    animation: grow 1.3s forwards;
+    z-index: 99999;
+  }
+  @keyframes grow {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(18); opacity: 0; }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* site fade-in */
+  body.loaded #introScreen { opacity: 0; pointer-events: none; }
+</style>
+
+<script>
+const intro = document.getElementById('introScreen');
+const maleBtn = document.getElementById('maleBtn');
+const femaleBtn = document.getElementById('femaleBtn');
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let particles = [], mode = null;
+
+function playIntroEffect(symbol, theme) {
+  mode = theme;
+  const icon = document.createElement('div');
+  icon.textContent = symbol;
+  icon.classList.add('growEffect');
+  document.body.appendChild(icon);
+
+  setTimeout(() => {
+    icon.remove();
+    document.body.classList.add('loaded');
+    setTimeout(() => intro.remove(), 1500);
+    startBackground(theme);
+  }, 1300);
+}
+
+maleBtn.onclick = () => playIntroEffect('⚙️','male');
+femaleBtn.onclick = () => playIntroEffect('💐','female');
+
+/* === Su altı ve doğa animasyonları === */
+function startBackground(theme) {
+  if (theme === 'male') {
+    // 🧊 su altı teması
+    const colors = ['#1a6f9b','#2a95c9','#3ab1d8','#7ad9ff'];
+    function bubble() {
+      this.x = Math.random()*canvas.width;
+      this.y = canvas.height + Math.random()*100;
+      this.r = Math.random()*6+2;
+      this.speed = Math.random()*1.5+0.5;
+    }
+    function drawBubble(b) {
+      ctx.beginPath();
+      ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+      ctx.fillStyle = colors[Math.floor(Math.random()*colors.length)];
+      ctx.globalAlpha = 0.4;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    function animate(){
+      ctx.fillStyle='rgba(10,25,40,0.3)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      particles.forEach((b,i)=>{
+        b.y -= b.speed;
+        if(b.y < -10) particles[i] = new bubble();
+        drawBubble(b);
+      });
+      requestAnimationFrame(animate);
+    }
+    for(let i=0;i<60;i++) particles.push(new bubble());
+    animate();
+  }
+  else {
+    // 🌸 doğa teması
+    const colors = ['#ffb7d5','#ffd9a0','#b1e693','#ffffff'];
+    function petal(){
+      this.x = Math.random()*canvas.width;
+      this.y = Math.random()*canvas.height;
+      this.size = Math.random()*5+2;
+      this.speed = Math.random()*0.8+0.3;
+    }
+    function drawPetal(p){
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      ctx.fillStyle = colors[Math.floor(Math.random()*colors.length)];
+      ctx.globalAlpha = 0.7;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    function animate(){
+      ctx.fillStyle='rgba(255,240,240,0.25)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      particles.forEach((p,i)=>{
+        p.y += p.speed;
+        p.x += Math.sin(p.y/40);
+        if(p.y>canvas.height+10) particles[i]=new petal();
+        drawPetal(p);
+      });
+      requestAnimationFrame(animate);
+    }
+    for(let i=0;i<50;i++) particles.push(new petal());
+    animate();
+  }
+}
+</script>
+<!-- ===================== -->
+<!-- /VERIDIUM INTRO END   -->
+<!-- ===================== -->
   <!-- ===================== -->
 <!-- 🎬 VERIDIUM INTRO     -->
 <!-- ===================== -->
