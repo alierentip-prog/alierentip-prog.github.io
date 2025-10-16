@@ -1,37 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AZURA - Okyanus</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(180deg, #041018, #0a2a3a);
-      color: #eaf4ff;
-      text-align: center;
-    }
-    h1 {
-      font-family: 'Cinzel', serif;
-      letter-spacing: 4px;
-      margin-top: 80px;
-    }
-    a {
-      color: #eaf4ff;
-      font-weight: bold;
-      text-decoration: none;
-      display: inline-block;
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 8px 14px;
-      border-radius: 10px;
-      margin-top: 20px;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZURA • Okyanus</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --fg:#dff3ff; --b:rgba(255,255,255,.14); --glass:rgba(255,255,255,.06) }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--fg); background:#061018; font:16px/1.6 Inter,system-ui;
+    overflow:hidden;
+    background-image: radial-gradient(1200px 800px at 60% -10%, rgba(80,160,255,.1), transparent 60%), linear-gradient(180deg,#07121c,#07141d 50%,#061018);
+  }
+  header{
+    position:fixed; inset:0 0 auto 0; height:72px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 16px; z-index:3; background:linear-gradient(180deg, rgba(0,0,0,.45), transparent);
+  }
+  .brand{font-family:Cinzel,serif; letter-spacing:.18em; font-weight:900}
+  .actions a{margin-left:10px; padding:10px 14px; border-radius:12px; border:1px solid var(--b); background:var(--glass); color:var(--fg); text-decoration:none; font-weight:800}
+  canvas{position:fixed; inset:0; z-index:0}
+  main{position:relative; z-index:1; max-width:1100px; margin:110px auto 60px; padding:0 16px}
+  .hero{
+    border:1px solid var(--b); background:rgba(255,255,255,.04); backdrop-filter:blur(6px);
+    border-radius:16px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,.4)
+  }
+</style>
 </head>
 <body>
-  <h1>🌊 Okyanus — Erkek Enerjisi</h1>
-  <p>Soğukkanlı, derin ve karizmatik bir aura seni karşılar.</p>
-  <a href="index.html">← Portala Dön</a>
+<header>
+  <div class="brand">AZURA</div>
+  <div class="actions"><a href="index.html" class="transition">Ana Menü</a></div>
+</header>
+
+<canvas id="sea"></canvas>
+
+<main>
+  <section class="hero">
+    <h2>🌊 Okyanus — karizmatik alan</h2>
+    <p>Derin suların üstünde neon kabarcıklar yükselir; uzak ufukta mavi ışık kırılır. Sağ üstten “Ana Menü” ile geri dönebilirsin.</p>
+  </section>
+</main>
+
+<div class="wipe" id="wipe"></div>
+
+<script>
+/* arkaplan — okyanus akışı */
+(() => {
+  const c=document.getElementById('sea'), x=c.getContext('2d'); let t=0;
+  function fit(){ c.width=innerWidth; c.height=innerHeight } addEventListener('resize',fit,{passive:true}); fit();
+  const bub=Array.from({length:180},()=>({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.5+Math.random()*1.2}));
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    // parıltı çizgileri
+    x.strokeStyle='rgba(120,200,255,.14)'; x.lineWidth=1;
+    for(let i=0;i<22;i++){ const y=(i/22)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)/24)*4); x.lineTo(c.width,y); x.stroke(); }
+    // kabarcıklar
+    for(const b of bub){ b.y-=b.s; if(b.y<-15){b.y=c.height+15;b.x=Math.random()*c.width}
+      x.fillStyle='rgba(120,210,255,.28)'; x.beginPath(); x.arc(b.x,b.y,b.r,0,Math.PI*2); x.fill();
+    }
+    t++; requestAnimationFrame(loop);
+  })();
+})();
+
+/* geçiş geri */
+(() => {
+  const wipe = document.getElementById('wipe');
+  const back = document.querySelector('a.transition');
+  back.addEventListener('click',(e)=>{ e.preventDefault(); wipe.classList.add('show'); setTimeout(()=>location.href=back.href,520); });
+})();
+</script>
+<style>
+  .wipe{position:fixed; inset:0; background:#060a12; transform:scale(0); border-radius:50%; z-index:5; transition:transform .55s ease-in}
+  .wipe.show{transform:scale(5)}
+</style>
 </body>
 </html>
