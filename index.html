@@ -3,180 +3,179 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>VERIDIUM — MAX EDITION</title>
-<meta name="description" content="Veridium · Max Edition · sinematik intro, parallax, neon/glow, cartoon-bahar ve buz-mavisi deniz animasyonları"/>
+<title>VERIDIUM — MAX++</title>
+<meta name="description" content="Veridium · Sinematik intro · Cartoon+Neon hibrit · Çok katmanlı parallax ve partikül sahneleri"/>
+
+<!-- ===== Tipografi & Reset ===== -->
 <style>
-/* ---------------- CORE TOKENS ---------------- */
+*{box-sizing:border-box} html,body{height:100%}
 :root{
-  --fg:#eaf2ff; --fg-dark:#0a0f14; --muted:#9bb0c4;
-  --ink:#0d1420; --ink2:#101010;
-  --card:rgba(255,255,255,.08); --border:rgba(255,255,255,.14);
-  --shadow:0 10px 30px rgba(0,0,0,.35);
-
-  --m1:#8ad7ff; --m2:#3aaed8; --m3:#0b2a40;        /* male sea palette */
-  --f1:#fff0d6; --f2:#ffd7ec; --f3:#b9efb0;        /* female spring palette */
-
-  --glow:#7ad3ff; --hot:#ff66c4;
+  --fg:#edf3ff; --fg-dark:#0a0f14; --muted:#9fb2c8;
+  --ink:#111; --border:rgba(255,255,255,.14);
+  --card:rgba(255,255,255,.08); --glass:rgba(255,255,255,.12);
+  /* Paletler */
+  --sea-1:#8ad7ff; --sea-2:#3aaed8; --sea-3:#0b2a40;
+  --spring-1:#fff0d6; --spring-2:#ffd7ec; --spring-3:#b9efb0;
+  --glow:#7ad3ff; --hot:#ff6ec7;
 }
-
-/* site baseline */
-*{box-sizing:border-box}
-html,body{height:100%}
 body{
-  margin:0; color:var(--fg); background:#0b0d10; overflow-x:hidden;
-  font:16px/1.6 "Inter",system-ui,Segoe UI,Roboto,Arial,sans-serif;
+  margin:0; color:var(--fg); background:radial-gradient(1400px 700px at 50% -200px, rgba(122,211,255,.14), transparent 55%), #0b0d10;
+  font:16px/1.65 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  overflow-x:hidden;
 }
+a{color:inherit;text-decoration:none}
+h1,h2{letter-spacing:.02em;text-shadow:0 3px 0 #0003;margin:.2rem 0 .6rem}
+h1{font-size:42px} @media(max-width:560px){h1{font-size:30px}}
+/* Genel UI */
+.wrap{max-width:1120px;margin:0 auto;padding:110px 16px 120px}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:18px; padding:18px;
+  backdrop-filter:blur(6px) saturate(120%); box-shadow:0 16px 40px rgba(0,0,0,.35);
+}
+.grid{display:grid;gap:16px}
+@media(min-width:880px){ .grid{grid-template-columns:1fr 1fr} }
 
-/* ---------------- GLOBAL FX LAYERS ---------------- */
-#bgCanvas{position:fixed; inset:0; z-index:0; display:block}
-#grain{position:fixed; inset:-20vmax; z-index:1; pointer-events:none; opacity:.06;
-  background-image:url('data:image/svg+xml;utf8,\
-<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">\
-<filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter>\
-<rect width="100%" height="100%" filter="url(%23n)" opacity="0.9"/></svg>');
-  animation:grain 8s linear infinite;
-}
-@keyframes grain{to{transform:translate3d(-10%,5%,0)}}
-#vignette{position:fixed; inset:0; z-index:2; pointer-events:none;
-  box-shadow:inset 0 0 180px 40px rgba(0,0,0,.65);
-}
+/* ==== Üst bar (mod & enerji) ==== */
+.topbar{position:fixed; top:14px; left:0; right:0; z-index:8; display:flex; justify-content:center; pointer-events:none}
+.pill{pointer-events:auto; display:flex; gap:10px; align-items:center; padding:10px 14px; border-radius:999px;
+  background:rgba(255,255,255,.08); border:1px solid var(--border); backdrop-filter:blur(6px)}
+.pill .btn{all:unset; padding:6px 10px; border:1px solid var(--border); border-radius:10px; cursor:pointer; font-weight:800}
+.pill .btn:hover{background:rgba(255,255,255,.12)}
 
-/* ---------------- INTRO ---------------- */
+/* ==== Intro ==== */
 #intro{
-  position:fixed; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;
-  background:radial-gradient(1200px 600px at 50% 35%, rgba(255,255,255,.06), transparent 60%), #000;
+  position:fixed; inset:0; z-index:20; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+  background:radial-gradient(1200px 600px at 50% 35%, rgba(255,255,255,.08), transparent 60%), #000;
 }
 .logo{
-  font-weight:900; font-size:54px; letter-spacing:.14em; text-transform:uppercase;
-  text-shadow:0 0 14px rgba(122,211,255,.35), 0 4px 0 #000;
+  font-size:58px; font-weight:900; letter-spacing:.16em; text-transform:uppercase;
+  -webkit-text-stroke:2px #0b1624; color:transparent; position:relative;
 }
-.logo .glow{background:linear-gradient(90deg,var(--glow),#aef); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 10px rgba(122,211,255,.5))}
-.sub{opacity:.9; margin-bottom:10px}
-.choices{display:flex; gap:12px; flex-wrap:wrap; justify-content:center}
-.btn{
-  background:#0c1219; color:#eaf6ff; border:1.5px solid #2b3b52; border-radius:14px; padding:12px 16px; cursor:pointer; font-weight:800;
-  box-shadow:0 6px 0 #000a; transform:translateY(0); transition:.15s;
+.logo::after{
+  content:"VERIDIUM"; position:absolute; inset:0;
+  background:linear-gradient(90deg, #aef, #7ad3ff, #bff); background-size:200% 100%;
+  -webkit-background-clip:text; color:transparent; filter:drop-shadow(0 0 12px rgba(122,211,255,.45));
+  animation:shine 4s linear infinite;
 }
-.btn:hover{transform:translateY(-2px)}
-.btn:active{transform:translateY(0)}
-.boom{position:fixed; inset:0; z-index:40; display:grid; place-items:center; pointer-events:none}
-.boom>div{font-size:72px; text-shadow:0 6px 0 #000c; animation:boom .85s cubic-bezier(.2,.8,.2,1) forwards}
-@keyframes boom{from{transform:scale(.2);opacity:.2} to{transform:scale(12);opacity:0}}
+@keyframes shine{to{background-position:200% 0}}
+.sub{opacity:.9;margin-bottom:8px}
+.choices{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.cbtn{
+  background:#0c1219; color:#eaf6ff; border:2px solid #2b3b52; border-radius:14px; padding:12px 16px; cursor:pointer; font-weight:900;
+  box-shadow:0 8px 0 #000a; transform:translateY(0); transition:.15s;
+}
+.cbtn:hover{transform:translateY(-2px)}
+.cbtn:active{transform:translateY(0)}
+.boom{position:fixed; inset:0; z-index:30; display:grid; place-items:center; pointer-events:none}
+.boom>div{font-size:84px; text-shadow:0 8px 0 #000c; animation:boom .85s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes boom{from{transform:scale(.2); opacity:.2} to{transform:scale(12); opacity:0}}
 .hide{opacity:0; pointer-events:none; transition:opacity .6s ease}
 
-/* ---------------- HEADER / CTAS ---------------- */
-.topbar{position:fixed; top:14px; left:0; right:0; z-index:5; display:flex; justify-content:center; pointer-events:none}
-.pill{pointer-events:auto; display:flex; gap:8px; align-items:center; padding:10px 14px; border-radius:999px;
-  background:rgba(255,255,255,.06); border:1px solid var(--border); backdrop-filter:blur(6px); box-shadow:var(--shadow)
-}
-.pill button{all:unset; padding:6px 10px; border-radius:10px; cursor:pointer; font-weight:800; background:rgba(0,0,0,.2); border:1px solid var(--border)}
-.pill button:hover{background:rgba(255,255,255,.1)}
+/* ==== Çok katmanlı arka plan ==== */
+#bgMain,#bgFX{position:fixed; inset:0; display:block}
+#bgMain{z-index:0} #bgFX{z-index:1; mix-blend-mode:soft-light}
+#grain{position:fixed; inset:-20vmax; z-index:2; pointer-events:none; opacity:.06;
+  background-image:url('data:image/svg+xml;utf8,\
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320">\
+<filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter>\
+<rect width="100%" height="100%" filter="url(%23n)" opacity="0.8"/></svg>');
+  animation:grain 8s linear infinite;}
+@keyframes grain{to{transform:translate3d(-10%,5%,0)}}
+#vignette{position:fixed; inset:0; z-index:3; pointer-events:none; box-shadow:inset 0 0 220px 60px rgba(0,0,0,.7)}
 
-/* ---------------- CONTENT ---------------- */
-#site{position:relative; z-index:3; opacity:0; transition:opacity .6s ease}
+/* ==== Parallax dekor ==== */
+.decors{position:fixed; inset:0; z-index:4; pointer-events:none}
+.layer{position:absolute; will-change:transform; filter:drop-shadow(0 8px 0 rgba(0,0,0,.35))}
+.skull{left:6vw; top:18vh; font-size:92px; opacity:.18}
+.gear{right:8vw; top:12vh; font-size:72px; opacity:.22}
+.sun{right:8vw; top:10vh; font-size:88px; opacity:.25; display:none}
+.flower{left:8vw; top:22vh; font-size:78px; opacity:.22; display:none}
+
+/* ==== Site ==== */
+#site{position:relative; z-index:6; opacity:0; transition:opacity .6s ease}
 #site.show{opacity:1}
-.wrap{max-width:1080px; margin:0 auto; padding:110px 16px 120px}
-.hero{
-  display:grid; grid-template-columns:1fr; gap:14px; margin-bottom:16px;
-}
-.card{
-  background:rgba(255,255,255,.08); border:1px solid var(--border); border-radius:18px; padding:18px; backdrop-filter: blur(4px) saturate(120%);
-  box-shadow:var(--shadow)
-}
-h1{margin:0 0 6px; font-size:38px; letter-spacing:.02em; text-shadow:0 3px 0 #0003}
-h2{margin:0 0 8px}
-.muted{color:var(--muted)}
-.grid{display:grid; gap:16px}
-@media(min-width:860px){ .hero{grid-template-columns:1.4fr .9fr} .grid{grid-template-columns:1fr 1fr} }
-
-.links{display:grid; gap:12px}
+.hero{display:grid;grid-template-columns:1.4fr .9fr;gap:16px;margin-bottom:16px}
+@media(max-width:880px){.hero{grid-template-columns:1fr}}
+.links{display:grid;gap:12px}
 .link{
   display:flex; align-items:center; justify-content:space-between; gap:10px;
-  padding:14px 16px; border-radius:14px; background:rgba(255,255,255,.12); border:1px solid var(--border);
+  padding:14px 16px; border-radius:14px; background:var(--glass); border:1px solid var(--border);
   transition:transform .12s ease, box-shadow .2s ease;
 }
-.link:hover{transform:translateY(-2px); box-shadow:0 10px 22px rgba(0,0,0,.25)}
-
-/* 3D tilt on hover (desktop) */
-.tilt{transform-style:preserve-3d; perspective:800px}
-.tilt:hover .tilt-i{transform:rotateX(6deg) rotateY(-6deg)}
-.tilt-i{transition:transform .25s ease}
-
-/* ---------------- THEME BADGES ---------------- */
+.link:hover{transform:translateY(-2px); box-shadow:0 14px 28px rgba(0,0,0,.28)}
 .badge{display:inline-flex; gap:8px; align-items:center; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:rgba(255,255,255,.08)}
-
-/* ---------------- LIGHT / DARK toggle effect ---------------- */
-[data-mode="dark"] body{}
-[data-mode="light"] body{color:#0b131a}
-[data-mode="light"] .card{background:rgba(255,255,255,.7); border-color:#00000022}
-[data-mode="light"] .link{background:#fff; border-color:#00000022}
-
-/* ---------------- PARALLAX DECOS ---------------- */
-.decors{position:fixed; inset:0; z-index:2; pointer-events:none}
-.layer{position:absolute; will-change:transform; filter:drop-shadow(0 6px 0 rgba(0,0,0,.35))}
-.skull{left:6vw; top:18vh; font-size:86px; opacity:.18}
-.gear{right:8vw; top:12vh; font-size:64px; opacity:.22}
-.sun{right:8vw; top:10vh; font-size:82px; opacity:.27}
-.flower{left:8vw; top:22vh; font-size:70px; opacity:.22}
-
-/* ---------------- RESPONSIVE TWEAK ---------------- */
-@media(max-width:520px){ h1{font-size:28px} .logo{font-size:42px} }
+.muted{color:var(--muted)}
 </style>
+
+<!-- ==== SVG filtreleri (glow + goo) ==== -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="softGlow">
+    <feGaussianBlur stdDeviation="3" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="goo">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+    <feColorMatrix in="blur" mode="matrix"
+      values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"/>
+    <feBlend in="SourceGraphic" in2="goo"/>
+  </filter>
+</svg>
 </head>
 <body>
 
-<!-- FX layers -->
-<canvas id="bgCanvas"></canvas>
+<!-- Çok katmanlı arka plan -->
+<canvas id="bgMain"></canvas>
+<canvas id="bgFX"></canvas>
 <div id="grain"></div>
 <div id="vignette"></div>
 
-<!-- Cinematic Intro -->
-<div id="intro">
-  <div class="logo"><span class="glow">VERIDIUM</span></div>
-  <div class="sub">Enerjini seç ve portalı aç</div>
-  <div class="choices">
-    <button id="maleBtn" class="btn">⚙️ Erkek</button>
-    <button id="femaleBtn" class="btn">🌸 Kadın</button>
-  </div>
-</div>
-
-<!-- top controls -->
-<div class="topbar">
-  <div class="pill">
-    <span>Mod:</span>
-    <button id="lightBtn">☀️ Aydınlık</button>
-    <button id="darkBtn">🌙 Karanlık</button>
-    <span style="margin-left:10px">Enerji:</span>
-    <button id="changeBtn">⚡ Değiştir</button>
-  </div>
-</div>
-
-<!-- Parallax décor (swap by theme) -->
+<!-- Parallax süsler -->
 <div class="decors" aria-hidden="true">
   <div id="d1" class="layer skull">💀</div>
   <div id="d2" class="layer gear">⚙️</div>
-  <div id="d3" class="layer sun" style="display:none">☀️</div>
-  <div id="d4" class="layer flower" style="display:none">🌸</div>
+  <div id="d3" class="layer sun">☀️</div>
+  <div id="d4" class="layer flower">🌸</div>
 </div>
 
-<!-- Site content -->
+<!-- Üst bar -->
+<div class="topbar">
+  <div class="pill">
+    <strong>Mod</strong>
+    <button id="lightBtn" class="btn">☀️ Aydınlık</button>
+    <button id="darkBtn" class="btn">🌙 Karanlık</button>
+    <span style="margin-left:10px"><strong>Enerji</strong></span>
+    <button id="changeBtn" class="btn">⚡ Değiştir</button>
+  </div>
+</div>
+
+<!-- Intro -->
+<div id="intro" role="dialog" aria-label="Enerji seç">
+  <div class="logo" aria-hidden="true">VERIDIUM</div>
+  <div class="sub">Enerjini seç ve portalı aç</div>
+  <div class="choices" filter="url(#softGlow)">
+    <button id="maleBtn" class="cbtn">⚙️ Erkek</button>
+    <button id="femaleBtn" class="cbtn">🌸 Kadın</button>
+  </div>
+</div>
+
+<!-- Site -->
 <main id="site">
   <div class="wrap">
-    <section class="hero tilt">
-      <div class="card tilt-i">
+    <section class="hero">
+      <div class="card" style="filter:url(#softGlow)">
         <h1 id="hello">Hoş geldin 👋</h1>
-        <p class="muted" id="desc">Enerjine göre arka planda **çok katmanlı** animasyonlar akıyor: parallax + partikül + ışık.</p>
-        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
-          <span class="badge">🎨 Glow & Noise</span>
-          <span class="badge">🌀 Parallax</span>
+        <p id="desc" class="muted">Arka planda cartoon-deniz / cartoon-bahar sahneleri, parallax ve çok katmanlı glow çalışıyor.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
           <span class="badge">💫 Canvas Partikül</span>
-          <span class="badge">🧊 Buz Mavisi / 🌸 Bahar</span>
+          <span class="badge">🌀 Parallax</span>
+          <span class="badge">✨ Glow + Grain + Vignette</span>
+          <span class="badge">🧊 Buz Mavisi • 🌸 Bahar</span>
         </div>
       </div>
-      <div class="card tilt-i">
+      <div class="card">
         <h2>Günün Sözü</h2>
         <p id="quote">“Sessiz güç, en gürültülü sonuçları doğurur.”</p>
-        <div style="height:8px"></div>
+        <div style="height:10px"></div>
         <h2>Rastgele Bilgi</h2>
         <p id="fact">MCV↓ + MCHC↓ → demir eksikliğini düşün.</p>
       </div>
@@ -194,23 +193,25 @@ h2{margin:0 0 8px}
       </div>
     </section>
 
-    <section style="margin-top:16px; display:flex; justify-content:space-between; align-items:center">
+    <section style="margin-top:16px;display:flex;justify-content:space-between;align-items:center">
       <div class="badge">© 2025 <strong>VERIDIUM</strong></div>
-      <div class="muted">Max Edition • cartoon + neon hibrit</div>
+      <div class="muted">MAX++ • cartoon + neon hibrit sahneler</div>
     </section>
   </div>
 </main>
 
+<!-- ===== JS (tüm akış) ===== -->
 <script>
-/* ---------------- Utility ---------------- */
-const $ = s => document.querySelector(s);
-const intro = $('#intro'), site = $('#site');
-const maleBtn = $('#maleBtn'), femaleBtn = $('#femaleBtn');
-const changeBtn = $('#changeBtn'), lightBtn = $('#lightBtn'), darkBtn = $('#darkBtn');
+/* ---------- kısayollar ---------- */
+const $=s=>document.querySelector(s);
+const intro=$('#intro'), site=$('#site');
+const maleBtn=$('#maleBtn'), femaleBtn=$('#femaleBtn');
+const changeBtn=$('#changeBtn'), lightBtn=$('#lightBtn'), darkBtn=$('#darkBtn');
 const d1=$('#d1'), d2=$('#d2'), d3=$('#d3'), d4=$('#d4');
 const hello=$('#hello'), desc=$('#desc');
 const quoteEl=$('#quote'), factEl=$('#fact');
 
+/* ---------- metinler ---------- */
 const QUOTES=[
   'Disiplin, motivasyon yokken de sürer.',
   'Derin sular sessiz akar.',
@@ -225,152 +226,165 @@ const FACTS=[
   'MCV↓ + MCHC↓ → demir eksikliği.',
   'Serum ferritin demirde azalır.'
 ];
-quoteEl.textContent = '“'+QUOTES[Math.floor(Math.random()*QUOTES.length)]+'”';
-factEl.textContent  = FACTS[Math.floor(Math.random()*FACTS.length)];
+quoteEl.textContent='“'+QUOTES[Math.floor(Math.random()*QUOTES.length)]+'”';
+factEl.textContent=FACTS[Math.floor(Math.random()*FACTS.length)];
 
-function boom(emoji){
-  const b=document.createElement('div'); b.className='boom'; b.innerHTML=`<div>${emoji}</div>`;
-  document.body.appendChild(b); setTimeout(()=>b.remove(), 900);
-}
-function showSite(){ site.classList.add('show'); }
-
-/* ---------------- Parallax ---------------- */
-document.addEventListener('mousemove', (e)=>{
+/* ---------- parallax ---------- */
+document.addEventListener('mousemove',(e)=>{
   const cx=innerWidth/2, cy=innerHeight/2;
   const dx=(e.clientX-cx)/cx, dy=(e.clientY-cy)/cy;
-  d1.style.transform=`translate(${dx*-20}px, ${dy*-10}px)`;
-  d2.style.transform=`translate(${dx*18}px, ${dy*12}px) rotate(${dx*6}deg)`;
-  d3.style.transform=`translate(${dx*16}px, ${dy*8}px)`;
-  d4.style.transform=`translate(${dx*-16}px, ${dy*6}px) rotate(${dx*4}deg)`;
+  d1.style.transform=`translate(${dx*-26}px, ${dy*-12}px) rotate(${dx*2}deg)`;
+  d2.style.transform=`translate(${dx*22}px, ${dy*16}px) rotate(${dx*8}deg)`;
+  d3.style.transform=`translate(${dx*18}px, ${dy*10}px)`;
+  d4.style.transform=`translate(${dx*-18}px, ${dy*8}px) rotate(${dx*6}deg)`;
 });
 
-/* ---------------- Canvas FX ---------------- */
-const cvs=document.getElementById('bgCanvas'), ctx=cvs.getContext('2d');
+/* ---------- canvas set ---------- */
+const c0=document.getElementById('bgMain'), g0=c0.getContext('2d');
+const c1=document.getElementById('bgFX')  , g1=c1.getContext('2d');
 function fit(){
-  const dpr=Math.min(2, devicePixelRatio||1);
-  cvs.width=Math.floor(innerWidth*dpr); cvs.height=Math.floor(innerHeight*dpr);
-  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const dpr=Math.min(2,devicePixelRatio||1);
+  [c0,c1].forEach(c=>{c.width=Math.floor(innerWidth*dpr); c.height=Math.floor(innerHeight*dpr)});
+  [g0,g1].forEach(g=>g.setTransform(dpr,0,0,dpr,0,0));
 }
-addEventListener('resize', fit); fit();
-let raf=null;
+addEventListener('resize',fit); fit();
+let raf0=null, raf1=null;
 
-/* cartoon SEA */
+/* ---------- cartoon SEA (male) ---------- */
 function startSea(){
-  cancelAnimationFrame(raf); fit();
+  cancelAnimationFrame(raf0); cancelAnimationFrame(raf1); fit();
   d1.style.display='block'; d2.style.display='block'; d3.style.display='none'; d4.style.display='none';
-  document.body.style.background='linear-gradient(180deg,var(--m1),var(--m2))';
+  document.body.style.background = 'linear-gradient(180deg,var(--sea-1),var(--sea-2))';
 
-  const waves=[];
-  for(let i=0;i<4;i++){
-    waves.push({y:innerHeight*0.45+i*26,amp:10+i*3,spd:.6+i*.15,t:Math.random()*1000,col:['#a6e3ff','#8fd9ff','#78cfff','#5fc2ee'][i%4]});
-  }
-  const bubbles=[];
-  for(let i=0;i<80;i++){
-    bubbles.push({x:Math.random()*innerWidth,y:innerHeight+Math.random()*innerHeight,r:3+Math.random()*6,spd:.5+Math.random()*.9,wg:Math.random()*200});
-  }
-
-  (function loop(){
-    raf=requestAnimationFrame(loop);
-    ctx.fillStyle='rgba(255,255,255,.22)'; ctx.fillRect(0,0,innerWidth,innerHeight);
-
+  // ana dalga + kabarcık (c0)
+  const waves=[]; for(let i=0;i<4;i++) waves.push({y:innerHeight*.45+i*26, amp:10+i*3, spd:.6+i*.15, t:Math.random()*1000, col:['#a6e3ff','#8fd9ff','#78cfff','#5fc2ee'][i%4]});
+  const bubbles=[]; for(let i=0;i<90;i++) bubbles.push({x:Math.random()*innerWidth,y:innerHeight+Math.random()*innerHeight,r:3+Math.random()*6,spd:.5+Math.random()*.9,wg:Math.random()*200});
+  (function loop0(){
+    raf0=requestAnimationFrame(loop0);
+    g0.fillStyle='rgba(255,255,255,.22)'; g0.fillRect(0,0,innerWidth,innerHeight);
     waves.forEach(w=>{
       w.t+=.02*w.spd;
-      ctx.lineWidth=8; ctx.lineCap='round'; ctx.strokeStyle=w.col; ctx.beginPath();
-      const k=.008; for(let x=0;x<=innerWidth;x+=14){ const y=w.y+Math.sin(x*k+w.t)*w.amp; if(x===0)ctx.moveTo(x,y); else ctx.lineTo(x,y); }
-      ctx.stroke();
-      ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.45)'; ctx.stroke();
+      g0.lineWidth=8; g0.lineCap='round'; g0.strokeStyle=w.col; g0.beginPath();
+      const k=.008; for(let x=0;x<=innerWidth;x+=14){const y=w.y+Math.sin(x*k+w.t)*w.amp; if(x===0)g0.moveTo(x,y); else g0.lineTo(x,y)}
+      g0.stroke(); g0.lineWidth=3; g0.strokeStyle='rgba(0,0,0,.45)'; g0.stroke();
     });
-
     bubbles.forEach(b=>{
       b.y-=b.spd; b.x+=Math.sin((b.y+b.wg)*.04)*.9;
-      if(b.y<-12){ b.y=innerHeight+20; b.x=Math.random()*innerWidth; }
-      ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
-      ctx.fillStyle=['#fff','#e6f7ff','#c8efff'][Math.floor(Math.random()*3)]; ctx.fill();
-      ctx.lineWidth=2.5; ctx.strokeStyle='rgba(0,0,0,.55)'; ctx.stroke();
-      ctx.beginPath(); ctx.arc(b.x-b.r*.35,b.y-b.r*.35,b.r*.35,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,.85)'; ctx.fill();
+      if(b.y<-12){b.y=innerHeight+20; b.x=Math.random()*innerWidth;}
+      g0.beginPath(); g0.arc(b.x,b.y,b.r,0,Math.PI*2); g0.fillStyle=['#fff','#e6f7ff','#c8efff'][Math.floor(Math.random()*3)]; g0.fill();
+      g0.lineWidth=2.5; g0.strokeStyle='rgba(0,0,0,.55)'; g0.stroke();
+      g0.beginPath(); g0.arc(b.x-b.r*.35,b.y-b.r*.35,b.r*.35,0,Math.PI*2); g0.fillStyle='rgba(255,255,255,.85)'; g0.fill();
     });
+  })();
+
+  // üst FX (ışık huzmesi + kıvılcım) (c1)
+  const beams=[]; for(let i=0;i<6;i++) beams.push({x:Math.random()*innerWidth, w:40+Math.random()*80, a:Math.random()*.5-.25, s:.2+.3*Math.random()});
+  let tt=0; (function loop1(){
+    raf1=requestAnimationFrame(loop1);
+    g1.clearRect(0,0,innerWidth,innerHeight);
+    // yumuşak caustics
+    beams.forEach(b=>{
+      b.x+=Math.sin((tt+b.w)*.005)*b.s*8;
+      g1.save(); g1.translate(b.x,0); g1.rotate(b.a);
+      const grd=g1.createLinearGradient(0,0,0,innerHeight);
+      grd.addColorStop(0,'rgba(255,255,255,.14)'); grd.addColorStop(1,'rgba(255,255,255,0)');
+      g1.fillStyle=grd; g1.fillRect(-b.w/2,0,b.w,innerHeight); g1.restore();
+    });
+    // minik neon kıvılcımlar
+    for(let i=0;i<30;i++){
+      const x=(tt*3+i*90)% (innerWidth+120) - 60;
+      const y=(innerHeight - (tt*2+i*140) % (innerHeight+140));
+      g1.beginPath(); g1.arc(x,y,1.8,0,Math.PI*2);
+      g1.fillStyle='rgba(122,211,255,.65)'; g1.fill();
+    }
+    tt++;
   })();
 }
 
-/* cartoon SPRING */
+/* ---------- cartoon SPRING (female) ---------- */
 function startSpring(){
-  cancelAnimationFrame(raf); fit();
+  cancelAnimationFrame(raf0); cancelAnimationFrame(raf1); fit();
   d1.style.display='none'; d2.style.display='none'; d3.style.display='block'; d4.style.display='block';
-  document.body.style.background='linear-gradient(180deg,var(--f1),var(--f2))';
+  document.body.style.background='linear-gradient(180deg,var(--spring-1),var(--spring-2))';
 
+  // ana (güneş + ağaç + yaprak) (c0)
   const sun={x:innerWidth*.82, y:innerHeight*.2, r:Math.min(innerWidth,innerHeight)*.12, t:Math.random()*1000};
-  const petals=[];
-  for(let i=0;i<90;i++){
-    petals.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:4+Math.random()*10,spd:.4+Math.random()*.8,drift:.6+Math.random()*.8,
-                 hue:['#ffb7d5','#ffd9a0','#b9efb0','#fff'][Math.floor(Math.random()*4)], rot:Math.random()*Math.PI*2, rs:(Math.random()-.5)*.02});
-  }
-  const trees=[]; const leaf=['#9be7a8','#7ddc8c','#b7f1c0'];
-  for(let i=0;i<6;i++){ trees.push({x:(i/5)*innerWidth+(Math.random()*40-20), y:innerHeight-40+Math.random()*10, w:140+Math.random()*120,h:60+Math.random()*40, c:leaf[i%leaf.length]}); }
+  const petals=[]; for(let i=0;i<100;i++) petals.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:4+Math.random()*10,spd:.4+Math.random()*.8,dr:.6+Math.random()*.8,col:['#ffb7d5','#ffd9a0','#b9efb0','#fff'][Math.floor(Math.random()*4)],rot:Math.random()*Math.PI*2,rs:(Math.random()-.5)*.02});
+  const trees=[]; const leaf=['#9be7a8','#7ddc8c','#b7f1c0']; for(let i=0;i<6;i++) trees.push({x:(i/5)*innerWidth+(Math.random()*40-20), y:innerHeight-40+Math.random()*10, w:140+Math.random()*120, h:60+Math.random()*40, c:leaf[i%leaf.length]});
 
-  (function loop(){
-    raf=requestAnimationFrame(loop);
-    ctx.fillStyle='rgba(255,255,255,.32)'; ctx.fillRect(0,0,innerWidth,innerHeight);
-
-    // sun
+  (function loop0(){
+    raf0=requestAnimationFrame(loop0);
+    g0.fillStyle='rgba(255,255,255,.30)'; g0.fillRect(0,0,innerWidth,innerHeight);
+    // güneş
     sun.t+=.01; const pulse=1+Math.sin(sun.t)*.03;
-    ctx.beginPath(); ctx.arc(sun.x,sun.y,sun.r*pulse,0,Math.PI*2); ctx.fillStyle='#ffe277'; ctx.fill();
-    ctx.lineWidth=5; ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.stroke();
-    const halo=ctx.createRadialGradient(sun.x,sun.y,sun.r*.8,sun.x,sun.y,sun.r*1.8);
+    g0.beginPath(); g0.arc(sun.x,sun.y,sun.r*pulse,0,Math.PI*2); g0.fillStyle='#ffe277'; g0.fill();
+    g0.lineWidth=5; g0.strokeStyle='rgba(0,0,0,.4)'; g0.stroke();
+    const halo=g0.createRadialGradient(sun.x,sun.y,sun.r*.8,sun.x,sun.y,sun.r*1.8);
     halo.addColorStop(0,'rgba(255,226,119,.45)'); halo.addColorStop(1,'rgba(255,226,119,0)');
-    ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(sun.x,sun.y,sun.r*1.8,0,Math.PI*2); ctx.fill();
-
-    // trees
-    trees.forEach(tr=>{ ctx.beginPath(); ctx.ellipse(tr.x,tr.y,tr.w/2,tr.h/2,0,0,Math.PI*2); ctx.fillStyle=tr.c; ctx.fill(); ctx.lineWidth=5; ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.stroke(); });
-
-    // petals / butterflies
+    g0.fillStyle=halo; g0.beginPath(); g0.arc(sun.x,sun.y,sun.r*1.8,0,Math.PI*2); g0.fill();
+    // ağaç
+    trees.forEach(tr=>{ g0.beginPath(); g0.ellipse(tr.x,tr.y,tr.w/2,tr.h/2,0,0,Math.PI*2); g0.fillStyle=tr.c; g0.fill(); g0.lineWidth=5; g0.strokeStyle='rgba(0,0,0,.4)'; g0.stroke(); });
+    // yaprak/kelebek
     petals.forEach(p=>{
-      p.y+=p.spd; p.x+=Math.sin((p.y+p.r)*.02)*p.drift; p.rot+=p.rs;
-      if(p.y>innerHeight+20){ p.y=-20; p.x=Math.random()*innerWidth; }
-      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
-      ctx.beginPath(); ctx.ellipse(-p.r*.5,0,p.r*.9,p.r*.55,0,0,Math.PI*2); ctx.fillStyle=p.hue; ctx.fill(); ctx.lineWidth=3.5; ctx.strokeStyle='rgba(0,0,0,.45)'; ctx.stroke();
-      ctx.beginPath(); ctx.ellipse(+p.r*.5,0,p.r*.9,p.r*.55,0,0,Math.PI*2); ctx.fillStyle=p.hue; ctx.fill(); ctx.lineWidth=3.5; ctx.strokeStyle='rgba(0,0,0,.45)'; ctx.stroke();
-      ctx.restore();
+      p.y+=p.spd; p.x+=Math.sin((p.y+p.r)*.02)*p.dr; p.rot+=p.rs;
+      if(p.y>innerHeight+20){p.y=-20; p.x=Math.random()*innerWidth;}
+      g0.save(); g0.translate(p.x,p.y); g0.rotate(p.rot);
+      g0.beginPath(); g0.ellipse(-p.r*.5,0,p.r*.9,p.r*.55,0,0,Math.PI*2); g0.fillStyle=p.col; g0.fill();
+      g0.lineWidth=3.5; g0.strokeStyle='rgba(0,0,0,.45)'; g0.stroke();
+      g0.beginPath(); g0.ellipse(+p.r*.5,0,p.r*.9,p.r*.55,0,0,Math.PI*2); g0.fillStyle=p.col; g0.fill();
+      g0.lineWidth=3.5; g0.strokeStyle='rgba(0,0,0,.45)'; g0.stroke();
+      g0.restore();
     });
+  })();
+
+  // üst FX (ışıltı parçacıkları) (c1)
+  let tt=0; (function loop1(){
+    raf1=requestAnimationFrame(loop1);
+    g1.clearRect(0,0,innerWidth,innerHeight);
+    for(let i=0;i<60;i++){
+      const x=(i*160 + Math.sin((tt+i)*.02)*200)% (innerWidth+200) - 100;
+      const y=(i*60 + tt*1.5) % (innerHeight+120) - 60;
+      g1.beginPath(); g1.arc(x,y,2.2,0,Math.PI*2);
+      g1.fillStyle='rgba(255,255,255,.65)'; g1.fill();
+    }
+    tt++;
   })();
 }
 
-/* ---------------- Flow ---------------- */
-function choose(kind){
-  if(kind==='male'){ startSea(); boom('⚙️'); hello.textContent='Derin sulara hoş geldin ⚙️'; desc.textContent='Buz-mavisi deniz, kalın çizgili dalga, kabarcık & parallax skull/gear.'; }
-  else { startSpring(); boom('🌸'); hello.textContent='Doğanın enerjisine hoş geldin 🌸'; desc.textContent='Güneş diski, ağaç tepeleri, kelebek-yaprak ve parallax çiçek.'; }
-  intro.classList.add('hide'); setTimeout(()=>intro.remove(),650); showSite();
+/* ---------- flow ---------- */
+function boom(emoji){
+  const b=document.createElement('div'); b.className='boom'; b.innerHTML=`<div>${emoji}</div>`;
+  document.body.appendChild(b); setTimeout(()=>b.remove(),900);
 }
-
-/* ask every time (no storage) */
-maleBtn.addEventListener('click', ()=>choose('male'));
-femaleBtn.addEventListener('click', ()=>choose('female'));
-changeBtn.addEventListener('click', ()=>{
+function choose(kind){
+  if(kind==='male'){ startSea(); boom('⚙️'); hello.textContent='Derin sulara hoş geldin ⚙️'; desc.textContent='Buz-mavisi deniz; dalga, kabarcık, caustics ve parallax skull/gear.'; }
+  else { startSpring(); boom('🌸'); hello.textContent='Doğanın enerjisine hoş geldin 🌸'; desc.textContent='Güneş, ağaç tepeleri, yaprak/kelebek ve parallax sun/flower.'; }
+  intro.classList.add('hide'); setTimeout(()=>intro.remove(),650); site.classList.add('show');
+}
+maleBtn.addEventListener('click',()=>choose('male'));
+femaleBtn.addEventListener('click',()=>choose('female'));
+changeBtn.addEventListener('click',()=>{
+  // Intro’yu dinamik yeniden kur
   if(!document.body.contains(intro)){
     const t=document.createElement('div'); t.id='intro'; t.innerHTML=`
-      <div class="logo"><span class="glow">VERIDIUM</span></div>
+      <div class="logo">VERIDIUM</div>
       <div class="sub">Enerjini seç ve portalı aç</div>
-      <div class="choices">
-        <button id="maleBtn" class="btn">⚙️ Erkek</button>
-        <button id="femaleBtn" class="btn">🌸 Kadın</button>
-      </div>`;
+      <div class="choices"><button id="maleBtn" class="cbtn">⚙️ Erkek</button><button id="femaleBtn" class="cbtn">🌸 Kadın</button></div>`;
     document.body.appendChild(t);
-    document.getElementById('maleBtn').addEventListener('click', ()=>choose('male'));
-    document.getElementById('femaleBtn').addEventListener('click', ()=>choose('female'));
-  } else {
-    intro.classList.remove('hide');
-  }
+    document.getElementById('maleBtn').addEventListener('click',()=>choose('male'));
+    document.getElementById('femaleBtn').addEventListener('click',()=>choose('female'));
+  }else{ intro.classList.remove('hide'); }
   site.classList.remove('show');
 });
-
-/* light/dark cosmetic (content cards) */
-lightBtn.addEventListener('click', ()=>{
+lightBtn.addEventListener('click',()=>{
   document.documentElement.setAttribute('data-mode','light');
+  // kartları beyazlaştır
+  document.querySelectorAll('.card').forEach(el=>{el.style.background='rgba(255,255,255,.78)'; el.style.color='#0b131a';});
 });
-darkBtn.addEventListener('click', ()=>{
-  document.documentElement.setAttribute('data-mode','dark');
+darkBtn.addEventListener('click',()=>{
+  document.documentElement.removeAttribute('data-mode');
+  document.querySelectorAll('.card').forEach(el=>{el.style.background='var(--card)'; el.style.color='var(--fg)';});
 });
-
-/* initial state: wait intro */
 </script>
 </body>
   </html>
