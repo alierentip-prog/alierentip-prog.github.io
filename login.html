@@ -1,103 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Veridium Giriş</title>
   <style>
-    :root {
-      --bg: #0b0d10;
-      --fg: #eaeaea;
-      --grad1: #2ac0ff;
-      --grad2: #8b5cf6;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--fg);
-      font-family: system-ui, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
-      padding: 30px;
-      width: 340px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(8px);
-    }
-
-    h1 {
-      margin-bottom: 20px;
-      font-size: 24px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 10px;
-      border: none;
-      outline: none;
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--fg);
-      font-size: 15px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 12px;
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      background: linear-gradient(135deg, var(--grad1), var(--grad2));
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.03);
-    }
-
-    .back {
-      display: block;
-      margin-top: 12px;
-      color: #aad9ff;
-      text-decoration: none;
-    }
+    :root{--bg:#0b0d10;--fg:#eaeaea;--glass:rgba(255,255,255,.06);--b:#8b5cf6}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,Segoe UI,Roboto}
+    .wrap{min-height:100%;display:grid;place-items:center;padding:24px}
+    .box{width:100%;max-width:360px;background:var(--glass);border:1px solid rgba(255,255,255,.12);
+         border-radius:16px;backdrop-filter:blur(8px);box-shadow:0 10px 30px rgba(0,0,0,.35);padding:20px}
+    h1{margin:0 0 12px;font-weight:900;letter-spacing:.06em}
+    .tabs{display:flex;gap:8px;margin:10px 0 16px}
+    .tabs button{flex:1;padding:10px 0;border:1px solid rgba(255,255,255,.15);background:transparent;color:var(--fg);
+                 border-radius:10px;cursor:pointer;font-weight:700}
+    .tabs button.act{background:linear-gradient(135deg,#2ac0ff,#8b5cf6)}
+    label{display:block;margin:12px 0 6px;font-size:14px;opacity:.85}
+    input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);
+          background:rgba(0,0,0,.25);color:var(--fg);outline:none}
+    .submit{margin-top:14px;width:100%;padding:12px;border:0;border-radius:12px;cursor:pointer;font-weight:800;
+            background:linear-gradient(135deg,#2ac0ff,#8b5cf6)}
+    .muted{margin-top:10px;font-size:13px;opacity:.75}
+    .link{color:#8b5cf6;text-decoration:none}
+    .toast{position:fixed;inset:auto 16px 16px 16px;padding:12px 14px;border-radius:12px;
+           background:#222;border:1px solid rgba(255,255,255,.12);color:#fff;display:none}
+    .toast.show{display:block}
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>🔑 Veridium Giriş</h1>
-    <input id="email" type="email" placeholder="E-posta" />
-    <input id="password" type="password" placeholder="Şifre" />
-    <button id="loginBtn">Giriş Yap</button>
-    <button id="signupBtn" style="background: linear-gradient(135deg,#22c55e,#16a34a);">
-      Kayıt Ol
-    </button>
-    <a href="index.html" class="back">← Ana sayfaya dön</a>
+  <div class="wrap">
+    <div class="box">
+      <h1>🔑 Veridium Giriş</h1>
+
+      <div class="tabs">
+        <button id="tabLogin" class="act">Giriş Yap</button>
+        <button id="tabSignup">Kayıt Ol</button>
+      </div>
+
+      <!-- GİRİŞ FORMU -->
+      <form id="loginForm">
+        <label for="lemail">E-posta</label>
+        <input id="lemail" type="email" autocomplete="username" required />
+        <label for="lpass">Şifre</label>
+        <input id="lpass" type="password" autocomplete="current-password" required />
+        <button class="submit" type="submit">Giriş Yap</button>
+      </form>
+
+      <!-- KAYIT FORMU -->
+      <form id="signupForm" style="display:none">
+        <label for="semail">E-posta</label>
+        <input id="semail" type="email" autocomplete="username" required />
+        <label for="spass">Şifre (min. 6)</label>
+        <input id="spass" type="password" autocomplete="new-password" minlength="6" required />
+        <button class="submit" type="submit">Kayıt Ol</button>
+      </form>
+
+      <p class="muted">
+        ← <a class="link" href="index.html">Ana sayfaya dön</a>
+      </p>
+    </div>
   </div>
 
-  <!-- ✅ Firebase bağlantısı -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Firebase v12 (CDN / module) -->
   <script type="module">
-    // Firebase modülleri
+    // ===== Firebase SDK'lar
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import {
       getAuth,
+      createUserWithEmailAndPassword,
       signInWithEmailAndPassword,
-      createUserWithEmailAndPassword
+      onAuthStateChanged,
+      sendEmailVerification,
+      signOut
     } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-    // 🔧 Firebase yapılandırman
+    // ===== SENİN PROJE AYARLARIN (aynen böyle kalacak)
     const firebaseConfig = {
       apiKey: "AIzaSyC-VlZl1YwSTo1NuBkPXSdt3fqMvFhtCgM",
       authDomain: "veridium-site.firebaseapp.com",
@@ -107,49 +87,84 @@
       appId: "1:422528394891:web:bec929ead94308a86a968e"
     };
 
-    // 🚀 Başlat
-    const app = initializeApp(firebaseConfig);
+    // ===== Başlat
+    const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // 🎯 Elemanlar
-    const emailEl = document.getElementById("email");
-    const passEl = document.getElementById("password");
-    const loginBtn = document.getElementById("loginBtn");
-    const signupBtn = document.getElementById("signupBtn");
+    // UI elemanları
+    const $ = s => document.querySelector(s);
+    const toastEl = $('#toast');
+    const tabLogin  = $('#tabLogin');
+    const tabSignup = $('#tabSignup');
+    const loginForm  = $('#loginForm');
+    const signupForm = $('#signupForm');
 
-    // ⚡ Giriş
-    loginBtn.addEventListener("click", async () => {
-      const email = emailEl.value.trim();
-      const password = passEl.value.trim();
-      if (!email || !password) {
-        alert("Lütfen e-posta ve şifre girin.");
-        return;
-      }
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("Giriş başarılı!");
-        window.location.href = "index.html";
-      } catch (error) {
-        alert("Giriş hatası: " + error.message);
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(()=>toastEl.classList.remove('show'), 3200);
+    }
+
+    // Sekme geçişi
+    tabLogin.addEventListener('click', ()=>{
+      tabLogin.classList.add('act'); tabSignup.classList.remove('act');
+      loginForm.style.display='block'; signupForm.style.display='none';
+    });
+    tabSignup.addEventListener('click', ()=>{
+      tabSignup.classList.add('act'); tabLogin.classList.remove('act');
+      signupForm.style.display='block'; loginForm.style.display='none';
+    });
+
+    // Kayıt ol
+    signupForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const email = $('#semail').value.trim();
+      const pass  = $('#spass').value;
+      try{
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        // İsteğe bağlı doğrulama maili
+        try{ await sendEmailVerification(cred.user); }catch(_){}
+        toast('Kayıt başarılı! Giriş yapılıyor…');
+        // Kayıttan hemen sonra giriş zaten açık olur; ana sayfaya geç
+        location.href = 'index.html';
+      }catch(err){
+        toast(humanError(err));
       }
     });
 
-    // ✨ Kayıt
-    signupBtn.addEventListener("click", async () => {
-      const email = emailEl.value.trim();
-      const password = passEl.value.trim();
-      if (!email || !password) {
-        alert("Lütfen e-posta ve şifre girin.");
-        return;
-      }
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("Kayıt başarılı! Giriş yapıldı.");
-        window.location.href = "index.html";
-      } catch (error) {
-        alert("Kayıt hatası: " + error.message);
+    // Giriş yap
+    loginForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const email = $('#lemail').value.trim();
+      const pass  = $('#lpass').value;
+      try{
+        await signInWithEmailAndPassword(auth, email, pass);
+        toast('Giriş başarılı, yönlendiriliyor…');
+        location.href = 'index.html';
+      }catch(err){
+        toast(humanError(err));
       }
     });
+
+    // Oturum değişince konsola düşsün (debug)
+    onAuthStateChanged(auth, (user)=>{
+      console.log('auth state:', user ? user.email : 'yok');
+    });
+
+    // Hata mesajlarını sadeleştir
+    function humanError(err){
+      const code = (err?.code||'').replace('auth/','');
+      switch(code){
+        case 'invalid-credential':
+        case 'user-not-found':   return 'Kullanıcı bulunamadı.';
+        case 'wrong-password':   return 'Şifre hatalı.';
+        case 'email-already-in-use': return 'Bu e-posta zaten kayıtlı.';
+        case 'invalid-email':    return 'Geçersiz e-posta adresi.';
+        case 'network-request-failed': return 'Ağ hatası. İnterneti kontrol et.';
+        case 'too-many-requests': return 'Çok fazla deneme. Biraz sonra tekrar dene.';
+        default: return `Hata: ${code||err.message}`;
+      }
+    }
   </script>
 </body>
 </html>
