@@ -60,12 +60,80 @@
   </style>
 </head>
 <body>
+  <body>
   <h1>🔑 Veridium Giriş</h1>
+
   <div class="login-box">
-    <input type="text" placeholder="Kullanıcı Adı">
-    <input type="password" placeholder="Şifre">
-    <button>Giriş Yap</button>
+    <!-- E-posta ve şifre alanları -->
+    <input id="email" type="email" placeholder="E-posta">
+    <input id="password" type="password" placeholder="Şifre">
+
+    <!-- Butonlar -->
+    <button id="loginBtn">Giriş Yap</button>
+    <button id="signupBtn" style="margin-left:10px;background:linear-gradient(135deg,#8b5cf6,#2ac0ff)">Kayıt Ol</button>
+
     <a href="index.html">← Ana sayfaya dön</a>
   </div>
+
+  <!-- Firebase: script-tag ile kullanım -->
+  <script type="module">
+    // Firebase modülleri (CDN)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } 
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    // 🔧 BURAYI KENDİ PROJE BİLGİLERİNLE DOLDUR
+    // Firebase konsolunda "Use a <script> tag" ekranındaki config’i KOPYALA-YAPIŞTIR
+    const firebaseConfig = {
+      apiKey: "AI...seninKey...",
+      authDomain: "veridium-site.firebaseapp.com",
+      projectId: "veridium-site",
+      storageBucket: "veridium-site.appspot.com",
+      messagingSenderId: "XXXXXXXXXXXX",
+      appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXX"
+    };
+
+    // Başlat
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Elemanlar
+    const $ = (sel)=>document.querySelector(sel);
+    const emailEl = $('#email');
+    const passEl  = $('#password');
+    const loginBtn  = $('#loginBtn');
+    const signupBtn = $('#signupBtn');
+
+    // Ufak yardımcı
+    const toast = (msg)=> alert(msg);  // istersen ileride daha şık bir toast’a çevirebilirsin
+
+    // Giriş
+    loginBtn.addEventListener('click', async ()=>{
+      const email = (emailEl.value||"").trim();
+      const pass  = passEl.value;
+      if(!email || !pass) return toast("E-posta ve şifre gerekli.");
+      try{
+        await signInWithEmailAndPassword(auth, email, pass);
+        toast("Giriş başarılı. Ana sayfaya yönlendiriliyorsun.");
+        location.href = "index.html";
+      }catch(err){
+        toast("Giriş başarısız: " + (err?.message||err));
+      }
+    });
+
+    // Kayıt ol
+    signupBtn.addEventListener('click', async ()=>{
+      const email = (emailEl.value||"").trim();
+      const pass  = passEl.value;
+      if(!email || !pass) return toast("E-posta ve şifre gerekli.");
+      try{
+        await createUserWithEmailAndPassword(auth, email, pass);
+        toast("Kayıt tamam. Giriş yapıldı, ana sayfaya gidiliyor.");
+        location.href = "index.html";
+      }catch(err){
+        toast("Kayıt başarısız: " + (err?.message||err));
+      }
+    });
+  </script>
 </body>
 </html>
