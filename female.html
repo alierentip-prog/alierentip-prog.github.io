@@ -4,133 +4,136 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Veridium — Kadın</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#0e0b10; --fg:#fff7fb; --rose:#ff7ab6; --leaf:#7ee3a1; --b:rgba(255,255,255,.16); --glass:rgba(255,255,255,.06) }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 Inter,system-ui}
-  header{
-    position:fixed; inset:0 0 auto 0; height:72px; display:flex; align-items:center; justify-content:space-between;
-    padding:0 16px; background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));
-    z-index:5
-  }
-  .brand{ font-family:Cinzel,serif; font-weight:900; letter-spacing:.16em; text-transform:uppercase;
-    background:linear-gradient(90deg,#ffd1dc,#ff9fcd,#fff1a8); -webkit-background-clip:text; color:transparent; }
-  .clock{font-weight:700; opacity:.9}
-  .actions a{
-    margin-left:10px; padding:10px 14px; border-radius:12px; text-decoration:none; color:var(--fg);
-    border:1px solid var(--b); background:var(--glass); backdrop-filter:blur(6px); font-weight:700
-  }
-  canvas{position:fixed; inset:0; z-index:0; display:block}
-  main{ position:relative; z-index:2; padding:100px 16px 32px; max-width:1100px; margin:0 auto }
-  .card{ border:1px solid var(--b); background:var(--glass); border-radius:16px; padding:16px; margin-bottom:14px; backdrop-filter:blur(8px) }
+:root{--fg:#fff7fb;--b:rgba(255,255,255,.16);--glass:rgba(255,255,255,.06);--bg:#0e0b10}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui;overflow:hidden}
+header{position:fixed;top:12px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:20;background:rgba(0,0,0,.25);backdrop-filter:blur(6px)}
+.brand{font-family:"Cinzel",serif;font-weight:900;letter-spacing:.18em;background:linear-gradient(90deg,#ffd1dc,#ffa3bd,#ffe6a7);-webkit-background-clip:text;color:transparent}
+.clock{font-weight:800;letter-spacing:.1em;opacity:.95}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid var(--b);background:var(--glass);color:var(--fg);padding:8px 12px;border-radius:10px;text-decoration:none;font-weight:800}
+main{position:relative;z-index:2;max-width:1100px;margin:110px auto 24px;padding:0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{border:1px solid var(--b);background:rgba(255,255,255,.06);border-radius:16px;padding:14px;backdrop-filter:blur(8px)}
+canvas#field,canvas#glow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#field{z-index:0} #glow{z-index:1}
+.bunny{position:fixed;right:28px;bottom:84px;width:120px;height:120px;opacity:.9;filter:blur(.2px);z-index:2;pointer-events:none}
+.bunny div{position:absolute;background:#ff8fbd;border-radius:50%}
+.bunny .body{width:96px;height:64px;left:12px;bottom:18px;box-shadow:0 0 40px rgba(255,150,200,.35) inset}
+.bunny .head{width:56px;height:50px;left:50px;bottom:52px}
+.bunny .ear1{width:20px;height:44px;left:66px;bottom:100px}
+.bunny .ear2{width:20px;height:44px;left:86px;bottom:100px}
+footer{text-align:center;opacity:.85;margin:18px 0}
 </style>
 </head>
 <body>
-  <header>
-    <div class="clock" id="clock">--:-- — --.--.----</div>
-    <h1 class="brand">VERIDIUM</h1>
-    <div class="actions">
-      <a href="login.html">Giriş Yap</a>
-      <a href="login.html#signup">Üye Ol</a>
-    </div>
-  </header>
+<header>
+  <div class="clock" id="clock">--:--:-- — --.--.----</div>
+  <h1 class="brand">VERIDIUM</h1>
+  <div class="actions">
+    <span class="guestOnly">
+      <a class="btn" href="login.html">Giriş Yap</a>
+      <a class="btn" href="login.html#signup">Üye Ol</a>
+    </span>
+    <span class="userOnly" style="display:none">
+      <span id="userEmail" class="btn" style="pointer-events:none"></span>
+      <button id="logoutBtn" class="btn" type="button">Çıkış Yap</button>
+    </span>
+  </div>
+</header>
 
-  <canvas id="field"></canvas>
+<canvas id="field"></canvas>
+<canvas id="glow"></canvas>
+<div class="bunny"><div class="ear1"></div><div class="ear2"></div><div class="head"></div><div class="body"></div></div>
 
-  <main>
+<main>
+  <div class="grid">
     <section class="card">
-      <h2>Doğanın Işığı’na hoş geldin 🌸</h2>
-      <p>Yumuşak <strong>çiçek yaprakları</strong> süzülür, uzakta dağların üzerinde güneş parıldar; sağ altta bir <strong>tavşan</strong> durmadan kıpırdanır.</p>
+      <h2>🌸 Doğa & Işık</h2>
+      <p>Güneş parıltısı, süzülen çiçek yaprakları, kuşçuklar ve köşede minik bir tavşan—tam “iç ısıtan” bir sahne.</p>
     </section>
     <section class="card">
-      <h2>Ne var burada?</h2>
-      <ul>
-        <li>Çiçek/petal partikülleri, güneş ışıması.</li>
-        <li>Minik tavşan silueti ve uçan kuşcuklar.</li>
-        <li>Sol üstte canlı saat & tarih, sağ üstte giriş/üye ol.</li>
-      </ul>
+      <h2>🔗 Keşfet</h2>
+      <p><a class="btn" href="echo.html">Echo</a>
+         <a class="btn" href="felsefe.html">Felsefe</a>
+         <a class="btn" href="notlar.html">Notlar</a>
+         <a class="btn" href="tip.html">Tıp Bilgileri</a>
+         <a class="btn" href="profile.html">Profil</a></p>
     </section>
-  </main>
+    <section class="card">
+      <h2>Günün Sözü</h2>
+      <div id="quote">“Nazik bir esinti, en ağır bulutu dağıtır.”</div>
+    </section>
+  </div>
+</main>
+
+<footer>© 2025 Veridium</footer>
 
 <script>
-/* Saat */
-(function(){
-  const z=n=>String(n).padStart(2,'0');
-  const el=document.getElementById('clock');
-  function tick(){ const d=new Date(); el.textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`; requestAnimationFrame(tick) }
-  tick();
-})();
+// saat
+(function tick(){const d=new Date(),z=n=>String(n).padStart(2,'0');
+document.getElementById('clock').textContent=
+`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`;requestAnimationFrame(tick)})();
 
-/* Doğa sahnesi */
+// doğa sahnesi
 (function(){
-  const c=document.getElementById('field'), x=c.getContext('2d');
-  function fit(){ c.width=innerWidth; c.height=innerHeight }
-  fit(); addEventListener('resize',fit);
-  const W=()=>c.width, H=()=>c.height;
+  const c=document.getElementById('field'),x=c.getContext('2d');
+  const g=document.getElementById('glow'),y=g.getContext('2d');
+  function size(){c.width=innerWidth;c.height=innerHeight;g.width=innerWidth;g.height=innerHeight}
+  size(); addEventListener('resize',size);
 
-  const petals=Array.from({length:Math.floor(W()*H()/26000)},()=>({
-    x:Math.random()*W(), y:Math.random()*H(), r:1+Math.random()*3,
-    hue:330+Math.random()*40, s:.4+.7*Math.random(), drift:(Math.random()-.5)*.7
+  const petals=Array.from({length:Math.floor(innerWidth*innerHeight/32000)},()=>({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:1+Math.random()*3,h:330+Math.random()*40,s:.35+.7*Math.random()
   }));
-  const birds=Array.from({length:6},()=>({ x:Math.random()*W(), y: H()*(.15+.25*Math.random()), v:.8+Math.random()*1.2 }));
+  const birds=Array.from({length:6},()=>({x:Math.random()*innerWidth,y:innerHeight*(.15+.25*Math.random()),v:.8+Math.random()*1.2}));
 
-  let t=0;
   (function loop(){
-    // arka gökyüzü ve dağlar
-    x.fillStyle='rgba(14,11,16,1)'; x.fillRect(0,0,W(),H());
+    // arka gökyüzü
+    x.fillStyle='rgba(14,11,16,1)'; x.fillRect(0,0,c.width,c.height);
+
     // güneş ışıması
-    const sx=W()*.82, sy=H()*.18;
-    const g1=x.createRadialGradient(sx,sy,10, sx,sy, 220);
+    const sx=c.width*.82, sy=c.height*.18;
+    const g1=x.createRadialGradient(sx,sy,10, sx,sy, 240);
     g1.addColorStop(0,'rgba(255,240,180,.85)');
     g1.addColorStop(.6,'rgba(255,205,140,.20)');
     g1.addColorStop(1,'rgba(255,205,140,0)');
-    x.fillStyle=g1; x.fillRect(0,0,W(),H());
+    x.fillStyle=g1; x.fillRect(0,0,c.width,c.height);
 
     // dağ katmanları
-    drawMountain(H()*.65, '#16211c'); drawMountain(H()*.72, '#121a16');
-    function drawMountain(h, color){
-      x.fillStyle=color; x.beginPath();
-      x.moveTo(0,H());
-      for(let i=0;i<=8;i++){
-        const px=(i/8)*W();
-        const py=h + Math.sin((t*0.01)+i)*6 + (i%2? -28: -40);
-        x.lineTo(px, py);
-      }
-      x.lineTo(W(),H()); x.closePath(); x.fill();
+    drawMount(c.height*.68,'#16211c'); drawMount(c.height*.76,'#121a16');
+    function drawMount(h, col){
+      x.fillStyle=col; x.beginPath(); x.moveTo(0,c.height);
+      for(let i=0;i<=8;i++){const px=(i/8)*c.width; const py=h + Math.sin((Date.now()/900)+i)*6 + (i%2?-28:-40); x.lineTo(px,py)}
+      x.lineTo(c.width,c.height); x.closePath(); x.fill();
     }
 
     // kuşlar
-    x.strokeStyle='rgba(255,255,255,.45)'; x.lineWidth=1.2;
-    for(const b of birds){
-      b.x += b.v; if(b.x>W()+30){ b.x=-30; b.y=H()*(.12+.3*Math.random()) }
-      x.beginPath();
-      x.moveTo(b.x-6,b.y); x.quadraticCurveTo(b.x-1,b.y-3,b.x+6,b.y);
-      x.stroke();
+    x.strokeStyle='rgba(255,255,255,.5)'; x.lineWidth=1.2;
+    for(const b of birds){ b.x+=b.v; if(b.x>c.width+30){b.x=-30; b.y=c.height*(.12+.3*Math.random())}
+      x.beginPath(); x.moveTo(b.x-6,b.y); x.quadraticCurveTo(b.x-1,b.y-3,b.x+6,b.y); x.stroke();
     }
 
-    // çiçek yaprakları
+    // yapraklar
     for(const p of petals){
-      p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.drift;
-      if(p.y>H()+10){ p.y=-10; p.x=Math.random()*W() }
-      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
-      x.fillStyle=`hsla(${p.hue},85%,70%,.9)`; x.fill();
+      p.y+=p.s; p.x+=Math.sin(p.y/40)*.6;
+      if(p.y>c.height+10){p.y=-10; p.x=Math.random()*c.width}
+      x.fillStyle=`hsla(${p.h},85%,72%,.9)`; x.beginPath(); x.arc(p.x,p.y,p.r,0,6.283); x.fill();
     }
 
-    // tavşan
-    const bx=W()*0.82, by=H()*0.82;
-    x.save();
-    x.translate(bx,by+Math.sin(t/30)*2);
-    x.scale(1.25,1.25);
-    x.fillStyle='rgba(255,122,182,.45)';
-    x.beginPath(); x.ellipse(0,0,22,16,0,0,Math.PI*2); x.fill();
-    x.beginPath(); x.arc(-16,-10,9,0,Math.PI*2); x.fill();
-    x.beginPath(); x.ellipse(-20,-22,4,12,0,0,Math.PI*2); x.ellipse(-10,-22,4,12,0,0,Math.PI*2); x.fill();
-    x.restore();
+    // üst parıltı (yumuşak glow)
+    y.clearRect(0,0,g.width,g.height);
+    const s2=y.createRadialGradient(c.width*.82,c.height*.18,8, c.width*.82,c.height*.18, 200);
+    s2.addColorStop(0,'rgba(255,240,180,.35)'); s2.addColorStop(1,'rgba(255,240,180,0)');
+    y.fillStyle=s2; y.fillRect(0,0,g.width,g.height);
 
-    t++; requestAnimationFrame(loop);
+    requestAnimationFrame(loop);
   })();
 })();
 </script>
+
+<!-- firebase -->
+<script type="module" src="./firebase.js"></script>
 </body>
 </html>
