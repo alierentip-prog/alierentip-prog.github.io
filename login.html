@@ -1,48 +1,90 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Giriş • AZURA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --b:rgba(255,255,255,.15); --glass:rgba(255,255,255,.06); --fg:#eaf4ff; --bg:#0b1117 }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Inter,system-ui;display:grid;place-items:center}
+  .card{width:min(420px,92%);border:1px solid var(--b);background:var(--glass);backdrop-filter:blur(8px);
+        padding:20px 18px;border-radius:16px}
+  h1{margin:.2em 0 12px;font-size:24px}
+  label{display:block;margin:10px 0 6px;font-weight:600;opacity:.9}
+  input{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--b);background:#0e151c;color:var(--fg)}
+  .row{display:flex;gap:10px;margin-top:14px}
+  button{flex:1;padding:11px 14px;border-radius:12px;border:1px solid var(--b);background:#15202b;color:var(--fg);
+         font-weight:800;cursor:pointer}
+  button:hover{filter:brightness(1.08)}
+  .msg{margin-top:10px;font-size:14px;min-height:22px}
+  .ok{color:#8ff0a6} .err{color:#ff9ab0}
+  a.back{display:inline-block;margin-top:14px;text-decoration:none;color:#a7c8ff}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Giriş</h1>
+  <label for="email">E-posta</label>
+  <input id="email" type="email" autocomplete="email" placeholder="ornek@mail.com" required>
+  <label for="pass">Şifre</label>
+  <input id="pass" type="password" autocomplete="current-password" placeholder="••••••" required>
+  <div class="row">
+    <button id="loginBtn">Giriş Yap</button>
+    <button id="signupBtn" type="button">Üye Ol</button>
+  </div>
+  <div id="msg" class="msg"></div>
+  <a class="back" href="/index.html">← Ana sayfa</a>
+</div>
+
+<!-- Firebase init (config burada) -->
+<script type="module" src="/firebase.js"></script>
+
+<!-- Login işlemleri -->
 <script type="module">
-import { auth,
-         signInWithEmailAndPassword,
-         createUserWithEmailAndPassword,
-         onAuthStateChanged,
-         signOut } from './firebase.js';
+  import {
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-// GİRİŞ
-document.getElementById('loginBtn').addEventListener('click', async () => {
-  const email = document.getElementById('email').value.trim();
-  const pass  = document.getElementById('pass').value;
-  try {
-    await signInWithEmailAndPassword(auth, email, pass);
-    alert('Giriş başarılı!');
-    location.href = 'index.html';
-  } catch (e) {
-    alert('Giriş hatası: ' + e.message);
+  const { auth } = window.__firebase;
+
+  const email = document.getElementById('email');
+  const pass  = document.getElementById('pass');
+  const msg   = document.getElementById('msg');
+
+  function showOk(t){ msg.className='msg ok'; msg.textContent=t }
+  function showErr(e){
+    msg.className='msg err';
+    const m = (e && e.code) ? e.code.replace('auth/','').replaceAll('-',' ') : (e?.message||'Hata');
+    msg.textContent = `Hata: ${m}`;
+    alert(`Giriş hatası: ${m}`);
   }
-});
 
-// ÜYE OL
-document.getElementById('signupBtn').addEventListener('click', async () => {
-  const email = document.getElementById('email').value.trim();
-  const pass  = document.getElementById('pass').value;
-  try {
-    await createUserWithEmailAndPassword(auth, email, pass);
-    alert('Hesap oluşturuldu, giriş yapıldı!');
-    location.href = 'index.html';
-  } catch (e) {
-    alert('Kayıt hatası: ' + e.message);
-  }
-});
+  document.getElementById('loginBtn').onclick = async (e)=>{
+    e.preventDefault();
+    try{
+      await signInWithEmailAndPassword(auth, email.value.trim(), pass.value);
+      showOk('Giriş başarılı, yönlendiriliyorsun…');
+      setTimeout(()=>location.href='/index.html', 600);
+    }catch(err){ showErr(err); }
+  };
 
-// ÇIKIŞ (sayfanda varsa)
-const logout = document.getElementById('logoutBtn');
-if (logout) {
-  logout.addEventListener('click', async () => {
-    await signOut(auth);
-    location.reload();
+  document.getElementById('signupBtn').onclick = async ()=>{
+    try{
+      await createUserWithEmailAndPassword(auth, email.value.trim(), pass.value);
+      showOk('Üyelik oluşturuldu, giriş yapıldı.');
+      setTimeout(()=>location.href='/index.html', 600);
+    }catch(err){ showErr(err); }
+  };
+
+  // Zaten girişliyse buraya gelince direkt geri yolla
+  onAuthStateChanged(auth, (user)=>{
+    if(user){ location.replace('/index.html'); }
   });
-}
-
-// Durum takibi (opsiyonel)
-onAuthStateChanged(auth, (user) => {
-  // user varsa girişli, yoksa değil
-  // burada UI'ı ayarlayabilirsin
-});
 </script>
+</body>
+</html>
