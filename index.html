@@ -54,6 +54,32 @@
   </style>
 </head>
 <body>
+  <header class="topbar">
+  <div class="clock" id="clock">--:--</div>
+  <h1 class="brand">AZURA</h1>
+  <nav id="authArea">
+    <a class="btn" href="login.html" id="loginLink">Giriş</a>
+    <a class="btn" href="login.html#signup" id="signupLink">Üye Ol</a>
+    <button class="btn" id="logoutBtn" style="display:none">Çıkış</button>
+  </nav>
+</header>
+
+<style>
+  .topbar{
+    position:fixed; top:10px; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 14px;
+    background:linear-gradient(180deg,rgba(0,0,0,.35),transparent);
+  }
+  .brand{letter-spacing:.18em; font-weight:900; opacity:.9}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.16);
+    background:rgba(255,255,255,.06); color:#eaf4ff; font-weight:700;
+    text-decoration:none; backdrop-filter:blur(6px)
+  }
+  #authArea{display:flex; gap:8px}
+</style>
   <h1>AZURA</h1>
   <div class="cards">
     <div class="card">
