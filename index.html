@@ -214,6 +214,22 @@
   }
 })();
 </script>
+  <script>
+  // Basit oturum göstergesi (Firebase yoksa da çalışır)
+  const logoutBtn = document.getElementById('logoutBtn');
+  const loginLink = document.querySelector('#authBar a[href="login.html"]');
+  const signupLink = document.querySelector('#authBar a[href="login.html#signup"]');
+
+  function refreshAuthUI(){
+    const u = sessionStorage.getItem('azuraUser'); // demo oturum
+    const logged = !!u;
+    loginLink.style.display = logged ? 'none' : '';
+    signupLink.style.display = logged ? 'none' : '';
+    logoutBtn.style.display = logged ? '' : 'none';
+  }
+  logoutBtn.onclick = ()=>{ sessionStorage.removeItem('azuraUser'); refreshAuthUI(); };
+  refreshAuthUI();
+  </script>
 </body>
   <header id="authBar" style="
   position:fixed; right:12px; top:12px; z-index:50; display:flex; gap:8px;">
