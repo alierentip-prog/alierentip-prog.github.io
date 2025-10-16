@@ -170,7 +170,7 @@ a:hover{ text-decoration:underline; }
     function greeting(){const h=new Date().getHours(); if(h<5)return'Gece devriyesi bitmedi 🦉'; if(h<11)return'Günaydın, yolcu 🌞'; if(h<17)return'Üretkenlik zamanı 💪'; if(h<22)return'Akşam moduna hoş geldin ✨'; return'İyi geceler, metal ruhu unutma 🤘'}
     document.getElementById('hello').textContent=greeting();
 
-    const savedEnergy=store.get(ENERGY_KEY,null);
+    const savedEnergy = null; // her açılışta enerji sor
     const modal=document.getElementById('energyModal');
     if(!savedEnergy){ modal.classList.add('show'); }
     else{ applyEnergy(savedEnergy); }
