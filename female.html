@@ -261,5 +261,62 @@
   }
 </script>
 <!-- ====== /BİTTİ ====== -->
+<style id="BIGGER-TEXT-OVERRIDE">
+  /* 🚀 DEV SİNEMATİK BOYUTLAR (tam ekran okunur) */
+  #storyInner{
+    position:absolute;
+    left:0; right:0;
+    transform:translateY(100%);
+    padding: 0 clamp(12px, 4vw, 60px) clamp(80px, 10vh, 140px);
+    color:#fff7fb;
+    font-family:"Playfair Display","Cinzel","Times New Roman",serif;
+    /* Ana paragraf boyutu: telefonda bile büyük, desktopta dev */
+    font-size: clamp(22px, 5.8vw, 64px);
+    line-height: 1.45;
+    text-align: center;
+    letter-spacing: 0.03em;
+    text-shadow:
+      0 0 28px rgba(255,200,255,.45),
+      0 0 90px rgba(255,120,255,.28);
+  }
+  #storyInner p{
+    margin: 0 0 clamp(18px, 3.2vw, 48px);
+    text-wrap: pretty;
+  }
+  #storyInner p.lead{
+    /* İlk ve son vurgulu satırlar: daha da büyük */
+    font-size: clamp(26px, 7.2vw, 86px);
+    font-weight: 900;
+    color:#ffe2ff;
+    letter-spacing: 0.06em;
+    text-shadow:
+      0 0 40px rgba(255,160,255,.55),
+      0 0 120px rgba(255,90,255,.32);
+  }
+
+  /* Üstteki başlık barını da büyütüp parlatıyoruz */
+  #scrollStory .bar{
+    font-size: clamp(18px, 3.6vw, 42px);
+    letter-spacing: 0.22em;
+    text-shadow: 0 0 26px rgba(255,180,255,.5);
+  }
+  #scrollStory h1{
+    font: 900 clamp(18px, 3.8vw, 44px)/1 Cinzel,serif;
+  }
+
+  /* Maske bantlarını büyüt (kenarlarda yumuşak fade) */
+  #storyViewport::before,
+  #storyViewport::after{
+    height: clamp(80px, 14vh, 160px);
+  }
+
+  /* Menü kartı biraz daha iri görünsün */
+  #menuPanel .menu-card{
+    transform: scale(.88);
+  }
+  #menuPanel .menu-card.show{
+    transform: scale(1);
+  }
+</style>
 </body>
 </html>
