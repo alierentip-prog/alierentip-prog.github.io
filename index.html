@@ -262,5 +262,25 @@ a:hover{ text-decoration:underline; }
       if(threeEnabled) init3D(); else dispose3D();
     });
   </script>
+  <!-- ⚡ Enerji değiştir butonu -->
+<button id="changeEnergy" style="
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--brand1);
+  color: var(--bg);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+">
+⚡ Enerji Değiştir
+</button>
+
+<script>
+document.getElementById('changeEnergy').addEventListener('click', () => {
+  const modal = document.getElementById('energyModal');
+  modal.classList.add('show');
+});
+</script>
 </body>
 </html>
