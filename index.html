@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>𝕍𝔼ℝ𝕀𝔻𝕀𝕌𝕄</title>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --male-bg: linear-gradient(180deg, #b3e5ff 0%, #0077b6 100%);
+      --female-bg: linear-gradient(180deg, #ffecb3 0%, #81c784 100%);
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      color: #fff;
+      background: #f8f8f8;
+      font-family: 'UnifrakturCook', cursive;
+    }
+
+    header {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      z-index: 5;
+    }
+
+    #clock {
+      font-size: 20px;
+      color: #333;
+      text-shadow: 0 0 6px rgba(0,0,0,0.15);
+      font-family: monospace;
+    }
+
+    .auth {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(0,0,0,0.15);
+      padding: 8px 14px;
+      border-radius: 8px;
+      color: #222;
+      cursor: pointer;
+      font-family: sans-serif;
+      font-weight: 600;
+      backdrop-filter: blur(6px);
+      transition: .25s;
+    }
+
+    .btn:hover {
+      background: rgba(255,255,255,0.5);
+      transform: scale(1.05);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: clamp(64px, 10vw, 120px);
+      background: linear-gradient(90deg,#00bfff,#8b5cf6,#ff79c6);
+      -webkit-background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 12px rgba(0,0,0,.4));
+      animation: glow 6s ease-in-out infinite alternate;
+      margin-top: 60px;
+    }
+
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 10px #00bfff); }
+      to { filter: drop-shadow(0 0 22px #ff79c6); }
+    }
+
+    .selector {
+      position: absolute;
+      bottom: 100px;
+      width: 100%;
+      text-align: center;
+      font-family: 'Cinzel', serif;
+    }
+
+    .selector button {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #111;
+      font-weight: 700;
+      font-size: 20px;
+      border-radius: 14px;
+      margin: 0 16px;
+      padding: 10px 26px;
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .selector button:hover {
+      transform: scale(1.08);
+      background: rgba(255,255,255,0.35);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+      font-family: monospace;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    #scene { background: var(--female-bg); transition: background 1s ease; }
+  </style>
+</head>
+<body>
+  <header>
+    <div id="clock">--:-- — -- -- ----</div>
+    <div class="auth">
+      <button class="btn">Giriş Yap</button>
+      <button class="btn">Üye Ol</button>
+    </div>
+  </header>
+
+  <h1>𝕍𝔼ℝ𝕀𝔻𝕀𝕌𝕄</h1>
+
+  <div class="selector">
+    <button id="male">⚙️ Erkek</button>
+    <button id="female">🌸 Kadın</button>
+  </div>
+
+  <canvas id="scene"></canvas>
+
+  <footer>© 2025 Veridium</footer>
+
+  <script>
+    // === SAAT ===
+    const clock = document.getElementById("clock");
+    function tick() {
+      const d = new Date();
+      const day = d.getDate().toString().padStart(2,"0");
+      const month = (d.getMonth()+1).toString().padStart(2,"0");
+      const year = d.getFullYear();
+      const time = d.toLocaleTimeString('tr-TR', {hour12:false});
+      clock.textContent = `${time} — ${day}.${month}.${year}`;
+    }
+    setInterval(tick, 1000); tick();
+
+    // === ARKA PLAN ===
+    const canvas = document.getElementById('scene');
+    const ctx = canvas.getContext('2d');
+    let W, H; function resize(){ W=canvas.width=innerWidth; H=canvas.height=innerHeight; }
+    window.addEventListener('resize', resize); resize();
+
+    let mode = 'female';
+    let particles = [];
+
+    function createParticles(){
+      particles = [];
+      if(mode === 'male'){
+        for(let i=0;i<80;i++){
+          particles.push({
+            x: Math.random()*W,
+            y: Math.random()*H,
+            r: Math.random()*3+1,
+            s: Math.random()*1.5+0.5
+          });
+        }
+      } else {
+        for(let i=0;i<50;i++){
+          particles.push({
+            x: Math.random()*W,
+            y: Math.random()*H,
+            r: Math.random()*3+1,
+            s: Math.random()*0.6+0.2,
+            color:`hsl(${Math.random()*40+120},70%,70%)`
+          });
+        }
+      }
+    }
+
+    function animate(){
+      ctx.clearRect(0,0,W,H);
+      if(mode==='male'){
+        ctx.fillStyle='rgba(0,119,182,0.2)';
+        ctx.fillRect(0,0,W,H);
+        for(const b of particles){
+          ctx.beginPath();
+          ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+          ctx.fillStyle='rgba(173,216,230,0.5)';
+          ctx.fill();
+          b.y-=b.s;
+          if(b.y<-10){ b.y=H+10; b.x=Math.random()*W; }
+        }
+      } else {
+        ctx.fillStyle='rgba(150,200,150,0.15)';
+        ctx.fillRect(0,0,W,H);
+        for(const p of particles){
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fillStyle=p.color;
+          ctx.fill();
+          p.y+=p.s;
+          if(p.y>H+10){ p.y=-10; p.x=Math.random()*W; }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+    createParticles();
+
+    // === MOD DEĞİŞTİR ===
+    document.getElementById('male').addEventListener('click', ()=>{
+      mode='male';
+      document.body.style.background='var(--male-bg)';
+      createParticles();
+    });
+    document.getElementById('female').addEventListener('click', ()=>{
+      mode='female';
+      document.body.style.background='var(--female-bg)';
+      createParticles();
+    });
+  </script>
+</body>
+  </html>
