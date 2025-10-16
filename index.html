@@ -1,176 +1,69 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>AZURA</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --fg:#eaf4ff; --mut:#a3b2c4;
-  --b:rgba(255,255,255,.14); --glass:rgba(255,255,255,.06);
-  --bg:#0B1A28; --blue:#4DB8FF; --pink:#FF9AC2; --sun:#FFE39A;
-}
-*{box-sizing:border-box} html,body{height:100%}
-body{margin:0;color:var(--fg);background:radial-gradient(1200px 800px at 50% 0%, rgba(77,184,255,.08), transparent 60%), var(--bg);font:16px/1.6 Inter,system-ui;overflow-x:hidden}
-
-/* splash */
-#splash{position:fixed;inset:0;display:grid;place-items:center;background:#07131E;z-index:1000;animation:fadeOut 1s ease 2s forwards}
-.word{font-family:Cinzel,serif;font-weight:900;font-size:clamp(44px,9vw,120px);letter-spacing:.12em;
-  background:linear-gradient(90deg,#4DB8FF,#BFE7FF,#4DB8FF);-webkit-background-clip:text;color:transparent;animation:flow 6s linear infinite, pop 1s ease}
-@keyframes flow{0%{background-position:0%}100%{background-position:200%}}
-@keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
-@keyframes fadeOut{to{opacity:0;visibility:hidden}}
-
-/* header */
-header{position:fixed;top:12px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 16px;z-index:20;background:rgba(0,0,0,.25);backdrop-filter:blur(6px)}
-.clock{font-weight:800;letter-spacing:.1em;opacity:.9}
-.actions{display:flex;gap:8px}
-.btn{border:1px solid var(--b);background:var(--glass);color:var(--fg);padding:8px 14px;border-radius:10px;text-decoration:none;font-weight:800}
-
-/* marka */
-.brand{font-family:Cinzel,serif;font-weight:900;letter-spacing:.2em;text-align:center;margin-top:120px;
-  font-size:clamp(36px,6.4vw,96px);background:linear-gradient(90deg,#4DB8FF,#8ec5ff,#BFE7FF);-webkit-background-clip:text;color:transparent;animation:flow 8s linear infinite;filter:drop-shadow(0 8px 28px rgba(0,0,0,.45))}
-
-/* grid */
-main{max-width:1100px;margin:0 auto;padding:20px;margin-top:60px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:30px}
-.card{border:1px solid var(--b);background:rgba(255,255,255,.05);border-radius:16px;min-height:480px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.4)}
-.head{position:absolute;top:16px;left:16px;right:16px;padding:10px 14px;border:1px solid var(--b);background:rgba(255,255,255,.05);backdrop-filter:blur(6px);border-radius:14px;font-weight:900}
-.go{position:absolute;right:16px;bottom:16px}
-.go .btn{padding:12px 20px}
-
-/* canvases */
-canvas{position:absolute;inset:0;width:100%;height:100%}
-
-/* modal (cinsiyet/enerji seçimi) */
-#choice{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:900;animation:fade .3s}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-.sheet{width:min(860px,92%);border:1px solid var(--b);background:rgba(10,15,22,.92);border-radius:22px;padding:26px;text-align:center;box-shadow:0 12px 60px rgba(0,0,0,.5)}
-.sheet h2{margin:0 0 10px;font-family:Cinzel,serif;background:linear-gradient(90deg,#BFE7FF,#fff);-webkit-background-clip:text;color:transparent}
-.choice{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.choice button{border:1px solid var(--b);background:var(--glass);color:var(--fg);padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AZURA Portal</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #091623, #050910);
+      color: #eaf4ff;
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 4px;
+      margin-top: 80px;
+      color: #a3b2c4;
+    }
+    .cards {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 60px;
+      flex-wrap: wrap;
+    }
+    .card {
+      width: 250px;
+      height: 160px;
+      border-radius: 16px;
+      backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: scale(1.03);
+    }
+    a {
+      text-decoration: none;
+      color: #eaf4ff;
+      font-weight: 700;
+      margin-top: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 14px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
-<div id="splash"><div class="word">AZURA</div></div>
-
-<header>
-  <div class="clock" id="clock">--:--:-- — --.--.----</div>
-  <div class="actions">
-    <a class="btn" href="login.html">Giriş</a>
-  </div>
-</header>
-
-<h1 class="brand">AZURA</h1>
-
-<main>
-  <div class="grid">
-    <!-- Deniz / Erkek -->
-    <section class="card">
-      <div class="head">🌊 Okyanus • Karizmatik</div>
-      <canvas id="sea"></canvas>
-      <div class="go"><a class="btn" href="male.html">Giriş →</a></div>
-    </section>
-    <!-- Doğa / Kadın -->
-    <section class="card">
-      <div class="head">🌿 Doğa • İç ısıtan</div>
-      <canvas id="forest"></canvas>
-      <div class="go"><a class="btn" href="female.html">Giriş →</a></div>
-    </section>
-  </div>
-</main>
-
-<!-- Enerji seçimi (her yenilemede sorar) -->
-<div id="choice">
-  <div class="sheet">
-    <h2>Azura enerjini seç ✨</h2>
-    <div class="choice">
-      <button id="pickSea">🌊 Okyanus (Erkek)</button>
-      <button id="pickForest">🌿 Doğa (Kadın)</button>
+  <h1>AZURA</h1>
+  <div class="cards">
+    <div class="card">
+      <h2>🌊 Okyanus</h2>
+      <a href="male.html">Giriş</a>
+    </div>
+    <div class="card">
+      <h2>🌿 Doğa</h2>
+      <a href="female.html">Giriş</a>
     </div>
   </div>
-</div>
-
-<footer style="text-align:center;opacity:.75;margin:40px 0">© 2025 AZURA</footer>
-
-<script>
-/* saat */
-(function tick(){const d=new Date(),z=n=>String(n).padStart(2,'0');
-document.getElementById('clock').textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`;
-requestAnimationFrame(tick)})();
-
-/* modal */
-const modal=document.getElementById('choice');
-document.getElementById('pickSea').onclick = ()=>{ modal.style.display='none'; location.href='male.html'; };
-document.getElementById('pickForest').onclick= ()=>{ modal.style.display='none'; location.href='female.html'; };
-
-/* deniz (baloncuk) */
-(function(){
-  const c=document.getElementById('sea'),x=c.getContext('2d');
-  function size(){c.width=c.clientWidth;c.height=c.clientHeight} size(); addEventListener('resize',size,{passive:true});
-  const B=120,a=[];for(let i=0;i<B;i++)a.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+Math.random(),o:Math.random()*6});
-  (function loop(){
-    x.clearRect(0,0,c.width,c.height);
-    const g=x.createRadialGradient(c.width*.5, c.height*.15, 10, c.width*.5, c.height*.15, 420);
-    g.addColorStop(0,'rgba(130,200,255,.25)'); g.addColorStop(1,'rgba(130,200,255,0)');
-    x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
-    for(const p of a){ p.y-=p.s; p.x+=Math.sin(p.o+=.02)*.5; if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
-      x.globalAlpha=.3; x.fillStyle='#7fe3ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,6.283); x.fill();
-    }
-    requestAnimationFrame(loop);
-  })();
-})();
-
-/* orman (çiçek tozu + güneş) */
-(function(){
-  const c=document.getElementById('forest'),x=c.getContext('2d');
-  function size(){c.width=c.clientWidth;c.height=c.clientHeight} size(); addEventListener('resize',size,{passive:true});
-  const N=100,p=[];for(let i=0;i<N;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40});
-  (function loop(){
-    x.clearRect(0,0,c.width,c.height);
-    const sx=c.width*.82, sy=c.height*.18;
-    const g=x.createRadialGradient(sx,sy,10, sx,sy, 220);
-    g.addColorStop(0,'rgba(255,240,180,.85)'); g.addColorStop(.6,'rgba(255,205,140,.18)'); g.addColorStop(1,'rgba(255,205,140,0)');
-    x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
-    for(const s of p){
-      s.y+=.35; s.x+=Math.sin(s.y/45)*.4;
-      if(s.y>c.height+10){s.y=-10; s.x=Math.random()*c.width}
-      x.fillStyle=`hsla(${s.h},80%,72%,.9)`; x.beginPath(); x.arc(s.x,s.y,s.r,0,6.283); x.fill();
-    }
-    requestAnimationFrame(loop);
-  })();
-})();
-</script>
-...
-</main>
-
-<!-- Firebase bağlantısı burada olacak -->
-<script type="module" src="./firebase.js"></script>
-<script type="module">
-  import { auth, onAuthStateChanged, signOut } from './firebase.js';
-
-  const loginLink = document.getElementById('loginLink');
-  const logoutLink = document.getElementById('logoutLink');
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      if (loginLink) loginLink.style.display = 'none';
-      if (logoutLink) {
-        logoutLink.style.display = 'inline-flex';
-        logoutLink.onclick = async () => {
-          await signOut(auth);
-          location.reload();
-        };
-      }
-    } else {
-      if (loginLink) loginLink.style.display = 'inline-flex';
-      if (logoutLink) logoutLink.style.display = 'none';
-    }
-  });
-</script>
-
 </body>
 </html>
-</body>
-  </html>
