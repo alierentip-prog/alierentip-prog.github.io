@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VERIDIUM — Portal</title>
+  <meta name="description" content="Ali Eren'in dijital köşesi: sözler, bilgiler, mini arşiv ve projeler.">
+  <style>
+    /* ========= Tema Değişkenleri ========= */
+    :root{
+      --bg:#0b0d10;          /* arka plan */
+      --fg:#e6ebf2;          /* metin rengi (yüksek kontrast) */
+      --muted:#9aa7bd;       /* ikincil metin */
+      --card:#11151a;        /* kart zemini */
+      --border:rgba(255,255,255,.07);
+      --brand1:#6ee7ff;      /* vurgu 1 */
+      --brand2:#7c6bff;      /* vurgu 2 */
+      --radius:16px;
+      --glow:0 0 0 transparent;
+      --trs:220ms ease;
+      --grid:#0f141a;
+    }
+    [data-theme="light"]:root{
+      --bg:#f7fafc; --fg:#0f172a; --muted:#475569; --card:#ffffff;
+      --border:rgba(0,0,0,.08); --glow:0 0 0 transparent; --grid:#e8eef6;
+      --brand1:#0ea5e9; --brand2:#6366f1;
+    }
+
+    /* ========= Global ========= */
+    html,body{height:100%}
+    body{
+      margin:0; font:16px/1.6 ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;
+      color:var(--fg); background:var(--bg);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:20px 16px 96px;position:relative}
+    .grid-bg::before{
+      content:""; position:fixed; inset:0; pointer-events:none;
+      background:
+        linear-gradient(var(--grid) 1px,transparent 1px) 0 0/32px 32px,
+        linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/32px 32px;
+      opacity:.2; z-index:0;
+    }
+
+    /* ========= Navbar ========= */
+    .topbar{
+      position:sticky; top:0; z-index:10; backdrop-filter:blur(8px);
+      background:linear-gradient(180deg,rgba(0,0,0,.35),transparent);
+      padding:12px 16px; border-bottom:1px solid var(--border);
+    }
+    .row{display:flex;align-items:center;gap:12px;max-width:1100px;margin:0 auto}
+    .logo{letter-spacing:.7em;font-weight:800;color:var(--brand1);opacity:.95}
+    .spacer{flex:1}
+    .btn{
+      border:1px solid var(--border); background:var(--card); color:var(--fg);
+      padding:8px 14px; border-radius:999px; transition:transform var(--trs),background var(--trs),border var(--trs);
+      text-decoration:none; display:inline-flex;align-items:center;gap:8px;font-weight:600;
+    }
+    .btn:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.18)}
+    .pill{padding:6px 10px;border-radius:8px;background:var(--card);border:1px solid var(--border);font-size:13px}
+
+    /* ========= Hero & Bloklar ========= */
+    .hero h1{margin:18px 0 4px;font-size:clamp(26px,4.4vw,42px);line-height:1.15}
+    .muted{color:var(--muted)}
+    .cards{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:18px}
+    .col-6{grid-column:span 6}
+    .col-12{grid-column:span 12}
+    @media(max-width:800px){.col-6{grid-column:span 12}}
+
+    .card{
+      position:relative; background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.25)),
+                 var(--card);
+      border:1px solid var(--border); border-radius:var(--radius);
+      padding:18px; box-shadow:var(--glow); transition:transform var(--trs), box-shadow var(--trs), border var(--trs);
+      overflow:hidden;
+    }
+    .card:hover{transform:translateY(-2px); border-color:rgba(255,255,255,.18)}
+    .card h2{margin:0 0 12px;font-size:20px}
+    .quote{font-size:20px;letter-spacing:.2px}
+    .quote::before{content:"“ ";opacity:.7}
+    .quote::after{content:" ”";opacity:.7}
+    .quote-foot{margin-top:8px;color:var(--muted);font-size:13px}
+
+    /* Link kartları */
+    .link-card{cursor:pointer; user-select:none}
+    .link-card h3{margin:0 0 6px;font-size:16px}
+    .link-card .desc{color:var(--muted); font-size:14px}
+    .link-card:hover{box-shadow:0 12px 30px rgba(15,23,42,.35)}
+    .tag{font-size:12px;padding:2px 8px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.03)}
+
+    /* ========= 3D Arkaplan ========= */
+    #bg3d{position:fixed; inset:0; z-index:-1}
+    #bg3d canvas{display:block}
+
+    /* ========= Enerji (gender) modal ========= */
+    .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.45); z-index:20}
+    .modal.show{display:grid}
+    .modal .panel{
+      background:var(--card); border:1px solid var(--border); border-radius:18px; padding:18px;
+      width:min(420px,92%); box-shadow:0 20px 60px rgba(2,6,23,.55)
+    }
+    .energy-choices{display:flex;gap:12px;margin-top:12px}
+    .energy-choices .btn{flex:1; justify-content:center}
+    .small{font-size:12px;color:var(--muted)}
+    .center{display:flex;align-items:center;justify-content:center}
+
+    /* daha okunaklı mavi ton ve link */
+    a{color:var(--brand1)}
+    a:hover{opacity:.9}
+  </style>
+</head>
+<body class="grid-bg">
+  <!-- 3D yıldız arka plan -->
+  <div id="bg3d"></div>
+
+  <!-- Üst bar -->
+  <div class="topbar">
+    <div class="row">
+      <div class="logo">V E R I D I U M</div>
+      <a class="btn" href="/">Ana Sayfa</a>
+      <a class="btn" href="/about.html">Hakkımda</a>
+      <span class="spacer"></span>
+      <button id="toggleTheme" class="pill">🌙 Karanlık</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- Karşılama -->
+    <section class="hero">
+      <h1 id="hello">Sessizliğin içinde yankılanan bilinç.</h1>
+      <div class="muted">Günaydın, yolcu <span id="sun">🌞</span></div>
+    </section>
+
+    <!-- Günün sözü & Rastgele bilgi -->
+    <div class="cards">
+      <article class="card col-6">
+        <h2>Günün Sözü</h2>
+        <p class="quote" id="quote">Yükleniyor…</p>
+        <div class="quote-foot" id="quoteFoot">—</div>
+      </article>
+
+      <aside class="card col-6">
+        <h2>Rastgele Bilgi</h2>
+        <p id="fact">Yükleniyor…</p>
+      </aside>
+    </div>
+
+    <!-- Keşfet (link kartları) -->
+    <h2 style="margin:24px 0 10px">Keşfet</h2>
+    <div class="cards">
+      <a class="card link-card col-6" href="/notlar.html">
+        <div class="tag">Notlar</div>
+        <h3>Tip çalışmaları</h3>
+        <div class="desc">Kısa özetler, tekrar listeleri.</div>
+      </a>
+
+      <a class="card link-card col-6" href="/ipuçları.html">
+        <div class="tag">Blue Karılar</div>
+        <h3>Mini ipuçları</h3>
+        <div class="desc">Ezberlik küçük inciler.</div>
+      </a>
+
+      <a class="card link-card col-6" href="/felsefe.html">
+        <div class="tag">Bize</div>
+        <h3>Felsefe, disiplin, metal</h3>
+        <div class="desc">Netlik & karakter notları.</div>
+      </a>
+
+      <a class="card link-card col-6" href="/projeler.html">
+        <div class="tag">Projeler</div>
+        <h3>Kod & denemeler</h3>
+        <div class="desc">Üreten işler burada.</div>
+      </a>
+
+      <a class="card link-card col-6" href="/echo.html">
+        <div class="tag">Veridium Echo</div>
+        <h3>Bir söz bırak</h3>
+        <div class="desc">Ziyaretçi defteri.</div>
+      </a>
+
+      <a class="card link-card col-6" href="/about.html">
+        <div class="tag">Hakkımda</div>
+        <h3>Vizyon & manifesto</h3>
+        <div class="desc">Kısa profil.</div>
+      </a>
+    </div>
+
+    <div class="center" style="margin-top:26px">
+      <small class="small">© 2025 <b>VERIDIUM</b> — Created by A.E.</small>
+    </div>
+  </div>
+
+  <!-- Enerji (gender) modal -->
+  <div class="modal" id="energyModal">
+    <div class="panel">
+      <h3 style="margin:4px 0 8px">Enerjin hangisi?</h3>
+      <div class="muted small">Seçimin sadece temayı etkiler; her zaman değiştirebilirsin.</div>
+      <div class="energy-choices">
+        <button class="btn" data-energy="cool">🩵 Serin / Cool</button>
+        <button class="btn" data-energy="warm">🩷 Sıcak / Warm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ======= Basit depolama ======= */
+    const store={
+      get:(k,d=null)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},
+      set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+    };
+    const THEME_KEY='ver:theme', ENERGY_KEY='ver:energy', ASK_KEY='ver:asked';
+    const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', store.get(THEME_KEY, prefersDark?'dark':'light'));
+
+    /* ======= Tema butonu ======= */
+    const tBtn=document.getElementById('toggleTheme');
+    function paintThemeLabel(){
+      const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+      tBtn.textContent=isDark?'🌙 Karanlık':'☀️ Aydınlık';
+    }
+    paintThemeLabel();
+    tBtn.addEventListener('click',()=>{
+      const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+      const next=isDark?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      store.set(THEME_KEY,next);
+      paintThemeLabel();
+    });
+
+    /* ======= İlk selamlama ======= */
+    function greeting(){
+      const h=new Date().getHours();
+      const text = h<5?'Gece devriyesi bitmedi 🦉':h<12?'Günaydın, Veridium yolcusu 🌞':h<18?'İyi çalışmalar ☀️':'İyi akşamlar 🌙';
+      document.getElementById('hello').textContent=text;
+      document.getElementById('sun').textContent=h<19?'🌞':'🌙';
+    }
+    greeting();
+
+    /* ======= Enerji seçimi (🩵/🩷) ======= */
+    const modal=document.getElementById('energyModal');
+    const savedEnergy = store.get(ENERGY_KEY,null);
+    const asked = store.get(ASK_KEY,false);
+    function applyEnergy(e){
+      // sadece vurgu renklerini değiştiriyoruz
+      if(e==='warm'){ document.documentElement.style.setProperty('--brand1','#ff7dcf'); document.documentElement.style.setProperty('--brand2','#ff8b6b'); }
+      else { document.documentElement.style.setProperty('--brand1','#6ee7ff'); document.documentElement.style.setProperty('--brand2','#7c6bff'); }
+    }
+    if(savedEnergy){ applyEnergy(savedEnergy); }
+    else if(!asked){ modal.classList.add('show'); }
+
+    modal?.querySelectorAll('[data-energy]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const e=btn.dataset.energy;
+        store.set(ENERGY_KEY,e); store.set(ASK_KEY,true);
+        applyEnergy(e); modal.classList.remove('show');
+      })
+    });
+
+    /* ======= Günün sözü & Rastgele bilgi ======= */
+    const QUOTES=[
+      {t:"Düşün, dene, öğren, yine dene.", a:"Anonim"},
+      {t:"Disiplin, motivasyon yokken de çalışmaktır.", a:"–"},
+      {t:"Basit olan, güvenilirdir.", a:"Naval"},
+      {t:"Küçük adımlar, uzun yollar açar.", a:"Anonim"},
+      {t:"Netlik, güçtür.", a:"Anonim"}
+    ];
+    const FACTS=[
+      "Bir damla kanda ~5 milyon eritrosit bulunur.",
+      "Demir eksikliği anemisinde MCV ve MCHC genellikle düşer.",
+      "Hemisdesmozom, keratinleri bazal laminaya bağlar.",
+      "Elastik lif: elastin çekirdeği + fibrillin mikrofilament."
+    ];
+    const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+    document.getElementById('quote').textContent=q.t;
+    document.getElementById('quoteFoot').textContent = q.a ? "— "+q.a : "—";
+    document.getElementById('fact').textContent = FACTS[Math.floor(Math.random()*FACTS.length)];
+
+    /* ======= Link kartlarında 3D tilt ======= */
+    const cards=[...document.querySelectorAll('.link-card')];
+    cards.forEach(card=>{
+      card.addEventListener('pointermove',e=>{
+        const r=card.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+        const rx=(y-.5)*8, ry=(x-.5)*-12;
+        card.style.transform=`perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
+      });
+      card.addEventListener('pointerleave',()=>{ card.style.transform=""; });
+    });
+
+    /* ======= Three.js olmadan hafif yıldız alanı =======
+       (CDN/ek kütüphane kullanmıyoruz; saf Canvas)   */
+    const bg = document.getElementById('bg3d');
+    const cvs = document.createElement('canvas'); const ctx = cvs.getContext('2d');
+    bg.appendChild(cvs);
+    let W,H,stars=[];
+    function resize(){
+      W = cvs.width = innerWidth; H = cvs.height = innerHeight;
+      stars = Array.from({length: Math.min(220, Math.floor(W*H/9000))},()=>({
+        x: Math.random()*W, y: Math.random()*H, z: Math.random()*1 + .2, s: Math.random()*1.5+.3
+      }));
+    }
+    addEventListener('resize', resize, {passive:true}); resize();
+    function loop(){
+      ctx.clearRect(0,0,W,H);
+      for(const st of stars){
+        st.y += st.z*0.25; if(st.y>H){ st.y = -2; st.x=Math.random()*W; }
+        ctx.globalAlpha = .5 + st.z*.5;
+        ctx.fillStyle = 'white';
+        ctx.fillRect(st.x, st.y, st.s, st.s);
+      }
+      requestAnimationFrame(loop);
+    } loop();
+  </script>
+</body>
+  </html>
