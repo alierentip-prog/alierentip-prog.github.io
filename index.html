@@ -1,91 +1,54 @@
 <!doctype html><html lang="tr">
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>VERIDIUM</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<title>Giriş • VERIDIUM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root{--fg:#e9eef5;--mut:#aeb8c6;--glass:rgba(255,255,255,.06);--gb:rgba(255,255,255,.16);
-        --sea1:#0e2231;--sea2:#07141e;--for1:#1a0f1a;--for2:#0c0a0f;--shadow:0 10px 40px rgba(0,0,0,.35)}
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;background:radial-gradient(1200px 800px at 50% 0%,rgba(0,180,255,.05),transparent 60%),#07090d;color:var(--fg);font:16px/1.55 Inter,system-ui}
-  header{position:fixed;inset:0 0 auto 0;height:74px;display:flex;align-items:center;justify-content:center;z-index:10}
-  .brand{position:absolute;top:18px;left:50%;transform:translateX(-50%);font-family:Cinzel,serif;font-weight:900;letter-spacing:.18em;
-    background:linear-gradient(90deg,#8ec5ff,#31b1ff,#7cf,#b5e1ff);background-size:240% 100%;-webkit-background-clip:text;color:transparent;animation:flow 9s linear infinite}
-  .bar{position:absolute;inset:14px 14px auto 14px;display:flex;justify-content:space-between;align-items:center}
-  .clock{font-weight:800;letter-spacing:.12em;opacity:.9}
-  .actions{display:flex;gap:10px}
-  .btn{appearance:none;border:1px solid var(--gb);background:var(--glass);color:var(--fg);padding:10px 16px;border-radius:12px;text-decoration:none;font-weight:700;backdrop-filter:blur(6px)}
-  main{max-width:1100px;margin:120px auto 80px;padding:0 14px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-  .card{position:relative;min-height:520px;border:1px solid var(--gb);background:#0f131a;border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-  .head{position:absolute;inset:18px auto auto 18px;border:1px solid var(--gb);background:rgba(255,255,255,.04);backdrop-filter:blur(6px);font-weight:900;letter-spacing:.08em;padding:12px 14px;border-radius:14px}
-  .go{position:absolute;inset:auto 18px 18px auto}
-  .go .btn{padding:14px 26px;font-weight:800}
-  canvas{position:absolute;inset:0;width:100%;height:100%}
-  footer{opacity:.75;text-align:center;margin:36px 0 22px}
-  @keyframes flow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+  :root{--fg:#e9eef5;--glass:rgba(255,255,255,.06);--gb:rgba(255,255,255,.18)}
+  body{margin:0;background:#0a0f14;color:var(--fg);font:16px/1.55 Inter,system-ui;display:grid;place-items:center;min-height:100vh}
+  .panel{width:min(420px,92%);border:1px solid var(--gb);background:var(--glass);backdrop-filter:blur(8px);border-radius:16px;padding:20px 18px}
+  h1{margin:0 0 12px}
+  label{display:block;margin:12px 0 4px}
+  input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--gb);background:#0c131a;color:var(--fg)}
+  .row{display:flex;gap:8px;margin-top:12px}
+  button{flex:1;padding:12px;border-radius:10px;border:1px solid var(--gb);background:var(--glass);color:var(--fg);font-weight:800;cursor:pointer}
+  .ok{display:none;margin-top:10px;color:#9ef4b0} .err{display:none;margin-top:10px;color:#ffa8a8}
+  .top{position:fixed;left:12px;top:12px;font-weight:800;opacity:.85}
 </style>
 </head>
 <body>
-<header>
-  <div class="bar">
-    <div class="clock" id="clock">--:--:-- — --.--.----</div>
-    <div class="actions">
-      <a class="btn" id="loginLink" href="login.html">Giriş Yap</a>
-      <a class="btn" id="logoutLink" style="display:none" href="javascript:void(0)">Çıkış</a>
+  <div class="top"><a href="index.html" style="color:#9ad;text-decoration:none">← Ana sayfa</a></div>
+  <form class="panel" onsubmit="return false">
+    <h1>Giriş</h1>
+    <label for="email">E-posta</label>
+    <input id="email" type="email" autocomplete="email" required>
+    <label for="pass">Şifre</label>
+    <input id="pass" type="password" autocomplete="current-password" required>
+    <div class="row">
+      <button id="loginBtn" type="button">Giriş Yap</button>
+      <button id="signupBtn" type="button">Üye Ol</button>
     </div>
-  </div>
-  <h1 class="brand">VERIDIUM</h1>
-</header>
+    <div id="ok" class="ok">✓ Tamam.</div>
+    <div id="err" class="err"></div>
+  </form>
 
-<main>
-  <div class="grid">
-    <section class="card" style="background:linear-gradient(180deg,var(--sea1),var(--sea2))">
-      <div class="head">⚙️ ERKEK • DERİN SULAR</div>
-      <canvas id="sea"></canvas>
-      <div class="go"><a class="btn" href="male.html">Giriş →</a></div>
-    </section>
-    <section class="card" style="background:linear-gradient(180deg,var(--for1),var(--for2))">
-      <div class="head">🌸 KADIN • DOĞA &amp; ÇİÇEK</div>
-      <canvas id="forest"></canvas>
-      <div class="go"><a class="btn" href="female.html">Giriş →</a></div>
-    </section>
-  </div>
-</main>
-
-<footer>© 2025 Veridium</footer>
-
-<!-- Firebase -->
-<script type="module" src="firebase.js"></script>
-<script>
-  // saat
-  (function tick(){const d=new Date(),z=n=>String(n).padStart(2,'0');
-    document.getElementById('clock').textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())} — ${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()}`;
-    requestAnimationFrame(tick);
-  })();
-
-  // auth UI
-  window.addEventListener("veridium-auth", (e)=>{
-    const user=e.detail.user, login=document.getElementById('loginLink'), logout=document.getElementById('logoutLink');
-    if(user){ login.style.display='none'; logout.style.display='inline-block'; logout.onclick=()=>window.__VERI__.logout(); }
-    else{ login.style.display='inline-block'; logout.style.display='none'; }
-  });
-
-  // deniz
-  (function(){
-    const c=document.getElementById('sea'),x=c.getContext('2d');
-    function size(){c.width=c.clientWidth;c.height=c.clientHeight} addEventListener('resize',size,{passive:true}); size();
-    const B=120,a=[];for(let i=0;i<B;i++)a.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
-    (function loop(){x.clearRect(0,0,c.width,c.height);for(const p of a){p.y-=p.s;if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
-      x.globalAlpha=.28;x.fillStyle='#6ee4ff';x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fill();}requestAnimationFrame(loop);})();
-  })();
-  // orman
-  (function(){
-    const c=document.getElementById('forest'),x=c.getContext('2d');
-    function size(){c.width=c.clientWidth;c.height=c.clientHeight} addEventListener('resize',size,{passive:true}); size();
-    const N=100,p=[];for(let i=0;i<N;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40});
-    (function loop(){x.clearRect(0,0,c.width,c.height);for(const s of p){s.y+=.4;s.x+=Math.sin(s.y/45)*.4;if(s.y>c.height+10){s.y=-10;s.x=Math.random()*c.width}
-      x.fillStyle=`hsla(${s.h},80%,72%,.9)`;x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fill();}requestAnimationFrame(loop);})();
-  })();
-</script>
+  <script type="module" src="firebase.js"></script>
+  <script type="module">
+    const F=window.__VERI__, $=id=>document.getElementById(id);
+    const ok=$('ok'), err=$('err'), email=$('email'), pass=$('pass');
+    $('loginBtn').onclick=async ()=>{
+      ok.style.display='none'; err.style.display='none';
+      try{ await F.login(email.value.trim(),pass.value);
+           ok.textContent='✓ Giriş başarılı. Yönlendiriliyor…'; ok.style.display='block';
+           setTimeout(()=>location.href='index.html',700); }
+      catch(e){ err.textContent=e.code||e.message; err.style.display='block'; }
+    };
+    $('signupBtn').onclick=async ()=>{
+      ok.style.display='none'; err.style.display='none';
+      try{ await F.signup(email.value.trim(),pass.value);
+           ok.textContent='✓ Üyelik oluşturuldu. Giriş yapıldı.'; ok.style.display='block';
+           setTimeout(()=>location.href='index.html',700); }
+      catch(e){ err.textContent=e.code||e.message; err.style.display='block'; }
+    };
+  </script>
 </body></html>
