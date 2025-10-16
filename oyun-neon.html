@@ -1,155 +1,197 @@
 <!doctype html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Neon Runner</title>
 <style>
-  :root{
-    --bg:#080d12; --grid:#0f1b24; --neon:#6ee7ff; --pink:#ff4dc4; --good:#22d3ee; --bad:#ff6b6b;
-  }
-  *{box-sizing:border-box}
+  :root{--bg:#0b0d10;--fg:#e6f0ff;--brand:#6ee7ff;--mut:#7aa0b5}
+  [data-theme="light"]{:root{--bg:#f7fafc;--fg:#0f172a;--brand:#0ea5e9;--mut:#475569}}
   html,body{height:100%}
-  body{
-    margin:0; background:radial-gradient(1200px 600px at 50% 20%, #0b1620 0%, #05090c 60%), var(--bg);
-    color:#dbe7ee; font:16px/1.5 system-ui,Segoe UI,Roboto,Inter,sans-serif; overflow:hidden;
-  }
-  header{
-    position:fixed; inset:0 0 auto 0; height:56px; display:flex; align-items:center; gap:12px; padding:0 14px;
-    background:linear-gradient(#0b141a, transparent); z-index:3
-  }
-  header a{color:#bfe9f7; text-decoration:none; padding:8px 12px; border-radius:12px; border:1px solid #16304122}
-  header a:hover{outline:2px solid #1b7ea522}
-  .title{margin-left:auto; opacity:.8}
-  #game{
-    position:absolute; inset:0; display:grid; place-items:center;
-  }
-  canvas{border-radius:18px; background:linear-gradient(#071018,#0a151e)}
-  .hud{
-    position:absolute; top:64px; left:50%; transform:translateX(-50%);
-    display:flex; gap:12px; padding:8px 12px; border-radius:12px;
-    background:#061018cc; backdrop-filter:blur(6px); border:1px solid #0e2a3a66;
-    box-shadow:0 0 32px #6ee7ff22, inset 0 0 0 1px #6ee7ff22;
-  }
-  .hud b{color:#6ee7ff}
-  .btn{
-    position:fixed; bottom:18px; left:50%; transform:translateX(-50%); z-index:3;
-    border:0; padding:10px 16px; border-radius:14px; cursor:pointer; font-weight:700;
-    color:#041017; background:linear-gradient(90deg,var(--neon),#8bffea);
-    box-shadow:0 0 20px #6ee7ff55, 0 0 8px #6ee7ff99 inset;
-  }
-  .hint{position:fixed; bottom:64px; left:50%; transform:translateX(-50%); opacity:.7}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -200px,rgba(110,231,255,.15),transparent),var(--bg);color:var(--fg);font:16px/1.5 system-ui,Segoe UI,Inter,Roboto,Arial}
+  .wrap{max-width:900px;margin:0 auto;padding:16px}
+  .hud{display:flex;gap:16px;align-items:center;justify-content:center;margin:12px auto 8px}
+  .pill{padding:8px 14px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(255,255,255,.03);backdrop-filter: blur(6px)}
+  .pill b{color:var(--brand)}
+  /* Oyun alanı */
+  #game{position:relative;height:520px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(to bottom,rgba(255,255,255,.02),transparent 140px),rgba(255,255,255,.02);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.03) inset}
+  /* Zemin çizgisi */
+  .ground{position:absolute;left:0;right:0;bottom:100px;height:2px;background:linear-gradient(90deg,transparent 0 20%,rgba(110,231,255,.45) 40%,transparent 60%);filter:drop-shadow(0 0 6px rgba(110,231,255,.6))}
+  /* Oyuncu */
+  .player{position:absolute;left:60px;bottom:102px;width:46px;height:46px;background:#67e8f9;border-radius:8px;box-shadow:0 0 20px 6px rgba(110,231,255,.35)}
+  /* Engel */
+  .obs{position:absolute;bottom:102px;width:28px;height:48px;background:#94a3b8;border-radius:6px;box-shadow:0 0 16px rgba(148,163,184,.35)}
+  .obs.tall{height:80px}
+  /* Başla ipucu */
+  .hint{position:absolute;inset:0;display:grid;place-items:center;color:var(--mut);font-weight:600;letter-spacing:.4px}
+  .btn{cursor:pointer}
+  /* Game over etiketi */
+  .overlay{position:absolute;inset:0;display:none;place-items:center;background:linear-gradient(to bottom,rgba(0,0,0,.2),rgba(0,0,0,.4));backdrop-filter:blur(2px)}
+  .card{padding:18px 22px;border-radius:12px;background:rgba(17,24,39,.8);border:1px solid rgba(255,255,255,.08);text-align:center}
+  .card h3{margin:0 0 8px}
+  .card .btn{display:inline-block;margin-top:8px;padding:8px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.1)}
 </style>
 </head>
 <body>
-  <header>
-    <a href="./">← Ana Sayfa</a>
-    <a href="./about.html">Hakkımda</a>
-    <div class="title">🎮 Neon Runner</div>
-  </header>
-
-  <div id="game">
-    <canvas id="c" width="900" height="520"></canvas>
-    <div class="hud">Skor: <b id="score">0</b> &nbsp; · &nbsp; En iyi: <b id="best">0</b></div>
-    <button id="play" class="btn">Başla / Zıpla (Boşluk veya Dokun)</button>
-    <div class="hint">Çift zıplama aktif</div>
+<div class="wrap">
+  <div class="hud">
+    <div class="pill">Skor: <b id="score">0</b></div>
+    <div class="pill">·</div>
+    <div class="pill">En iyi: <b id="best">0</b></div>
   </div>
 
+  <div id="game" class="game btn" aria-label="Zıplamak için dokun / boşluk">
+    <div class="hint" id="hint">Dokun ya da Boşluk/↑ ile zıpla</div>
+    <div class="ground"></div>
+    <div id="player" class="player"></div>
+    <div id="over" class="overlay">
+      <div class="card">
+        <h3>💥 Çarpışma!</h3>
+        <div>Skor: <b id="final">0</b> · En iyi: <b id="finalBest">0</b></div>
+        <div class="btn" id="again">Tekrar Oyna</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-(() => {
-  const cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
-  const scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
-  const playBtn = document.getElementById('play');
-  // boyutları ekrana göre küçült
-  function fit(){ const s=Math.min(innerWidth/900, innerHeight/520, 1); cvs.style.transform=`scale(${s})`; cvs.style.transformOrigin="top center"; }
-  addEventListener('resize',fit); fit();
+(()=> {
+  // ====== DOM ======
+  const game = document.getElementById('game');
+  const player = document.getElementById('player');
+  const scoreEl = document.getElementById('score');
+  const bestEl  = document.getElementById('best');
+  const hint   = document.getElementById('hint');
+  const over   = document.getElementById('over');
+  const final  = document.getElementById('final');
+  const finalBest = document.getElementById('finalBest');
+  const again  = document.getElementById('again');
 
-  // Oyun değişkenleri
-  const G = 0.6, FLOOR = 440;
-  let running=false, score=0, best= +localStorage.getItem('neon:best')||0; bestEl.textContent=best;
-  const player = { x:120, y:FLOOR, vy:0, w:36, h:36, jumps:2 };
-  let obstacles=[], t=0;
+  // ====== Oyun durumu ======
+  let running = false;
+  let tPrev = 0;
+  let score = 0;
+  let best = Number(localStorage.getItem('neon_best') || 0);
+  bestEl.textContent = best;
 
+  // Fizik
+  let x = 60;             // sabit (solda)
+  let y = 0;              // zemin ofseti
+  let vy = 0;             // hız
+  const G = -2400;        // yerçekimi (px/s^2)
+  const JUMP_V = 820;     // zıplama hızı
+  const GROUND = 0;       // referans
+
+  // Engel listesi
+  /** @type {{el:HTMLElement, x:number, w:number, h:number}[]} */
+  let obs = [];
+  let spawnTimer = 0;
+
+  // Yardımcılar
+  function clamp(v,min,max){return v<min?min:v>max?max:v}
+  function rnd(a,b){return Math.random()*(b-a)+a}
+
+  // Başlat / reset
   function reset(){
-    score=0; obstacles=[]; t=0;
-    player.y=FLOOR; player.vy=0; player.jumps=2;
-    running=true; playBtn.textContent="Zıpla"; playBtn.blur();
+    score = 0;
+    scoreEl.textContent = '0';
+    vy = 0; y = 0;
+    obs.forEach(o=>o.el.remove()); obs = [];
+    spawnTimer = 0;
+    over.style.display='none';
   }
 
-  function addObs(){
-    const h = 24 + Math.random()*60;
-    const w = 24 + Math.random()*36;
-    const gap = 380 + Math.random()*220;
-    const y = FLOOR + 36 - h;
-    const speed = 5 + Math.min(5, score/400);
-    obstacles.push({x:cvs.width+40, y, w, h, speed});
-  }
-
-  function jump(){
-    if(!running){ reset(); return; }
-    if (player.jumps>0){
-      player.vy = -11.5; player.jumps--;
-    }
-  }
-  addEventListener('keydown',e=>{ if(e.code==='Space' || e.code==='ArrowUp') jump(); });
-  cvs.addEventListener('pointerdown', jump);
-  playBtn.addEventListener('click', jump);
-
-  function collide(a,b){
-    return !(a.x+a.w<b.x || a.x>b.x+b.w || a.y+a.h<b.y || a.y>b.y+b.h);
-  }
-
-  function neonRect(x,y,w,h,clr){
-    ctx.shadowBlur=18; ctx.shadowColor=clr; ctx.fillStyle=clr; ctx.globalAlpha=.18; ctx.fillRect(x-6,y-6,w+12,h+12);
-    ctx.globalAlpha=1; ctx.fillStyle=clr; ctx.fillRect(x,y,w,h);
-    ctx.shadowBlur=0;
-  }
-
-  function tick(){
-    ctx.clearRect(0,0,cvs.width,cvs.height);
-
-    // zemin grid
-    ctx.strokeStyle='#0c1a23'; ctx.lineWidth=1;
-    for(let i=0;i<60;i++){ ctx.beginPath(); ctx.moveTo(0, i*18+120); ctx.lineTo(cvs.width, i*18+120); ctx.stroke(); }
-    ctx.fillStyle='#0b1620'; ctx.fillRect(0, FLOOR+36, cvs.width, cvs.height);
-
-    // oyuncu fizik
-    player.vy += G; player.y += player.vy;
-    if(player.y>FLOOR){ player.y=FLOOR; player.vy=0; player.jumps=2; }
-    neonRect(player.x, player.y, player.w, player.h, '#6ee7ff');
-
-    // engeller
-    if(t%75===0) addObs();
-    for(const o of obstacles){ o.x -= o.speed; neonRect(o.x, o.y, o.w, o.h, '#ff4dc4'); }
-    obstacles = obstacles.filter(o => o.x>-80);
-
-    // skor & çarpışma
-    for(const o of obstacles){
-      if(!o.passed && o.x + o.w < player.x){ o.passed=true; score+=10; scoreEl.textContent=score; }
-      if(collide(player, o)){ gameOver(); return; }
-    }
-
-    // parıltı çizgileri
-    ctx.globalAlpha=.25; ctx.strokeStyle='#6ee7ff'; ctx.beginPath();
-    ctx.moveTo(0,FLOOR+36); ctx.lineTo(cvs.width, FLOOR+36); ctx.stroke(); ctx.globalAlpha=1;
-
-    t++;
-    requestAnimationFrame(tick);
+  function start(){
+    if (running) return;
+    reset();
+    running = true;
+    hint.style.display='none';
   }
 
   function gameOver(){
-    running=false;
-    best = Math.max(best, score); localStorage.setItem('neon:best', best); bestEl.textContent=best;
-    playBtn.textContent = "Yeniden Başlat";
-    // kırmızı flash
-    const id = setInterval(()=>{ cvs.style.filter='brightness(1.6) saturate(1.6)'; setTimeout(()=>cvs.style.filter='none',120); }, 180);
-    setTimeout(()=>clearInterval(id), 900);
+    running = false;
+    over.style.display='grid';
+    final.textContent = Math.floor(score);
+    if (score > best){ best = Math.floor(score); localStorage.setItem('neon_best', best) }
+    bestEl.textContent = best;
+    finalBest.textContent = best;
   }
 
-  // ilk çizim
-  reset(); running=false; playBtn.textContent="Başla / Zıpla";
-  requestAnimationFrame(tick);
+  // Zıplama
+  function jump(){
+    if (!running) start();
+    // zemine yakınsa zıpla (çift zıplamayı engelle)
+    if (y <= GROUND + 2){
+      vy = JUMP_V;
+    }
+  }
+
+  // Giriş
+  game.addEventListener('pointerdown', jump);
+  window.addEventListener('keydown', e=>{
+    if(e.code==='Space' || e.code==='ArrowUp' || e.key===' '){ e.preventDefault(); jump(); }
+    if(e.code==='KeyR'){ reset(); running=true; }
+  });
+  again.addEventListener('click', ()=>{ reset(); running=true; });
+
+  // Engel oluştur
+  function spawn(){
+    const el = document.createElement('div');
+    const tall = Math.random()<0.35;
+    el.className = 'obs' + (tall ? ' tall' : '');
+    game.appendChild(el);
+    const w = 28, h = tall?80:48;
+    const xPos = game.clientWidth + w + 10;
+    obs.push({ el, x:xPos, w, h });
+  }
+
+  // Ana döngü
+  function loop(now){
+    requestAnimationFrame(loop);    // HER KAREDE çalış
+
+    const dt = Math.min(1/30, (now - tPrev)/1000 || 0); // saniye
+    tPrev = now;
+
+    if (!running) return;
+
+    // Fizik (yukarı +)
+    vy += G * dt;
+    y += vy * dt;
+    if (y < GROUND){ y = GROUND; vy = 0; } // yere değdi
+
+    // Oyuncu konumu (CSS bottom)
+    player.style.bottom = (102 + y) + 'px';
+
+    // Engelleri güncelle
+    const speed = 320; // px/s
+    spawnTimer -= dt;
+    if (spawnTimer <= 0){
+      spawn(); spawnTimer = rnd(1.0, 1.8);
+    }
+
+    for (let i=obs.length-1;i>=0;i--){
+      const o = obs[i];
+      o.x -= speed * dt;
+      if (o.x < -60){ o.el.remove(); obs.splice(i,1); continue; }
+      o.el.style.transform = `translateX(${o.x}px)`;
+      // Çarpışma (basit AABB)
+      const px = x, pw = 46, ph = 46 + y;
+      const ox = o.x, ow = o.w, oh = o.h;
+      // player rect
+      const pLeft = px, pRight = px+pw, pBottom = 102, pTop = 102+46+y;
+      const oLeft = ox+60, oRight = oLeft+ow, oBottom = 102, oTop = 102+oh;
+      const collide = !(pRight < oLeft || pLeft > oRight || pTop < oBottom || pBottom > oTop);
+      if (collide){ gameOver(); }
+    }
+
+    // skor
+    score += dt*10;
+    scoreEl.textContent = Math.floor(score);
+  }
+
+  // Başlat döngü
+  requestAnimationFrame(loop);
 })();
 </script>
 </body>
-  </html>
+</html>
