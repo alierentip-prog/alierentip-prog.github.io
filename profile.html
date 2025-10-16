@@ -1,0 +1,91 @@
+<!doctype html><html lang="tr"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Veridium — Profil</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#e9eef5;--b:rgba(255,255,255,.16);--glass:rgba(255,255,255,.06);--bg:#0b1118}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;position:sticky;top:0;background:rgba(0,0,0,.35);backdrop-filter:blur(8px)}
+.btn{border:1px solid var(--b);background:var(--glass);color:var(--fg);padding:8px 12px;border-radius:10px;text-decoration:none;font-weight:800}
+main{max-width:800px;margin:18px auto;padding:0 14px}
+.card{border:1px solid var(--b);background:var(--glass);border-radius:14px;padding:14px;margin-bottom:12px}
+label{display:block;margin:6px 0}
+input[type="text"],select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--b);background:#0c1520;color:var(--fg)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+</style></head><body>
+<header>
+  <a class="btn" href="index.html">← Ana sayfa</a>
+  <div class="actions">
+    <span class="guestOnly">
+      <a class="btn" href="login.html">Giriş Yap</a>
+      <a class="btn" href="login.html#signup">Üye Ol</a>
+    </span>
+    <span class="userOnly">
+      <span id="userEmail" class="btn" style="pointer-events:none"></span>
+      <button id="logoutBtn" class="btn" type="button">Çıkış Yap</button>
+    </span>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <h2>Profil</h2>
+    <p id="who">Giriş durumu okunuyor…</p>
+  </div>
+
+  <div class="card">
+    <h3>Tercihler</h3>
+    <div class="row">
+      <div style="flex:1 1 220px">
+        <label for="theme">Tema</label>
+        <select id="theme">
+          <option value="auto">Otomatik</option>
+          <option value="light">Aydınlık</option>
+          <option value="dark">Karanlık</option>
+        </select>
+      </div>
+      <div style="flex:1 1 220px">
+        <label for="energy">Enerji</label>
+        <select id="energy">
+          <option value="none">Seçilmedi</option>
+          <option value="male">Erkek / Derin Sular</option>
+          <option value="female">Kadın / Doğa</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn" id="savePrefs" style="margin-top:10px">💾 Kaydet</button>
+  </div>
+</main>
+
+<script type="module" src="./firebase.js"></script>
+<script type="module">
+  import { Auth } from "./app.js"; // sadece tipi sabitlemek için (opsiyonel)
+</script>
+<script type="module" src="./app.js"></script>
+<script type="module">
+  import { Auth } from "./app.js";
+
+  const who = document.getElementById("who");
+  const themeSel = document.getElementById("theme");
+  const energySel= document.getElementById("energy");
+  const KEY="veridium_prefs_v1";
+
+  function loadPrefs(){
+    const raw = localStorage.getItem(KEY);
+    try{ const p=JSON.parse(raw||"{}"); themeSel.value=p.theme||"auto"; energySel.value=p.energy||"none"; }
+    catch{ themeSel.value="auto"; energySel.value="none"; }
+  }
+  function savePrefs(){
+    const p={ theme: themeSel.value, energy: energySel.value };
+    localStorage.setItem(KEY, JSON.stringify(p));
+    alert("Tercihler kaydedildi ✅");
+  }
+  document.getElementById("savePrefs").onclick=savePrefs;
+  loadPrefs();
+
+  Auth.on((user)=>{
+    if(user) who.textContent=`Giriş yapan: ${user.email}`;
+    else     who.innerHTML=`Misafir modundasın. <a class="btn" href="login.html">Giriş Yap</a>`;
+  });
+</script>
+</body></html>
