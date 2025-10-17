@@ -1,361 +1,364 @@
 <!doctype html>
-<html lang="tr" data-theme="light">
+<html lang="tr">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>AZURA — Full</title>
+<title>AZURA</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-/* ===== Theme Vars ===== */
-:root{
-  --fg:#0b1020; --mut:#55657a; --bg:#f7fbff; --card:#ffffff; --nav:#072643;
-  --b:rgba(0,0,0,.10); --glass:rgba(255,255,255,.58);
-  --blue:#55c8ff; --pink:#ff9ad0; --green:#9ff2b1;
-  --g1:#7ed8ff; --g2:#b9ffc9; --g3:#ffd2ff;
-}
-[data-theme="dark"]{
-  --fg:#eaf1ff; --mut:#a7b6cb; --bg:#050b12; --card:#0d1522; --nav:#071d33;
-  --b:rgba(255,255,255,.14); --glass:rgba(255,255,255,.08);
-  --g1:#7fd8ff; --g2:#9ff2b1; --g3:#e7a6ff;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0; font:15px/1.6 Inter,system-ui; color:var(--fg); background:var(--bg); overflow-x:hidden}
+  :root{
+    --fg:#0b1220; --mut:#5b6b82;
+    --glass:rgba(0,20,40,.06); --b:rgba(0,20,40,.14);
+    --blue:#4fb7ff; --pink:#ff8ec5; --green:#62f0a1;
+    --bar:#0f2a48; --bg:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;color:var(--fg);background:var(--bg);font:16px/1.55 Inter,system-ui;overflow-x:hidden}
 
-/* ===== TOP BAR ===== */
-.top{
-  position:sticky; top:0; z-index:40;
-  height:58px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
-  padding:0 10px; background:var(--nav); color:#cfe8ff; border-bottom:1px solid rgba(255,255,255,.08);
-}
-.brand{
-  font:900 22px/1 Cinzel,serif; letter-spacing:.35em; color:transparent;
-  -webkit-background-clip:text; background-clip:text;
-  background-image:linear-gradient(90deg,#fff,var(--g1),var(--g2),var(--g3),#fff);
-  background-size:300% 100%; animation:shift 9s linear infinite;
-  text-shadow:0 6px 26px rgba(0,0,0,.35);
-}
-@keyframes shift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-.badge{border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#eaf4ff;
-  border-radius:10px; padding:7px 11px; font-weight:800; text-decoration:none; margin-left:8px}
-.clock{font-weight:800; letter-spacing:.1em}
+  /* ====== ÜST ŞERİT ====== */
+  header.top{
+    position:sticky; top:0; z-index:10;
+    background:var(--bar); color:#eaf4ff; border-bottom:1px solid rgba(255,255,255,.15);
+  }
+  .bar{
+    height:54px; display:flex; align-items:center; gap:10px; padding:0 12px;
+  }
+  .clock{font-weight:900; letter-spacing:.04em; background:rgba(255,255,255,.08); padding:6px 10px; border-radius:10px}
+  .brand{
+    flex:1; text-align:center; font:900 22px/1 Cinzel,serif; letter-spacing:.6em;
+    background:linear-gradient(90deg,#5fd3ff,#78f5c8,#fff6a8,#ffacd6,#c99bff,#5fd3ff);
+    background-size:250% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation: hue 10s linear infinite;
+  }
+  @keyframes hue{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+  .btn{color:#eaf4ff; text-decoration:none; font-weight:900; padding:8px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.06)}
+  .menuBtn{width:38px;height:32px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);cursor:pointer}
+  .menuBtn span{display:block;width:18px;height:2px;background:#eaf4ff;box-shadow:0 6px 0 #eaf4ff,0 -6px 0 #eaf4ff}
 
-/* ===== LEFT PANEL (drawer) ===== */
-.drawer-btn{
-  appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08);
-  color:#eaf4ff; border-radius:10px; padding:7px 11px; font-weight:800;
-}
-.drawer{
-  position:fixed; left:0; top:58px; bottom:0; width:300px; z-index:45;
-  background:var(--card); color:var(--fg); border-right:1px solid var(--b);
-  transform:translateX(-100%); transition:transform .28s ease; box-shadow:0 10px 50px rgba(0,0,0,.2)
-}
-.drawer.show{ transform:none }
-.drawer h4{ margin:14px 14px 8px }
-.drawer ul{ list-style:none; margin:0; padding:0 6px 10px }
-.drawer li a{
-  display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:12px;
-  color:var(--fg); text-decoration:none; border:1px solid var(--b); background:var(--glass); margin:6px;
-}
-.drawer .mut{ color:var(--mut); padding:8px 14px }
+  /* ====== SOL ÇEKMECE ====== */
+  .drawer{position:fixed; inset:0 50% 0 0; max-width:320px; transform:translateX(-105%); transition:transform .35s ease; z-index:12}
+  .drawer .panel{height:100%; background:#0f2035; color:#eaf4ff; padding:16px; overflow:auto}
+  .drawer.open{transform:none}
+  .shade{position:fixed; inset:0; background:rgba(0,0,0,.35); opacity:0; visibility:hidden; transition:.3s; z-index:11}
+  .shade.show{opacity:1; visibility:visible}
+  .nav h4{margin:12px 0 6px; opacity:.9}
+  .nav a{display:flex; align-items:center; gap:10px; padding:10px 12px; margin:6px 0; border-radius:12px; text-decoration:none; color:#eaf4ff; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12)}
+  .nav a .ico{font-size:18px}
 
-/* ===== HERO CARDS ===== */
-main{max-width:1100px; margin:40px auto 20px; padding:0 14px}
-.cards{display:flex; justify-content:center; gap:28px; margin-top:28px}
-.card{
-  width:min(380px,44vw); height:290px; position:relative; overflow:hidden;
-  border:1px solid var(--b); background:var(--glass); backdrop-filter:blur(10px);
-  border-radius:18px; box-shadow:0 10px 40px rgba(0,0,0,.15);
-}
-.card .head{
-  position:absolute; left:16px; top:16px; padding:10px 14px; border:1px solid var(--b);
-  border-radius:12px; background:rgba(255,255,255,.08); font-weight:900;
-}
-.go{ position:absolute; right:16px; bottom:16px }
-.btn{
-  border:1px solid var(--b); background:var(--glass); color:var(--fg);
-  padding:12px 18px; border-radius:12px; font-weight:900; text-decoration:none;
-}
-canvas.tile{ position:absolute; inset:0; width:100%; height:100% }
+  /* ====== KARTLAR ====== */
+  main{max-width:1100px; margin:16px auto; padding:0 12px}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+  @media(max-width:800px){ .grid{grid-template-columns:1fr} }
+  .card{
+    position:relative; height:220px; border:1px solid var(--b);
+    background:linear-gradient(180deg,rgba(79,183,255,.06),#fff); border-radius:18px;
+    overflow:hidden; box-shadow:0 12px 36px rgba(0,0,0,.08)
+  }
+  .card.pink{ background:linear-gradient(180deg,rgba(255,142,197,.06),#fff) }
+  .head{position:absolute; left:14px; top:12px; font-weight:900}
+  .go{position:absolute; right:14px; bottom:14px}
+  .go .btn{border-radius:14px; padding:10px 16px}
 
-/* ===== CTA + ORB ===== */
-.cta{display:grid; grid-template-columns:1.2fr 1fr; gap:20px; max-width:1100px; margin:30px auto 0; padding:0 14px}
-.test-box{ border:1px solid var(--b); background:var(--glass); border-radius:16px; padding:18px; backdrop-filter:blur(8px) }
-.orb-box{ display:grid; place-items:center; border:1px solid var(--b); border-radius:16px;
-  background:radial-gradient(600px 400px at 30% 30%, rgba(85,200,255,.10), transparent 60%), rgba(255,255,255,.35) }
+  canvas.tile{position:absolute; inset:0; width:100%; height:100%}
 
-/* ===== FEATURES ===== */
-.features{ max-width:1100px; margin:20px auto 40px; display:grid; gap:16px;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); padding:0 14px }
-.features article{ border:1px solid var(--b); background:var(--glass); border-radius:16px; padding:14px; backdrop-filter:blur(8px) }
+  /* ====== TEST BLOĞU ====== */
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px}
+  @media(max-width:900px){ .row{grid-template-columns:1fr} }
+  .test, .orb{
+    border:1px solid var(--b); border-radius:18px; background:#fff; box-shadow:0 12px 36px rgba(0,0,0,.08);
+    padding:16px; position:relative; overflow:hidden
+  }
+  .test h3{margin:0 0 10px}
+  .q{margin:12px 0; font-weight:700}
+  .opts{display:flex; gap:8px; flex-wrap:wrap}
+  .chip{appearance:none; border:1px solid var(--b); background:rgba(79,183,255,.07); padding:8px 12px; border-radius:999px; cursor:pointer}
+  .chip[data-p="p"]{background:rgba(255,142,197,.08); border-color:rgba(255,142,197,.25)}
+  .actions{display:flex; gap:10px; margin-top:12px}
+  .muted{color:var(--mut); font-size:14px; margin-top:8px}
+  .result{display:none; border-top:1px dashed var(--b); padding-top:12px; margin-top:10px}
+  .pill{display:inline-block; padding:6px 10px; border-radius:999px; font-weight:900; font-size:12px; margin-right:6px}
+  .pill.m{background:rgba(79,183,255,.15); color:#0b4a7a}
+  .pill.p{background:rgba(255,142,197,.15); color:#7a104b}
 
-/* ===== TEST MODAL ===== */
-.modal[hidden]{display:none}
-.modal{ position:fixed; inset:0; z-index:120; display:grid; place-items:center; background:rgba(0,0,0,.45) }
-.modal__box{ background:var(--card); color:var(--fg); padding:20px; border-radius:16px; max-width:680px; width:92%; border:1px solid var(--b) }
-.modal__box h3{ margin:0 0 6px }
-.scale{ display:inline-grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-left:8px }
-.quiz label{ display:block; margin:10px 0 }
-.quiz input[type=radio]{ width:18px; height:18px }
-.result{ margin-top:12px; padding:12px; border-radius:12px; background:linear-gradient(90deg,rgba(77,184,255,.18),rgba(255,154,208,.18)) }
+  /* ====== DÖNEN ORB ====== */
+  .orbWrap{position:relative; display:grid; place-items:center; height:100%}
+  .orbCanvas{width:100%; aspect-ratio:1/1; max-width:380px}
 
-/* ===== SPLASH (white ring + AZURA + full white) ===== */
-#splash{ position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:#0a0a0a }
-.ring{
-  position:relative; width:min(84vmin,760px); aspect-ratio:1/1; border-radius:50%; display:grid; place-items:center;
-  filter:blur(.25px); animation:ringPulse 3.8s ease-in-out forwards;
-}
-.ring::before{
-  content:""; position:absolute; inset:0; border-radius:50%;
-  background:
-    radial-gradient(circle at 50% 50%,
-      rgba(255,255,255,0.08) 0%,
-      rgba(255,255,255,0.07) 50%,
-      rgba(255,255,255,0.05) 70%,
-      rgba(255,255,255,0.06) 85%,
-      rgba(255,255,255,0.08) 100%) padding-box,
-    radial-gradient(circle at 50% 50%,
-      transparent 66%,
-      rgba(255,255,255,.35) 70%,
-      rgba(255,255,255,.95) 74%,
-      #ffffff 78%,
-      rgba(255,255,255,.95) 82%,
-      rgba(255,255,255,.35) 86%,
-      rgba(255,255,255,.14) 92%,
-      rgba(255,255,255,.08) 97%,
-      rgba(255,255,255,.06) 100%) border-box;
-  -webkit-mask: radial-gradient(farthest-side,#000 66%,transparent 67%);
-          mask: radial-gradient(farthest-side,#000 66%,transparent 67%);
-}
-.logo{
-  position:relative; z-index:1; font-family:Cinzel,serif; font-weight:900; letter-spacing:.22em;
-  font-size: clamp(40px, 9.2vw, 160px); line-height:1;
-  background:linear-gradient(90deg,#ffffff,#bfe8ff,#7cd2ff,#a8a4ff,#ff9ddb,#ffffff);
-  background-size:300% 100%; -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 26px rgba(255,255,255,.35); animation:hueShift 6s linear infinite, logoPop 3.8s ease-in-out both;
-}
-@keyframes hueShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-@keyframes logoPop{0%{transform:scale(.88);opacity:0} 12%{opacity:1} 45%{transform:scale(1.08)} 70%{transform:scale(.98)} 100%{transform:scale(1.10)}}
-@keyframes ringPulse{0%{transform:scale(.84);opacity:.92} 35%{transform:scale(1.10)} 60%{transform:scale(.96)} 100%{transform:scale(26);opacity:1}}
-#whiteOut{ position:fixed; inset:0; background:#ffffff; z-index:210; opacity:0; transition:opacity .55s ease; pointer-events:none }
-#whiteOut.show{ opacity:1 }
+  /* ====== INTRO (HALKA) – 1sn KISALMIŞ, YUMUŞAK GEÇİŞ ====== */
+  #splash{position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:#ffffff}
+  .ring{
+    position:relative; width:min(80vmin,740px); aspect-ratio:1/1; border-radius:50%;
+    display:grid; place-items:center; filter: blur(.2px); animation:ringPulse 2.4s ease-in-out forwards;
+  }
+  .ring::before{
+    content:""; position:absolute; inset:0; border-radius:50%;
+    /* kalın BEYAZ halka, içe doğru kontrast azalarak */
+    background:
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,.06) 0%, rgba(255,255,255,.05) 60%, rgba(255,255,255,.08) 100%) padding-box,
+      radial-gradient(circle at 50% 50%, transparent 66%, rgba(255,255,255,.35) 70%, #fff 78%, rgba(255,255,255,.35) 86%, rgba(255,255,255,.1) 92%, rgba(255,255,255,.06) 100%) border-box;
+    -webkit-mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
+            mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
+  }
+  .logo{
+    position:relative; z-index:1; font:900 clamp(42px,9.6vw,160px)/1 Cinzel,serif; letter-spacing:.22em;
+    background:linear-gradient(90deg,#2a638a,#6bcfff,#77ffd6,#fff3a8,#ff9dd3,#c59bff,#2a638a);
+    background-size:280% 100%; -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 30px rgba(60,120,200,.35);
+    animation:hue 9s linear infinite, pop 2.4s ease-in-out both;
+  }
+  @keyframes pop{0%{transform:scale(.86);opacity:0}15%{opacity:1}55%{transform:scale(1.08)}80%{transform:scale(.98)}100%{transform:scale(1.06)}}
 
-/* ===== MISC ===== */
-.badge.toggle{margin-right:8px}
-.themeBtn{margin-left:8px}
-@media(max-width:900px){
-  .cards{flex-direction:column; align-items:center}
-  .cta{grid-template-columns:1fr}
-}
+  /* beyaza çık – sonra ipeksi şekilde sayfayı göster */
+  #whiteOut{position:fixed; inset:0; background:#fff; z-index:210; opacity:0; pointer-events:none; transition:opacity .55s ease}
+  #whiteOut.show{opacity:1}
 </style>
 </head>
 <body>
 
-<!-- ===== SPLASH (entry) ===== -->
-<div id="splash" aria-label="Azura Giriş">
+<!-- ÜST ŞERİT -->
+<header class="top">
+  <div class="bar">
+    <div class="menuBtn" id="menuBtn"><span></span></div>
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="brand">A Z U R A</div>
+    <a class="btn" href="login.html">Giriş</a>
+    <a class="btn" href="login.html#signup">Üye Ol</a>
+  </div>
+</header>
+
+<!-- SOL ÇEKMECE -->
+<div class="drawer" id="drawer">
+  <div class="panel">
+    <h3 style="margin:6px 0 10px;font-family:Cinzel,serif;letter-spacing:.12em">AZURA</h3>
+    <div class="nav">
+      <h4>📚 İçerikler</h4>
+      <a href="#erkek"><span class="ico">🌊</span>Okyanus (Erkek) — Karizma • Disiplin</a>
+      <a href="#kadin"><span class="ico">🌿</span>Doğa (Kadın) — Zarafet • Denge</a>
+      <a href="#test"><span class="ico">🧪</span>Seni Tanımak İsteriz – Kısa Test</a>
+      <a href="#orbis"><span class="ico">🪩</span>Azura Orb – Dinamik Küre</a>
+      <h4>ℹ️ Hakkımda</h4>
+      <a href="#about"><span class="ico">👤</span>Kısa Biyografi</a>
+      <a href="#neler"><span class="ico">✨</span>Neler Yapılabilir?</a>
+    </div>
+  </div>
+</div>
+<div class="shade" id="shade"></div>
+
+<!-- ANA İÇERİK -->
+<main>
+  <section class="grid" id="erkek">
+    <div class="card">
+      <div class="head">🌊 <b>Okyanus</b> • Karizma • Disiplin</div>
+      <canvas class="tile" id="pMale"></canvas>
+      <div class="go"><a class="btn" href="male.html">Git →</a></div>
+    </div>
+    <div class="card pink" id="kadin">
+      <div class="head">🌿 <b>Doğa</b> • Zarafet • Denge</div>
+      <canvas class="tile" id="pFemale"></canvas>
+      <div class="go"><a class="btn" href="female.html">Git →</a></div>
+    </div>
+  </section>
+
+  <section class="row" id="test">
+    <!-- TEST -->
+    <div class="test">
+      <h3>🧪 Seni Tanımak İsteriz</h3>
+      <div class="q">1) Zor bir hedef görünce ilk hissin?</div>
+      <div class="opts" data-q="q1">
+        <button class="chip" data-s="m">“Plan yapar denerim.”</button>
+        <button class="chip" data-s="p" data-p="p">“İlham alırım.”</button>
+        <button class="chip" data-s="m">“Adım adım bölerim.”</button>
+      </div>
+
+      <div class="q">2) Ekipte rolün?</div>
+      <div class="opts" data-q="q2">
+        <button class="chip" data-s="m">Yön veren</button>
+        <button class="chip" data-s="p" data-p="p">Moral yükselten</button>
+        <button class="chip" data-s="m">Takip/uygulama</button>
+      </div>
+
+      <div class="q">3) Birine yardım ederken en önem verdiğin?</div>
+      <div class="opts" data-q="q3">
+        <button class="chip" data-s="p" data-p="p">Empati ve nezaket</button>
+        <button class="chip" data-s="m">Çözüm ve netlik</button>
+      </div>
+
+      <div class="actions">
+        <button id="seeRes" class="btn">Sonucu Gör</button>
+        <button id="reset" class="btn">Sıfırla</button>
+      </div>
+      <div class="muted">Not: Bu mini test eğlence amaçlıdır; öneriler öz-değerlendirme içindir.</div>
+
+      <div class="result" id="resBox">
+        <div id="resTags"></div>
+        <p id="resText" style="margin:10px 0 0"></p>
+      </div>
+    </div>
+
+    <!-- ORB -->
+    <div class="orb" id="orbis">
+      <h3>🪩 Azura Orb</h3>
+      <div class="orbWrap">
+        <canvas id="orb" class="orbCanvas"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" style="margin-top:18px" class="test">
+    <h3>👤 Hakkımda (kısa)</h3>
+    <p>Azura; üretken, düzenli ve zarafeti önemseyen bir alan. Burada motivasyon, nezaket, minimal tasarım ve bilimsel meraka yer var.</p>
+  </section>
+
+  <section id="neler" style="margin-top:12px" class="test">
+    <h3>✨ Neler Yapılabilir?</h3>
+    <ul style="margin:10px 0 0; padding-left:18px">
+      <li>📈 Haftalık hedef panosu ve ilerleme çubuğu</li>
+      <li>📚 İçerik kütüphanesi (felsefe, tıp notları, teknik yazılar)</li>
+      <li>🧭 Günlük kısa yönlendirmeler ve alıştırmalar</li>
+      <li>🎧 Odak için arka plan sesleri (okyanus / orman)</li>
+      <li>🎯 “Mini challenge” görevleri (30dk sprint vb.)</li>
+    </ul>
+  </section>
+</main>
+
+<!-- INTRO OVERLAYS -->
+<div id="splash" aria-label="Intro">
   <div class="ring"><div class="logo">AZURA</div></div>
 </div>
 <div id="whiteOut" aria-hidden="true"></div>
 
-<!-- ===== TOP BAR ===== -->
-<div class="top">
-  <div class="left">
-    <button class="drawer-btn" id="drawerOpen">☰ Menü</button>
-  </div>
-  <div class="center"><div class="brand">A Z U R A</div></div>
-  <div class="right" style="justify-self:end">
-    <span class="clock" id="clock">--:--:--</span>
-    <button class="badge themeBtn" id="themeBtn">✨/🌙</button>
-    <a class="badge" href="#">Giriş</a>
-    <a class="badge" href="#">Üye Ol</a>
-  </div>
-</div>
-
-<!-- ===== LEFT PANEL ===== -->
-<aside class="drawer" id="drawer">
-  <h4>📌 Başlıklar</h4>
-  <ul>
-    <li><a href="#erkek">💙 Erkek Alanı • Okyanus</a></li>
-    <li><a href="#kadin">💗 Kadın Alanı • Doğa</a></li>
-    <li><a href="#test">🧭 Seni Tanımak İsteriz</a></li>
-    <li><a href="#bilgi">📚 Bilgi Bankası</a></li>
-    <li><a href="#felsefe">💭 Felsefe</a></li>
-    <li><a href="#echo">🔊 Echo’lar</a></li>
-  </ul>
-  <div class="mut">İleride: profil, favoriler, topluluk…</div>
-</aside>
-
-<main>
-  <!-- HERO CARDS -->
-  <div class="cards">
-    <section class="card" id="erkek">
-      <div class="head">🌊 Okyanus • Karizmatik</div>
-      <canvas class="tile" id="sea"></canvas>
-      <div class="go"><a class="btn nav" href="male.html">Giriş →</a></div>
-    </section>
-
-    <section class="card" id="kadin">
-      <div class="head">🌿 Doğa • İç ısıtan</div>
-      <canvas class="tile" id="forest"></canvas>
-      <div class="go"><a class="btn nav" href="female.html">Giriş →</a></div>
-    </section>
-  </div>
-
-  <!-- CTA + ORB -->
-  <section class="cta" id="test">
-    <div class="test-box">
-      <h3>🧭 Seni Tanımak İsteriz</h3>
-      <p>5 kısa soruyla baskın enerjini keşfet: <b>Okyanus</b> mu, <b>Doğa</b> mı, yoksa <b>Denge</b> mi?</p>
-      <button class="btn" id="openTest">Teste Başla</button>
-      <div id="testResult" class="result" hidden></div>
-    </div>
-    <div class="orb-box">
-      <canvas id="azuraOrb" width="340" height="340" aria-label="Dönen Azura Küresi"></canvas>
-    </div>
-  </section>
-
-  <!-- FEATURES -->
-  <section class="features">
-    <article id="bilgi"><h4>📚 Bilgi Bankası</h4><p>Notlar, özetler, hızlı tekrar kartları. Gün gün büyüyen arşiv.</p></article>
-    <article id="echo"><h4>🔊 Echo’lar</h4><p>Günlük mikro-öneriler ve motivasyon yankıları. Sessiz ama etkili.</p></article>
-    <article id="felsefe"><h4>💭 Felsefe Köşesi</h4><p>Kısa metinler: bakış açını keskinleştiren düşünce egzersizleri.</p></article>
-  </section>
-</main>
-
-<!-- TEST MODAL -->
-<div id="testModal" class="modal" hidden>
-  <div class="modal__box">
-    <h3>Mini Test</h3>
-    <form id="personTest">
-      <label>1) Zamanı planlayarak ilerlemek bana huzur verir.
-        <span class="scale">
-          <input type="radio" name="q1" value="1"><input type="radio" name="q1" value="2"><input type="radio" name="q1" value="3"><input type="radio" name="q1" value="4"><input type="radio" name="q1" value="5">
-        </span>
-      </label>
-      <label>2) Yeni fikirleri hemen denemek isterim.
-        <span class="scale">
-          <input type="radio" name="q2" value="1"><input type="radio" name="q2" value="2"><input type="radio" name="q2" value="3"><input type="radio" name="q2" value="4"><input type="radio" name="q2" value="5">
-        </span>
-      </label>
-      <label>3) Baskı altında netleşirim.
-        <span class="scale">
-          <input type="radio" name="q3" value="1"><input type="radio" name="q3" value="2"><input type="radio" name="q3" value="3"><input type="radio" name="q3" value="4"><input type="radio" name="q3" value="5">
-        </span>
-      </label>
-      <label>4) Empatiyle hareket ederim.
-        <span class="scale">
-          <input type="radio" name="q4" value="1"><input type="radio" name="q4" value="2"><input type="radio" name="q4" value="3"><input type="radio" name="q4" value="4"><input type="radio" name="q4" value="5">
-        </span>
-      </label>
-      <label>5) Disiplin beni motive eder.
-        <span class="scale">
-          <input type="radio" name="q5" value="1"><input type="radio" name="q5" value="2"><input type="radio" name="q5" value="3"><input type="radio" name="q5" value="4"><input type="radio" name="q5" value="5">
-        </span>
-      </label>
-      <button class="btn" type="submit">Sonucu Gör</button>
-    </form>
-  </div>
-</div>
-
 <script>
-/* ===== Splash timeline: ring → whiteOut → reveal ===== */
-(()=>{
-  const INTRO_MS = 3800; // ring & logo
-  const white = document.getElementById('whiteOut');
-  setTimeout(()=>{ white.classList.add('show'); setTimeout(()=>{
-      document.getElementById('splash')?.remove();
-      white.remove();
-    }, 560);
-  }, INTRO_MS);
-})();
-
-/* ===== Clock ===== */
+/* ====== SAAT ====== */
 (function clock(){
-  const el=document.getElementById('clock'); const z=n=>String(n).padStart(2,'0');
-  function tick(){ const d=new Date(); el.textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`; requestAnimationFrame(tick) }
-  tick();
+  const el = document.getElementById('clock');
+  const tick = ()=>{ const d=new Date();
+    const h=String(d.getHours()).padStart(2,'0');
+    const m=String(d.getMinutes()).padStart(2,'0');
+    const s=String(d.getSeconds()).padStart(2,'0');
+    el.textContent=`${h}:${m}:${s}`;
+  };
+  tick(); setInterval(tick,1000);
 })();
 
-/* ===== Drawer ===== */
+/* ====== SOL ÇEKMECE ====== */
 (()=>{
-  const open=document.getElementById('drawerOpen');
   const drawer=document.getElementById('drawer');
-  open.addEventListener('click',()=> drawer.classList.toggle('show'));
-  addEventListener('click',e=>{
-    if(drawer.classList.contains('show') && !drawer.contains(e.target) && e.target!==open) drawer.classList.remove('show');
-  });
+  const shade =document.getElementById('shade');
+  const btn   =document.getElementById('menuBtn');
+  const open=()=>{drawer.classList.add('open'); shade.classList.add('show')};
+  const close=()=>{drawer.classList.remove('open'); shade.classList.remove('show')};
+  btn.addEventListener('click',open);
+  shade.addEventListener('click',close);
+  addEventListener('keydown',e=>{if(e.key==='Escape') close();});
 })();
 
-/* ===== Theme Toggle ===== */
-document.getElementById('themeBtn').onclick=()=>{
-  const r=document.documentElement;
-  r.dataset.theme = r.dataset.theme==='dark' ? 'light' : 'dark';
-};
-
-/* ===== Hero Card Animations ===== */
-(function sea(){
-  const c=document.getElementById('sea'), x=c.getContext('2d');
-  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
-  const B=150, b=[]; for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
-  let t=0; (function loop(){
+/* ====== KART İÇİ PARÇACIK ====== */
+function particles(canvas, hueBase){
+  const c=canvas, x=c.getContext('2d');
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit();
+  addEventListener('resize',fit,{passive:true});
+  const N=90, P=[];
+  for(let i=0;i<N;i++) P.push({x:Math.random()*c.width, y:Math.random()*c.height, r:1+Math.random()*2, a:Math.random()*Math.PI*2});
+  (function loop(){
     x.clearRect(0,0,c.width,c.height);
-    x.strokeStyle='rgba(80,200,255,.18)'; x.lineWidth=1;
-    for(let i=0;i<38;i++){ const y=(i/38)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.04)*6); x.lineTo(c.width,y); x.stroke(); }
-    for(const p of b){ p.y-=p.s; if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
-      x.globalAlpha=.28; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,6.283); x.fill(); }
+    for(const p of P){
+      p.a += 0.01; p.x += Math.cos(p.a)*0.3; p.y -= .6;
+      if(p.y < -10){ p.y = c.height+10; p.x = Math.random()*c.width; }
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
+      x.fillStyle = `hsla(${hueBase + (p.x/c.width)*40}, 80%, 60%, .85)`;
+      x.fill();
+    }
+    requestAnimationFrame(loop);
+  })();
+}
+particles(document.getElementById('pMale'), 205);   // mavi
+particles(document.getElementById('pFemale'), 325); // pembe
+
+/* ====== TEST ====== */
+(()=>{
+  const picks = {m:0, p:0};
+  for(const box of document.querySelectorAll('.opts')){
+    box.addEventListener('click',e=>{
+      const t=e.target.closest('.chip'); if(!t) return;
+      const set=box.querySelectorAll('.chip'); set.forEach(c=>c.classList.remove('on'));
+      t.classList.add('on');
+      const s=t.dataset.s; if(s) { /* geçici say */
+        /* önce eski seçimi çıkar */
+        for(const c of set){ if(c.classList.contains('on') && c!==t && c.dataset.s) picks[c.dataset.s] = Math.max(0,picks[c.dataset.s]-1);}
+        picks[s] = (picks[s]||0)+1;
+      }
+    });
+  }
+  const res=document.getElementById('resBox'), tags=document.getElementById('resTags'), text=document.getElementById('resText');
+  document.getElementById('seeRes').onclick=()=>{
+    const scoreM=picks.m||0, scoreP=picks.p||0;
+    tags.innerHTML = `<span class="pill m">M:${scoreM}</span><span class="pill p">P:${scoreP}</span>`;
+    let msg="";
+    if(scoreM>scoreP){
+      msg = "Daha çok **hedef/kararlılık** çizgisindesin. Güçlü yanların: netlik, sorumluluk, sürdürme gücü. İyileştirme: esneklik molaları planlamak, nazik geri bildirim pratiği.";
+    }else if(scoreP>scoreM){
+      msg = "Daha çok **empati/uyum** tarafındasın. Güçlü yanların: iletişim, takım uyumu, esneklik. İyileştirme: sınır koyma, hedefi sayılara dökme, haftalık takip.";
+    }else{
+      msg = "**Dengeli profil.** Gerektiğinde yön veren, gerektiğinde yumuşatan bir tavırdasın. Öneri: bir haftayı disiplin temasıyla, bir haftayı nezaket temasıyla çalış.";
+    }
+    text.innerHTML = msg.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>');
+    res.style.display='block';
+  };
+  document.getElementById('reset').onclick=()=>location.reload();
+})();
+
+/* ====== ORB (Dönen küre) ====== */
+(()=>{
+  const c=document.getElementById('orb'), x=c.getContext('2d');
+  function fit(){ const s=c.parentElement.clientWidth; c.width=s; c.height=s; } fit(); addEventListener('resize',fit,{passive:true});
+  let t=0;
+  (function loop(){
+    const w=c.width,h=c.height; x.clearRect(0,0,w,h);
+    const r=w*0.42, cx=w/2, cy=h/2;
+    // gövde
+    const grad=x.createRadialGradient(cx,cy,r*0.2,cx,cy,r);
+    grad.addColorStop(0,'rgba(100,180,255,.95)');
+    grad.addColorStop(.6,'rgba(170,120,255,.45)');
+    grad.addColorStop(1,'rgba(255,255,255,.15)');
+    x.fillStyle=grad; x.beginPath(); x.arc(cx,cy,r,0,Math.PI*2); x.fill();
+    // akış çizgileri
+    x.lineWidth=1.5; x.globalAlpha=.8;
+    for(let i=0;i<22;i++){
+      const a=(i/22)*Math.PI, rr=r*Math.sin((t/40)+i/3)*.08 + r*.88;
+      x.strokeStyle=`hsla(${210+i*6},80%,60%,.6)`;
+      x.beginPath();
+      for(let k=0;k<=60;k++){
+        const th=(k/60)*Math.PI*2;
+        const px=cx + Math.cos(th)*rr*Math.cos(a);
+        const py=cy + Math.sin(th)*rr;
+        if(k===0) x.moveTo(px,py); else x.lineTo(px,py);
+      }
+      x.stroke();
+    }
+    x.globalAlpha=1;
     t++; requestAnimationFrame(loop);
   })();
 })();
-(function forest(){
-  const c=document.getElementById('forest'), x=c.getContext('2d');
-  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
-  const N=120, p=[]; for(let i=0;i<N;i++) p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40});
-  (function loop(){
-    x.clearRect(0,0,c.width,c.height);
-    for(const s of p){ s.y+=.4; s.x+=Math.sin(s.y/45)*.4; if(s.y>c.height+10){s.y=-10; s.x=Math.random()*c.width}
-      x.fillStyle=`hsla(${s.h},80%,72%,.9)`; x.beginPath(); x.arc(s.x,s.y,s.r,0,6.283); x.fill(); }
-    requestAnimationFrame(loop);
-  })();
-})();
 
-/* ===== Orb ===== */
+/* ====== INTRO: 1sn kısaltıldı, yumuşak sayfa geçişi ====== */
 (()=>{
-  const c=document.getElementById('azuraOrb'); if(!c) return; const x=c.getContext('2d'); let t=0;
-  function draw(){
-    x.clearRect(0,0,c.width,c.height); const cx=c.width/2, cy=c.height/2, R=Math.min(cx,cy)-10;
-    const bg=x.createRadialGradient(cx,cy,R*0.2,cx,cy,R*1.2); bg.addColorStop(0,'rgba(255,255,255,.35)'); bg.addColorStop(1,'rgba(255,255,255,0)');
-    x.fillStyle=bg; x.fillRect(0,0,c.width,c.height);
-    x.save(); x.translate(cx,cy); x.rotate(t/120);
-    const g=x.createRadialGradient(0,0,R*0.15,0,0,R);
-    g.addColorStop(0,'#fff'); g.addColorStop(.35,'#9fd8ff'); g.addColorStop(.6,'#b09cff'); g.addColorStop(.85,'#ffb4e6'); g.addColorStop(1,'rgba(255,255,255,0)');
-    x.fillStyle=g; x.beginPath(); x.arc(0,0,R,0,6.283); x.fill();
-    x.globalAlpha=.22; x.rotate(t/60);
-    for(let i=0;i<3;i++){ x.beginPath(); x.ellipse(R*0.1,-R*0.1,R*0.55,R*0.22,0,0,6.283); x.fillStyle='rgba(255,255,255,.25)'; x.fill(); x.rotate(Math.PI/3); }
-    x.restore(); t++; requestAnimationFrame(draw);
-  } draw();
-})();
+  const INTRO_MS = 2400;  // eskisinden 1s daha kısa
+  const splash = document.getElementById('splash');
+  const white  = document.getElementById('whiteOut');
 
-/* ===== Test ===== */
-(()=>{
-  const modal=document.getElementById('testModal');
-  const open=document.getElementById('openTest');
-  const form=document.getElementById('personTest');
-  const resultBox=document.getElementById('testResult');
-
-  open.onclick=()=>{ modal.hidden=false; };
-  modal.onclick=e=>{ if(e.target===modal) modal.hidden=true; };
-
-  form.onsubmit=e=>{
-    e.preventDefault();
-    let s=0; for(let i=1;i<=5;i++){ s+=Number(form["q"+i].value||0); }
-    let txt;
-    if(s>=21) txt="Enerjin 🌀 <b>Okyanus</b>: stratejik, kararlı, odaklı. Net hedef+zaman bloklarıyla parlıyorsun. Arada sezgiye alan aç; esneklik ivme kazandırır.";
-    else if(s<=13) txt="Enerjin 🌷 <b>Doğa</b>: sezgisel, akışkan, ilham dolu. İnsanlarla bağ gücün. Bir miktar yapı (günlük 1 zor iş) seni çok ileri taşır.";
-    else txt="Enerjin ⚖️ <b>Denge</b>: mantık+sezgi dengede. Adaptasyonun yüksek; karar anlarında 2 dakikalık netleştirme ritüeli harikalar yaratır.";
-    resultBox.innerHTML = txt;
-    resultBox.hidden = false;
-    modal.hidden = true;
-  };
+  // 1) halka animasyonu oynarken bekle
+  setTimeout(()=>{
+    // 2) beyaza yükselt
+    white.classList.add('show');
+    // 3) kısa bir bekleme sonrası splash'i kaldır, beyaz perdenin opaklığını ipeksi şekilde indir
+    setTimeout(()=>{
+      splash.remove();
+      // yumuşak sayfa görünümü
+      setTimeout(()=> white.classList.remove('show'), 80);
+    }, 520);
+  }, INTRO_MS);
 })();
 </script>
 </body>
