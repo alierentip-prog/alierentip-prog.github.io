@@ -2,435 +2,126 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AZURA • Nova Pulse</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-<meta name="theme-color" content="#0a355c">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AZURA NOVA</title>
+<link rel="icon" href="data:,">
 <style>
-/* =========================================================
-   AZURA 2.0 — NOVA PULSE (Full Single File)
-   ========================================================= */
-
-/* ---------- RESET ---------- */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;width:100%;overflow-x:hidden}
-img,canvas,svg{display:block;max-width:100%}
-button{font:inherit;cursor:pointer}
 :root{
-  --blue:#0a355c; --blue2:#0b487c; --sky:#00bfff;
-  --bg:#f6fbff; --surface:#fff; --ink:#0e1a26; --muted:#5f6e7d;
-  --glass:rgba(255,255,255,.72); --glass2:rgba(255,255,255,.42);
-  --radius:16px; --radiusSm:12px; --radiusLg:26px;
-  --shadow:0 10px 30px rgba(6,24,44,.12);
+  --bg:#f5f9ff;--ink:#04142a;--muted:#5b6b7a;--brand:#1885ff;--card:#ffffff;
+  --shadow:0 10px 40px rgba(0,0,0,.08);--accent1:#7de0ff;--accent2:#b7b3ff;--accent3:#ffc5e8;
 }
-body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
-
-/* ---------- DARK THEME ---------- */
-@media (prefers-color-scheme:dark){
-  :root{--bg:#0b121a;--surface:#0f1b26;--ink:#e7eef5;--muted:#96a7b7;--glass:rgba(22,30,42,.7);--glass2:rgba(22,30,42,.5);--shadow:0 16px 36px rgba(0,0,0,.35)}
+:root.dark{
+  --bg:#0b1320;--card:#0f1a2d;--ink:#e8f3ff;--muted:#a5b9d0;--brand:#5ab0ff;--shadow:0 10px 40px rgba(0,0,0,.45)
 }
-body.dark{--bg:#0b121a;--surface:#0f1b26;--ink:#e7eef5;--muted:#96a7b7;--glass:rgba(22,30,42,.7);--glass2:rgba(22,30,42,.5);--shadow:0 16px 36px rgba(0,0,0,.35)}
-
-/* ---------- UTIL ---------- */
-.container{max-width:1200px;margin:0 auto;padding:18px}
-.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;position:relative;overflow:hidden}
-.card h4{font-weight:800;margin-bottom:6px}
-.muted{color:var(--muted)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-.sectionTitle{display:flex;align-items:center;gap:10px;margin:20px 0 10px}
-.sectionTitle h3{font-size:20px}
-.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.badges .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:linear-gradient(90deg,#eef6ff,#ffffff);border:1px solid #e6eef5;box-shadow:var(--shadow);font-weight:600}
-.hovUp{transition:transform .18s ease, box-shadow .22s}
-.hovUp:hover{transform:translateY(-3px);box-shadow:0 22px 48px rgba(6,24,44,.16)}
-.kbd{padding:3px 6px;border-radius:6px;background:#edf3ff;border:1px solid #d9e6ff}
-
-/* ---------- INTRO ---------- */
-#intro{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#fff;z-index:9999;animation:introFade 2.9s ease forwards}
-#intro .ring{width:220px;height:220px;border-radius:50%;border:10px solid rgba(10,53,92,.28);box-shadow:0 0 0 10px rgba(10,53,92,.05), inset 0 0 40px rgba(10,53,92,.15);animation:ringBurst 1.6s ease-out}
-#intro .logo{position:absolute;font-family:Cinzel,serif;letter-spacing:.6em;font-size:52px;color:var(--blue);text-shadow:0 6px 18px rgba(10,53,92,.18);opacity:0;animation:logoIn 1.4s ease-out .7s forwards}
-@keyframes ringBurst{0%{transform:scale(.4);opacity:.0}60%{transform:scale(1.25);opacity:1}100%{transform:scale(30);opacity:0}}
-@keyframes logoIn{0%{opacity:0;transform:scale(.65) translateY(8px)}100%{opacity:1;transform:scale(1)}}
-@keyframes introFade{0%,80%{opacity:1}100%{opacity:0;visibility:hidden}}
-
-/* ---------- TOPBAR ---------- */
-.topbar{position:sticky;top:0;z-index:60;background:linear-gradient(90deg,#004e98,#00bfff);backdrop-filter:saturate(130%) blur(6px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
-.topbar .wrap{max-width:1200px;height:60px;margin:0 auto;display:flex;align-items:center;padding:0 14px}
-.topbar .left,.topbar .mid,.topbar .right{flex:1;display:flex;align-items:center}
-.topbar .mid{justify-content:center}
-.topbar .brand{font-family:Cinzel,serif;color:#fff;font-size:22px;letter-spacing:.7em;text-indent:.7em}
-.topbar .clock{color:#fff;font-weight:800;border:1px solid rgba(255,255,255,.5);padding:6px 10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06))}
-.topbar .chip,.topbar button{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:12px;padding:8px 12px;margin-left:8px}
-.topbar .chip:hover,.topbar button:hover{background:rgba(255,255,255,.35)}
-#mask{position:fixed;inset:0;background:rgba(0,0,0,.25);backdrop-filter:blur(1px);opacity:0;visibility:hidden;transition:.25s;z-index:59}
-
-/* ---------- DRAWER ---------- */
-.drawer{position:fixed;inset:0 auto 0 0;width:330px;transform:translateX(-100%);background:var(--glass);backdrop-filter:blur(12px);border-right:1px solid rgba(0,0,0,.06);z-index:60;transition:.35s cubic-bezier(.2,.7,.2,1)}
-.drawer.open{transform:none}
-.drawer .head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.06)}
-.drawer h3{font-family:Cinzel,serif;letter-spacing:.25em}
-.drawer .content{padding:14px 16px;display:grid;gap:12px}
-.drawer a.item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-radius:12px;box-shadow:var(--shadow)}
-.drawer a.item:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(6,24,44,.18)}
-
-/* ---------- BG DOTS ---------- */
-#bgDots{position:fixed;inset:0;z-index:0;pointer-events:none}
-
-/* ---------- HERO ---------- */
-.hero{position:relative;margin:12px 0 6px;border-radius:22px;overflow:hidden;background:radial-gradient(circle at 10% 0%,#e8f5ff,transparent 60%),linear-gradient(180deg,#ffffff,transparent 60%)}
-.hero .layer{position:absolute;inset:0;background:radial-gradient(600px 280px at 85% 10%,rgba(12,123,255,.08),transparent 60%), radial-gradient(600px 280px at 10% 80%,rgba(255,143,199,.08),transparent 60%)}
-.hero .inner{position:relative;padding:32px 18px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.hero h2{font-size:28px}
-.hero p{color:var(--muted);max-width:560px}
-.hero .cta{display:flex;gap:10px;margin-top:10px}
-.hero .orbHint{justify-self:end;align-self:center;width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#c8e7ff,#8ebffd 55%,#69e1ff);box-shadow:0 10px 20px rgba(30,80,140,.28)}
-
-/* ---------- INFO DUO ---------- */
-.infoDuo{margin-top:12px}
-.card .sun{position:absolute;left:16px;top:14px;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fffbde,#ffd35a 40%,#ffae00);filter:blur(.2px);box-shadow:0 0 20px #ffd35a66, inset 0 0 8px #fff7}
-.card .brain{position:absolute;right:16px;top:12px;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 45% 35%,#ffd6ea,#ff8bd5 40%,#db58ff 80%);box-shadow:0 0 20px #d46cf566}
-
-/* ---------- MALE / FEMALE PANELS ---------- */
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-.panel{display:flex;gap:12px;border-radius:var(--radiusLg);overflow:hidden;position:relative;min-height:170px;background:linear-gradient(160deg,#eaf6ff,#fff)}
-.panel .txt{flex:2;padding:18px;z-index:1}
-.panel .thumb{flex:1;position:relative;min-height:130px}
-.panel .thumb canvas{position:absolute;inset:0;width:100%;height:100%}
-.panel h3{font-size:20px;margin-bottom:6px}
-.panel p{color:var(--muted)}
-.panel .go{position:absolute;right:16px;top:50%;transform:translateY(-50%);padding:10px 14px;border-radius:14px;background:#fff;border:1px solid #e6eef5;box-shadow:var(--shadow)}
-.panel.male{background:linear-gradient(160deg,#e4f2ff,#ffffff)}
-.panel.female{background:linear-gradient(160deg,#fff0f6,#ffffff)}
-
-/* ---------- SPHERE ---------- */
-.sphereWrap{margin:22px 0}
-.sphereBox{background:var(--surface);border-radius:var(--radiusLg);box-shadow:var(--shadow);padding:20px}
-.sphereTitle{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.sphere{width:360px;height:360px;margin:12px auto;border-radius:50%;background:
-    radial-gradient(130px 130px at 42% 36%,rgba(255,255,255,.9),rgba(255,255,255,.0) 70%),
-    radial-gradient(circle at 52% 55%,#e4f4ff,#cde7ff 60%,rgba(255,255,255,0) 61%),
-    conic-gradient(from 0deg,#b6f 0 15%,#6cf 15% 35%,#7ef 35% 55%,#c9f 55% 75%,#f7a 75% 100%);
-  filter:saturate(110%); box-shadow:inset 0 0 40px rgba(255,255,255,.9), 0 30px 60px rgba(38,90,140,.15); position:relative; transition:transform .2s}
-.sphere::after{content:"";position:absolute;inset:18px;border-radius:50%;border:10px solid rgba(255,255,255,.55);filter:blur(.6px);animation:ringSpin 9s linear infinite}
-@keyframes ringSpin{to{transform:rotate(360deg)}}
-.sphereShadow{width:60%;height:22px;margin:10px auto;background:radial-gradient(circle,rgba(0,0,0,.35),transparent 60%);filter:blur(6px)}
-
-/* ---------- TABS / PANELS ---------- */
-.tabs{margin-top:16px}
-.tabBar{display:flex;gap:6px;flex-wrap:wrap}
-.tabBar button{padding:8px 12px;border-radius:10px;border:1px solid #dfe9f4;background:#f6fbff}
-.tabBar button.active{background:#e6f1ff;border-color:#bcd6ff}
-.tabPanel{display:none;margin-top:10px}
-.tabPanel.active{display:block}
-
-/* ---------- TIMELINE ---------- */
-.timeline{position:relative;padding-left:26px}
-.timeline::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(#bcd6ff,#e6f1ff)}
-.timeline .row{position:relative;margin:12px 0;padding:10px;background:var(--surface);border:1px solid #e6eef5;border-radius:12px}
-.timeline .row::before{content:"";position:absolute;left:-18px;top:12px;width:10px;height:10px;border-radius:50%;background:#69aaff;box-shadow:0 0 0 4px #e9f2ff}
-
-/* ---------- ACCORDION ---------- */
-.acc .item{border:1px solid #e6eef5;border-radius:12px;margin:8px 0;overflow:hidden;background:var(--surface)}
-.acc .head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer}
-.acc .body{max-height:0;overflow:hidden;transition:max-height .28s ease}
-.acc .item.open .body{max-height:220px;padding:0 14px 12px}
-
-/* ---------- STATS (pure CSS bar) ---------- */
-.statBar{display:grid;grid-template-columns:80px 1fr;align-items:center;gap:8px;margin:6px 0}
-.statBar .bar{height:10px;border-radius:999px;background:linear-gradient(90deg,#dfe9f4,#edf6ff);position:relative;overflow:hidden}
-.statBar .bar span{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,#5aa0ff,#7ee3ff)}
-
-/* ---------- FOOTER ---------- */
-footer .wave{height:8px;background:linear-gradient(90deg,#e8f2ff,#fff);border-radius:8px}
-
-/* ---------- ANIMS ---------- */
-.fade{animation:fade .5s ease both}@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.fadeSlide{animation:fadeSlide .6s ease both}@keyframes fadeSlide{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
-
-/* ---------- RESP ---------- */
-@media (max-width:960px){.grid2{grid-template-columns:1fr}.row2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.hero .inner{grid-template-columns:1fr}.hero .orbHint{justify-self:start}}
-@media (max-width:560px){.topbar .brand{letter-spacing:.55em;text-indent:.55em;font-size:18px}.sphere{width:290px;height:290px}}
+*{box-sizing:border-box}html,body{height:100%;margin:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden}
+.bg{
+  position:fixed;inset:-10%;z-index:-1;filter:blur(40px);
+  background:
+    radial-gradient(800px 500px at 20% 0%,rgba(150,220,255,.7),transparent 60%),
+    radial-gradient(900px 700px at 80% 10%,rgba(240,200,255,.6),transparent 60%),
+    radial-gradient(900px 800px at 50% 100%,rgba(255,230,255,.5),transparent 60%),
+    linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.5));
+  animation: drift 25s ease-in-out infinite alternate;
+}
+@keyframes drift{0%{transform:translateY(0)}100%{transform:translateY(-3%)}}
+.topbar{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-bottom:1px solid rgba(0,0,0,.08)}
+.topbar .brand{font-weight:800;letter-spacing:.4em;font-size:20px;background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));-webkit-background-clip:text;color:transparent;animation:colorflow 10s linear infinite;background-size:400%}
+@keyframes colorflow{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+.btn{background:rgba(255,255,255,.4);padding:8px 12px;border-radius:10px;border:1px solid rgba(0,0,0,.1);cursor:pointer;font-weight:700}
+.clock{font-variant-numeric:tabular-nums;background:rgba(255,255,255,.4);padding:6px 10px;border-radius:10px}
+.drawer{position:fixed;inset:0;display:grid;grid-template-columns:300px 1fr;pointer-events:none;z-index:20}
+.drawer .panel{background:var(--card);box-shadow:var(--shadow);transform:translateX(-100%);transition:transform .35s ease;padding:16px;overflow-y:auto}
+.drawer .shade{background:rgba(0,0,0,.25);opacity:0;transition:opacity .35s ease}
+.drawer.open{pointer-events:auto}
+.drawer.open .panel{transform:none}
+.drawer.open .shade{opacity:1}
+.drawer a{display:block;padding:12px;border-radius:10px;text-decoration:none;color:var(--ink);background:rgba(255,255,255,.3);margin:6px 0;border:1px solid rgba(0,0,0,.08)}
+.drawer a:hover{background:rgba(0,0,0,.05)}
+.wrap{max-width:1200px;margin:30px auto;padding:0 18px;display:grid;gap:20px}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.info{grid-template-columns:1fr}}
+.card{background:var(--card);padding:18px;border-radius:18px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.08)}
+.card h3{margin:0 0 10px}
+.quote::before{content:"💡 "}
+.fact::before{content:"🧠 "}
+.sex{display:grid;grid-template-columns:1fr auto;align-items:center;padding:18px;border-radius:20px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.08)}
+.sex.male{background:linear-gradient(90deg,#d6ecff 0%,#f5fbff 100%)}
+.sex.female{background:linear-gradient(90deg,#ffe8f5 0%,#fff5fa 100%)}
+.sex .enter a{display:inline-block;padding:10px 16px;background:#eaf5ff;border-radius:12px;text-decoration:none;font-weight:700;color:var(--ink);border:1px solid rgba(0,0,0,.1)}
+.sex.female .enter a{background:#fff0f7}
+.sphere{position:relative;background:var(--card);border-radius:20px;padding:0;overflow:hidden;box-shadow:var(--shadow)}
+.sphere canvas{display:block;width:100%;height:600px}
+.tip{position:absolute;right:12px;bottom:12px;font-size:12px;color:var(--muted);background:rgba(255,255,255,.4);padding:6px 10px;border-radius:10px}
+footer{text-align:center;padding:40px;color:var(--muted)}
 </style>
 </head>
 <body>
-
-<!-- =================== INTRO =================== -->
-<div id="intro" aria-hidden="true">
-  <div class="ring"></div><div class="logo">AZURA</div>
+<div class="bg"></div>
+<div class="topbar">
+  <button id="open" class="btn">☰</button>
+  <div class="brand">A Z U R A</div>
+  <div class="clock" id="clock">00:00:00</div>
+  <button id="theme" class="btn">Tema</button>
 </div>
-
-<!-- =================== TOPBAR =================== -->
-<header class="topbar">
-  <div class="wrap">
-    <div class="left">
-      <button id="btnDrawer">☰ Panel</button>
-      <div id="clock" class="clock" style="margin-left:8px">00:00:00</div>
-    </div>
-    <div class="mid">
-      <div class="brand">A Z U R A</div>
-    </div>
-    <div class="right">
-      <button id="toggleTheme" title="Tema (T)">Tema</button>
-      <a class="chip" href="#">Giriş Yap</a>
-      <a class="chip" href="#">Üye Ol</a>
-    </div>
-  </div>
-</header>
-<div id="mask"></div>
-
-<!-- =================== DRAWER =================== -->
-<aside id="drawer" class="drawer" aria-hidden="true">
-  <div class="head"><h3>MENÜ</h3><button id="btnClose">Kapat</button></div>
-  <div class="content">
-    <a href="#quote" class="item">💡 Günün Sözü</a>
-    <a href="#fact" class="item">🧠 İlginç Bilgi</a>
-    <a href="#male" class="item">🌊 Okyanus (Erkek)</a>
-    <a href="#female" class="item">🌸 Doğa (Kadın)</a>
-    <a href="#sphere" class="item">🪩 Azura Küresi</a>
-    <a href="#tabs" class="item">🧭 Sekmeler</a>
-    <a href="#timeline" class="item">🕒 Zaman Çizgisi</a>
-    <a href="#faq" class="item">❔ SSS</a>
-    <a href="#stats" class="item">📊 İstatistikler</a>
-  </div>
-</aside>
-
-<!-- =================== BG DOTS =================== -->
-<canvas id="bgDots" aria-hidden="true"></canvas>
-
-<!-- =================== MAIN =================== -->
-<main class="container">
-
-  <!-- HERO -->
-  <section class="hero card hovUp fadeSlide">
-    <div class="layer" aria-hidden="true"></div>
-    <div class="inner">
-      <div>
-        <h2>Hoş geldin Kaşif 👋</h2>
-        <p>Azura 2.0, hız + estetik + zarafet. Micro-dots arka plan, dönen küre, canlı paneller ve akıcı geçişler. Kısayol: <span class="kbd">T</span> (tema), <span class="kbd">Alt</span> + <span class="kbd">,</span> (panel).</p>
-        <div class="cta">
-          <button id="btnFocusSphere">Küreye Git</button>
-          <button id="btnShowTips">İpuçları</button>
-        </div>
-      </div>
-      <div class="orbHint" title="Hafif hareket verir"></div>
-    </div>
-  </section>
-
-  <!-- ÜST BİLGİ (QUOTE & FACT) -->
-  <section class="grid2 infoDuo fade">
-    <article id="quote" class="card hovUp">
-      <div class="sun"></div>
-      <h4>Günün Sözü</h4>
-      <p id="qText" class="muted">Yükleniyor…</p>
-      <small id="qAuth" class="muted"></small>
-    </article>
-    <article id="fact" class="card hovUp">
-      <div class="brain"></div>
-      <h4>İlginç Bilgi</h4>
-      <p id="fText" class="muted">Yükleniyor…</p>
-      <small class="muted">Azura Bilgi Bankası</small>
-    </article>
-  </section>
-
-  <!-- MALE / FEMALE -->
-  <section class="row2 fadeSlide">
-    <article id="male" class="panel male hovUp">
-      <div class="txt">
-        <h3>🌊 Okyanus • Karizmatik</h3>
-        <p>Serin mavilik, hava kabarcıkları ve metalik çizgiler. Akışına bırak.</p>
-        <a class="go" href="#">Giriş →</a>
-      </div>
-      <div class="thumb"><canvas id="seaThumb"></canvas></div>
-    </article>
-    <article id="female" class="panel female hovUp">
-      <div class="txt">
-        <h3>🌸 Doğa • İç ısıtan</h3>
-        <p>Güneş parıltısı, pembe yapraklar, yumuşak esinti ve sıcak yeşiller.</p>
-        <a class="go" href="#">Giriş →</a>
-      </div>
-      <div class="thumb"><canvas id="forestThumb"></canvas></div>
-    </article>
-  </section>
-
-  <!-- KISA CTA -->
-  <section class="card hovUp fade" style="margin-top:16px;display:flex;align-items:center;justify-content:space-between">
-    <div>
-      <h4>🧪 Sizi tanımak isteriz</h4>
-      <p class="muted">Kısa bir test ile Azura deneyimini kişiselleştirelim.</p>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button>Başla</button><button>Detay</button>
-    </div>
-  </section>
-
-  <!-- SPHERE -->
-  <section id="sphere" class="sphereWrap fade">
-    <div class="sphereBox">
-      <div class="sphereTitle">
-        <h3>Azura Küresi</h3>
-        <div class="badges">
-          <button id="reactBtn" class="pill">Fareye tepki</button>
-          <button id="autoBtn" class="pill">Yumuşak hareket</button>
-        </div>
-      </div>
-      <div class="sphere" id="theSphere"></div>
-      <div class="sphereShadow"></div>
-    </div>
-  </section>
-
-  <!-- TABS -->
-  <section id="tabs" class="tabs card hovUp fade">
-    <div class="sectionTitle"><h3>🧭 Keşif Sekmeleri</h3></div>
-    <div class="tabBar" role="tablist" aria-label="Sekmeler">
-      <button class="active" data-tab="t1" role="tab">Öne Çıkanlar</button>
-      <button data-tab="t2" role="tab">Projeler</button>
-      <button data-tab="t3" role="tab">Notlar</button>
-      <button data-tab="t4" role="tab">İpuçları</button>
-    </div>
-    <div id="t1" class="tabPanel active">
-      <div class="grid3" style="margin-top:10px">
-        <article class="card hovUp"><h4>Minimalizm</h4><p class="muted">Az ile çok; beyaz alan, tipografi ve ritim.</p></article>
-        <article class="card hovUp"><h4>Performans</h4><p class="muted">Vanilla JS, zero deps, 60fps hedefi.</p></article>
-        <article class="card hovUp"><h4>Erişilebilirlik</h4><p class="muted">Klavye + ARIA etiketleri, kontrast ve odak.</p></article>
-      </div>
-    </div>
-    <div id="t2" class="tabPanel">
-      <div class="grid2" style="margin-top:10px">
-        <article class="card hovUp"><h4>Nova Core</h4><p class="muted">Tema motoru, animasyon katmanı, bileşen mimarisi.</p></article>
-        <article class="card hovUp"><h4>Echo</h4><p class="muted">Konuk defteri: gerçek zamanlı his/mesaj akışı (yakında).</p></article>
-      </div>
-    </div>
-    <div id="t3" class="tabPanel">
-      <div class="acc">
-        <div class="item">
-          <div class="head"><strong>Arayüz ritmi</strong><span>+</span></div>
-          <div class="body"><p class="muted">8px grid, 12/16/20 paddings; kart araları 14–18px.</p></div>
-        </div>
-        <div class="item">
-          <div class="head"><strong>Tipografi</strong><span>+</span></div>
-          <div class="body"><p class="muted">Inter gövde, Cinzel başlık. satır yüksekliği 1.45.</p></div>
-        </div>
-      </div>
-    </div>
-    <div id="t4" class="tabPanel">
-      <ul class="muted" style="margin:10px 16px 4px 16px">
-        <li>“Kısa yol: <span class='kbd'>T</span> = tema, <span class='kbd'>Alt</span> + <span class='kbd'>,</span> = panel.”</li>
-        <li>“Sekmeler klavye ile: <span class='kbd'>←</span> / <span class='kbd'>→</span>”</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- TIMELINE -->
-  <section id="timeline" class="card hovUp fade">
-    <div class="sectionTitle"><h3>🕒 Nova Pulse Yol Haritası</h3></div>
-    <div class="timeline">
-      <div class="row"><strong>v2.0</strong> — Nova Pulse temeli, animasyon sistemi, mikro-dots, küre.</div>
-      <div class="row"><strong>v2.1</strong> — Tema API, kısa yollar, sekmeler & acc.</div>
-      <div class="row"><strong>v2.2</strong> — Erişilebilirlik denetimleri, testler.</div>
-      <div class="row"><strong>v2.3</strong> — Echo prototip, içerik şablonları.</div>
-    </div>
-  </section>
-
-  <!-- FAQ / ACCORDION -->
-  <section id="faq" class="card hovUp fade">
-    <div class="sectionTitle"><h3>❔ Sık Sorulanlar</h3></div>
-    <div class="acc">
-      <div class="item">
-        <div class="head"><strong>Azura neden hızlı?</strong><span>+</span></div>
-        <div class="body"><p class="muted">Vanilla JS, tek dosya, zero deps, minimal hesaplama ve requestAnimationFrame döngüsü.</p></div>
-      </div>
-      <div class="item">
-        <div class="head"><strong>Koyu tema nasıl?</strong><span>+</span></div>
-        <div class="body"><p class="muted">Sistem temasıyla otomatik; buton veya <span class="kbd">T</span> ile manuel.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STATS -->
-  <section id="stats" class="card hovUp fade">
-    <div class="sectionTitle"><h3>📊 Mini İstatistikler</h3></div>
-    <div class="grid2">
-      <div>
-        <div class="statBar"><strong>Hız</strong><div class="bar"><span style="width:92%"></span></div></div>
-        <div class="statBar"><strong>UI</strong><div class="bar"><span style="width:88%"></span></div></div>
-        <div class="statBar"><strong>Erişim</strong><div class="bar"><span style="width:84%"></span></div></div>
-      </div>
-      <div class="muted">Değerler, Nova tasarım hedeflerine göre normalize edilmiştir.</div>
-    </div>
-  </section>
-
-  <!-- BOTTOM CARDS -->
-  <section class="grid3 fade" style="margin:16px 0">
-    <article class="card hovUp"><h4>📘 Hakkımda</h4><p class="muted">Azura; sade, hızlı ve göz yormayan bir kişisel portal.</p></article>
-    <article class="card hovUp"><h4>📑 İçerik Başlıkları</h4><p class="muted">Echo, Notlar, Felsefe, Projeler, Tıp Bilgileri…</p></article>
-    <article class="card hovUp"><h4>⚡ Motivasyon</h4><p class="muted">“Sessiz adımlar, en derin izleri bırakır.”</p></article>
-  </section>
-
-  <footer class="card" style="text-align:center">
-    <div class="wave" aria-hidden="true"></div>
-    © 2025 <strong>AZURA</strong>
-  </footer>
-
+<div id="drawer" class="drawer">
+  <nav class="panel">
+    <h3>Panel</h3>
+    <a href="#ocean">🌊 Okyanus (Erkek)</a>
+    <a href="#forest">🌸 Doğa (Kadın)</a>
+    <a href="#sphere">🪄 Küre</a>
+    <a href="#about">ℹ️ Hakkında</a>
+  </nav>
+  <div class="shade"></div>
+</div>
+<main class="wrap">
+<section class="info">
+  <div class="card quote"><h3>Günün Sözü</h3><p id="qText">Yükleniyor...</p><small id="qAuth"></small></div>
+  <div class="card fact"><h3>İlginç Bilgi</h3><p id="fText">Yükleniyor...</p><small>Azura Nova</small></div>
+</section>
+<section id="ocean" class="sex male">
+  <div><h3>🌊 Okyanus • Karizmatik</h3><p>Net, sakin, soğukkanlı. Derinlik karizmadır.</p></div>
+  <div class="enter"><a href="male.html">Giriş →</a></div>
+</section>
+<section id="forest" class="sex female">
+  <div><h3>🌸 Doğa • Zarif</h3><p>İncelik sabırla büyür, sıcaklık zarafettir.</p></div>
+  <div class="enter"><a href="female.html">Giriş →</a></div>
+</section>
+<section id="sphere" class="sphere"><canvas id="orb"></canvas><div class="tip">Fareyle oyna, t ile tema</div></section>
+<section id="about" class="card"><h3>Hakkında</h3><p>Azura Nova: minimal, zarif, dinamik. Beyaz temada başlar, kullanıcı isterse koyu moda geçer.</p></section>
 </main>
-
+<footer>© 2025 AZURA NOVA</footer>
 <script>
-/* =========================================================
-   SCRIPTS
-   ========================================================= */
-
-/* ---------- helpers ---------- */
-const $=(s,r=document)=>r.querySelector(s);
-const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-
-/* ---------- clock ---------- */
-(function(){const el=$('#clock'); if(!el) return; const two=n=>String(n).padStart(2,'0'); function tick(){const d=new Date(); el.textContent=`${two(d.getHours())}:${two(d.getMinutes())}:${two(d.getSeconds())}`; setTimeout(tick,250)} tick()})();
-
-/* ---------- drawer ---------- */
-(function(){const d=$('#drawer'),m=$('#mask'),o=$('#btnDrawer'),c=$('#btnClose'); const on=()=>{d.classList.add('open');m.style.opacity=1;m.style.visibility='visible'}; const off=()=>{d.classList.remove('open');m.style.opacity=0;m.style.visibility='hidden'}; o.addEventListener('click',on); c.addEventListener('click',off); m.addEventListener('click',off); addEventListener('keydown',e=>{if(e.key==='Escape') off()})})();
-
-/* ---------- theme toggle ---------- */
-(function(){const key='azura-theme'; const btn=$('#toggleTheme'); const apply=v=>document.body.classList.toggle('dark',v==='dark'); const saved=localStorage.getItem(key)||''; if(saved) apply(saved); btn.addEventListener('click',()=>{const v=document.body.classList.contains('dark')?'light':'dark'; localStorage.setItem(key,v); apply(v)}); addEventListener('keydown',e=>{if(e.key.toLowerCase()==='t') btn.click()})})();
-
-/* ---------- quotes & facts ---------- */
-(function(){const QU=[["Sessiz adımlar, en derin izleri bırakır.","Azura"],["Nezaket, zekânın görünen yüzüdür.","Azura"],["Disiplin, özgürlüğün en kısa yoludur.","Azura"],["Sabır, hızın yakıtıdır.","Azura"],["Dalgayı bekleme; yelkeni hazırla.","Azura"]]; const FA=["Beynin yaklaşık %60'ı yağdan oluşur.","REM uykusu, duygusal merkezleri güçlendirir.","Kalp günde ~100.000 kez atar.","İnsan burnu 1 trilyon farklı kokuyu ayırt edebilir.","Su içmek bilişsel performansı yükseltir."]; const pick=a=>a[Math.floor(Math.random()*a.length)]; const[q,a]=pick(QU); $('#qText').textContent='“ '+q+' ”'; $('#qAuth').textContent='— '+a; $('#fText').textContent=pick(FA)})();
-
-/* ---------- bg dots ---------- */
-(function(){const c=$('#bgDots'),x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true}); let t=0; (function loop(){x.clearRect(0,0,c.width,c.height); const n=Math.floor(Math.max(120,c.width*c.height/16000)); for(let i=0;i<n;i++){const y=((i*13+t)%c.height); const hue=200+(i%60); x.fillStyle=`hsla(${hue},40%,${35+(i%20)}%,.18)`; x.fillRect((i*37)%c.width,y,2,2)} t+=1.15; requestAnimationFrame(loop)})()})();
-
-/* ---------- hero layer parallax ---------- */
-(function(){const layer=$('.hero .layer'), hero=$('.hero'); if(!layer||!hero) return; hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect(); const dx=(e.clientX-(r.left+r.width/2))/r.width; const dy=(e.clientY-(r.top+r.height/2))/r.height; layer.style.transform=`translate(${dx*16}px,${dy*12}px)`}); hero.addEventListener('pointerleave',()=>layer.style.transform='translate(0,0)')})();
-
-/* ---------- male (sea) canvas ---------- */
-(function(){const c=$('#seaThumb'); if(!c) return; const x=c.getContext('2d'); const fit=()=>{c.width=c.clientWidth;c.height=c.clientHeight}; fit(); addEventListener('resize',fit,{passive:true}); const B=120,b=[]; for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()}); let t=0;(function loop(){x.clearRect(0,0,c.width,c.height); x.globalAlpha=.24; x.strokeStyle='rgba(80,160,220,.28)'; x.lineWidth=1; for(let i=0;i<28;i++){const y=(i/28)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.04)*6); x.lineTo(c.width,y); x.stroke()} x.globalAlpha=.36; x.fillStyle='rgba(120,200,255,.18)'; for(const p of b){p.y-=p.s;p.x+=Math.cos((p.y+t)*.02)*.6;if(p.y<-10){p.y=c.height+10;p.x=Math.random()*c.width}x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fill()} t+=1; requestAnimationFrame(loop)})()})();
-
-/* ---------- female (forest) canvas ---------- */
-(function(){const c=$('#forestThumb'); if(!c) return; const x=c.getContext('2d'); const fit=()=>{c.width=c.clientWidth;c.height=c.clientHeight}; fit(); addEventListener('resize',fit,{passive:true}); const N=60,p=[]; for(let i=0;i<N;i++) p.push({x:Math.random()*c.width,y:Math.random()*c.height,s:.6+Math.random()*1.5,h:300+Math.random()*80}); (function loop(){x.clearRect(0,0,c.width,c.height); for(const s of p){s.y+=.35;s.x+=Math.sin(s.y/40)*.4;if(s.y>c.height+8){s.y=-8;s.x=Math.random()*c.width}x.fillStyle=`hsla(${s.h},80%,70%,.28)`;x.beginPath();x.arc(s.x,s.y,1.4,0,6.28);x.fill()} requestAnimationFrame(loop)})()})();
-   
-/* ---------- sphere ---------- */
-(function(){const sph=$('#theSphere'); if(!sph) return; const wrap=sph.parentElement; let tx=0,ty=0,cx=0,cy=0,auto=false,a=0; const lerp=(a,b,t)=>a+(b-a)*t; function update(){ if(auto){a+=.015;tx=Math.cos(a)*16;ty=Math.sin(a*1.2)*12} cx=lerp(cx,tx,.07); cy=lerp(cy,ty,.07); sph.style.transform=`translate(${cx}px,${cy}px)`; requestAnimationFrame(update)} update(); wrap.addEventListener('pointermove',e=>{if(auto) return; const r=wrap.getBoundingClientRect(); tx=(e.clientX-(r.left+r.width/2))*.06; ty=(e.clientY-(r.top+r.height/2))*.06}); wrap.addEventListener('pointerleave',()=>{if(!auto){tx=0;ty=0}}); $('#reactBtn').addEventListener('click',()=>{auto=false;tx=ty=0}); $('#autoBtn').addEventListener('click',()=>{auto=!auto; if(!auto){tx=ty=0}})})();
-
-/* ---------- tabs ---------- */
-(function(){const bar=$('.tabBar'); const panels=$$('.tabPanel'); if(!bar) return; bar.addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; const id=b.dataset.tab; bar.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)); panels.forEach(p=>p.classList.toggle('active',p.id===id))}); addEventListener('keydown',e=>{if(!bar.contains(document.activeElement)) return; const btns=[...bar.querySelectorAll('button')]; let i=btns.indexOf(document.activeElement); if(e.key==='ArrowRight'){i=(i+1)%btns.length; btns[i].focus(); btns[i].click()} if(e.key==='ArrowLeft'){i=(i-1+btns.length)%btns.length; btns[i].focus(); btns[i].click()}})})();
-
-/* ---------- accordion ---------- */
-(function(){ $$('.acc .item .head').forEach(h=>h.addEventListener('click',()=>h.parentElement.classList.toggle('open'))) })();
-
-/* ---------- smooth anchors + outline feedback ---------- */
-(function(){ $$('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1); const el=document.getElementById(id); if(el){e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); el.style.outline='2px solid #7bc4ff'; el.style.outlineOffset='6px'; setTimeout(()=>{el.style.outline='none'},520)}})) })();
-
-/* ---------- hero buttons ---------- */
-$('#btnFocusSphere')?.addEventListener('click',()=>{document.getElementById('sphere').scrollIntoView({behavior:'smooth'})});
-$('#btnShowTips')?.addEventListener('click',()=>alert('Kısayollar: T (tema), Alt+, (panel), sekmelerde ←/→'));
-
-/* ---------- keyboard shortcuts ---------- */
-(function(){addEventListener('keydown',e=>{if(e.key.toLowerCase()==='t') $('#toggleTheme')?.click(); if(e.altKey && e.key===',') $('#btnDrawer')?.click()})})();
-
-/* ---------- after intro scroll top ---------- */
-addEventListener('load',()=>{setTimeout(()=>scrollTo(0,0),60)});
+const c=document.getElementById('clock');function tick(){const d=new Date();c.textContent=d.toLocaleTimeString()}setInterval(tick,1000);tick();
+document.getElementById('open').onclick=()=>drawer.classList.add('open');
+drawer.querySelector('.shade').onclick=()=>drawer.classList.remove('open');
+const themeBtn=document.getElementById('theme');
+function setTheme(d){document.documentElement.classList.toggle('dark',d);localStorage.setItem('azTheme',d?'1':'0')}
+setTheme(localStorage.getItem('azTheme')==='1');
+themeBtn.onclick=()=>setTheme(!document.documentElement.classList.contains('dark'));
+const QUOTES=[["Nezaket sessizliğin yankısıdır.","Azura"],["Dalga büyükse kıyı da yakındır.","Azura"],["Sabır en zarif güçtür.","Azura"]];
+const FACTS=["Kalp günde 100.000 kez atar.","Beynin %60'ı yağdır.","Gülmek bağışıklığı güçlendirir."];
+(()=>{const[q,a]=QUOTES[Math.floor(Math.random()*QUOTES.length)];qText.textContent="“ "+q+" ”";qAuth.textContent="— "+a;fText.textContent=FACTS[Math.floor(Math.random()*FACTS.length)];})();
+   (function orb(){
+const cvs=document.getElementById('orb');const ctx=cvs.getContext('2d');
+function fit(){cvs.width=innerWidth; cvs.height=600}fit();addEventListener('resize',fit);
+let t=0,cx=cvs.width/2,cy=cvs.height/2,tx=cx,ty=cy;const DPR=window.devicePixelRatio||1;
+function render(){
+ctx.clearRect(0,0,cvs.width,cvs.height);
+const r=Math.min(cvs.width,cvs.height)*0.35;
+cx+=(tx-cx)*0.05;cy+=(ty-cy)*0.05;
+const hue=(t*60)%360;
+const g=ctx.createRadialGradient(cx,cy,r*0.1,cx,cy,r);
+g.addColorStop(0,`hsla(${(hue)%360},95%,70%,1)`);
+g.addColorStop(.4,`hsla(${(hue+60)%360},95%,70%,.95)`);
+g.addColorStop(.7,`hsla(${(hue+180)%360},95%,70%,.85)`);
+g.addColorStop(1,`hsla(${(hue+260)%360},95%,70%,.7)`);
+ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+for(let i=0;i<180;i++){const a=t+i/180*Math.PI*2;ctx.strokeStyle=`hsla(${(hue+i*2)%360},100%,70%,.5)`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,r*1.05,a,a+.03);ctx.stroke();}
+t+=.01;requestAnimationFrame(render);
+}
+cvs.addEventListener('pointermove',e=>{const b=cvs.getBoundingClientRect();tx=e.clientX-b.left;ty=e.clientY-b.top});
+render();
+})();
 </script>
-
 </body>
 </html>
