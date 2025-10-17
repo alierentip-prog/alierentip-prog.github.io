@@ -3,27 +3,28 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AZURA • KADIN</title>
+<title>AZURA • ERKEK</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg-deep:#110E13;
-  --pink-1:#FF9DC3;
-  --pink-2:#FFB7D3;
-  --pink-3:#FF8FB6;
-  --card-top:rgba(82,49,78,0.86);
-  --card-bot:rgba(52,33,50,0.86);
-  --card-border:rgba(255,160,210,0.12);
-  --chip-bg:#2C1D2A;
-  --chip-border:rgba(255,160,210,0.22);
-  --chip-text:#F6CFE1;
-  --text-body:#EED4E4;
-  --btn-bg:rgba(40,28,45,0.7);
-  --btn-bd:rgba(255,160,210,0.22);
-  --btn-tx:#EFCFE3;
-  --accent-mor:#B16AD9;
+  --bg-deep:#0B1117;
+  --blue-1:#7CD0FF;
+  --blue-2:#A5E1FF;
+  --blue-3:#58BFF5;
+  --card-top:rgba(23,30,42,0.86);
+  --card-bot:rgba(14,20,31,0.86);
+  --card-border:rgba(140,200,255,0.16);
+  --chip-bg:#111A24;
+  --chip-border:rgba(140,200,255,0.28);
+  --chip-text:#D6EEFF;
+  --text-body:#DCEAF7;
+  --btn-bg:rgba(15,24,36,0.72);
+  --btn-bd:rgba(140,200,255,0.28);
+  --btn-tx:#E8F4FF;
+  --accent-blue:#9ED7FF;
+  --accent-cyan:#D6F2FF;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -36,53 +37,38 @@ body{
 .bg-halos{
   position:absolute; inset:0;
   background:
-    radial-gradient(900px 550px at 85% 10%, rgba(255,200,230,0.10), rgba(255,160,210,0.06) 40%, transparent 70%),
-    radial-gradient(1200px 700px at 15% 115%, rgba(255,120,180,0.08), transparent 75%);
+    radial-gradient(1100px 680px at 80% 12%, rgba(120,190,255,0.14), rgba(80,160,230,0.08) 40%, transparent 70%),
+    radial-gradient(1300px 700px at 10% 110%, rgba(60,140,220,0.10), transparent 75%);
+  filter: blur(0.2px);
 }
 .canvas{position:absolute; inset:0;}
-.sun{
-  position:absolute; width:560px; height:560px; border-radius:50%;
-  filter:blur(0.2px);
-  background:
-    radial-gradient(closest-side, rgba(255,243,205,0.95), rgba(255,218,160,0.35) 55%, rgba(255,190,140,0.08) 78%, transparent 90%);
-  opacity:.75;
-  animation: sun-walk 42s linear infinite alternate;
-}
-@keyframes sun-walk{
-  0%{transform:translate(46vw, 4vh)}
-  20%{transform:translate(68vw, 12vh)}
-  40%{transform:translate(78vw, 28vh)}
-  60%{transform:translate(60vw, 36vh)}
-  80%{transform:translate(70vw, 14vh)}
-  100%{transform:translate(48vw, 26vh)}
-}
 .top-buttons{position:fixed; inset:0 0 auto 0; height:0; z-index:5;}
 .btn{
   position:absolute; top:12px; padding:8px 12px; border-radius:12px;
   background:var(--btn-bg); color:var(--btn-tx); border:1px solid var(--btn-bd);
   backdrop-filter: blur(6px);
   text-decoration:none; font-weight:600; font-size:14px;
-  box-shadow:0 8px 24px rgba(17,0,30,.28);
+  box-shadow:0 8px 24px rgba(0,20,40,.28);
 }
-.btn:hover{box-shadow:0 10px 30px rgba(255,160,210,.18)}
+.btn:hover{box-shadow:0 10px 30px rgba(120,180,255,.18)}
 .btn.left{left:12px}
 .btn.right{right:12px}
 .welcome{
   position:fixed; top:70px; left:50%; transform:translateX(-50%);
   width:min(720px, calc(100% - 40px));
   padding:16px 22px; border-radius:16px; z-index:4;
-  background:rgba(30,24,33,0.8); border:1px solid var(--card-border);
-  box-shadow:0 8px 30px rgba(17,0,30,0.35);
+  background:rgba(12,18,28,0.82); border:1px solid var(--card-border);
+  box-shadow:0 8px 30px rgba(0,12,24,0.35);
   text-align:left; opacity:0; animation:wel-in .8s ease .2s forwards;
 }
 .welcome h3{
   margin:0; font-family:Cinzel,serif; letter-spacing:.06em; font-weight:700;
   line-height:1.25; font-size:18px;
-  background:linear-gradient(180deg,#FFD2E8 0%, #FFFFFF 85%);
+  background:linear-gradient(180deg,#E8F6FF 0%, #FFFFFF 85%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 18px rgba(255,120,180,.35);
+  text-shadow:0 0 18px rgba(120,190,255,.35);
 }
-.welcome p{margin:6px 0 0; color:#E9C7D9; font-size:14px}
+.welcome p{margin:6px 0 0; color:#CFE6F8; font-size:14px}
 @keyframes wel-in{to{opacity:1; transform:translate(-50%,0)}}
 .fade-out{animation:wel-out .8s ease forwards}
 @keyframes wel-out{to{opacity:0; transform:translate(-50%,-10px)}}
@@ -93,16 +79,16 @@ body{
 }
 .manifesto-scrim{
   position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(8,6,10,.45), rgba(8,6,10,.15) 30%, transparent 60%);
+  background:linear-gradient(180deg, rgba(5,8,12,.48), rgba(5,8,12,.18) 30%, transparent 60%);
 }
 .manifesto{
   position:absolute; left:50%; transform:translateX(-50%);
   width:min(1100px, 92vw); text-align:center;
   font-family:Cinzel,serif; font-weight:700; letter-spacing:.04em;
   font-size: clamp(28px, 8.8vw, 96px); line-height:1.25;
-  background:linear-gradient(180deg, var(--accent-mor) 0%, #D6B9FF 100%);
+  background:linear-gradient(180deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 22px rgba(177,106,217,.45);
+  text-shadow:0 0 22px rgba(120,190,255,.45);
   white-space:pre-wrap; text-transform:uppercase;
   top:100%;
   animation: slideUp 120s linear forwards;
@@ -116,14 +102,14 @@ body{
 .card, .card-wide{
   background:linear-gradient(180deg, var(--card-top), var(--card-bot));
   border:1px solid var(--card-border); border-radius:18px; padding:20px;
-  box-shadow:0 15px 40px rgba(17,0,30,0.35);
+  box-shadow:0 15px 40px rgba(0,20,40,0.35);
 }
 .card h3, .card-wide h3{
   margin:0 0 8px; font-family:Cinzel,serif; font-weight:700; letter-spacing:.06em;
   font-size:22px; line-height:1.1;
-  background:linear-gradient(180deg,#FFD2E8 0%, #FFFFFF 85%);
+  background:linear-gradient(180deg,#E8F6FF 0%, #FFFFFF 85%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 18px rgba(255,120,180,.35);
+  text-shadow:0 0 18px rgba(120,190,255,.35);
 }
 .card p, .card-wide p{margin:6px 0 0; color:var(--text-body)}
 .chips{margin-top:12px; display:flex; flex-wrap:wrap; gap:8px}
@@ -134,80 +120,71 @@ body{
 }
 .card-wide{grid-column:1 / -1}
 footer{
-  max-width:1100px; margin:32px auto 0; text-align:center; color:#E7CCDB;
+  max-width:1100px; margin:32px auto 0; text-align:center; color:#CFE2F5;
   opacity:.95; font-size:14px;
 }
 </style>
 </head>
 <body>
-
 <div class="bg-layer">
   <div class="bg-halos"></div>
   <canvas class="canvas" id="stars"></canvas>
-  <div class="sun" id="sun"></div>
 </div>
-
 <div class="top-buttons">
   <a class="btn left" id="userBtn" href="#">Kullanıcı Paneli</a>
   <a class="btn right" id="homeBtn" href="index.html">Ana Menü</a>
 </div>
-
 <div class="welcome" id="welcomeBox">
-  <h3>Doğanın Işığı’na Hoş Geldin 🌸</h3>
-  <p>Sakin bir nefes al; birazdan kısa bir manifesto akacak.</p>
+  <h3>Derin Sular’a Hoş Geldin ⚙️</h3>
+  <p>Birazdan kısa bir manifesto alttan akacak. Dilersen “Yazıyı Geç” ile menüye geçebilirsin.</p>
 </div>
-
 <a class="btn skip" id="skipBtn">Yazıyı Geç</a>
-
 <div class="manifesto-wrap" id="mfWrap" aria-hidden="true">
   <div class="manifesto-scrim"></div>
   <div class="manifesto" id="manifesto">
-KADIN OLMAK; ZARAFETİYLE BİRLİKTE GÜCÜ TAŞIMAKTIR.
-YERİ GELDİĞİNDE SUSMAYI, YERİ GELDİĞİNDE
-SÖZÜNÜ SAVUNMAYI BİLMEKTİR. TOPLUMUN YÜKLEDİĞİ ROLLERİ DEĞİL,
-KENDİ KİMLİĞİNİ SEÇMEKTİR. BİR ANNE, BİR KARDEŞ, BİR DOST
-YA DA BİR LİDER OLABİLİR; HANGİ ROLDE OLURSA OLSUN,
-DEĞERİNİ ÇEVRESİNE HİSSETTİRİR.
+ERKEK OLMAK; GÜÇ GÖSTERİSİ DEĞİL, DURUŞ MESELESİDİR.
+KENDİNİ İFADE EDERKEN NEZAKETTEN, KARAR ALIRKEN VİCDANDAN ÖDÜN VERMEZ.
+TOPLUMDA SAYGI GÖRMEK İÇİN ÖNCE SAYGI GÖSTERMEYİ BİLİR.
+BİR KADINA, BİR DOSTA, BİR YABANCIYA… FARK ETMEZ; HER İNSANA AYNI ÖZENİ GÖSTERİR.
+SÖZÜNÜN ERİ OLUR, SORUMLULUKLARINI ERTELEMEZ.
+ÇÜNKÜ BİLİR Kİ GÜVEN, BİR DEFA SARSILDIĞINDA YILLAR BİLE ONARAMAZ.
 
-KADIN; SABRIN, EMEĞİN VE ADALETİN SEMBOLÜDÜR.
-BİR EVİ YUVA YAPAN, BİR DÜŞÜNCEYİ HAYALE DÖNÜŞTÜREN ODUR.
-HAYATA KATTIĞI HER AYRINTI, BİR BAŞKASINA UMUT OLUR.
-VE O UMUT, İNSANLIĞIN EN SESSİZ AMA EN GÜÇLÜ SESİDİR.
+ERKEKLİK; EMEK VERMEK, KORUMAK, SAHİP ÇIKMAK VE GEREKTİĞİNDE GERİ ÇEKİLMEKTİR.
+BİR BAKIŞIYLA DEĞİL, BİR DAVRANIŞIYLA FARK EDİLİR.
+KENDİNE HÂKİM OLMAYI ÖĞRENMİŞ HER ERKEK, GERÇEK OLGUNLUĞA ERİŞMİŞTİR.
 
-TAVSİYE: DEĞERİNİ HATIRLATMAK ZORUNDA KALMA;
-KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
+TAVSİYE:
+KENDİNİ ANLATMAYA DEĞİL, ANLAMAYA ÇALIŞ.
+GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
+
+— AZURA NOVA
   </div>
 </div>
-
 <main class="main" id="main">
   <div class="grid">
     <div class="card">
-      <h3>🌸 ZARAFET &amp; DENGE</h3>
-      <p>Zarafet; yavaşlamayı bilmek, denge ise payına düşeni üstlenmektir. İkisi beraber olduğunda şefkat üretkenliği boğmaz, üretkenlik de şefkati yıpratmaz.</p>
-      <div class="chips"><span>Sadelik</span><span>Nazik sınır</span><span>Ritüel</span></div>
+      <h3>🧭 DURUŞ &amp; SORUMLULUK</h3>
+      <p>Duruş; söze değil, alışkanlığa yazılır. Rutinlerini sadeleştir; “söz verdim” cümlesini takvimde somutlaştır.</p>
+      <div class="chips"><span>Net ajanda</span><span>Öncelik 3</span><span>Takip alışkanlığı</span></div>
     </div>
-
     <div class="card">
-      <h3>✨ İÇ ISITAN MOTİVASYON</h3>
-      <p>Güne minik bir <em>açılış ritüeli</em> koy: 3 derin nefes, bir bardak su, 1 cümle niyet. Niyet cümlesi: “Bugün şunu bitiriyorum: …”</p>
-      <div class="chips"><span>Niyet cümlesi</span><span>Kısa ısınma</span><span>Şefkatli iç ses</span></div>
+      <h3>🤝 NEZAKET • GÜÇ</h3>
+      <p>Güç, sesi yükseltmek değildir. İhtiyacı doğru anlamak, net ve nazik talepte bulunmaktır: “Bunu şu şekilde çözebilir miyiz?”</p>
+      <div class="chips"><span>Netlik</span><span>Ölçülülük</span><span>Alternatif</span></div>
     </div>
-
     <div class="card">
-      <h3>🫶 NEZAKET</h3>
-      <p>“Sınır koymak kırmak değildir.” Talebi yumuşatan vurgular: “Bunu şu kadar yapabilir miyiz?”, “Bu iki seçeneği görüyorum, hangisi rahat?”</p>
-      <div class="chips"><span>Şeffaflık</span><span>Seçenek</span><span>Rica</span></div>
+      <h3>🛠️ DİSİPLİN</h3>
+      <p>Her gün 20 dakikalık “ağır kaldırış”: zor ama küçük bir iş. Bitince kısa not: “Bugün kendime saygım arttı çünkü…”</p>
+      <div class="chips"><span>20 dk blok</span><span>Tek hedef</span><span>Kısa rapor</span></div>
     </div>
-
     <div class="card">
-      <h3>🌙 MİNİ ALIŞTIRMA</h3>
-      <p>15 dakikalık nazik odak: telefonu sessize al, modunu “pencere” yap; minik notluk. Bitince “Bu anda kendime teşekkür ediyorum çünkü…” yaz.</p>
-      <div class="chips"><span>15 dk odak</span><span>Tek iş</span><span>Şükran cümlesi</span></div>
+      <h3>🌬️ SAKİNLİK EGZERSİZİ</h3>
+      <p>4-6 nefes (4 sn al, 6 sn ver). Gözlem cümlesi: “Şu an benden beklenen tek adım ne?”</p>
+      <div class="chips"><span>Nefes 4-6</span><span>Tek adım</span><span>Gözlem</span></div>
     </div>
-
     <div class="card-wide">
-      <h3>🌺 KAYNAKLAR</h3>
-      <p><strong>Essentialism</strong> (McKeown) — <strong>Rest</strong> (Pang) — <strong>Tiny Habits</strong> (Fogg)</p>
+      <h3>📚 KAYNAKLAR</h3>
+      <p><strong>Atomic Habits</strong> (Clear) — <strong>Deep Work</strong> (Newport) — <strong>Ego Is the Enemy</strong> (Holiday)</p>
       <div class="chips"><span>← Ana Menü</span><span>Kanallar</span><span>Alıştırmalar</span></div>
     </div>
   </div>
@@ -216,12 +193,11 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
 
 <script>
 (function(){
-  const c=document.getElementById('stars');
-  const ctx=c.getContext('2d');
+  const c=document.getElementById('stars');const ctx=c.getContext('2d');
   function size(){c.width=innerWidth;c.height=innerHeight}
   size();addEventListener('resize',size);
-  const colors=['#FF9DC3','#FFB7D3','#FF8FB6'];
-  const dots=Array.from({length:140},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:(Math.random()*2)+1.2,o:0.55+Math.random()*0.2,c:colors[(Math.random()*colors.length)|0],vy:0.02+Math.random()*0.06}));
+  const colors=['#7CD0FF','#A5E1FF','#58BFF5','#C3ECFF'];
+  const dots=Array.from({length:150},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:(Math.random()*2)+1.1,o:0.45+Math.random()*0.25,c:colors[(Math.random()*colors.length)|0],vy:0.025+Math.random()*0.065}));
   function draw(){ctx.clearRect(0,0,c.width,c.height);for(const d of dots){ctx.globalAlpha=d.o;ctx.fillStyle=d.c;ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();d.y+=d.vy;if(d.y>c.height+8){d.y=-8;d.x=Math.random()*c.width}}requestAnimationFrame(draw);}
   draw();
 })();
@@ -238,7 +214,17 @@ function startManifesto(){
 }
 skipBtn.addEventListener('click',()=>{if(manifestoTimer){clearTimeout(manifestoTimer);}showMenu();});
 function showMenu(){mfWrap.style.display='none';skipBtn.classList.remove('show');main.style.display='block';}
-document.getElementById('userBtn').addEventListener('click',e=>{e.preventDefault();alert('Kullanıcı Paneli yakında burada 🌸');});
+document.getElementById('userBtn').addEventListener('click',e=>{e.preventDefault();alert('Kullanıcı Paneli yakında burada ⚙️');});
+</script>
+  <audio id="bgMusic" src="yenidosya.m4a" loop></audio>
+<script>
+window.addEventListener('click',()=>{
+  const m=document.getElementById('bgMusic');
+  if(m.paused){ 
+    m.play(); 
+    m.volume=0.4; // %40 ses
+  }
+});
 </script>
 </body>
 </html>
