@@ -1,213 +1,232 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Azura Nova | Kadın Alanı</title>
-  <style>
-    * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif;}
-    body {
-      background: radial-gradient(circle at top, #fff4f7 0%, #ffd6e6 60%, #f2bcd6 100%);
-      overflow:hidden;
-      color:#442233;
-      height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      animation: fadeIn 1.5s ease-in;
-    }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AZURA • Kadın</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2b1b16;            /* metin */
+    --bg:#0e0b10;             /* zemin (menü ve efekt aşaması) */
+    --panel:rgba(255,255,255,.08);
+    --b:rgba(255,255,255,.16);
+    --glass:rgba(255,255,255,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--ink); font:16px/1.55 Inter,system-ui;
+    background: var(--bg);
+    overflow:hidden;
+  }
 
-    /* Güneş efekti */
-    .sun {
-      position:absolute;
-      width:150px; height:150px;
-      background:radial-gradient(circle at center, #fffae0 0%, #ffde80 50%, transparent 80%);
-      border-radius:50%;
-      filter:blur(14px);
-      opacity:.9;
-      animation: moveSun 25s linear infinite alternate;
-    }
-    @keyframes moveSun {
-      0% {top:10%; left:15%;}
-      50% {top:30%; left:70%;}
-      100% {top:15%; left:25%;}
-    }
+  /* üst bar */
+  header{
+    position:fixed; inset:0 0 auto 0; height:64px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 14px; z-index:30; backdrop-filter: blur(6px);
+    background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,0));
+    color:#ffe9f4;
+  }
+  .brand{ font-family:Cinzel,serif; font-weight:900; letter-spacing:.14em; opacity:.95 }
+  .actions a{
+    display:inline-flex; align-items:center; gap:8px;
+    text-decoration:none; color:#ffe9f4; font-weight:900;
+    border:1px solid var(--b); background:var(--glass); border-radius:12px; padding:10px 14px;
+  }
 
-    /* Yavaş yaprak benekleri */
-    .leaf {
-      position:absolute;
-      width:6px; height:6px;
-      background:rgba(255,200,220,0.45);
-      border-radius:50%;
-      animation: floatLeaf 16s linear infinite;
-    }
-    @keyframes floatLeaf {
-      0% {transform: translateY(0);}
-      100% {transform: translateY(120vh);}
-    }
+  /* aşama katmanları */
+  #welcome,#story,#menu{ position:fixed; inset:0; }
+  #welcome, #menu{ display:grid; place-items:center }
+  .hide{ display:none !important }
 
-    /* Hoşgeldin yazısı */
-    #welcome {
-      font-size: 2.5rem;
-      font-weight: 600;
-      opacity: 0;
-      animation: fadeInOut 6s ease-in-out forwards;
-      color:#b02c6d;
-      text-shadow:0 0 14px rgba(255,255,255,0.8);
-    }
-    @keyframes fadeInOut {
-      0% {opacity: 0;}
-      20%,80% {opacity: 1;}
-      100% {opacity: 0;}
-    }
+  /* 1) Hoş geldin kartı */
+  #welcome .sheet{
+    width:min(920px,92%); border:1px solid var(--b); border-radius:18px;
+    background: rgba(255,255,255,.08); padding:22px; text-align:center;
+    color:#ffe9f4;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+    animation: pop .5s ease both;
+  }
+  #welcome h2{ margin:0 0 8px; font:900 24px/1.1 Cinzel,serif; letter-spacing:.14em }
+  #welcome p{ margin:0; opacity:.9 }
+  @keyframes pop{ from{transform:translateY(8px); opacity:0} to{transform:none; opacity:1} }
 
-    /* Manifesto */
-    #manifesto {
-      position:absolute;
-      bottom:-100%;
-      width:80%;
-      max-width:700px;
-      background: rgba(255,245,248,0.8);
-      border-radius:20px;
-      padding:30px;
-      font-size:1.2rem;
-      line-height:1.9rem;
-      color:#5a2344;
-      opacity:0;
-      animation: slideUp 18s ease-in-out 6.5s forwards;
-      box-shadow:0 0 25px rgba(255,220,240,0.5);
-    }
-    @keyframes slideUp {
-      0% {bottom:-100%; opacity:0;}
-      10% {opacity:1;}
-      100% {bottom:35%; opacity:1;}
-    }
+  /* 2) dev tipografi – arkaplan düz krem */
+  #story{
+    background:#fff4e6; /* düz açık krem; efekt yok */
+    display:grid; grid-template-rows:64px 1fr; z-index:20;
+  }
+  .skip{
+    position:fixed; left:12px; top:12px; z-index:25;
+    appearance:none; border:1px solid rgba(0,0,0,.15); background:rgba(0,0,0,.06);
+    color:#2b1b16; border-radius:12px; padding:10px 14px; font-weight:900; cursor:pointer; backdrop-filter: blur(6px);
+  }
+  #storyViewport{ position:relative; overflow:hidden }
+  #storyInner{
+    position:absolute; left:0; right:0; transform:translateY(100%);
+    display:flex; justify-content:center;
+    padding:0 18px 80px;
+  }
+  .block{
+    width:min(1100px,92%); margin:0 auto; color:#2b1b16; 
+    background: linear-gradient(180deg, rgba(255,246,235,.98), rgba(255,238,220,.95));
+    border-radius:22px; padding:34px 28px;
+    box-shadow:0 30px 80px rgba(120,80,60,.22);
+  }
+  .t1{ font-size: clamp(42px,8.5vw,110px); line-height:1.02; font-weight:900; letter-spacing:.01em; margin:0 0 24px }
+  .t2{ font-size: clamp(24px,3.6vw,48px); line-height:1.22; margin:0 0 22px; font-weight:800; opacity:.96 }
+  .t3{ font-size: clamp(22px,2.8vw,38px); line-height:1.3; margin:0 0 20px }
+  .sign{ font-size: clamp(18px,2.2vw,28px); margin-top:10px; opacity:.9; font-weight:900 }
 
-    /* Geç butonu */
-    #skip {
-      position:fixed;
-      top:20px; left:20px;
-      background:rgba(255,255,255,0.4);
-      border:none;
-      color:#8a245e;
-      padding:10px 18px;
-      border-radius:10px;
-      cursor:pointer;
-      backdrop-filter: blur(6px);
-      font-weight:600;
-    }
+  /* 3) menü (kartlar) */
+  #menu{
+    background:
+      radial-gradient(1100px 700px at 80% 18%, rgba(255,215,150,.18), transparent 60%),
+      #0e0b10;
+    z-index:10; padding:90px 14px 24px; overflow:auto; color:#ffe9f4;
+  }
+  .wrap{ max-width:1200px; margin:0 auto }
+  .grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:16px }
+  .card{
+    background:var(--panel); border:1px solid var(--b); border-radius:16px; padding:16px;
+    box-shadow:0 10px 40px rgba(0,0,0,.35); min-height:180px; position:relative; overflow:hidden;
+  }
+  .card h3{ margin:0 0 8px }
+  .go{ position:absolute; right:16px; bottom:16px }
+  .btn{
+    appearance:none; border:1px solid var(--b); background:rgba(255,255,255,.1);
+    color:#ffe9f4; padding:10px 14px; border-radius:12px; font-weight:900; text-decoration:none; display:inline-flex; gap:8px;
+  }
 
-    /* Menü */
-    #menu {
-      position:absolute;
-      bottom:-100%;
-      opacity:0;
-      width:90%;
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:20px;
-      animation: menuAppear 2s ease 23s forwards;
-    }
-    @keyframes menuAppear {
-      to {bottom:5%; opacity:1;}
-    }
-    .card {
-      background:rgba(255,240,245,0.8);
-      border-radius:20px;
-      box-shadow:0 0 15px rgba(255,200,230,0.6);
-      width:280px;
-      padding:20px;
-      transition: transform .3s ease;
-    }
-    .card:hover {transform:translateY(-6px);}
-    .card h3 {
-      color:#b02c6d;
-      font-size:1.3rem;
-      margin-bottom:8px;
-    }
-    .card p {color:#5a2344; font-size:1rem; line-height:1.5rem;}
+  /* menü açılınca arkaplan efekti */
+  canvas.fx{ position:fixed; inset:0; z-index:0; display:none }
+  body.fx-on canvas.fx{ display:block }
 
-    #menu a {
-      display:inline-block;
-      margin-top:10px;
-      padding:6px 12px;
-      background:#b02c6d;
-      color:#fff;
-      border-radius:8px;
-      text-decoration:none;
-      font-weight:600;
-    }
-
-    @keyframes fadeIn {
-      from {opacity:0;} to {opacity:1;}
-    }
-  </style>
+  .fade{ animation:fade .5s ease both }
+  @keyframes fade{ from{opacity:0} to{opacity:1} }
+</style>
 </head>
 <body>
 
-<div class="sun"></div>
-<button id="skip" onclick="showMenu()">Yazıyı Geç</button>
-<div id="welcome">🌸 Zarafetin Alanına Hoş Geldin 🌸</div>
+<header>
+  <div class="brand">AZURA • KADIN</div>
+  <div class="actions"><a href="index.html">← Ana Menü</a></div>
+</header>
 
-<div id="manifesto">
-  Kadın olmak, yalnızca doğanın bir mucizesi değil;  
-  aynı zamanda direnişin, zarafetin ve sezginin bir bileşimidir.  
-  Her sabah biraz daha güçlenir,  
-  her kırılmadan sonra biraz daha ışıldar.  
-  Kadın, sessizliğin içindeki bilgeliği duyar;  
-  kaosun ortasında düzen kurar.  
-  Gülüşü bile bir devrimdir bazen.  
-  Kendini tanımak, sınırlarını bilmek ve sınırların ötesine geçmektir varoluşun özü.  
-  — Azura Nova
-</div>
+<!-- 1) Hoş geldin -->
+<section id="welcome" class="fade">
+  <div class="sheet">
+    <h2>Doğanın Işığı’na hoş geldin 🌸</h2>
+    <p>Sakin bir nefes al; gün ışığı birazdan içeri süzülecek.</p>
+  </div>
+</section>
 
-<div id="menu">
-  <div class="card">
-    <h3>Zarafet & Güç</h3>
-    <p>Yumuşaklık bir zayıflık değil, en büyük dayanıklılıktır.  
-       Sessizce büyüyen bir gülsün.</p>
-    <a href="#">Keşfet</a>
+<!-- 2) Büyük metin -->
+<section id="story" class="hide" aria-label="manifesto">
+  <button class="skip" id="skip">Geç</button>
+  <div id="storyViewport">
+    <div id="storyInner">
+      <div class="block">
+        <p class="t1">Rüzgârın <strong>zarafetine</strong> hoş geldin.</p>
+        <p class="t2">Türkiye’de kadın olmak; sessizce çiçek açmak ve her gün yeniden güç toplamaktır. Zarafet bir süs değil, <em>dayanıklığın üslubudur</em>.</p>
+        <p class="t3">Kadın; evi ısıtan nefes, sokağı aydınlatan neşedir. Var ettiği düzen, görünmez ama hissedilir. Emeği; her ayrıntıda imzadır.</p>
+        <p class="t3">Saygı, onun en doğal hakkıdır. Şefkati zayıflık değil, <strong>bilgelik</strong>tir. Birlikte yükseltir; paylaştıkça çoğalır.</p>
+        <p class="t3">Kadına değer vermek; geleceğe değer vermektir. Çünkü kadın, yalnız kendini değil, çevresini de büyütür.</p>
+        <p class="sign">Bugün bir kadının yükünü değil, <strong>yükünü alanları</strong> konuşalım. — Azura Nova</p>
+      </div>
+    </div>
   </div>
-  <div class="card">
-    <h3>İlham</h3>
-    <p>Bir kadının inancı, bir toplumun temelidir.  
-       Dünyayı güzelleştirme gücün içindedir.</p>
-    <a href="#">İlham Al</a>
+</section>
+
+<!-- 3) Menü -->
+<section id="menu" class="hide" aria-label="kadın menü">
+  <canvas id="fx" class="fx"></canvas>
+  <div class="wrap">
+    <div class="grid">
+      <article class="card"><h3>Kanallar</h3><p>Doğa, sanat, ilham…</p><div class="go"><a class="btn" href="#">Aç</a></div></article>
+      <article class="card"><h3>Kaynaklar</h3><p>Okumalar, araçlar.</p><div class="go"><a class="btn" href="#">Aç</a></div></article>
+      <article class="card"><h3>Topluluk</h3><p>Azura sohbetleri.</p><div class="go"><a class="btn" href="#">Aç</a></div></article>
+      <article class="card"><h3>Profil</h3><p>Tercihler ve tema.</p><div class="go"><a class="btn" href="#">Aç</a></div></article>
+    </div>
   </div>
-  <div class="card">
-    <h3>Özgürlük</h3>
-    <p>Kendin olmanın zarafeti,  
-       başkalarının kalıplarına sığmamaktır.</p>
-    <a href="#">Hisset</a>
-  </div>
-  <div class="card">
-    <h3>Mini Alıştırma</h3>
-    <p>Bugün aynaya bak, sadece bir gülümse.  
-       Dünyayı yumuşatmaya oradan başla.</p>
-    <a href="#">Başla</a>
-  </div>
-</div>
+</section>
 
 <script>
-  // Yaprak efektleri
-  for(let i=0;i<60;i++){
-    const l=document.createElement('div');
-    l.className='leaf';
-    l.style.left=Math.random()*100+'vw';
-    l.style.top=Math.random()*100+'vh';
-    l.style.animationDuration=(10+Math.random()*10)+'s';
-    document.body.appendChild(l);
-  }
+/* akış: 1) welcome 4sn ➜ 2) story scroll ➜ 3) menü */
+const welcome = document.getElementById('welcome');
+const story   = document.getElementById('story');
+const menu    = document.getElementById('menu');
+const skipBtn = document.getElementById('skip');
 
-  // Menüye erken geçiş
-  function showMenu(){
-    document.getElementById('manifesto').style.display='none';
-    document.getElementById('menu').style.bottom='5%';
-    document.getElementById('menu').style.opacity='1';
+setTimeout(()=>{ // 4 sn sonra metne geç
+  welcome.classList.add('hide');
+  story.classList.remove('hide');
+  startScroll();
+}, 4000);
+
+skipBtn.addEventListener('click', finishStory);
+
+let rafId;
+function startScroll(){
+  const viewport = document.getElementById('storyViewport');
+  const inner = document.getElementById('storyInner');
+  const vh = viewport.clientHeight;
+  const ih = inner.scrollHeight;
+  const total = ih + vh + 80;
+  const start = performance.now();
+  const speed = 46; // px/sn
+
+  function loop(t){
+    const dt = (t - start)/1000;
+    const dy = Math.min(total, dt * speed);
+    inner.style.transform = `translateY(${vh - dy}px)`;
+    if (dy >= total) finishStory();
+    else rafId = requestAnimationFrame(loop);
   }
+  rafId = requestAnimationFrame(loop);
+}
+
+function finishStory(){
+  cancelAnimationFrame(rafId);
+  story.classList.add('hide');
+  menu.classList.remove('hide');
+  document.body.classList.add('fx-on');
+  startFX();
+}
+
+/* menü arka plan efekti: güneş ışığı + nazik yaprak tozları */
+function startFX(){
+  const c = document.getElementById('fx');
+  const x = c.getContext('2d');
+  function fit(){ c.width = innerWidth; c.height = innerHeight }
+  fit(); addEventListener('resize', fit, {passive:true});
+
+  const petals = Array.from({length: Math.floor((c.width*c.height)/32000)}, () => ({
+    x: Math.random()*c.width, y: Math.random()*c.height,
+    r: 1 + Math.random()*2.2, s: .35 + Math.random()*.6, d:(Math.random()-.5)*.6, hue: 330+Math.random()*40
+  }));
+
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    // güneş ışıması
+    const sx=c.width*.82, sy=c.height*.18;
+    const g=x.createRadialGradient(sx,sy,10, sx,sy, 220);
+    g.addColorStop(0,'rgba(255,240,180,.85)');
+    g.addColorStop(.6,'rgba(255,205,140,.20)');
+    g.addColorStop(1,'rgba(255,205,140,0)');
+    x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
+
+    // nazik yaprak taneleri
+    for(const p of petals){
+      p.y+=p.s; p.x+=Math.sin(p.y/40)*.5 + p.d;
+      if(p.y>c.height+10){ p.y=-10; p.x=Math.random()*c.width }
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
+      x.fillStyle=`hsla(${p.hue},80%,72%,.9)`; x.fill();
+    }
+    requestAnimationFrame(loop);
+  })();
+}
 </script>
-
 </body>
-  </html>
+</html>
