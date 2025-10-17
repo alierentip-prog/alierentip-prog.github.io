@@ -7,24 +7,32 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{ --fg:#fff7fb; --bg:#0c0a0f; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14) }
-*{box-sizing:border-box} html,body{height:100%} body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(255,154,208,.09), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui; overflow:hidden}
-header{position:fixed; inset:12px 12px auto auto; z-index:4}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(255,154,208,.09), transparent 60%), var(--bg); font:16px/1.6 Inter,system-ui; overflow-x:hidden}
+header{position:fixed; inset:12px 12px auto auto; z-index:5}
 a.btn{padding:10px 14px; border-radius:12px; border:1px solid var(--b); background:var(--glass); color:var(--fg); text-decoration:none; font-weight:900}
 h1{position:fixed; left:50%; transform:translateX(-50%); top:24px; margin:0; font-family:Cinzel,serif; letter-spacing:.16em}
 canvas{position:fixed; inset:0; z-index:0}
-/* ---------- MANİFESTO OVERLAY (alttan yukarı) ---------- */
+
+/* Manifesto overlay */
 #story{position:fixed; inset:0; display:grid; grid-template-rows:auto 1fr auto; z-index:3; background:linear-gradient(180deg, rgba(35,20,38,.96), rgba(25,15,28,.94))}
-#story .bar{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.08)}
-#story h2{margin:0; font:900 18px/1 Cinzel,serif; letter-spacing:.16em}
-#story .skip{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff; border-radius:12px; padding:8px 12px; font-weight:900}
+#story .bar{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.08)}
+#story h2{margin:0; font:900 clamp(18px,3.6vw,28px)/1 Cinzel,serif; letter-spacing:.16em}
+#story .skip, #story .home{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff; border-radius:12px; padding:10px 14px; font-weight:900}
 #viewport{position:relative; overflow:hidden}
-#inner{position:absolute; left:0; right:0; transform:translateY(100%); padding:16px 18px 60px; font-size:20px; line-height:1.9; text-shadow:0 0 10px rgba(0,0,0,.3)}
-#inner p{margin:0 0 22px}
-#inner p.lead{font-size:22px; font-weight:900; color:#ffd9ef}
-/* ---------- Ana içerik ---------- */
-.sheet{position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(920px,92%); border:1px solid var(--b); background:rgba(12,10,15,.78); border-radius:20px; padding:22px; z-index:1; backdrop-filter: blur(8px)}
-/* ---------- Giriş sönerek beyaz ---------- */
-#enter{position:fixed; inset:0; background:#ffffff; z-index:5; opacity:1; transform:scale(1.05); animation:fadeIn .55s ease forwards}
+#inner{position:absolute; left:0; right:0; transform:translateY(100%); padding:20px 24px 70px; font-size:clamp(20px,3.8vw,26px); line-height:1.9; text-shadow:0 0 12px rgba(0,0,0,.35)}
+#inner p{margin:0 0 26px}
+#inner p.lead{font-size:clamp(22px,4.4vw,30px); font-weight:900; color:#ffd9ef}
+
+/* İçerik kartları */
+.page{position:relative; z-index:1; padding:110px 14px 60px; max-width:1100px; margin:0 auto}
+.grid{display:grid; gap:16px; grid-template-columns:1fr 1fr}
+.card{background:rgba(35,20,38,.72); border:1px solid rgba(255,255,255,.14); border-radius:16px; padding:16px; box-shadow:0 10px 40px rgba(0,0,0,.28); backdrop-filter:blur(8px)}
+.card h3{margin:0 0 4px; font:900 20px/1.1 Cinzel,serif; letter-spacing:.12em}
+.pill{display:inline-block; margin:6px 6px 0 0; padding:6px 10px; border:1px solid rgba(255,255,255,.2); border-radius:999px; background:rgba(255,255,255,.08); font-weight:800}
+
+/* Giriş beyaz fade */
+#enter{position:fixed; inset:0; background:#ffffff; z-index:6; opacity:1; transform:scale(1.05); animation:fadeIn .55s ease forwards}
 @keyframes fadeIn{to{opacity:0; transform:scale(1)}}
 </style>
 </head>
@@ -38,7 +46,10 @@ canvas{position:fixed; inset:0; z-index:0}
 <section id="story" aria-label="Kadına Değer">
   <div class="bar">
     <h2>DOĞA • ZARAFET • DENGE</h2>
-    <button id="skip" class="skip">Geç</button>
+    <div style="display:flex;gap:8px">
+      <button class="home" onclick="location.href='index.html'">Ana Menü</button>
+      <button id="skip" class="skip">Geç</button>
+    </div>
   </div>
   <div id="viewport"><div id="inner">
     <p class="lead">Zarafet, görünüş değil; davranışın ritmidir.</p>
@@ -50,35 +61,61 @@ canvas{position:fixed; inset:0; z-index:0}
   <div style="text-align:center; padding:10px; opacity:.75">⏳ Metin bitince sayfa otomatik açılacak • İstersen “Geç”e bas</div>
 </section>
 
-<!-- Ana içerik -->
-<section class="sheet" id="main" style="visibility:hidden">
-  <h2>Hoş geldin 🌸</h2>
-  <p>Burada odak seansları, kısa alıştırmalar ve sakin arka plan ile yol arkadaşın olacağım.</p>
-</section>
+<!-- ANA SAYFA İÇERİĞİ -->
+<main class="page" id="main" style="visibility:hidden">
+  <div class="grid">
+    <section class="card">
+      <h3>🍃 Zarafet & Denge</h3>
+      <p>Zarafet; yavaşlamayı bilmek, denge ise payına düşeni üstlenmektir. Birlikte olduğunda üretkenlik ile şefkat yarıştırmaz.</p>
+      <span class="pill">Sadelik</span><span class="pill">Nazik sınır</span><span class="pill">Ritüel</span>
+    </section>
+    <section class="card">
+      <h3>✨ İç Isıtan Motivasyon</h3>
+      <p>Güne minik bir <b>açılış ritüeli</b> koy: 3 derin nefes, bir bardak su ve 1 cümle niyet.</p>
+      <span class="pill">Niyet cümlesi</span><span class="pill">Kısa ısınma</span><span class="pill">Şefkatli iç ses</span>
+    </section>
+    <section class="card">
+      <h3>🤍 Nezaket</h3>
+      <p>“Sınır koymak kırmak değildir.” Talebi yumuşat: “Bunu X’e kadar yapabilir miyim? Yoksa Y daha uygun mu?”</p>
+      <span class="pill">Şeffaflık</span><span class="pill">Seçenek</span><span class="pill">Rica</span>
+    </section>
+    <section class="card">
+      <h3>🌸 Mini Alıştırma</h3>
+      <p>15 dakikalık <b>nazik odak</b>: telefonu sessize al, modunu seç; bitince “Şu anda kendime teşekkür” cümlesi yaz.</p>
+      <span class="pill">15 dk odak</span><span class="pill">Tek iş</span><span class="pill">Şükran cümlesi</span>
+    </section>
+  </div>
+</main>
 
 <script>
-/* Güneş+petaller+tavşan */
+/* Güneş + petaller + tavşan — GÜNEŞ ekranda gezinir */
 (()=>{ const c=field,x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
 const petals=Array.from({length:Math.floor(c.width*c.height/26000)},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*3,h:330+Math.random()*40,s:.4+.7*Math.random(),d:(Math.random()-.5)*.7}));
-let t=0;(function loop(){ x.fillStyle='#0c0a0f'; x.fillRect(0,0,c.width,c.height);
-const sx=c.width*.82, sy=c.height*.18; const g=x.createRadialGradient(sx,sy,10,sx,sy,220);
-g.addColorStop(0,'rgba(255,240,180,.85)'); g.addColorStop(.6,'rgba(255,205,140,.20)'); g.addColorStop(1,'rgba(255,205,140,0)');
-x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
-for(const p of petals){ p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.d; if(p.y>c.height+10){p.y=-10; p.x=Math.random()*c.width}
-x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fillStyle=`hsla(${p.h},85%,70%,.9)`; x.fill(); }
-const bx=c.width*0.82, by=c.height*0.82; x.save(); x.translate(bx,by+Math.sin(t/30)*2); x.scale(1.25,1.25);
-x.fillStyle='rgba(255,122,182,.45)'; x.beginPath(); x.ellipse(0,0,22,16,0,0,Math.PI*2); x.fill(); x.beginPath(); x.arc(-16,-10,9,0,Math.PI*2); x.fill();
-x.beginPath(); x.ellipse(-20,-22,4,12,0,0,Math.PI*2); x.ellipse(-10,-22,4,12,0,0,Math.PI*2); x.fill(); x.restore(); t++; requestAnimationFrame(loop); })(); })();
+let t=0;(function loop(){
+  x.fillStyle='#0c0a0f'; x.fillRect(0,0,c.width,c.height);
+  // hareketli güneş
+  const sx=c.width*(0.6+0.2*Math.sin(t/240)), sy=c.height*(0.18+0.06*Math.cos(t/300));
+  const g=x.createRadialGradient(sx,sy,10,sx,sy,240);
+  g.addColorStop(0,'rgba(255,240,180,.9)'); g.addColorStop(.6,'rgba(255,205,140,.22)'); g.addColorStop(1,'rgba(255,205,140,0)');
+  x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
+  // yapraklar
+  for(const p of petals){ p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.d; if(p.y>c.height+10){p.y=-10; p.x=Math.random()*c.width}
+    x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fillStyle=`hsla(${p.h},85%,70%,.9)`; x.fill();}
+  // tavşan
+  const bx=c.width*0.82, by=c.height*0.82; x.save(); x.translate(bx,by+Math.sin(t/30)*2); x.scale(1.25,1.25);
+  x.fillStyle='rgba(255,122,182,.45)'; x.beginPath(); x.ellipse(0,0,22,16,0,0,Math.PI*2); x.fill(); x.beginPath(); x.arc(-16,-10,9,0,Math.PI*2); x.fill();
+  x.beginPath(); x.ellipse(-20,-22,4,12,0,0,Math.PI*2); x.ellipse(-10,-22,4,12,0,0,Math.PI*2); x.fill(); x.restore();
+  t++; requestAnimationFrame(loop);
+})(); })();
 
 /* Manifesto akışı */
 (()=>{const vp=document.getElementById('viewport'), inner=document.getElementById('inner'), skip=document.getElementById('skip'), main=document.getElementById('main'), story=document.getElementById('story');
-const vh=()=>vp.clientHeight; let start; const SPEED=50;
-function startScroll(){ const ih=inner.scrollHeight, dist=ih + vh() + 60; start=performance.now();
+const vh=()=>vp.clientHeight; const SPEED=54;
+function startScroll(){ const ih=inner.scrollHeight, dist=ih + vh() + 80, start=performance.now();
  (function step(now){ const d=(now-start)/1000*SPEED; inner.style.transform=`translateY(${vh()-Math.min(d,dist)}px)`; 
    if(d>=dist) finish(); else requestAnimationFrame(step); })(performance.now());}
 function finish(){ story.style.display='none'; main.style.visibility='visible'; }
-skip.onclick=finish;
-setTimeout(()=>{ startScroll(); }, 500);
+skip.onclick=finish; setTimeout(startScroll, 600);
 })();
 </script>
 </body>
