@@ -26,6 +26,7 @@
   --accent-mor:#B16AD9;
 }
 
+/* Reset */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -110,7 +111,7 @@ body{
   text-shadow:0 0 22px rgba(177,106,217,.45);
   white-space:pre-wrap; text-transform:uppercase;
   top:100%;
-  animation:slideUp 73s linear forwards; /* 73 saniye */
+  animation:slideUp 58s linear forwards; /* hız artırıldı */
 }
 @keyframes slideUp{to{top:-120%}}
 
@@ -239,7 +240,7 @@ setTimeout(()=>{welcome.classList.add('fade-out');
 
 function startManifesto(){
   mfWrap.style.display='block'; skipBtn.classList.add('show');
-  manifestoTimer=setTimeout(showMenu,73000); // 73 saniye
+  manifestoTimer=setTimeout(showMenu,58000); // 58 saniye
 }
 
 skipBtn.addEventListener('click',()=>{
@@ -259,4 +260,4 @@ document.getElementById('userBtn').addEventListener('click',(e)=>{
 });
 </script>
 </body>
-</html>
+      </html>
