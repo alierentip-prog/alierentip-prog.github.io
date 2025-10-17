@@ -6,113 +6,80 @@
 <title>AZURA • Doğa</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --fg:#fff7fb; --mut:#f7d9ea; --ink:#1b0f18;
-    --b:rgba(255,255,255,.18); --glass:rgba(25,15,25,.55);
-    --accent:#ff8fc3; --accent2:#ffd1ec; --chip:#3b1f33;
-    --bg:#0c0a0f;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;color:var(--fg);background:radial-gradient(1200px 800px at 50% -10%, rgba(255,154,208,.1), transparent 60%),var(--bg);font:16px/1.65 Inter,system-ui;overflow-x:hidden}
-  header{position:fixed;inset:12px 12px auto auto;z-index:3}
-  a.btn{padding:10px 14px;border-radius:12px;border:1px solid var(--b);background:rgba(255,255,255,.06);color:var(--fg);text-decoration:none;font-weight:900}
-  h1{position:fixed;left:50%;transform:translateX(-50%);top:22px;margin:0;font-family:Cinzel,serif;letter-spacing:.16em}
-  canvas{position:fixed;inset:0;z-index:0}
-
-  .wrap{position:relative;z-index:1;max-width:1100px;margin:120px auto 80px;padding:0 16px;display:grid;gap:18px}
-  .row{display:grid;grid-template-columns:1fr;gap:18px}
-  @media(min-width:860px){ .row{grid-template-columns:1fr 1fr} }
-
-  /* BÜYÜK RENKLİ YAZI KARELERİ */
-  .block{
-    padding:22px 22px 20px;border-radius:22px;border:1px solid var(--b);
-    background:linear-gradient(180deg, rgba(59,31,51,.65), rgba(59,31,51,.35));
-    backdrop-filter: blur(10px); box-shadow:0 12px 40px rgba(0,0,0,.35);
-  }
-  .block h2{
-    margin:0 0 8px; font:900 clamp(18px,3.6vw,28px)/1.15 Cinzel,serif; letter-spacing:.12em;
-    background:linear-gradient(90deg,#ffe2f2,#ff8fc3,#ffd1ec); -webkit-background-clip:text; color:transparent;
-    text-shadow:0 0 14px rgba(255,180,220,.28)
-  }
-  .block p{margin:0 0 10px}
-  .chip{display:inline-block;margin:.25rem .35rem .1rem 0;padding:.42rem .66rem;border-radius:999px;font-weight:800;font-size:.9rem;background:rgba(255,255,255,.08);border:1px solid var(--b);color:#ffeaf6}
-  .block.rose{background:linear-gradient(180deg, rgba(59,31,51,.7), rgba(59,31,51,.36))}
-  .block.blush{background:linear-gradient(180deg, rgba(70,28,52,.66), rgba(70,28,52,.34))}
-  .block.deep{background:linear-gradient(180deg, rgba(40,18,38,.7), rgba(40,18,38,.35))}
-
-  .menu{display:flex;flex-wrap:wrap;gap:10px}
-  .menu a{border:1px solid var(--b);background:rgba(255,255,255,.06);color:var(--fg);text-decoration:none;font-weight:900;border-radius:12px;padding:10px 14px}
-
-  #wipe{position:fixed;inset:0;background:#ffffff;z-index:10;pointer-events:none;opacity:0;transform:scale(1.05);transition:opacity .45s ease,transform .45s ease}
-  #wipe.show{opacity:1;transform:scale(1)}
+:root{ --fg:#fff7fb; --bg:#0c0a0f; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14) }
+*{box-sizing:border-box} html,body{height:100%} body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(255,154,208,.09), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui; overflow:hidden}
+header{position:fixed; inset:12px 12px auto auto; z-index:4}
+a.btn{padding:10px 14px; border-radius:12px; border:1px solid var(--b); background:var(--glass); color:var(--fg); text-decoration:none; font-weight:900}
+h1{position:fixed; left:50%; transform:translateX(-50%); top:24px; margin:0; font-family:Cinzel,serif; letter-spacing:.16em}
+canvas{position:fixed; inset:0; z-index:0}
+/* ---------- MANİFESTO OVERLAY (alttan yukarı) ---------- */
+#story{position:fixed; inset:0; display:grid; grid-template-rows:auto 1fr auto; z-index:3; background:linear-gradient(180deg, rgba(35,20,38,.96), rgba(25,15,28,.94))}
+#story .bar{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.08)}
+#story h2{margin:0; font:900 18px/1 Cinzel,serif; letter-spacing:.16em}
+#story .skip{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff; border-radius:12px; padding:8px 12px; font-weight:900}
+#viewport{position:relative; overflow:hidden}
+#inner{position:absolute; left:0; right:0; transform:translateY(100%); padding:16px 18px 60px; font-size:20px; line-height:1.9; text-shadow:0 0 10px rgba(0,0,0,.3)}
+#inner p{margin:0 0 22px}
+#inner p.lead{font-size:22px; font-weight:900; color:#ffd9ef}
+/* ---------- Ana içerik ---------- */
+.sheet{position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(920px,92%); border:1px solid var(--b); background:rgba(12,10,15,.78); border-radius:20px; padding:22px; z-index:1; backdrop-filter: blur(8px)}
+/* ---------- Giriş sönerek beyaz ---------- */
+#enter{position:fixed; inset:0; background:#ffffff; z-index:5; opacity:1; transform:scale(1.05); animation:fadeIn .55s ease forwards}
+@keyframes fadeIn{to{opacity:0; transform:scale(1)}}
 </style>
 </head>
 <body>
-  <div id="wipe"></div>
-  <header><a class="btn back" href="index.html">← Ana Menü</a></header>
-  <h1>DOĞA</h1>
-  <canvas id="field"></canvas>
+<div id="enter"></div>
+<header><a class="btn" href="index.html">← Ana Menü</a></header>
+<h1>DOĞA</h1>
+<canvas id="field"></canvas>
 
-  <main class="wrap">
-    <section class="row">
-      <article class="block rose">
-        <h2>🌿 Zarafet & Denge</h2>
-        <p>Zarafet; yavaşlamayı bilmek, denge ise payına düşeni üstlenmektir. İkisi beraber olduğunda şefkat üretkenliği boğmaz, üretkenlik de şefkati yıpratmaz.</p>
-        <span class="chip">Sadelik</span><span class="chip">Nazik sınır</span><span class="chip">Ritüel</span>
-      </article>
-      <article class="block blush">
-        <h2>✨ İç Isıtan Motivasyon</h2>
-        <p>Güne minik bir <em>açılış ritüeli</em> koy: 3 derin nefes, bir bardak su, 1 cümle niyet. Niyet cümlesi: “Bugün şunu bitiriyorum: …”</p>
-        <span class="chip">Niyet cümlesi</span><span class="chip">Kısa ısınma</span><span class="chip">Şefkatli iç ses</span>
-      </article>
-    </section>
+<!-- MANİFESTO -->
+<section id="story" aria-label="Kadına Değer">
+  <div class="bar">
+    <h2>DOĞA • ZARAFET • DENGE</h2>
+    <button id="skip" class="skip">Geç</button>
+  </div>
+  <div id="viewport"><div id="inner">
+    <p class="lead">Zarafet, görünüş değil; davranışın ritmidir.</p>
+    <p>Türkiye’nin kadınları; sofranın bereketi, bilimin sabrı, sanatın sesi… Her adımda görünmez emeğin izleri, her başarıda çoğalan cesaret vardır.</p>
+    <p>Değer; alkış anında değil, gündeliğin sessiz kahramanlığındadır. Eşitlik yol açmaktır: eğitime, güvene, imkâna.</p>
+    <p>Denge; kendine şefkat, başkasına nezakettir. Güç; birlikteyken büyür.</p>
+    <p class="lead">Bugün; merhamet, bilgi ve hayalle… Yol açık.</p>
+  </div></div>
+  <div style="text-align:center; padding:10px; opacity:.75">⏳ Metin bitince sayfa otomatik açılacak • İstersen “Geç”e bas</div>
+</section>
 
-    <section class="row">
-      <article class="block deep">
-        <h2>🤝 Nezaket</h2>
-        <p>“Sınır koymak kırmak değildir.” Talebi yumuşat: “Bunu X’e kadar yapabilirim; şu iki yol uygun görünüyor, hangisi rahat?”</p>
-        <span class="chip">Şeffaflık</span><span class="chip">Seçenek</span><span class="chip">Rica</span>
-      </article>
-
-      <article class="block rose">
-        <h2>🌸 Mini Alıştırma</h2>
-        <p>15 dakikalık <strong>nazik odak</strong>: telefon uçuş modunda, tek pencere, yumuşak müzik. Bitince “Şu anda kendime teşekkür ediyorum çünkü…” yaz.</p>
-        <span class="chip">15 dk odak</span><span class="chip">Tek iş</span><span class="chip">Şükran cümlesi</span>
-      </article>
-    </section>
-
-    <section class="block blush">
-      <h2>📚 Kaynaklar</h2>
-      <p><strong>Essentialism</strong> (McKeown) — <strong>Rest</strong> (Pang) — <strong>Tiny Habits</strong> (Fogg)</p>
-      <div class="menu">
-        <a href="index.html" class="nav">← Ana Menü</a>
-        <a href="#!" class="nav">Kanallar</a>
-        <a href="#!" class="nav">Alıştırmalar</a>
-      </div>
-    </section>
-  </main>
+<!-- Ana içerik -->
+<section class="sheet" id="main" style="visibility:hidden">
+  <h2>Hoş geldin 🌸</h2>
+  <p>Burada odak seansları, kısa alıştırmalar ve sakin arka plan ile yol arkadaşın olacağım.</p>
+</section>
 
 <script>
-/* güneş ışıması + pembe yapraklar */
-(()=>{ const c=field, x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
-  const petals=Array.from({length: Math.floor(c.width*c.height/26000)},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*3,h:330+Math.random()*40,s:.4+.7*Math.random(),d:(Math.random()-.5)*.7}));
-  let t=0; (function loop(){
-    x.fillStyle='#0c0a0f'; x.fillRect(0,0,c.width,c.height);
-    const sx=c.width*.82, sy=c.height*.18; const g=x.createRadialGradient(sx,sy,10,sx,sy,220);
-    g.addColorStop(0,'rgba(255,240,180,.85)'); g.addColorStop(.6,'rgba(255,205,140,.20)'); g.addColorStop(1,'rgba(255,205,140,0)');
-    x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
-    for(const p of petals){ p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.d; if(p.y>c.height+10){p.y=-10; p.x=Math.random()*c.width}
-      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fillStyle=`hsla(${p.h},85%,70%,.9)`; x.fill(); }
-    t++; requestAnimationFrame(loop);
-  })(); })();
+/* Güneş+petaller+tavşan */
+(()=>{ const c=field,x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
+const petals=Array.from({length:Math.floor(c.width*c.height/26000)},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*3,h:330+Math.random()*40,s:.4+.7*Math.random(),d:(Math.random()-.5)*.7}));
+let t=0;(function loop(){ x.fillStyle='#0c0a0f'; x.fillRect(0,0,c.width,c.height);
+const sx=c.width*.82, sy=c.height*.18; const g=x.createRadialGradient(sx,sy,10,sx,sy,220);
+g.addColorStop(0,'rgba(255,240,180,.85)'); g.addColorStop(.6,'rgba(255,205,140,.20)'); g.addColorStop(1,'rgba(255,205,140,0)');
+x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
+for(const p of petals){ p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.d; if(p.y>c.height+10){p.y=-10; p.x=Math.random()*c.width}
+x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fillStyle=`hsla(${p.h},85%,70%,.9)`; x.fill(); }
+const bx=c.width*0.82, by=c.height*0.82; x.save(); x.translate(bx,by+Math.sin(t/30)*2); x.scale(1.25,1.25);
+x.fillStyle='rgba(255,122,182,.45)'; x.beginPath(); x.ellipse(0,0,22,16,0,0,Math.PI*2); x.fill(); x.beginPath(); x.arc(-16,-10,9,0,Math.PI*2); x.fill();
+x.beginPath(); x.ellipse(-20,-22,4,12,0,0,Math.PI*2); x.ellipse(-10,-22,4,12,0,0,Math.PI*2); x.fill(); x.restore(); t++; requestAnimationFrame(loop); })(); })();
 
-/* linklerde sönerek geçiş + geri */
-(()=>{ const wipe=document.getElementById('wipe');
-  for(const a of document.querySelectorAll('a.nav, .back')) a.addEventListener('click',e=>{
-    e.preventDefault(); wipe.classList.add('show'); setTimeout(()=>location.href=a.getAttribute('href'),420);
-  });
+/* Manifesto akışı */
+(()=>{const vp=document.getElementById('viewport'), inner=document.getElementById('inner'), skip=document.getElementById('skip'), main=document.getElementById('main'), story=document.getElementById('story');
+const vh=()=>vp.clientHeight; let start; const SPEED=50;
+function startScroll(){ const ih=inner.scrollHeight, dist=ih + vh() + 60; start=performance.now();
+ (function step(now){ const d=(now-start)/1000*SPEED; inner.style.transform=`translateY(${vh()-Math.min(d,dist)}px)`; 
+   if(d>=dist) finish(); else requestAnimationFrame(step); })(performance.now());}
+function finish(){ story.style.display='none'; main.style.visibility='visible'; }
+skip.onclick=finish;
+setTimeout(()=>{ startScroll(); }, 500);
 })();
 </script>
 </body>
-        </html>
+</html>
