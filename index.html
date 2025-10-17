@@ -276,5 +276,93 @@ particles(document.getElementById('pMale'), 210); // mavi
 particles(document.getElementById('pFem'), 320);  // pembe
 
 </script>
+<!-- ==== AZURA INTRO (drop-in) ==== -->
+<div id="azIntro" aria-hidden="true">
+  <div class="ring"><span class="logo">AZURA</span></div>
+  <button class="skip" type="button">Geç</button>
+  <div class="whiteout"></div>
+</div>
+
+<style>
+  #azIntro{position:fixed;inset:0;background:#0a0a0a;display:grid;place-items:center;z-index:9999}
+  #azIntro .ring{position:relative;width:min(78vmin,720px);aspect-ratio:1/1;border-radius:50%;
+    display:grid;place-items:center;animation:ringPulse 3.7s ease-in-out forwards;filter:blur(.15px)}
+  /* dış beyaz kalın halka (merkeze doğru kontrast azalan) */
+  #azIntro .ring::before{content:"";position:absolute;inset:0;border-radius:50%;
+    background:
+      radial-gradient(circle at 50% 50%,
+        rgba(255,255,255,.08) 0%,
+        rgba(255,255,255,.06) 60%,
+        rgba(255,255,255,.05) 80%,
+        rgba(255,255,255,.08) 100%) padding-box,
+      radial-gradient(circle at 50% 50%,
+        transparent 66%,
+        rgba(255,255,255,.4) 70%,
+        rgba(255,255,255,1) 76%,
+        rgba(255,255,255,.4) 86%,
+        rgba(255,255,255,.12) 92%,
+        rgba(255,255,255,.06) 100%) border-box;
+    -webkit-mask:radial-gradient(farthest-side,#000 66%,transparent 67%);
+            mask:radial-gradient(farthest-side,#000 66%,transparent 67%);
+  }
+  /* yazı: vahşi/fütüristik metalik gradient + yansıma */
+  #azIntro .logo{font:900 clamp(36px,9.5vw,150px)/1 "Orbitron",system-ui;
+    letter-spacing:.20em;
+    background:linear-gradient(90deg,#fff,#b8e7ff,#7cd2ff,#8fe1c7,#a5a3ff,#ff9ddb,#fff);
+    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 24px rgba(255,255,255,.35);
+    animation:hueShift 6s linear infinite, popScale 3.7s ease-in-out both}
+  /* skip butonu */
+  #azIntro .skip{position:fixed;right:14px;bottom:14px;padding:10px 14px;border-radius:12px;
+    border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-weight:800}
+  /* tam beyaz örtü (en sonda kısa süre) */
+  #azIntro .whiteout{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .6s ease}
+  #azIntro.flash .whiteout{opacity:1}
+
+  @keyframes hueShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+  @keyframes popScale{
+    0%{transform:scale(.86);opacity:0}
+    12%{opacity:1}
+    45%{transform:scale(1.08)}
+    70%{transform:scale(.96)}
+    100%{transform:scale(1.08)}
+  }
+  @keyframes ringPulse{
+    0%{transform:scale(.86);opacity:.92}
+    35%{transform:scale(1.12);opacity:1}
+    60%{transform:scale(.94);opacity:.98}
+    100%{transform:scale(26);opacity:1} /* ekranı kapla */
+  }
+  @media (prefers-reduced-motion:reduce){
+    #azIntro .ring{animation:none;transform:scale(1)} #azIntro .logo{animation:none}
+  }
+</style>
+
+<script>
+  (()=>{
+    const intro = document.getElementById('azIntro');
+    const white = intro.querySelector('.whiteout');
+    const skip  = intro.querySelector('.skip');
+    const INTRO_MS = 3700;   // halka + yazı
+    const FLASH_MS = 600;    // tam beyaz kalma
+
+    function endIntro(){
+      intro.classList.add('flash');
+      setTimeout(()=>{ intro.remove(); }, FLASH_MS);
+    }
+
+    // otomatik bitiş
+    setTimeout(endIntro, INTRO_MS);
+
+    // tıklayınca/skip ile atla
+    intro.addEventListener('click', e=>{
+      if(e.target===skip) { endIntro(); }
+    }, {passive:true});
+
+    // ESC ile de atlat
+    addEventListener('keydown',e=>{ if(e.key==='Escape') endIntro(); });
+  })();
+</script>
+<!-- ==== /AZURA INTRO ==== -->
 </body>
   </html>
