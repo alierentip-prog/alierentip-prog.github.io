@@ -2,134 +2,205 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AZURA • Okyanus</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#07131b; --ink:#eaf4ff; --muted:#a3bdd3; --line:rgba(255,255,255,.14);
-  --glass:rgba(255,255,255,.07); --card:rgba(8,16,24,.72); --accent:#65d4ff;
-}
-*{box-sizing:border-box} html,body{height:100%}
-body{margin:0;background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.12), transparent 60%), var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui;overflow:hidden}
-header{position:fixed; inset:12px 12px auto 12px; z-index:3; display:flex; gap:10px}
-a.btn{padding:10px 14px; border-radius:12px; text-decoration:none; color:var(--ink); background:var(--glass); border:1px solid var(--line); font-weight:900}
-h1{position:fixed; left:50%; transform:translateX(-50%); top:20px; margin:0; font-family:Cinzel,serif; letter-spacing:.18em}
+  :root{
+    --fg:#eaf4ff;
+    --cream:#fff3e0;           /* manifesto metin rengi */
+    --cream-bg:rgba(255,243,224,.16);
+    --cream-bg-2:rgba(255,243,224,.28);
+    --b:rgba(255,255,255,.14);
+    --glass:rgba(255,255,255,.06);
+    --sea:#07131b;
+    --chip:#cde9ff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.08), transparent 60%), var(--sea);
+    font:16px/1.55 Inter,system-ui; overflow:hidden;
+  }
 
-/* intro fade-in from white */
-#enter{position:fixed; inset:0; background:#fff; z-index:10; transform:scale(1.02); animation:fadeIn .6s ease forwards}
-@keyframes fadeIn{to{opacity:0;transform:scale(1)}}
-#leave{position:fixed; inset:0; background:#fff; z-index:10; opacity:0; transition:opacity .45s ease}
-#leave.show{opacity:1}
-canvas{position:fixed; inset:0; z-index:0; display:block}
+  /* üst eylemler */
+  header{position:fixed; inset:12px 12px auto 12px; z-index:6; display:flex; gap:10px; align-items:center}
+  a.btn, button.btn{
+    appearance:none; border:1px solid var(--b); background:var(--glass); color:var(--fg);
+    padding:10px 14px; border-radius:12px; font-weight:900; text-decoration:none; backdrop-filter:blur(8px); cursor:pointer;
+  }
+  .right{margin-left:auto; display:flex; gap:10px}
 
-/* scrolling manifesto */
-.layer{position:fixed; inset:0; display:grid; grid-template-rows:auto 1fr auto; z-index:2; background:linear-gradient(180deg, rgba(7,19,27,.9), rgba(7,19,27,.7))}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,0))}
-.topbar h2{margin:0; font:900 20px/1 Cinzel,serif; letter-spacing:.16em}
-.topbar .skip{appearance:none; border:1px solid var(--line); background:var(--glass); color:var(--ink); border-radius:12px; padding:8px 12px; font-weight:900; cursor:pointer}
-.view{position:relative; overflow:hidden}
-.story{
-  position:absolute; left:0; right:0; transform:translateY(100%);
-  padding:0 22px 60px; color:#dff4ff; font:900 24px/2 Cinzel,serif; letter-spacing:.02em; text-shadow:0 0 18px rgba(60,180,255,.25)
-}
-.story p{margin:0 0 28px}
-.story p.lead{font-size:28px; color:#bfe9ff; text-shadow:0 0 18px rgba(120,220,255,.35)}
-.hint{padding:10px; text-align:center; color:var(--muted); border-top:1px solid var(--line)}
+  /* okyanus arka plan */
+  canvas#sea{position:fixed; inset:0; z-index:0; display:block}
 
-/* menu after story */
-#menu{position:fixed; inset:0; display:none; place-items:center; z-index:2}
-.card{
-  width:min(900px,92%); background:var(--card); border:1px solid var(--line); padding:18px; border-radius:18px; backdrop-filter: blur(8px);
-  transform:scale(.9); opacity:0; transition:transform .6s ease, opacity .6s ease;
-}
-.card.show{transform:scale(1); opacity:1}
-.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:10px}
-.item{background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px; padding:12px; font-weight:800}
-.item a{color:var(--ink); text-decoration:none}
+  /* karşılama */
+  .hello{
+    position:fixed; inset:0; z-index:3; display:grid; place-items:center;
+    animation:helloIn .7s ease both, helloOut .7s ease 2.6s forwards;
+  }
+  .hello h2{
+    margin:0; font:900 clamp(22px,4.5vw,44px)/1.15 Cinzel,serif; letter-spacing:.12em;
+    color:#e9f6ff; text-shadow:0 0 22px rgba(150,220,255,.45);
+    background:linear-gradient(90deg,#e9f6ff,#bfe4ff,#9dd9ff,#e9f6ff); -webkit-background-clip:text; color:transparent;
+  }
+  @keyframes helloIn{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+  @keyframes helloOut{to{opacity:0; transform:translateY(-8px)}}
 
-/* big welcome block that slides up first */
-.sheet{
-  position:fixed; left:50%; top:50%; transform:translate(-50%,calc(-50% + 20px)); width:min(920px,92%);
-  border:1px solid var(--line); background:var(--card); border-radius:20px; padding:22px; z-index:1; backdrop-filter: blur(8px);
-  animation: sheetOut .6s ease forwards 3.2s; /* 3.2s sonra kaybolur */
-}
-@keyframes sheetOut{to{opacity:0; visibility:hidden}}
-.sheet h3{margin:0 0 8px}
-.sheet p{margin:0}
+  /* manifesto: satır başına 2-3 kelime için dar sütun */
+  .manifest{
+    position:fixed; inset:0; z-index:4; display:grid; place-items:center;
+    padding:18px;
+    animation:manIn .6s ease .2s both;
+  }
+  @keyframes manIn{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+  .man-box{
+    max-width: min(16ch, 86vw);              /* satır genişliği ≈ 2–3 kelime */
+    font-weight:800; letter-spacing:.6px; line-height:1.9;
+    font-size: clamp(28px, 4vw, 42px);
+    color: var(--cream);
+    text-align:center;
+    filter: drop-shadow(0 8px 26px rgba(0,0,0,.45));
+    /* satır arkasına yumuşak krem patch */
+    background:
+      linear-gradient(transparent,transparent) padding-box,
+      radial-gradient(120% 140% at 50% 40%, var(--cream-bg-2), var(--cream-bg)) border-box;
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    padding: 10px 14px; border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.10);
+  }
+  .skip{
+    position:fixed; left:12px; top:12px; z-index:5;
+    font-weight:900; letter-spacing:.3px;
+  }
 
-/* bubbles + lines canvas runs always behind */
+  /* manifesto kapanınca menü görünür */
+  main{position:relative; z-index:1; padding:100px 16px 40px; max-width:1100px; margin:0 auto; display:none}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px}
+  .card{
+    border:1px solid var(--b); background:var(--glass); backdrop-filter:blur(8px);
+    border-radius:18px; padding:16px; box-shadow:0 10px 40px rgba(0,0,0,.35);
+    transform:scale(.98); opacity:0; transition:transform .4s ease, opacity .4s ease;
+  }
+  .card.show{transform:scale(1); opacity:1}
+  .card h3{margin:0 0 8px; font-weight:900; letter-spacing:.06em}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+  .chip{padding:6px 10px; border-radius:999px; background:rgba(85,200,255,.18); border:1px solid rgba(85,200,255,.28); color:#dff5ff; font-size:12px; font-weight:800}
+
+  footer{opacity:.85; text-align:center; margin:22px 0 8px; font-size:12px}
 </style>
 </head>
 <body>
-<div id="enter"></div>
-<div id="leave"></div>
 
 <header>
-  <a class="btn back" href="index.html">← Ana Menü</a>
-  <a class="btn" href="#menu">Menü</a>
+  <button class="btn skip" id="skipBtn">Yazıyı Geç</button>
+  <div class="right">
+    <a class="btn" href="index.html">Ana Menü</a>
+  </div>
 </header>
-<h1>OKYANUS</h1>
+
 <canvas id="sea"></canvas>
 
-<section class="sheet">
-  <h3>Okyanus seni çağırıyor ⚙️</h3>
-  <p>Serin mavilikte hava kabarcıkları yükselir; metalik çizgiler derinde akıp gider. Omuzlarını indir; nefes al: ritim sende.</p>
+<section class="hello" aria-hidden="true">
+  <h2>Derin Sular’a hoş geldin ⚙️</h2>
 </section>
 
-<!-- Manifesto -->
-<section id="layer" class="layer" aria-label="Manifesto">
-  <div class="topbar"><h2>DERİNLİK • KİBARLIK • ODAK</h2><button class="skip" id="skip">Menüye geç</button></div>
-  <div class="view"><div class="story" id="story">
-    <p class="lead">Karizma gürültüde değil; netlik ve kibarlıkta saklıdır. Güç, sakin kalabilenin omuzlarına yerleşir.</p>
-    <p>Derin sular, yüzeyin fırtınasını sessizce seyreder. Hızlı kararlar, sakin bir zihnin meyvesidir. Söz az, saygı çok; hareket net, ses ölçülüdür.</p>
-    <p>Kibarlık zayıflık değil, ustalıktır. Kapıyı tutmak bir jesttir; yeri gelince masayı kurmak bir beceri, gerektiğinde özür dilemek bir özgüvendir.</p>
-    <p>Odağını bölmeyen; güne başladığında neye “evet”, neye “hayır” diyeceğini bilen kişi, yola hükmeder. Derin nefes, net bakış, temiz hedef.</p>
-    <p class="lead">Okyanus şunu fısıldar: “Gürültüyü yasakla, ritmi dinle.” Kararlılığın tonu mavidir.</p>
-  </div></div>
-  <div class="hint">⏳ Metin bittiğinde menü açılır • “Menüye geç” ile atlayabilirsin</div>
-</section>
-
-<!-- Menü -->
-<section id="menu" aria-label="Erkek Menüsü">
-  <div class="card" id="menuCard">
-    <h3>⚙️ Okyanus Alanı</h3>
-    <div class="grid">
-      <div class="item"><a href="index.html">← Ana Menü</a></div>
-      <div class="item"><a href="#motivasyon">Motivasyon Notları</a></div>
-      <div class="item"><a href="#kibarlik">Kibarlığın İncelikleri</a></div>
-      <div class="item"><a href="#odak">Odak Rutinleri</a></div>
-    </div>
+<section class="manifest" id="manifest">
+  <div class="man-box" id="manText">
+    Güç,
+    başkasını
+    susturmak
+    değildir.
+    Doğru
+    yerde
+    doğru
+    sözü
+    söyleyebilmektir.
+    Nezaket
+    zayıflık
+    değil,
+    hakimiyettir.
+    İnşa
+    eden
+    el,
+    yıkmaz:
+    onarır.
+    Dostunu
+    kaldırır,
+    haksızlığa
+    karşı
+    dimdik
+    ama
+    zarafetle
+    durur.
+    Sınırını
+    bilir,
+    başkasının
+    alanını
+    korur.
+    Sessiz
+    adımlar
+    atar,
+    derin
+    izler
+    bırakır.
   </div>
 </section>
 
+<main id="menu">
+  <div class="grid">
+    <article class="card"><h3>Karizma & Disiplin</h3><p>Kısa, uygulanabilir odak ritüeli. 25 dk sprint + 5 dk nefes.</p><div class="chips"><span class="chip">Odak</span><span class="chip">Düzen</span></div></article>
+    <article class="card"><h3>Kibarlık • Mikro Davranış</h3><p>Bugün 3 kişiye bilinçli teşekkür et. Tonu alçak tut, göz teması ekle.</p><div class="chips"><span class="chip">Nezaket</span><span class="chip">İz Bırak</span></div></article>
+    <article class="card"><h3>Mini Alıştırma</h3><p>2 dk dik duruş, 8 dk tempolu yürüyüş. Postür + zihin açılır.</p><div class="chips"><span class="chip">Postür</span></div></article>
+    <article class="card"><h3>Kaynaklar</h3><p>Okuma listesi, kısa notlar, alıntılar.</p><div class="chips"><span class="chip">Liste</span><span class="chip">Not</span></div></article>
+  </div>
+  <footer>© 2025 AZURA • Tüm hakları saklıdır</footer>
+</main>
+
 <script>
-/* arka plan: çizgiler + kabarcıklar */
-(()=>{const c=sea,x=c.getContext('2d');function fit(){c.width=innerWidth;c.height=innerHeight}fit();addEventListener('resize',fit,{passive:true});
-  const B=240,b=[];for(let i=0;i<B;i++)b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+Math.random()*1});
-  let t=0;(function loop(){
+/* Okyanus: sadece kabarcık + hafif parıltı */
+(()=>{ const c=document.getElementById('sea'), x=c.getContext('2d');
+  function fit(){ c.width=innerWidth; c.height=innerHeight } fit(); addEventListener('resize',fit,{passive:true});
+  const B = Math.floor((innerWidth*innerHeight)/12000);
+  const b = Array.from({length:Math.max(160,B)},()=>({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()}));
+  const glows=Array.from({length:14},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:40+Math.random()*120,a:.06+.06*Math.random()}));
+  (function loop(){
     x.clearRect(0,0,c.width,c.height);
-    x.globalAlpha=.22;x.strokeStyle='rgba(90,180,255,.35)';x.lineWidth=1;
-    for(let i=0;i<44;i++){const y=(i/44)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.04)*6); x.lineTo(c.width,y); x.stroke();}
-    for(const p of b){ p.y-=p.s; if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
-      x.globalAlpha=.32; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
+    // parıltı
+    for(const g of glows){
+      x.fillStyle=`rgba(130,200,255,${g.a})`;
+      x.beginPath(); x.arc(g.x,g.y,g.r,0,Math.PI*2); x.fill();
     }
-    t++; requestAnimationFrame(loop);
+    // kabarcık
+    for(const p of b){
+      p.y-=p.s; if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
+      x.globalAlpha=.28; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
+    }
+    requestAnimationFrame(loop);
   })();
 })();
 
-/* manifesto: aşağıdan yukarı akış + skip */
-(()=>{const layer=document.getElementById('layer'); const story=document.getElementById('story'); const skip=document.getElementById('skip');
-  const viewH=()=>innerHeight-100; let start; const speed=46; let raf;
-  function flow(ts){ if(!start) start=ts; const el=ts-start; const dy=(el/1000)*speed; story.style.transform=`translateY(${viewH()-dy}px)`;
-    if(dy>story.scrollHeight+viewH()){ openMenu(); } else { raf=requestAnimationFrame(flow); } }
-  raf=requestAnimationFrame(flow);
-  function openMenu(){ cancelAnimationFrame(raf); layer.style.display='none'; const m=document.getElementById('menu'); m.style.display='grid'; requestAnimationFrame(()=>document.getElementById('menuCard').classList.add('show')); }
-  skip.addEventListener('click',openMenu,{once:true});
-})();
+/* Akış: 1) hello biter → manifesto görünür (zaten açık) 2) 9sn sonra menü */
+const skip = document.getElementById('skipBtn');
+const manifest = document.getElementById('manifest');
+const menu = document.getElementById('menu');
 
-/* back → beyaz sönerek */
-(()=>{const leave=document.getElementById('leave'); document.querySelector('.back').addEventListener('click',e=>{ e.preventDefault(); leave.classList.add('show'); setTimeout(()=>location.href='index.html',420); });})();
+let timer = setTimeout(closeManifest, 9000);
+skip.addEventListener('click', closeManifest);
+
+function closeManifest(){
+  clearTimeout(timer);
+  if(!manifest) return;
+  manifest.style.transition='opacity .6s ease, transform .6s ease';
+  manifest.style.opacity='0';
+  manifest.style.transform='translateY(-10px)';
+  setTimeout(()=>{ manifest.remove(); showMenu(); }, 620);
+}
+function showMenu(){
+  menu.style.display='block';
+  // kartlara küçük gecikmeli show sınıfı
+  [...menu.querySelectorAll('.card')].forEach((el,i)=> setTimeout(()=> el.classList.add('show'), 80*i));
+}
 </script>
 </body>
-</html>
+  </html>
