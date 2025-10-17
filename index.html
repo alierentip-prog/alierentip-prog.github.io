@@ -572,6 +572,21 @@ body{
   .hamburger{ width:36px; height:36px; font-size:18px }
   .hint{ display:none }
 }
+@media (max-width:560px){
+  .brand{ letter-spacing:.38em; font-size:14px }
+  .clock{ font-size:12px; padding:6px }
+  .hamburger{ width:36px; height:36px }
+  .hint{ display:none }
+}
+
+/* 🌊 Arka plan mikro-noktalar (bgDots) */
+#bgDots {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, #eaf3ff 0%, #f9fcff 100%);
+}
 </style>
 </head>
 <body>
