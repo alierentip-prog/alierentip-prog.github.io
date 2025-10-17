@@ -216,15 +216,5 @@ skipBtn.addEventListener('click',()=>{if(manifestoTimer){clearTimeout(manifestoT
 function showMenu(){mfWrap.style.display='none';skipBtn.classList.remove('show');main.style.display='block';}
 document.getElementById('userBtn').addEventListener('click',e=>{e.preventDefault();alert('Kullanıcı Paneli yakında burada ⚙️');});
 </script>
-  <audio id="bgMusic" src="yenidosya.m4a" loop></audio>
-<script>
-window.addEventListener('click',()=>{
-  const m=document.getElementById('bgMusic');
-  if(m.paused){ 
-    m.play(); 
-    m.volume=0.4; // %40 ses
-  }
-});
-</script>
 </body>
 </html>
