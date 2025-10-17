@@ -201,21 +201,71 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
   function draw(){ctx.clearRect(0,0,c.width,c.height);for(const d of dots){ctx.globalAlpha=d.o;ctx.fillStyle=d.c;ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();d.y+=d.vy;if(d.y>c.height+8){d.y=-8;d.x=Math.random()*c.width}}requestAnimationFrame(draw);}
   draw();
 })();
-const welcome=document.getElementById('welcomeBox');
-const mfWrap=document.getElementById('mfWrap');
-const skipBtn=document.getElementById('skipBtn');
-const main=document.getElementById('main');
-let manifestoTimer=null;
-setTimeout(()=>{welcome.classList.add('fade-out');setTimeout(startManifesto,600);},2200);
-function startManifesto(){
-  mfWrap.style.display='block';
-  skipBtn.classList.add('show');
-  manifestoTimer=setTimeout(showMenu,45000);
-}
-skipBtn.addEventListener('click',()=>{if(manifestoTimer){clearTimeout(manifestoTimer);}showMenu();});
-function showMenu(){mfWrap.style.display='none';skipBtn.classList.remove('show');main.style.display='block';}
-document.getElementById('userBtn').addEventListener('click',e=>{e.preventDefault();alert('Kullanıcı Paneli yakında burada ⚙️');});
+  const welcome   = document.getElementById('welcomeBox');
+  const mfWrap    = document.getElementById('mfWrap');
+  const manifesto = document.getElementById('manifesto');
+  const skipBtn   = document.getElementById('skipBtn');
+  const main      = document.getElementById('main');
+
+  let manifestoTimer = null;
+  let finished = false;            // bir kez çalışsın
+
+  // (Opsiyonel) transform’lu çözümü kullandıysan süreyi metin boyuna göre hesapla:
+  function setScrollDuration(pxPerSec = 140){
+    const totalPx = manifesto.scrollHeight + innerHeight;
+    const durSec  = totalPx / pxPerSec;
+    manifesto.style.setProperty('--dur', durSec + 's');
+    return durSec;
+  }
+
+  // Kısa hoşgeldin
+  setTimeout(()=>{
+    welcome.classList.add('fade-out');
+    setTimeout(startManifesto, 600);
+  }, 1600);
+
+  function startManifesto(){
+    mfWrap.style.display = 'block';
+    skipBtn.classList.add('show');
+
+    // 2× hız örneği (kullanıyorsan):
+    const dur = (manifesto.style.getPropertyValue('--dur'))
+                ? parseFloat(getComputedStyle(manifesto).getPropertyValue('--dur'))
+                : setScrollDuration(140); // transform çözümü yoksa bu satır sorun yaratmaz
+
+    // ❶ Animasyon biter bitmez menüye geç
+    manifesto.addEventListener('animationend', showMenu, { once: true });
+
+    // ❷ Emniyet için yedek zamanlayıcı (animasyon olmasa bile)
+    manifestoTimer = setTimeout(showMenu, (dur || 45) * 1000 + 500);
+  }
+
+  skipBtn.addEventListener('click', ()=>{
+    if (manifestoTimer) clearTimeout(manifestoTimer);
+    showMenu();
+  });
+
+  function showMenu(){
+    if (finished) return;
+    finished = true;
+    mfWrap.style.display = 'none';
+    skipBtn.classList.remove('show');
+    main.style.display = 'block';
+  }
 </script>
+
+Özet:
+
+animationend ile slayt biter bitmez showMenu() çalışır.
+
+Ek olarak bir yedek setTimeout var; beklenmedik durumda da menü açılır.
+
+finished bayrağı aynı fonksiyonun iki kez çalışmasını engeller.
+
+
+Bunu ekledikten sonra “Yazıyı Geç”e bassan da, slayt kendiliğinden tamamlansa da menüye kesin geçer.
+
+
   <!-- 🎧 Arka Plan Müziği -->
 <audio id="bgMusic" src="yenidosya.mp3" preload="auto" loop></audio>
 
