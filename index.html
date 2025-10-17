@@ -9,268 +9,455 @@
 <meta name="theme-color" content="#0a355c">
 
 <style>
-/* --- Reset & Base --- */
-*,*::before,*::after{box-sizing:border-box; margin:0; padding:0}
-html,body{height:100%; width:100%; overflow-x:hidden; font-family:Inter, sans-serif; background:#f6fbff; color:#0e1a26}
-.dark body{background:#0b121a; color:#e7eef5}
+/* =========================================================
+   AZURA 2.0 • NOVA PULSE  —  Full Single File
+   ========================================================= */
 
-/* --- Intro / Splash --- */
-#introSplash{
-  position:fixed;inset:0; background:#fff; display:flex;align-items:center;justify-content:center;
-  z-index:9999; animation:introFade 2.8s ease forwards;
+/* -------- Reset -------- */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;overflow-x:hidden}
+:root{
+  --blue:#0a355c; --blue2:#0b487c; --sky:#00bfff; --glass:#ffffffcc;
+  --ink:#0e1a26; --inkSoft:#5e6b78; --bg:#f6fbff; --card:#ffffff;
+  --shadow:0 10px 30px rgba(6,24,44,.12);
+  --radius:16px; --radiusSm:12px; --radiusLg:26px;
 }
-#introSplash .circle{
-  width:200px; height:200px; border-radius:50%; border:8px solid rgba(10,53,92,.3);
-  animation:circleGrow 1.6s ease-out;
-}
-#introSplash .logo{
-  position:absolute; font-family:Cinzel, serif; font-size:48px; letter-spacing:.5em;
-  color:#0a355c; opacity:0; animation:logoAppear 1.6s ease-out .8s forwards;
-}
-@keyframes circleGrow{
-  0%{transform:scale(.4); opacity:0}
-  50%{transform:scale(1.2); opacity:1}
-  100%{transform:scale(30); opacity:0}
-}
-@keyframes logoAppear{
-  0%{opacity:0; transform:scale(.6)}
-  100%{opacity:1; transform:scale(1)}
-}
-@keyframes introFade{
-  0%,80%{opacity:1}
-  100%{opacity:0; visibility:hidden}
-}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+img,canvas{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;background:#fff;border:1px solid #e6eef5;border-radius:12px;padding:10px 14px;transition:.25s}
 
-/* --- Top Panel --- */
+/* -------- Dark theme (auto + toggle) -------- */
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0b121a; --card:#0f1b26; --glass:#182430cc; --ink:#e8eef5; --inkSoft:#98a8b7; --shadow:0 16px 36px rgba(0,0,0,.35)}
+}
+body.dark{--bg:#0b121a; --card:#0f1b26; --glass:#182430cc; --ink:#e8eef5; --inkSoft:#98a8b7; --shadow:0 16px 36px rgba(0,0,0,.35)}
+
+/* -------- Intro / Splash -------- */
+#intro{
+  position:fixed; inset:0; background:#fff; display:flex; align-items:center; justify-content:center;
+  z-index:9999; animation:introFade 2.9s ease forwards;
+}
+#intro .ring{
+  width:220px; height:220px; border-radius:50%; border:10px solid rgba(10,53,92,.28);
+  box-shadow:0 0 0 10px rgba(10,53,92,.05), inset 0 0 40px rgba(10,53,92,.15);
+  animation:ringBurst 1.6s ease-out;
+}
+#intro .logo{
+  position:absolute; font-family:Cinzel,serif; letter-spacing:.6em; font-size:52px; color:var(--blue);
+  text-shadow:0 6px 18px rgba(10,53,92,.18); opacity:0; animation:logoIn 1.4s ease-out .7s forwards;
+}
+@keyframes ringBurst{0%{transform:scale(.4);opacity:.0}60%{transform:scale(1.25);opacity:1}100%{transform:scale(30);opacity:0}}
+@keyframes logoIn{0%{opacity:0;transform:scale(.65) translateY(8px)}100%{opacity:1;transform:scale(1)}}
+@keyframes introFade{0%,80%{opacity:1}100%{opacity:0;visibility:hidden}}
+
+/* -------- Topbar -------- */
 .topbar{
-  position:fixed;top:0;left:0;right:0; height:56px; background:linear-gradient(90deg,#004e98,#00bfff);
-  display:flex; align-items:center; padding:0 16px; z-index:50;
+  position:sticky; top:0; z-index:50;
+  background:linear-gradient(90deg,#004e98,#00bfff);
+  backdrop-filter:saturate(130%) blur(6px);
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
 }
-.topbar .left, .topbar .center, .topbar .right{
-  display:flex; align-items:center;
+.topbar .wrap{max-width:1100px;margin:0 auto;height:60px;display:flex;align-items:center;padding:0 12px}
+.topbar .left,.topbar .mid,.topbar .right{flex:1;display:flex;align-items:center}
+.topbar .mid{justify-content:center}
+.topbar .brand{font-family:Cinzel,serif;color:#fff;font-size:22px;letter-spacing:.7em;text-indent:.7em}
+.topbar .clock{color:#fff;font-weight:800;border:1px solid rgba(255,255,255,.5);padding:6px 10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06))}
+.topbar .chip, .topbar button{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.45);color:#fff}
+.topbar .chip:hover, .topbar button:hover{background:rgba(255,255,255,.35)}
+
+/* -------- Drawer (sol panel) -------- */
+.drawer{position:fixed; inset:0 auto 0 0; width:320px; transform:translateX(-100%); background:var(--glass);
+  backdrop-filter:blur(10px); border-right:1px solid rgba(0,0,0,.06); z-index:60; transition:.35s cubic-bezier(.2,.7,.2,1)}
+.drawer.open{transform:none}
+.drawer .head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.06)}
+.drawer h3{font-family:Cinzel,serif;letter-spacing:.25em}
+.drawer .content{padding:14px 16px;display:grid;gap:12px}
+.drawer a.item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border-radius:12px;box-shadow:var(--shadow)}
+.drawer a.item:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(6,24,44,.18)}
+
+/* -------- Main container -------- */
+.main{max-width:1100px;margin:0 auto;padding:18px}
+
+/* -------- Info duo (Günün Sözü + İlginç Bilgi) -------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.card h4{font-weight:800;margin-bottom:6px}
+.card p{color:var(--inkSoft)}
+.card small{opacity:.7}
+.card .sun{position:absolute;left:16px;top:14px;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fffbde,#ffd35a 40%,#ffae00);filter:blur(.2px);box-shadow:0 0 20px #ffd35a66, inset 0 0 8px #fff7}
+.card .brain{position:absolute;right:16px;top:12px;width:40px;height:40px;border-radius:50%;
+  background:radial-gradient(circle at 45% 35%,#ffd6ea,#ff8bd5 40%,#db58ff 80%);box-shadow:0 0 20px #d46cf566}
+
+/* -------- Male/Female cards -------- */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.panel{display:flex;gap:12px;border-radius:var(--radiusLg);overflow:hidden;position:relative;min-height:160px;
+  background:linear-gradient(160deg,#eaf6ff,#fff)}
+.panel .txt{flex:2;padding:18px;z-index:1}
+.panel .thumb{flex:1;position:relative;min-height:120px}
+.panel .thumb canvas{position:absolute;inset:0;width:100%;height:100%}
+.panel h3{font-size:20px;margin-bottom:6px}
+.panel p{color:var(--inkSoft)}
+.panel .go{position:absolute;right:16px;top:50%;transform:translateY(-50%);padding:10px 14px;border-radius:14px;background:#fff;border:1px solid #e6eef5;box-shadow:var(--shadow)}
+.panel.male{background:linear-gradient(160deg,#e4f2ff,#ffffff)}
+.panel.female{background:linear-gradient(160deg,#fff0f6,#ffffff)}
+
+/* -------- “Sizi tanımak isteriz” -------- */
+.cta{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+.cta p{color:var(--inkSoft)}
+.cta .orb{width:52px;height:52px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#c8e7ff,#8ebffd 55%,#69e1ff);box-shadow:0 10px 20px rgba(30,80,140,.28)}
+
+/* -------- Sphere -------- */
+.sphereWrap{margin:28px auto 0;max-width:1000px}
+.sphereBox{background:var(--card);border-radius:var(--radiusLg);box-shadow:var(--shadow);padding:20px}
+.sphereTitle{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.sphereTitle .miniTools{display:flex;gap:8px}
+.sphere{width:340px;height:340px;margin:12px auto;border-radius:50%;
+  background:
+    radial-gradient(130px 130px at 42% 36%,rgba(255,255,255,.9),rgba(255,255,255,.0) 70%),
+    radial-gradient(circle at 52% 55%,#e4f4ff,#cde7ff 60%,rgba(255,255,255,0) 61%),
+    conic-gradient(from 0deg,#b6f 0 15%,#6cf 15% 35%,#7ef 35% 55%,#c9f 55% 75%,#f7a 75% 100%);
+  filter:saturate(110%); box-shadow:inset 0 0 40px rgba(255,255,255,.9), 0 30px 60px rgba(38,90,140,.15);
+  position:relative; transition:transform .2s ease;
 }
-.topbar .left{flex:1}
-.topbar .center{flex:1; justify-content:center}
-.topbar .right{flex:1; justify-content:flex-end}
-.topbar .brand{font-family:Cinzel, serif; color:#fff; font-size:22px; letter-spacing:.7em}
-.topbar button, .topbar .chip{background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.4);
-  color:#fff; padding:6px 12px; border-radius:8px; margin-left:8px; transition:background .3s}
-.topbar button:hover, .topbar .chip:hover{background:rgba(255,255,255,.35)}
-.clock{font-weight:700; color:#fff; border:1px solid rgba(255,255,255,.5); padding:6px 10px; border-radius:10px}
-
-/* --- Container & layout --- */
-.mainWrap{padding-top:72px; max-width:900px; margin:0 auto}
-.rowTop{display:flex; gap:16px; margin-bottom:24px}
-.cardWide{
-  flex:1; background:#ffffff; border-radius:16px; padding:18px;
-  box-shadow:0 10px 30px rgba(6,24,44,.1); position:relative; overflow:hidden;
+.sphere::after{
+  content:""; position:absolute; inset:18px; border-radius:50%; 
+  border:10px solid rgba(255,255,255,.55); filter:blur(.6px);
+  animation:ringSpin 9s linear infinite;
 }
-.cardWide h4{margin-bottom:10px}
-.cardWide.small{flex:0 0 200px}
+@keyframes ringSpin{to{transform:rotate(360deg)}}
+.sphereShadow{width:60%; height:22px; margin:10px auto; background:radial-gradient(circle,rgba(0,0,0,.35),transparent 60%); filter:blur(6px)}
 
-/* --- Panels Okyanus / Doğa --- */
-.panelBig{
-  background:#eef9ff; border-radius:16px; overflow:hidden; position:relative; display:flex;
-}
-.panelBig .content{flex:2; padding:18px; z-index:1}
-.panelBig .thumb{flex:1; position:relative}
-.panelBig .thumb canvas{position:absolute; inset:0; width:100%; height:100%}
-.panelBig.male{background:linear-gradient(160deg,#e4f6ff,#ffffff)}
-.panelBig.female{background:linear-gradient(160deg,#fff0f6,#ffffff)}
+/* -------- Bottom cards -------- */
+.bottom3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:18px}
+.bottom3 p{color:var(--inkSoft)}
 
-.btnRight{
-  display:inline-block; background:#fff; border:1px solid rgba(0,0,0,.1);
-  padding:10px 14px; border-radius:12px; position:absolute; right:18px; top:50%; transform:translateY(-50%);
-  box-shadow:0 6px 18px rgba(0,0,0,.1)
-}
+/* -------- bg micro-dots canvas -------- */
+#bgDots{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* --- Sphere / Küre alanı --- */
-.sphereWrap{margin-top:32px; text-align:center; position:relative}
-.sphere{width:260px; height:260px; margin:0 auto; border-radius:50%;
-  background:radial-gradient(circle at 50% 46%,#ffffff,rgba(255,255,255,0) 60%);
-  box-shadow: inset 0 0 40px rgba(255,255,255,.8), 0 30px 60px rgba(38,90,140,.15);
-  transition:transform .2s ease;
-}
-.sphereShadow{width:60%; height:20px; background:radial-gradient(circle,#000,transparent); filter:blur(4px); margin:14px auto}
+/* -------- utility animations -------- */
+.fade{animation:fade .6s ease both} @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.fadeSlide{animation:fadeSlide .7s ease both} 
+@keyframes fadeSlide{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+.hovUp{transition:transform .2s ease, box-shadow .25s} .hovUp:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(6,24,44,.16)}
 
-/* --- Info boxes alt kısmı --- */
-.bottomRow{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:30px}
-.bottomRow .cardWide{padding:14px;}
-
-/* --- Micro dots background --- */
-#bgDots{position:fixed; inset:0; z-index:0; pointer-events:none}
-
-/* --- Fade efekt sınıfları --- */
-.fadeIn{animation:fadeIn .6s ease both}
-@keyframes fadeIn{from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:none}}
-
-/* --- Responsive --- */
-@media (max-width:720px){
-  .rowTop{flex-direction:column}
-  .panelBig{flex-direction:column}
-  .btnRight{position:static; transform:none; margin-top:14px}
+/* -------- responsive -------- */
+@media (max-width:960px){ .grid2{grid-template-columns:1fr} .row{grid-template-columns:1fr} .bottom3{grid-template-columns:1fr}}
+@media (max-width:560px){
+  .topbar .brand{letter-spacing:.55em;text-indent:.55em;font-size:18px}
+  .panel .go{position:static;transform:none;margin-top:10px}
+  .sphere{width:270px;height:270px}
 }
 </style>
 </head>
 <body>
 
-<!-- Intro Splash -->
-<div id="introSplash">
-  <div class="circle"></div>
+<!-- =================== INTRO =================== -->
+<div id="intro" aria-hidden="true">
+  <div class="ring"></div>
   <div class="logo">AZURA</div>
 </div>
 
-<!-- Top Bar -->
+<!-- =================== TOPBAR =================== -->
 <header class="topbar">
-  <div class="left">
-    <div id="clock" class="clock">00:00:00</div>
-  </div>
-  <div class="center">
-    <div class="brand">A Z U R A</div>
-  </div>
-  <div class="right">
-    <button id="btnLogin">Giriş Yap</button>
-    <button id="btnSignup">Üye Ol</button>
+  <div class="wrap">
+    <div class="left">
+      <button id="btnDrawer">☰ Panel</button>
+      <div id="clock" class="clock" style="margin-left:10px">00:00:00</div>
+    </div>
+    <div class="mid">
+      <div class="brand">A Z U R A</div>
+    </div>
+    <div class="right">
+      <button id="toggleTheme" title="Tema (T)">Tema</button>
+      <a class="chip" href="#" id="loginBtn">Giriş Yap</a>
+      <a class="chip" href="#" id="signupBtn" style="margin-left:8px">Üye Ol</a>
+    </div>
   </div>
 </header>
 
+<!-- =================== DRAWER =================== -->
+<aside id="drawer" class="drawer" aria-hidden="true">
+  <div class="head">
+    <h3>MENÜ</h3>
+    <button id="btnClose">Kapat</button>
+  </div>
+  <div class="content">
+    <a href="#quote" class="item">💡 Günün Sözü</a>
+    <a href="#fact" class="item">🧠 İlginç Bilgi</a>
+    <a href="#male" class="item">🌊 Okyanus (Erkek)</a>
+    <a href="#female" class="item">🌸 Doğa (Kadın)</a>
+    <a href="#sphere" class="item">🪩 Azura Küresi</a>
+    <a href="#about" class="item">📘 Hakkımda</a>
+    <a href="#content" class="item">📑 İçerikler</a>
+    <a href="#motivation" class="item">⚡ Motivasyon</a>
+  </div>
+</aside>
+
+<!-- mask for drawer (click to close) -->
+<div id="mask" style="position:fixed;inset:0;background:rgba(0,0,0,.25);backdrop-filter:blur(1px);opacity:0;visibility:hidden;transition:.25s;z-index:59"></div>
+
+<!-- bg dots -->
 <canvas id="bgDots" aria-hidden="true"></canvas>
 
-<div class="mainWrap">
+<!-- =================== MAIN =================== -->
+<main class="main" id="main">
 
-  <!-- Üst kartlar: Günün Sözü & İlginç Bilgi -->
-  <div class="rowTop">
-    <section class="cardWide fadeIn" id="cardQuote">
-      <h4>💡 Günün Sözü</h4>
+  <!-- Günün Sözü & İlginç Bilgi -->
+  <section class="grid2 fade" aria-label="Üst bilgi">
+    <article id="quote" class="card hovUp">
+      <div class="sun" aria-hidden="true"></div>
+      <h4>Günün Sözü</h4>
       <p id="qText">Yükleniyor…</p>
       <small id="qAuth"></small>
-    </section>
-    <section class="cardWide fadeIn" id="cardFact">
-      <h4>🧠 İlginç Bilgi</h4>
+    </article>
+
+    <article id="fact" class="card hovUp">
+      <div class="brain" aria-hidden="true"></div>
+      <h4>İlginç Bilgi</h4>
       <p id="fText">Yükleniyor…</p>
       <small>Azura Bilgi Bankası</small>
-    </section>
-  </div>
+    </article>
+  </section>
 
-  <!-- Okyanus / Doğa paneller -->
-  <div class="rowTop">
-    <article class="panelBig fadeIn male">
-      <div class="content">
+  <!-- Male / Female -->
+  <section class="row" style="margin-top:18px" aria-label="Kanallar">
+    <article id="male" class="panel male fadeSlide hovUp">
+      <div class="txt">
         <h3>🌊 Okyanus • Karizmatik</h3>
         <p>Serin mavilik, hava kabarcıkları ve metalik çizgiler. Akışına bırak.</p>
-        <div class="btnRight">Giriş →</div>
+        <a class="go" href="#">Giriş →</a>
       </div>
       <div class="thumb"><canvas id="seaThumb"></canvas></div>
     </article>
-    <article class="panelBig fadeIn female">
-      <div class="content">
+
+    <article id="female" class="panel female fadeSlide hovUp">
+      <div class="txt">
         <h3>🌸 Doğa • İç ısıtan</h3>
         <p>Güneş parıltısı, pembe yapraklar, yumuşak esinti ve sıcak yeşiller.</p>
-        <div class="btnRight">Giriş →</div>
+        <a class="go" href="#">Giriş →</a>
       </div>
       <div class="thumb"><canvas id="forestThumb"></canvas></div>
     </article>
-  </div>
-
-  <!-- Sizi tanımak isteriz -->
-  <section class="cardWide fadeIn ctaSoft" style="display:flex;align-items:center;justify-content:space-between">
-    <div>
-      <h4>🧪 Sizi tanımak isteriz</h4>
-      <p style="color:#6c7b8a">Kısa bir test ile Azura deneyimini kişiselleştirelim.</p>
-    </div>
-    <div class="miniOrb" aria-hidden="true"></div>
   </section>
 
-  <!-- Küre -->
-  <section class="fadeIn" style="text-align:center; margin-top:40px">
-    <h3>Azura Küresi</h3>
-    <div class="sphereWrap">
-      <div class="sphere" id="theSphere"></div>
+  <!-- CTA -->
+  <section class="card cta fade hovUp" style="margin-top:18px">
+    <div>
+      <h4>🧪 Sizi tanımak isteriz</h4>
+      <p>Kısa bir test ile Azura deneyimini kişiselleştirelim.</p>
+    </div>
+    <div class="orb" aria-hidden="true"></div>
+  </section>
+
+  <!-- Sphere -->
+  <section id="sphere" class="sphereWrap fade">
+    <div class="sphereBox">
+      <div class="sphereTitle">
+        <h3>Azura Küresi</h3>
+        <div class="miniTools">
+          <button id="reactBtn">Fareye Tepki</button>
+          <button id="autoBtn">Yumuşak Hareket</button>
+        </div>
+      </div>
+      <div class="sphere" id="theSphere" title="Hafif hareket verir"></div>
       <div class="sphereShadow"></div>
     </div>
   </section>
 
-  <!-- Alt üç kart -->
-  <div class="bottomRow fadeIn">
-    <section class="cardWide">
+  <!-- Bottom trio -->
+  <section class="bottom3 fade" style="margin-bottom:20px">
+    <article id="about" class="card hovUp">
       <h4>📘 Hakkımda</h4>
       <p>Azura; sade, hızlı ve göz yormayan bir kişisel portal. Daha fazlası yakında.</p>
-    </section>
-    <section class="cardWide">
+    </article>
+    <article id="content" class="card hovUp">
       <h4>📑 İçerik Başlıkları</h4>
       <p>Echo (konuk defteri), Notlar, Felsefe, Projeler, Tıp Bilgileri…</p>
-    </section>
-    <section class="cardWide">
+    </article>
+    <article id="motivation" class="card hovUp">
       <h4>⚡ Motivasyon</h4>
       <p>“Sessiz adımlar, en derin izleri bırakır.” “Dalgalar büyükse, kıyı da yakındır.”</p>
-    </section>
-  </div>
+    </article>
+  </section>
 
-</div>
+  <footer class="card" style="text-align:center">
+    © 2025 <strong>AZURA</strong>
+  </footer>
+
+</main>
 
 <script>
-/* Saat */
-(function(){
-  const el = document.getElementById('clock'); if(!el) return;
-  const two = n=>String(n).padStart(2,'0');
+/* =========================================================
+   AZURA 2.0 • NOVA PULSE — Scripts
+   ========================================================= */
+
+/* ---------- mini helpers ---------- */
+const $ = (sel,root=document)=>root.querySelector(sel);
+const $$ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
+
+/* ---------- clock ---------- */
+(function clock(){
+  const el = $('#clock'); if(!el) return;
+  const two=n=>String(n).padStart(2,'0');
   function tick(){
-    const d = new Date();
+    const d=new Date();
     el.textContent = `${two(d.getHours())}:${two(d.getMinutes())}:${two(d.getSeconds())}`;
     setTimeout(tick,250);
   }
   tick();
 })();
 
-/* Söz & Bilgi */
-(function(){
-  const QUOTES=[["Sessiz adımlar, en derin izleri bırakır.","Azura"],["Nezaket, zekânın görünen yüzüdür.","Azura"]];
-  const FACTS=["Beynin %60'ı yağdan oluşur.","Kalp günde ~100.000 kez atar."];
-  const [q,a] = QUOTES[Math.floor(Math.random()*QUOTES.length)];
-  document.getElementById('qText').textContent = '“ '+q+' ”';
-  document.getElementById('qAuth').textContent = '— '+a;
-  document.getElementById('fText').textContent = FACTS[Math.floor(Math.random()*FACTS.length)];
+/* ---------- drawer ---------- */
+(function drawer(){
+  const d = $('#drawer'), mask=$('#mask'), open=$('#btnDrawer'), close=$('#btnClose');
+  const on=()=>{d.classList.add('open'); mask.style.opacity=1; mask.style.visibility='visible'}
+  const off=()=>{d.classList.remove('open'); mask.style.opacity=0; mask.style.visibility='hidden'}
+  open.addEventListener('click',on); close.addEventListener('click',off); mask.addEventListener('click',off);
+  // Esc
+  addEventListener('keydown',e=>{ if(e.key==='Escape') off() });
 })();
 
-/* Micro dots background */
-(function(){
-  const c = document.getElementById('bgDots'), x = c.getContext('2d');
-  function fit(){ c.width = innerWidth; c.height = innerHeight }
-  fit(); window.addEventListener('resize', fit, {passive:true});
-  let t = 0;
+/* ---------- theme toggle (T) ---------- */
+(function theme(){
+  const key='azura-theme';
+  const btn=$('#toggleTheme');
+  const apply = v => document.body.classList.toggle('dark', v==='dark');
+  const saved=localStorage.getItem(key)||'';
+  if(saved) apply(saved);
+  btn.addEventListener('click',()=>{
+    const v = document.body.classList.contains('dark') ? 'light' : 'dark';
+    localStorage.setItem(key,v); apply(v);
+  });
+  // keyboard T
+  addEventListener('keydown',e=>{ if(e.key.toLowerCase()==='t') btn.click() });
+})();
+
+/* ---------- quotes & facts ---------- */
+(function quotesFacts(){
+  const QUOTES=[
+    ["Sessiz adımlar, en derin izleri bırakır.","Azura"],
+    ["Nezaket, zekânın görünen yüzüdür.","Azura"],
+    ["Disiplin, özgürlüğün en kısa yoludur.","Azura"],
+    ["Sabır, hızın yakıtıdır.","Azura"],
+    ["Dalgayı bekleme; yelkeni hazırla.","Azura"]
+  ];
+  const FACTS=[
+    "Beynin yaklaşık %60'ı yağdan oluşur.",
+    "REM uykusu, duygusal merkezleri güçlendirir.",
+    "Kalp günde ~100.000 kez atar.",
+    "İnsan burnu 1 trilyon farklı kokuyu ayırt edebilir.",
+    "Su içmek bilişsel performansı yükseltir."
+  ];
+  const pick = arr=>arr[Math.floor(Math.random()*arr.length)];
+  const [q,qa]=pick(QUOTES);
+  $('#qText').textContent = '“ '+q+' ”';
+  $('#qAuth').textContent = '— '+qa;
+  $('#fText').textContent = pick(FACTS);
+})();
+
+/* ---------- background micro-dots ---------- */
+(function bgDots(){
+  const c=$('#bgDots'), x=c.getContext('2d');
+  function fit(){ c.width=innerWidth; c.height=innerHeight }
+  fit(); addEventListener('resize',fit,{passive:true});
+  let t=0;
   (function loop(){
     x.clearRect(0,0,c.width,c.height);
-    const dots = Math.max(80, c.width * c.height / 18000);
+    const dots=Math.floor(Math.max(120, c.width*c.height/16000));
     for(let i=0;i<dots;i++){
-      const y = ((i*13 + t) % c.height);
-      const hue = 200 + (i % 60);
-      x.fillStyle = `hsla(${hue},40%,${35 + (i % 20)}%,.18)`;
-      x.fillRect((i*37) % c.width, y, 2, 2);
+      const y=((i*13+t)%c.height);
+      const hue=200+(i%60);
+      x.fillStyle=`hsla(${hue},40%,${35+(i%20)}%,.18)`;
+      x.fillRect((i*37)%c.width, y, 2, 2);
     }
-    t += 1.15;
+    t+=1.2; requestAnimationFrame(loop);
+  })();
+})();
+
+/* ---------- canvases: male / sea ---------- */
+(function seaThumb(){
+  const c=$('#seaThumb'); if(!c) return; const x=c.getContext('2d');
+  const fit=()=>{c.width=c.clientWidth; c.height=c.clientHeight}; fit(); addEventListener('resize',fit,{passive:true});
+  const B=120,b=[];
+  for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
+  let t=0; (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    x.globalAlpha=.24; x.strokeStyle='rgba(80,160,220,.28)'; x.lineWidth=1;
+    for(let i=0;i<28;i++){const y=(i/28)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.04)*6); x.lineTo(c.width,y); x.stroke();}
+    x.globalAlpha=.36; x.fillStyle='rgba(120,200,255,.18)';
+    for(const p of b){ p.y-=p.s; p.x+=Math.cos((p.y+t)*.02)*.6; if(p.y<-10){p.y=c.height+10;p.x=Math.random()*c.width} x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill(); }
+    t+=1; requestAnimationFrame(loop);
+  })();
+})();
+
+/* ---------- canvases: female / forest ---------- */
+(function forestThumb(){
+  const c=$('#forestThumb'); if(!c) return; const x=c.getContext('2d');
+  const fit=()=>{c.width=c.clientWidth; c.height=c.clientHeight}; fit(); addEventListener('resize',fit,{passive:true});
+  const N=60,p=[]; for(let i=0;i<N;i++) p.push({x:Math.random()*c.width,y:Math.random()*c.height,s:.6+Math.random()*1.5,h:300+Math.random()*80});
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    for(const s of p){ s.y+=.35; s.x+=Math.sin(s.y/40)*.4; if(s.y>c.height+8){s.y=-8; s.x=Math.random()*c.width}
+      x.fillStyle=`hsla(${s.h},80%,70%,.28)`; x.beginPath(); x.arc(s.x,s.y,1.4,0,6.28); x.fill();
+    }
     requestAnimationFrame(loop);
   })();
 })();
 
-/* Küre tepki */
-(function(){
-  const sph = document.getElementById('theSphere'); if(!sph) return;
-  let tx=0, ty=0, cx=0, cy=0;
-  const lerp = (a,b,t)=>a+(b-a)*t;
-  const upd = ()=>{
-    cx = lerp(cx,tx,0.07); cy = lerp(cy,ty,0.07);
-    sph.style.transform = `translate(${cx}px,${cy}px)`;
-    requestAnimationFrame(upd);
-  };
-  upd();
+/* ---------- sphere interactions ---------- */
+(function sphere(){
+  const sph = $('#theSphere'); if(!sph) return;
   const wrap = sph.parentElement;
-  wrap.addEventListener('pointermove', e=>{
-    const r = wrap.getBoundingClientRect();
-    tx = (e.clientX - (r.left + r.width/2)) * 0.06;
-    ty = (e.clientY - (r.top + r.height/2)) * 0.06;
-  });
-  wrap.addEventListener('pointerleave', ()=>{ tx=0; ty=0 });
+  let tx=0,ty=0,cx=0,cy=0, auto=false, a=0, raf=0;
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  function update(){
+    if(auto){ a+=.015; tx=Math.cos(a)*16; ty=Math.sin(a*1.2)*12; }
+    cx=lerp(cx,tx,.07); cy=lerp(cy,ty,.07);
+    sph.style.transform=`translate(${cx}px,${cy}px)`;
+    raf=requestAnimationFrame(update);
+  }
+  update();
+  wrap.addEventListener('pointermove', e=>{ if(auto) return; const r=wrap.getBoundingClientRect(); tx=(e.clientX-(r.left+r.width/2))*.06; ty=(e.clientY-(r.top+r.height/2))*.06; });
+  wrap.addEventListener('pointerleave', ()=>{ if(!auto){tx=0;ty=0} });
+  $('#reactBtn').addEventListener('click',()=>{ auto=false; tx=ty=0; });
+  $('#autoBtn').addEventListener('click',()=>{ auto=!auto; if(!auto){tx=ty=0} });
 })();
+
+/* ---------- smooth anchor outline feedback ---------- */
+(function hiAnchor(){
+  $$('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const id=a.getAttribute('href').slice(1);
+      const el=document.getElementById(id);
+      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); 
+        el.style.outline='2px solid #7bc4ff'; el.style.outlineOffset='6px';
+        setTimeout(()=>{el.style.outline='none'},520);
+      }
+    });
+  });
+})();
+
+/* ---------- keyboard shortcuts ---------- */
+/*
+  T : Tema değiştir
+  Alt + , : Drawer aç/kapat
+  Alt + 1/2/3 : Quote/Fact/Sphere
+*/
+(function keys(){
+  addEventListener('keydown',e=>{
+    if(e.key.toLowerCase()==='t'){ $('#toggleTheme').click(); }
+    if(e.altKey && e.key===","){ $('#btnDrawer').click() }
+    if(e.altKey && e.key==="1"){ location.hash="#quote" }
+    if(e.altKey && e.key==="2"){ location.hash="#fact" }
+    if(e.altKey && e.key==="3"){ location.hash="#sphere" }
+  });
+})();
+
+/* ---------- after intro ensure scroll at top (mobile Safari sometimes keeps) ---------- */
+addEventListener('load',()=>{ setTimeout(()=>scrollTo(0,0),50) });
 </script>
 
 </body>
-                                                 </html>
+</html>
