@@ -8,372 +8,76 @@
 <style>
   :root{ --b:rgba(255,255,255,.16); --glass:rgba(255,255,255,.06); --fg:#fff7fb; --bg:#0c0a0f }
   *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(255,154,208,.09), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui; overflow:hidden}
-  header{position:fixed; inset:12px 12px auto auto; z-index:3}
-  a.btn{padding:10px 14px; border-radius:12px; border:1px solid var(--b); background:var(--glass); color:var(--fg); text-decoration:none; font-weight:900}
-  h1{position:fixed; left:50%; transform:translateX(-50%); top:24px; margin:0; font-family:Cinzel,serif; letter-spacing:.16em}
-  canvas{position:fixed; inset:0; z-index:0}
-  .sheet{position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(920px,92%); border:1px solid var(--b); background:rgba(12,10,15,.78); border-radius:20px; padding:22px; z-index:1; backdrop-filter: blur(8px)}
-  /* girişte beyazdan sönerek görünme */
-  #enter{position:fixed; inset:0; background:#ffffff; z-index:5; opacity:1; transform:scale(1.05); animation:fadeIn .55s ease forwards}
-  @keyframes fadeIn{to{opacity:0; transform:scale(1)}}
-  /* çıkışta sönerek beyaz */
-  #leave{position:fixed; inset:0; background:#ffffff; z-index:5; opacity:0; transform:scale(1.05); transition:opacity .45s ease, transform .45s ease}
-  #leave.show{opacity:1; transform:scale(1)}
+  body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(255,154,208,.09), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui}
+  header{position:sticky; top:0; z-index:10; background:rgba(0,0,0,.35); backdrop-filter:blur(6px); border-bottom:1px solid rgba(255,255,255,.12)}
+  nav{display:flex; gap:8px; padding:10px; justify-content:center}
+  nav a{border:1px solid var(--b); background:var(--glass); color:#fff; text-decoration:none; font-weight:800; padding:8px 12px; border-radius:12px}
+  main{max-width:960px; margin:16px auto; padding:0 12px; display:grid; gap:12px}
+  .card{border:1px solid var(--b); background:rgba(12,10,15,.78); border-radius:18px; padding:16px}
+  canvas.field{position:relative; width:100%; height:260px; border-radius:14px; background:rgba(255,255,255,.06)}
 </style>
 </head>
 <body>
-  <div id="enter"></div>
-  <div id="leave"></div>
 
-  <header><a class="btn back" href="index.html">← Ana Menü</a></header>
-  <h1>DOĞA</h1>
-  <canvas id="field"></canvas>
+<header>
+  <nav>
+    <a href="#intro">Giriş</a>
+    <a href="#manifesto">Metin</a>
+    <a href="#menu">Menü</a>
+    <a href="index.html">← Ana Menü</a>
+  </nav>
+</header>
 
-  <section class="sheet">
+<main>
+  <section id="intro" class="card">
     <h2>Doğanın Işığı’na hoş geldin 🌸</h2>
     <p>Uzakta gün ışığı parıldar; pembe yapraklar havada süzülür, yumuşak bir esintiyle seni içine çeker.</p>
+    <canvas id="field" class="field"></canvas>
   </section>
 
+  <section id="manifesto" class="card">
+    <h2>Kadına Değer • Kadın</h2>
+    <p>Türkiye’de kadın olmak; gündoğumunda ekmeğin buharı, akşamüstü pencereden sokağa taşan gülüş, yollara düşmüş bir cesaret ve evlere sinmiş bir bilgeliktir…</p>
+    <p>Değer; yalnız alkışta değil, gündeliğin sessiz kahramanlığındadır. Başını göğe kaldırıp “yapabilirim” diyen her kadında memleket göğünün mavisi bir ton daha derinleşir.</p>
+  </section>
+
+  <section id="menu" class="card">
+    <h2>Kadın Menüsü</h2>
+    <div class="actions">
+      <a href="#manifesto">Metne in</a>
+      <a href="index.html">← Ana Menü</a>
+    </div>
+  </section>
+</main>
+
 <script>
-  // güneş ışıması + yapraklar + minik tavşan
-  (()=>{ const c=field, x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
-    const petals=Array.from({length: Math.floor(c.width*c.height/26000)},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*3,h:330+Math.random()*40,s:.4+.7*Math.random(),d:(Math.random()-.5)*.7}));
-    let t=0; (function loop(){
-      x.fillStyle= getComputedStyle(document.body).getPropertyValue('--bg').trim() || '#0c0a0f';
-      x.fillRect(0,0,c.width,c.height);
-      // güneş
-      const sx=c.width*.82, sy=c.height*.18; const g=x.createRadialGradient(sx,sy,10,sx,sy,220);
-      g.addColorStop(0,'rgba(255,240,180,.85)'); g.addColorStop(.6,'rgba(255,205,140,.20)'); g.addColorStop(1,'rgba(255,205,140,0)');
-      x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
-      // yapraklar
-      for(const p of petals){
-        p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.d; if(p.y>c.height+10){p.y=-10; p.x=Math.random()*c.width}
-        x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fillStyle=`hsla(${p.h},85%,70%,.9)`; x.fill();
-      }
-      // tavşan
-      const bx=c.width*0.82, by=c.height*0.82; x.save(); x.translate(bx,by+Math.sin(t/30)*2); x.scale(1.25,1.25);
-      x.fillStyle='rgba(255,122,182,.45)'; x.beginPath(); x.ellipse(0,0,22,16,0,0,Math.PI*2); x.fill();
-      x.beginPath(); x.arc(-16,-10,9,0,Math.PI*2); x.fill();
-      x.beginPath(); x.ellipse(-20,-22,4,12,0,0,Math.PI*2); x.ellipse(-10,-22,4,12,0,0,Math.PI*2); x.fill();
-      x.restore();
-      t++; requestAnimationFrame(loop);
-    })();
-  })();
+/* smooth scroll */
+document.addEventListener('click', (e)=>{
+  const a = e.target.closest('a[href^="#"]');
+  if(!a) return;
+  const el = document.querySelector(a.getAttribute('href'));
+  if(!el) return;
+  e.preventDefault();
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+});
 
-  // geri dönüşte sönerek beyaz
-  (()=> {
-    const leave=document.getElementById('leave');
-    document.querySelector('.back').addEventListener('click',e=>{
-      e.preventDefault(); leave.classList.add('show'); setTimeout(()=>location.href='index.html', 420);
-    });
-  })();
-</script>
-  <!-- ====== KARŞILAMA ➜ MANİFESTO ➜ MENÜ SIRALAMASI ====== -->
-<style>
-  /* Katman düzeni */
-  #welcomeCard, #scrollStory, #menuPanel { position:fixed; inset:0; z-index:9; }
-  #welcomeCard, #menuPanel { display:grid; place-items:center; }
-
-  /* ➊ Karşılama kartı */
-  #welcomeCard{
-    background: radial-gradient(1000px 600px at 75% 15%, rgba(255,230,180,.10), transparent 60%), #0c0a0f;
-    animation: welcomeIn .5s ease both;
-  }
-  @keyframes welcomeIn{ from{opacity:0; transform:scale(.98)} to{opacity:1; transform:scale(1)} }
-  .wc-box{
-    max-width: 860px; margin:0 16px; padding:18px 18px;
-    border:1px solid rgba(255,255,255,.14); border-radius:16px;
-    background: rgba(255,255,255,.06); backdrop-filter: blur(8px);
-    color:#fff7fb; box-shadow:0 10px 40px rgba(0,0,0,.35);
-  }
-  .wc-title{ margin:0 0 8px; font: 900 20px/1.2 Cinzel, serif; letter-spacing:.12em }
-  .wc-desc{ margin:0; opacity:.9 }
-
-  /* ➋ Manifesto katmanı */
-  #scrollStory{ display:none; grid-template-rows:auto 1fr auto;
-    background: linear-gradient(180deg, #0c0a0f 0%, #0f0b12 100%);
-  }
-  #scrollStory .bar{
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.08);
-    background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));
-    color:#ffe8f4; font-weight:800
-  }
-  #scrollStory h1{ margin:0; font:900 18px/1 Cinzel,serif; letter-spacing:.16em }
-  #scrollStory .skip{
-    appearance:none; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.07);
-    color:#fff; border-radius:12px; padding:8px 12px; font-weight:800; cursor:pointer; backdrop-filter:blur(6px);
-  }
-  #storyViewport{ position:relative; overflow:hidden }
-  #storyInner{
-  position:absolute;
-  left:0; right:0;
-  transform:translateY(100%);
-  padding:0 22px 60px;
-  color:#fff7fb;
-  font:22px/1.9 "Playfair Display", "Cinzel", serif;
-  letter-spacing:0.02em;
-  text-shadow:0 0 10px rgba(255,200,255,.25);
-}
-#storyInner p{
-  margin:0 0 24px;
-  text-wrap:pretty;
-}
-#storyInner p.lead{
-  font-size:26px;
-  font-weight:900;
-  color:#ffe0f8;
-  text-shadow:0 0 14px rgba(255,150,255,.35);
+/* güneş ışıması + yaprak */
+(() => {
+  const c = document.getElementById('field'), x = c.getContext('2d');
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
+  const petals = Array.from({length: 120}, ()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40,s:.4+.7*Math.random(),d:(Math.random()-.5)*.7}));
+  let t=0; (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    const sx=c.width*.82, sy=c.height*.18; const g=x.createRadialGradient(sx,sy,10,sx,sy,220);
+    g.addColorStop(0,'rgba(255,240,180,.85)'); g.addColorStop(.6,'rgba(255,205,140,.20)'); g.addColorStop(1,'rgba(255,205,140,0)');
+    x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
+    for(const p of petals){
+      p.y+=p.s; p.x+=Math.sin((t+p.y)/40)*.6 + p.d; if(p.y>c.height+10){p.y=-10; p.x=Math.random()*c.width}
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fillStyle=`hsla(${p.h},85%,70%,.9)`; x.fill();
     }
-  #storyViewport::before,#storyViewport::after{
-    content:""; position:absolute; left:0; right:0; height:80px; pointer-events:none; z-index:1
-  }
-  #storyViewport::before{ top:0; background:linear-gradient(180deg,#0c0a0f,rgba(12,10,15,0)) }
-  #storyViewport::after{ bottom:0; background:linear-gradient(0deg,#0c0a0f,rgba(12,10,15,0)) }
-  .hint{ text-align:center; color:#ffebf6; opacity:.75; padding:10px; border-top:1px solid rgba(255,255,255,.08) }
-
-  /* Manifesto açıkken arkadaki UI’ı sakla */
-  body.story-on header, body.story-on .sheet { visibility:hidden }
-
-  /* ➌ Menü: scale-in */
-  #menuPanel{ display:none; background: radial-gradient(1000px 600px at 75% 15%, rgba(255,210,245,.08), transparent 60%) }
-  .menu-card{
-    width:min(860px,92%); border:1px solid rgba(255,255,255,.14); border-radius:18px;
-    background: rgba(255,255,255,.06); backdrop-filter: blur(8px); padding:18px;
-    transform: scale(.92); opacity:0; transition: transform .6s ease, opacity .6s ease;
-  }
-  .menu-card.show{ transform: scale(1); opacity:1 }
-  .menu-card h2{ margin:0 0 8px; font:900 20px/1.1 Cinzel,serif; letter-spacing:.14em; color:#ffe8f4 }
-  .menu-actions{ display:flex; gap:10px; flex-wrap:wrap }
-  .btn{
-    appearance:none; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.07);
-    color:#fff; font-weight:800; border-radius:12px; padding:10px 14px; text-decoration:none; backdrop-filter:blur(6px)
-  }
-
-  /* Fade çıkış */
-  .fade-out{ animation: fade .6s ease forwards }
-  @keyframes fade{ to{ opacity:0; visibility:hidden } }
-</style>
-
-<!-- ➊ Karşılama (5 sn) -->
-<section id="welcomeCard" aria-label="Karşılama">
-  <div class="wc-box">
-    <h3 class="wc-title">Doğanın Işığı’na hoş geldin 🌸</h3>
-    <p class="wc-desc">Uzakta gün ışığı parıldar; pembe yapraklar havada süzülür, yumuşak bir esintiyle seni içine çeker.</p>
-  </div>
-</section>
-
-<!-- ➋ Manifesto -->
-<section id="scrollStory" aria-label="Kadına Değer Manifestosu">
-  <div class="bar">
-    <h1>KADINA DEĞER • KADIN</h1>
-    <button class="skip" id="skipStory">Menüye geç</button>
-  </div>
-  <div id="storyViewport">
-    <div id="storyInner">
-      <p class="lead">Türkiye’de kadın olmak; gündoğumunda ekmeğin buharı, akşamüstü pencereden sokağa taşan gülüş, yollara düşmüş bir cesaret ve evlere sinmiş bir bilgeliktir.</p>
-      <p>Nice yüzyılın türkülerinde “yar” diye çağrılan, masallarda “anasultan” diye ağırlanan kadın; sofranın bereketi, evin direği, mahallenin hafızasıdır. Adı bazen ninenin dizinde bir dua, bazen bir öğretmenin kara tahta başında tebeşir tozu, bazen bir mühendisin şantiyede teri, bazen bir hekimin beyaz önlüğünde sarsılmaz bir sükûnettir.</p>
-      <p>Kadının emeği; tandırın sıcak taşında, tarlanın serin toprağında, atölyenin çıtırtısında, laboratuvarın mikroskobunda aynı ışıltıyla parlar. Bu toprakların kadınları; Göktürk yazıtlarından Selçuklu nakışına, Osmanlı hattından Cumhuriyet’in ilk adımlarına kadar her satırda iz bırakır.</p>
-      <p>“Komşu komşunun külüne muhtaçtır” diyen kültürde, kadın komşuluğun kendisidir: kapı eşiğinde paylaşılan çorba, “geçmiş olsun”a eşlik eden kek kokusu, bir bebek ağladığında birlikte uyanan mahalledir. Dayanışma, kadınların ellerinde kurulan görünmez bir ağdır; düğüm düğüm sevgi, ilmik ilmik emektir.</p>
-      <p>Değer; yalnız alkışta değil, gündeliğin sessiz kahramanlığındadır. Sabah otobüsünde birinin yer vermesinde, sınava hazırlanan kardeşine sabaha kadar çay demlemesinde, bir projeyi sabırla son çizgisine kadar taşımasındadır. Başını göğe kaldırıp “yapabilirim” diyen her kadında memleket göğünün mavisi bir ton daha derinleşir.</p>
-      <p>Türk kültüründe kadına saygı; nazar boncuğu gibi evin girişine asılan, misafir gelince en güzel fincanın çıkarıldığı bir inceliktir. Düğünde halayın göbeğinde neşe, yas gününde omuz omuza sessiz bir metanettir. Dilimizde “bacım” diye başlayan cümle, sadece akrabalık değil; güven, hürmet ve emanet duygusudur.</p>
-      <p>Şehirde ya da köyde, sahilde ya da dağ başında; kadının adı üretendir. Kimi zaman bir ebru teknesinde suya nakış, kimi zaman bir yazılım satırında geleceğe köprü, kimi zaman bir sınıfta ilk harfi öğreten sabırdır. Ayak izleri bazen görünmez; ama her yolun altında o izlerin direnci vardır.</p>
-      <p>Bir ülke, kadınlarının ufku kadar genişler. Ufku genişletmek; fırsatı çoğaltmakla, sözü kuvvetlendirmekle, emeği görünür kılmakla olur. Çünkü bir kız çocuğunun “yapabilirim” dediği gün, takvimler geriye değil ileriye sayar.</p>
-      <p>Bu yüzden; “değer” bir hitap şekli değil, bir yaşam biçimidir. Kadına değer vermek; kapı açmakla sınırlı nezaket değil, yol açmaktır: eğitime, sağlığa, güvene, imkâna, eşit çabaya açılan kapıdır. Yol açılan her yerde başarı çoğalır; başarı çoğaldıkça ülke güzelleşir.</p>
-      <p>Ve bil ki; kadın yalnız değildir. Yan yana ve omuz omuzadır: ailede, işte, kampüste, atölyede, klinikte, sahada. Aynı türkünün farklı nakaratlarında aynı cesaretle söyler: “Buradayım.”</p>
-      <p>Türkiye’de kadın olmak; kökleri derin, dalları güneşe uzanan bir çınar olmaktır. Rüzgâr eser, yaprak hışırdar; ama gövde dimdik kalır. O gövdeye yaslanan herkes, gölgede serinlik, dalda meyve bulur.</p>
-      <p class="lead">Bugün; emeğin, bilginin ve merhametin yanına hayali de koyalım. Çünkü hayal kurulan her yerde gelecek şimdiden başlar. Ve bu geleceğin adı; eşitlikten örülü bir umut, saygıyla büyüyen bir barış, birlikte yazılan bir hikâyedir.</p>
-    </div>
-  </div>
-  <div class="hint">⏳ Metin bittiğinde menü otomatik açılacak • İstersen “Menüye geç” ile atla</div>
-</section>
-
-<!-- ➌ Menünün scale-in paneli (istersen içeriği değiştirebilirsin) -->
-<section id="menuPanel" aria-label="Kadın Menüsü">
-  <div class="menu-card" id="menuCard">
-    <h2>🌸 Doğanın Alanı</h2>
-    <div class="menu-actions">
-      <a class="btn" href="index.html">← Ana Menü</a>
-      <a class="btn" href="#kanallar">Kanallar</a>
-      <a class="btn" href="#bilgi">Bilgi Bankası</a>
-      <a class="btn" href="#profil">Profilim</a>
-    </div>
-  </div>
-</section>
-
-<script>
-  // sıralama: 5 sn karşılama ➜ manifesto scroll ➜ menü scale-in
-  const WELCOME_MS = 5000;
-
-  const welcome = document.getElementById('welcomeCard');
-  const story   = document.getElementById('scrollStory');
-  const skipBtn = document.getElementById('skipStory');
-  const menu    = document.getElementById('menuPanel');
-  const menuCard= document.getElementById('menuCard');
-
-  // ➊ Karşılama
-  setTimeout(() => {
-    welcome.classList.add('fade-out');
-    setTimeout(() => {
-      welcome.remove();
-      startManifesto();
-    }, 620);
-  }, WELCOME_MS);
-
-  // ➋ Manifesto akışı
-  let rafId, start, totalDistance;
-  function startManifesto(){
-    document.body.classList.add('story-on');
-    story.style.display = 'grid';
-    const viewport = document.getElementById('storyViewport');
-    const inner    = document.getElementById('storyInner');
-    const vh = viewport.clientHeight;
-    const ih = inner.scrollHeight;
-    totalDistance = ih + vh + 40; // tamamen çıkana dek
-    start = performance.now();
-    const speed = 42; // px/sn (okunur hız)
-
-    const loop = (now) => {
-      const t = now ?? performance.now();
-      const elapsed = t - start;
-      const dy = Math.min(totalDistance, (elapsed/1000)*speed);
-      inner.style.transform = `translateY(${vh - dy}px)`;
-      if (dy >= totalDistance) finishStory();
-      else rafId = requestAnimationFrame(loop);
-    };
-    loop();
-
-    // atla
-    skipBtn.addEventListener('click', finishStory, { once:true });
-  }
-
-  function finishStory(){
-    cancelAnimationFrame(rafId);
-    story.classList.add('fade-out');
-    setTimeout(() => {
-      story.remove();
-      document.body.classList.remove('story-on');
-      // ➌ Menü
-      menu.style.display = 'grid';
-      requestAnimationFrame(()=> menuCard.classList.add('show'));
-    }, 620);
-  }
+    t++; requestAnimationFrame(loop);
+  })();
+})();
 </script>
-<!-- ====== /BİTTİ ====== -->
-<style id="BIGGER-TEXT-OVERRIDE">
-  /* 🚀 DEV SİNEMATİK BOYUTLAR (tam ekran okunur) */
-  #storyInner{
-    position:absolute;
-    left:0; right:0;
-    transform:translateY(100%);
-    padding: 0 clamp(12px, 4vw, 60px) clamp(80px, 10vh, 140px);
-    color:#fff7fb;
-    font-family:"Playfair Display","Cinzel","Times New Roman",serif;
-    /* Ana paragraf boyutu: telefonda bile büyük, desktopta dev */
-    font-size: clamp(22px, 5.8vw, 64px);
-    line-height: 1.45;
-    text-align: center;
-    letter-spacing: 0.03em;
-    text-shadow:
-      0 0 28px rgba(255,200,255,.45),
-      0 0 90px rgba(255,120,255,.28);
-  }
-  #storyInner p{
-    margin: 0 0 clamp(18px, 3.2vw, 48px);
-    text-wrap: pretty;
-  }
-  #storyInner p.lead{
-    /* İlk ve son vurgulu satırlar: daha da büyük */
-    font-size: clamp(26px, 7.2vw, 86px);
-    font-weight: 900;
-    color:#ffe2ff;
-    letter-spacing: 0.06em;
-    text-shadow:
-      0 0 40px rgba(255,160,255,.55),
-      0 0 120px rgba(255,90,255,.32);
-  }
-
-  /* Üstteki başlık barını da büyütüp parlatıyoruz */
-  #scrollStory .bar{
-    font-size: clamp(18px, 3.6vw, 42px);
-    letter-spacing: 0.22em;
-    text-shadow: 0 0 26px rgba(255,180,255,.5);
-  }
-  #scrollStory h1{
-    font: 900 clamp(18px, 3.8vw, 44px)/1 Cinzel,serif;
-  }
-
-  /* Maske bantlarını büyüt (kenarlarda yumuşak fade) */
-  #storyViewport::before,
-  #storyViewport::after{
-    height: clamp(80px, 14vh, 160px);
-  }
-
-  /* Menü kartı biraz daha iri görünsün */
-  #menuPanel .menu-card{
-    transform: scale(.88);
-  }
-  #menuPanel .menu-card.show{
-    transform: scale(1);
-  }
-</style>
-<style id="ULTRA-BIG-TEXT">
-  /* 🌸 dev sinematik manifesto boyutları */
-  #storyInner{
-    position:absolute;
-    left:0; right:0;
-    transform:translateY(100%);
-    padding:0 5vw 10vh;
-    color:#fff7fb;
-    font-family:"Playfair Display","Cinzel","Times New Roman",serif;
-    font-size:clamp(28px,9vw,120px);  /* 🔥 normal paragraflar */
-    line-height:1.3;
-    text-align:center;
-    letter-spacing:0.05em;
-    text-shadow:
-      0 0 45px rgba(255,200,255,.55),
-      0 0 120px rgba(255,100,255,.35),
-      0 0 240px rgba(255,160,255,.25);
-  }
-  #storyInner p{
-    margin:0 0 clamp(24px,5vw,80px);
-    text-wrap:pretty;
-  }
-  #storyInner p.lead{
-    font-size:clamp(36px,12vw,160px); /* 💥 giriş ve bitiş cümleleri */
-    font-weight:900;
-    color:#ffe2ff;
-    letter-spacing:0.08em;
-    text-shadow:
-      0 0 80px rgba(255,180,255,.7),
-      0 0 180px rgba(255,90,255,.5),
-      0 0 320px rgba(255,60,255,.3);
-  }
-
-  /* başlık barını da iri yapalım */
-  #scrollStory .bar{
-    font-size:clamp(24px,6vw,80px);
-    letter-spacing:.25em;
-    text-shadow:0 0 40px rgba(255,180,255,.7);
-  }
-  #scrollStory h1{
-    font:900 clamp(24px,6vw,84px)/1 Cinzel,serif;
-  }
-
-  /* menü kartı da biraz büyüsün */
-  #menuPanel .menu-card{
-    transform:scale(0.85);
-  }
-  #menuPanel .menu-card.show{
-    transform:scale(1);
-  }
-
-  /* üst-alt maske fade yüksekliği */
-  #storyViewport::before,
-  #storyViewport::after{
-    height:clamp(120px,20vh,240px);
-  }
-</style>
 </body>
 </html>
