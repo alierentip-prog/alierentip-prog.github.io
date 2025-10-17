@@ -10,7 +10,6 @@
 
 <style>
 :root{
-  /* Renkler */
   --bg-deep:#110E13;
   --pink-1:#FF9DC3;
   --pink-2:#FFB7D3;
@@ -25,10 +24,10 @@
   --btn-bg:rgba(40,28,45,0.72);
   --btn-bd:rgba(255,160,210,0.22);
   --btn-tx:#EFCFE3;
-  --accent-mor:#B16AD9; /* manifesto yazısı */
+  --accent-mor:#B16AD9;
 }
 
-/* Reset ufak dokunuş */
+/* Reset */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -37,29 +36,23 @@ body{
   overflow-x:hidden;
 }
 
-/* --- Parçacıklar ve Güneş --- */
+/* Arka plan ve güneş */
 .bg-layer{position:fixed; inset:0; pointer-events:none; z-index:0;}
-/* geniş yumuşak parıltılar */
 .bg-halos{
   position:absolute; inset:0;
   background:
     radial-gradient(900px 550px at 85% 10%, rgba(255,200,230,0.10), rgba(255,160,210,0.06) 40%, transparent 70%),
     radial-gradient(1200px 700px at 12% 120%, rgba(255,120,180,0.08), transparent 75%);
 }
-/* pembe noktacıklar */
 .canvas{position:absolute; inset:0;}
-/* Güneş */
 .sun{
   position:absolute; width:560px; height:560px; border-radius:50%;
-  filter:blur(0.2px);
-  background:
-    radial-gradient(closest-side, rgba(255,243,205,0.95), rgba(255,218,160,0.35) 55%, rgba(255,190,140,0.08) 78%, transparent 90%);
-  opacity:.78;
+  background:radial-gradient(closest-side, rgba(255,243,205,0.95), rgba(255,218,160,0.35) 55%, rgba(255,190,140,0.08) 78%, transparent 90%);
+  opacity:.78; filter:blur(0.2px);
   animation: sun-walk 42s linear infinite alternate;
 }
 @keyframes sun-walk{
-  /* daha GENİŞ gezi alanı */
-  0%   { transform:translate(50vw,  4vh) }
+  0%   { transform:translate(50vw, 4vh) }
   20%  { transform:translate(78vw, 16vh) }
   40%  { transform:translate(58vw, 32vh) }
   60%  { transform:translate(70vw, 10vh) }
@@ -67,7 +60,7 @@ body{
   100% { transform:translate(62vw, 28vh) }
 }
 
-/* Üst menü butonları */
+/* Butonlar */
 .top-buttons{position:fixed; inset:0 0 auto 0; height:0; z-index:5;}
 .btn{
   position:absolute; top:12px; padding:8px 12px; border-radius:12px;
@@ -75,7 +68,6 @@ body{
   backdrop-filter: blur(6px);
   text-decoration:none; font-weight:600; font-size:14px;
   box-shadow:0 8px 24px rgba(17,0,30,.28);
-  transition:transform .15s ease, box-shadow .2s ease;
 }
 .btn:hover{transform:translateY(-1px); box-shadow:0 10px 30px rgba(255,160,210,.18)}
 .btn.left{left:12px}
@@ -123,14 +115,14 @@ body{
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-shadow:0 0 22px rgba(177,106,217,.45);
   white-space:pre-wrap; text-transform:uppercase;
-  top:100%; /* alttan başlat */
-  animation: slideUp 38s linear forwards; /* Hızlandırıldı */
+  top:100%;
+  animation: slideUp 53s linear forwards; /* Uzatıldı 53s */
 }
 @keyframes slideUp{
   to{ top:-120% }
 }
 
-/* Menü (kartlar) */
+/* Menü */
 .main{position:relative; z-index:2; padding:90px 18px 64px; display:none;}
 .grid{
   max-width:1100px; margin:0 auto; display:grid; gap:20px;
@@ -160,16 +152,6 @@ body{
 footer{
   max-width:1100px; margin:32px auto 0; text-align:center; color:#E7CCDB;
   opacity:.95; font-size:14px;
-}
-
-/* Küçük ekran uyarlamaları */
-@media (max-width:760px){
-  .grid{grid-template-columns:1fr 1fr;}
-  .card h3{font-size:18px}
-  .card-wide h3{font-size:20px}
-}
-@media (max-width:520px){
-  .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -202,8 +184,8 @@ footer{
   <div class="manifesto-scrim"></div>
   <div class="manifesto" id="manifesto">
 KADIN OLMAK; ZARAFETİ VE GÜCÜ BİRLİKTE TAŞIMAKTIR.
-YERİ GELDİĞİNDE SUSMAYI, YERİ GELDİĞİNDE SÖZÜNÜ
-SAVUNMAYI BİLMEKTİR. ROLLERİ DEĞİL, KENDİ KİMLİĞİNİ SEÇMEKTİR.
+YERİ GELDİĞİNDE SUSMAYI, YERİ GELDİĞİNDE SÖZÜNÜ SAVUNMAYI BİLMEKTİR.
+ROLLERİ DEĞİL, KENDİ KİMLİĞİNİ SEÇMEKTİR.
 BİR ANNE, BİR KARDEŞ, BİR DOST YA DA BİR LİDER OLABİLİR;
 HANGİ ROLDE OLURSA OLSUN, DEĞERİNİ ÇEVRESİNE HİSSETTİRİR.
 
@@ -217,7 +199,7 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
   </div>
 </div>
 
-<!-- Menü (Manifesto bitince görünür) -->
+<!-- Menü -->
 <main class="main" id="main">
   <div class="grid">
     <div class="card">
@@ -293,16 +275,14 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
   })();
 })();
 
-/* ---------- Akış mantığı ---------- */
+/* ---------- Akış ---------- */
 const welcome = document.getElementById('welcomeBox');
 const mfWrap  = document.getElementById('mfWrap');
-const manifesto = document.getElementById('manifesto');
 const skipBtn = document.getElementById('skipBtn');
 const main = document.getElementById('main');
 
 let manifestoTimer = null;
 
-/* Hoşgeldin 2.8sn görünür, sonra manifesto başlar */
 setTimeout(()=>{
   welcome.classList.add('fade-out');
   setTimeout(startManifesto, 820);
@@ -311,11 +291,9 @@ setTimeout(()=>{
 function startManifesto(){
   mfWrap.style.display='block';
   skipBtn.classList.add('show');
-  /* 38sn sonra menüye (animasyon biter) */
-  manifestoTimer = setTimeout(showMenu, 38000);
+  manifestoTimer = setTimeout(showMenu, 53000); // 53 saniye
 }
 
-/* Yazıyı geç */
 skipBtn.addEventListener('click', ()=>{
   if(manifestoTimer){ clearTimeout(manifestoTimer); }
   showMenu();
@@ -327,7 +305,6 @@ function showMenu(){
   main.style.display='block';
 }
 
-/* Sol üst Kullanıcı Paneli şimdilik dummy */
 document.getElementById('userBtn').addEventListener('click', (e)=>{
   e.preventDefault();
   alert('Kullanıcı Paneli yakında burada 🌸');
