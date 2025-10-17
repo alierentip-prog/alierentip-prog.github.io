@@ -31,9 +31,7 @@
     animation: aurora 16s linear infinite alternate;
     pointer-events:none; z-index:0;
   }
-  @keyframes aurora{
-    0%{transform:translateY(0)} 100%{transform:translateY(40px)}
-  }
+  @keyframes aurora{ 0%{transform:translateY(0)} 100%{transform:translateY(40px)} }
 
   /* üst marka */
   h1.brand{
@@ -47,9 +45,7 @@
 
   /* kart grid */
   main{position:relative; z-index:1}
-  .cards{
-    display:flex; justify-content:center; gap:28px; margin-top:54px;
-  }
+  .cards{ display:flex; justify-content:center; gap:28px; margin-top:54px; }
   .card{
     width:min(360px,44vw); height:280px;
     border:1px solid var(--b); background:var(--glass); backdrop-filter: blur(8px);
@@ -76,51 +72,80 @@
   canvas.tile{position:absolute; inset:0; width:100%; height:100%}
 
   /* geçiş sönme (beyaz) */
-  #wipe{ position:fixed; inset:0; background:#ffffff; z-index:100; pointer-events:none;
-         opacity:0; transform:scale(1.05); transition:opacity .45s ease, transform .45s ease }
+  #wipe{
+    position:fixed; inset:0; background:#ffffff; z-index:100; pointer-events:none;
+    opacity:0; transform:scale(1.05); transition:opacity .45s ease, transform .45s ease
+  }
   #wipe.show{ opacity:1; transform:scale(1) }
 
-  /* ======= SPLASH: beyaz kalın halka içinde AZURA, beyaza patlayıp sönme ======= */
-  #splash{
-    position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:var(--bg);
-  }
-  /* halka + yazı konteyneri */
-  .ringWrap{
-    position:relative; width:220px; aspect-ratio:1/1; border-radius:50%;
-    display:grid; place-items:center;
-    /* kalın beyaz halka */
-    box-shadow: 0 0 0 14px #fff inset, 0 0 40px rgba(255,255,255,.45), 0 0 120px rgba(255,255,255,.35);
+  /* ======= SPLASH (İSTEDİĞİN YENİ HALKA INTRO) ======= */
+  #splash{ position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:#0a0a0a; }
+  /* Halka: merkeze doğru kontrast azalan ama sıfırlanmayan yapı */
+  .ring{
+    position:relative; width:min(78vmin,720px); aspect-ratio:1/1; border-radius:50%;
+    display:grid; place-items:center; filter: blur(.3px);
     animation:ringPulse 3.4s ease-in-out forwards;
   }
-  /* AZURA yazısı (gradient) */
-  .ringWrap .title{
-    font: 900 36px/1 Cinzel,serif; letter-spacing:.18em;
-    background:linear-gradient(90deg,#ffffff,#e9f4ff,#bfe0ff,#ffffff);
+  .ring::before{
+    content:""; position:absolute; inset:0; border-radius:50%;
+    background:
+      radial-gradient(circle at 50% 50%,
+        rgba(255,255,255,0.08) 0%,
+        rgba(255,255,255,0.08) 45%,
+        rgba(255,255,255,0.06) 60%,
+        rgba(255,255,255,0.05) 75%,
+        rgba(255,255,255,0.04) 90%,
+        rgba(255,255,255,0.08) 100%) padding-box,
+      radial-gradient(circle at 50% 50%,
+        transparent 66%,
+        rgba(255,255,255,0.35) 70%,
+        rgba(255,255,255,0.95) 74%,
+        #ffffff 78%,
+        rgba(255,255,255,0.95) 82%,
+        rgba(255,255,255,0.35) 86%,
+        rgba(255,255,255,0.12) 90%,
+        rgba(255,255,255,0.08) 94%,
+        rgba(255,255,255,0.06) 97%,
+        rgba(255,255,255,0.05) 100%) border-box;
+    -webkit-mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
+            mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
+  }
+
+  /* AZURA yazısı: renk kaydırmalı dijital */
+  .logo{
+    position:relative; z-index:1;
+    font-family:Cinzel,serif; font-weight:900; letter-spacing:.20em;
+    font-size: clamp(36px, 9.5vw, 150px); line-height:1;
+    background:linear-gradient(90deg,#ffffff,#b8e7ff,#7cd2ff,#a5a3ff,#ff9ddb,#ffffff);
+    background-size:300% 100%;
     -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow: 0 0 14px rgba(255,255,255,.45);
-  }
-  @keyframes ringPulse{
-    0%  { transform:scale(.35); filter:blur(0px); }
-    33% { transform:scale(1.15) }
-    60% { transform:scale(.75) }
-    100%{ transform:scale(26) } /* devleşip ekranı kaplar */
+    text-shadow:0 0 24px rgba(255,255,255,.35);
+    animation:hueShift 6s linear infinite, popScale 3.4s ease-in-out both;
   }
 
-  /* beyaz patlama perdesi */
-  #flash{
-    position:fixed; inset:0; background:#ffffff; z-index:199; opacity:0; pointer-events:none;
-    animation: flashRise 3.4s ease-in-out forwards;
+  /* Tam beyaz örtü: en sonda tam beyaza çıkar */
+  #whiteOut{ position:fixed; inset:0; background:#fff; z-index:210; opacity:0; transition:opacity .48s ease; pointer-events:none; }
+  #whiteOut.show{ opacity:1; }
+
+  /* Animasyonlar */
+  @keyframes hueShift { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+  @keyframes popScale {
+    0%{ transform:scale(.86); opacity:0 }
+    12%{ opacity:1 }
+    45%{ transform:scale(1.06) }
+    70%{ transform:scale(.98) }
+    100%{ transform:scale(1.10) }
   }
-  @keyframes flashRise{
-    0%{opacity:0}
-    55%{opacity:.2}
-    70%{opacity:.65}
-    100%{opacity:0} /* sönme */
+  @keyframes ringPulse {
+    0%{ transform:scale(.86); opacity:.92 }
+    35%{ transform:scale(1.08); opacity:1 }
+    60%{ transform:scale(.96); opacity:.98 }
+    100%{ transform:scale(26); opacity:1 } /* devleşip ekranı kaplar */
   }
 
-  /* Hoş geldiniz metni: patlama sonuna doğru belirip sönsün */
+  /* Hoş geldiniz metni: patlamanın sonunda belirip sönsün */
   #hello{
-    position:fixed; inset:auto 0 24vh 0; text-align:center; z-index:201;
+    position:fixed; inset:auto 0 24vh 0; text-align:center; z-index:205;
     font-family:Cinzel,serif; font-size:clamp(22px,4.2vw,42px); letter-spacing:.12em; font-weight:900;
     color:#ffffff; text-shadow:0 0 22px rgba(255,255,255,.65);
     opacity:0; transform:translateY(8px);
@@ -139,10 +164,10 @@
 <body>
 
   <!-- SPLASH -->
-  <div id="splash">
-    <div class="ringWrap"><div class="title">AZURA</div></div>
+  <div id="splash" aria-label="Azura Intro">
+    <div class="ring"><div class="logo">AZURA</div></div>
   </div>
-  <div id="flash"></div>
+  <div id="whiteOut" aria-hidden="true"></div>
   <div id="hello">Hoş geldiniz 🩵🩷</div>
 
   <!-- Wipe (sayfa geçişi: sönerek beyaza) -->
@@ -171,14 +196,26 @@
   </main>
 
 <script>
-/* ---------- SPLASH zamanlama: 3.4s halka animasyonu + beyaz patlama ---------- */
+/* ---------- SPLASH zamanlama: halka → tam beyaz → index ---------- */
 (() => {
-  // Splash sonunda tüm overlay'leri kaldır
+  const INTRO_MS = 3400;   // halka + yazı sahnesi
+  const WHITE_MS = 520;    // tam beyaza yükselme süresi
+
+  const splash = document.getElementById('splash');
+  const white  = document.getElementById('whiteOut');
+  const hello  = document.getElementById('hello');
+
+  // 1) Halka sahnesi oynar (CSS animasyonları)
+  // 2) Süre dolunca tam beyaza çıkar
   setTimeout(()=>{
-    document.getElementById('splash')?.remove();
-    document.getElementById('flash')?.remove();
-    document.getElementById('hello')?.remove();
-  }, 4800); // hoş geldiniz de söndükten biraz sonra
+    white.classList.add('show');
+    // 3) Kısa süre sonra tüm overlay'leri kaldır, sayfa görünür
+    setTimeout(()=>{
+      splash.remove();
+      white.remove();
+      hello.remove();
+    }, WHITE_MS);
+  }, INTRO_MS);
 })();
 
 /* ---------- kart içi mini animasyonlar ---------- */
@@ -224,4 +261,4 @@
 })();
 </script>
 </body>
-      </html>
+  </html>
