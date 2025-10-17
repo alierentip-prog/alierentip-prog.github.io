@@ -6,333 +6,192 @@
 <title>AZURA</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --fg:#0a1220; --mut:#5a6b85;
-    --glass:rgba(0,20,55,.06); --b:rgba(0,20,55,.12);
-    --blue:#55c8ff; --pink:#ff9ad0; --green:#9ff2b1;
-    --bg:#ffffff; --nav:#0d2a44;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0; color:var(--fg); font:16px/1.6 Inter,system-ui; background:var(--bg)}
-
-  /* ====== SPLASH (3s toplam) ====== */
-  #splash{position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:#0a0a0a}
-  .ring{position:relative; width:min(78vmin,720px); aspect-ratio:1/1; border-radius:50%; display:grid; place-items:center; filter: blur(.3px);
-        animation:ringPulse 2.5s ease-in-out forwards}
-  .ring::before{
-    content:""; position:absolute; inset:0; border-radius:50%;
-    background:
-      radial-gradient(circle at 50% 50%,
-        rgba(255,255,255,0.08) 0%,
-        rgba(255,255,255,0.08) 45%,
-        rgba(255,255,255,0.06) 60%,
-        rgba(255,255,255,0.05) 75%,
-        rgba(255,255,255,0.04) 90%,
-        rgba(255,255,255,0.08) 100%) padding-box,
-      radial-gradient(circle at 50% 50%,
-        transparent 66%,
-        rgba(255,255,255,0.35) 70%,
-        rgba(255,255,255,0.95) 74%,
-        #ffffff 78%,
-        rgba(255,255,255,0.95) 82%,
-        rgba(255,255,255,0.35) 86%,
-        rgba(255,255,255,0.12) 90%,
-        rgba(255,255,255,0.08) 94%,
-        rgba(255,255,255,0.06) 97%,
-        rgba(255,255,255,0.05) 100%) border-box;
-    -webkit-mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
-            mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
-  }
-  .logo{
-    position:relative; z-index:1;
-    font-family:Cinzel,serif; font-weight:900; letter-spacing:.22em;
-    font-size: clamp(40px, 10vw, 160px); line-height:1;
-    background:linear-gradient(90deg,#ffffff,#b8e7ff,#7cd2ff,#a5a3ff,#ff9ddb,#ffffff);
-    background-size:300% 100%;
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 0 24px rgba(255,255,255,.35);
-    animation:hueShift 6s linear infinite, popScale 2.5s ease-in-out both;
-  }
-  #whiteOut{position:fixed; inset:0; background:#fff; z-index:210; opacity:0; transition:opacity .5s ease; pointer-events:none}
-
-  @keyframes hueShift{to{background-position:200% 50%}}
-  @keyframes popScale{0%{transform:scale(.86);opacity:0} 12%{opacity:1} 50%{transform:scale(1.08)} 100%{transform:scale(1.1)}}
-  @keyframes ringPulse{0%{transform:scale(.86);opacity:.92} 35%{transform:scale(1.08)} 60%{transform:scale(.96)} 100%{transform:scale(26)}}
-
-  /* ÜST NAV */
-  .topbar{position:sticky; top:0; z-index:20; background:var(--nav); color:#eaf5ff; border-bottom:1px solid rgba(255,255,255,.08)}
-  .topbar .inner{display:flex; align-items:center; gap:10px; padding:10px 12px}
-  .hamb{appearance:none; border:0; background:transparent; color:#cfeaff; font-size:22px; cursor:pointer}
-  .clock{font-weight:900; letter-spacing:.08em; opacity:.9}
-  .brand{margin:0 auto; font-family:Cinzel,serif; font-weight:900; letter-spacing:.6em; text-indent:.6em; font-size:18px;
-    background:linear-gradient(90deg,#4bd1ff,#7df2c3,#f4ff9b,#ffb3e6,#a8a6ff,#4bd1ff); -webkit-background-clip:text; color:transparent;
-    background-size:300% 100%; animation:rainbow 18s linear infinite}
-  @keyframes rainbow{to{background-position:200% 0}}
-  .actions a{display:inline-flex; gap:6px; align-items:center; padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#eaf5ff; text-decoration:none; font-weight:800}
-
-  /* SOL ÇEKMECE */
-  #drawerShade{position:fixed; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(2px); opacity:0; pointer-events:none; transition:.25s; z-index:19}
-  #drawer{position:fixed; inset:0 auto 0 0; width:min(320px,86%); background:#0f2236; color:#e7f2ff; transform:translateX(-100%);
-          transition:.25s; z-index:20; border-right:1px solid rgba(255,255,255,.08); overflow:auto}
-  #drawer.open{transform:none}
-  #drawerShade.show{opacity:1; pointer-events:auto}
-  #drawer .head{padding:14px 14px 8px; font:900 14px/1 Cinzel,serif; letter-spacing:.28em; opacity:.9}
-  #drawer nav a{display:flex; gap:10px; padding:10px 12px; margin:6px 10px; text-decoration:none; color:#e7f2ff; border:1px solid rgba(255,255,255,.08); border-radius:10px; background:rgba(255,255,255,.04)}
-  #drawer small{opacity:.7}
-
-  /* GRID */
-  .wrap{max-width:1100px; margin:14px auto; padding:0 12px; display:grid; gap:12px}
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-  @media (max-width:820px){ .grid{grid-template-columns:1fr} }
-
-  .card{background:#fff; border:1px solid var(--b); border-radius:16px; box-shadow:0 10px 30px rgba(5,28,61,.08)}
-  .card .head{display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid var(--b); border-radius:16px 16px 0 0; background:linear-gradient(180deg,#f9fbff,#f2f7ff)}
-  .chip{padding:8px 12px; border-radius:14px; background:linear-gradient(180deg,#eef6ff,#eaf2ff); border:1px solid var(--b); font-weight:800; color:#083357}
-  .body{padding:12px}
-
-  /* BOYALI BÜYÜK KARTLAR */
-  .big{height:180px; position:relative; overflow:hidden; border-radius:16px}
-  .maleCard{background:linear-gradient(180deg,#eaf4ff 0%, #dbeaff 55%, #eaf4ff 100%)}
-  .femaleCard{background:linear-gradient(180deg,#fff0f7 0%, #ffe3f0 55%, #fff0f7 100%)}
-  .big .go{position:absolute; right:12px; bottom:12px}
-  .btn{appearance:none; border:0; padding:10px 14px; border-radius:12px; color:#fff; font-weight:900; cursor:pointer}
-  .btn.blue{background:linear-gradient(180deg,#5aa9ff,#447aff); box-shadow:0 8px 20px rgba(31,98,255,.28)}
-  .btn.pink{background:linear-gradient(180deg,#ff9fd6,#ff6fb4); box-shadow:0 8px 20px rgba(255,77,161,.28)}
-  .big canvas{position:absolute; inset:0; width:100%; height:100%}
-
-  /* TEST */
-  .q{margin:10px 0 6px; font-weight:900}
-  .options{display:flex; flex-wrap:wrap; gap:8px}
-  .opt{padding:8px 12px; border-radius:14px; border:1px solid var(--b); background:#fff; cursor:pointer}
-  .opt.active{background:#edf6ff; border-color:#8dc7ff}
-
-  /* ORB alanı */
-  .orbWrap{display:grid; place-items:center; height:320px}
-  canvas#orbCanvas{width:280px; height:280px}
-
-  h3.sec{margin:10px 0 8px; font-size:14px; color:#0e3561}
+:root{
+  --fg:#101318; --mut:#5b6b7e;
+  --card:#ffffff; --b:rgba(0,0,0,.08);
+  --bar:#0d2a44; --az1:#a2e3ff; --az2:#9ff2b1; --az3:#ffe36e; --az4:#ff9ad0; --az5:#a8a4ff;
+  --tileBlue:#eaf5ff; --tilePink:#ffeef6;
+  --orb1:#bfe6ff; --orb2:#ffd7ff; --orb3:#c9ffe0; --bg:#f7f9fc;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0; color:var(--fg); font:16px/1.55 Inter,system-ui; background:var(--bg)}
+/* ---------- Üst şerit ---------- */
+.top{position:sticky; top:0; z-index:20; background:var(--bar); color:#e8f3ff; box-shadow:0 2px 16px rgba(0,0,0,.08)}
+.nav{display:flex; align-items:center; gap:12px; padding:10px 12px; max-width:1100px; margin:0 auto}
+.brand{margin:0 auto 0 0; font-family:Cinzel,serif; letter-spacing:.38em; font-weight:900;
+  background:linear-gradient(90deg,#eaffff,var(--az1),var(--az2),var(--az3),var(--az4),var(--az5),#eaffff);
+  background-size:300% 100%; -webkit-background-clip:text; color:transparent; animation:hue 14s linear infinite}
+.clock{font-weight:800; background:#0b2236; border:1px solid rgba(255,255,255,.08); padding:6px 10px; border-radius:10px}
+.btn{font-weight:900; padding:8px 12px; border-radius:12px; text-decoration:none; border:1px solid rgba(255,255,255,.12); background:#113656; color:#eaf4ff}
+.theme{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#113656;color:#d8ecff;font-weight:900}
+@keyframes hue{to{background-position:200% 0}}
+/* ---------- Sayfa ızgarası ---------- */
+.wrap{max-width:1100px; margin:18px auto; padding:0 12px; display:grid; gap:16px}
+.row{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.card{background:var(--card); border:1px solid var(--b); border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,.04); overflow:hidden}
+.head{display:flex; align-items:center; gap:8px; padding:10px 12px; font-weight:900; color:#314356; border-bottom:1px solid var(--b)}
+.box{padding:14px 16px}
+/* Günün sözü / ilginç bilgi */
+.quote .box{position:relative; padding:18px} 
+.quote b{display:block; font-weight:900; margin-bottom:6px}
+.quote small{opacity:.7}
+.fact .box{padding:18px}
+.badge{display:inline-flex; align-items:center; gap:6px; font-weight:900; padding:6px 10px; border-radius:999px; background:#eef6ff; color:#1b3b68; border:1px solid var(--b)}
+/* Erkek/Kadın kartları */
+.tile{position:relative; height:170px; display:grid; place-items:center; background:linear-gradient(#fff, #fff7), #fff}
+.tile.blue{background:radial-gradient(400px 180px at 20% -20%, #bfe6ff55, transparent 60%), var(--tileBlue)}
+.tile.pink{background:radial-gradient(400px 180px at 80% -20%, #ffd6ef55, transparent 60%), var(--tilePink)}
+.tile canvas{position:absolute; inset:0}
+.tile .go{position:absolute; right:12px; bottom:12px}
+.go a{display:inline-flex; align-items:center; gap:6px; font-weight:900; padding:10px 14px; border-radius:12px; text-decoration:none; border:1px solid var(--b); background:#0d47a1; color:#fff; box-shadow:0 8px 22px rgba(13,71,161,.25)}
+.go a.pink{background:#c2185b}
+.title{display:flex; align-items:center; gap:8px; padding:10px 12px; font-weight:900; color:#334}
+/* Orb */
+.orb{height:320px; display:grid; place-items:center}
+#orb{width:220px; height:220px; border-radius:50%;
+  background: radial-gradient(120px 120px at 50% 45%, var(--orb1), transparent 60%),
+              radial-gradient(90px 90px at 60% 55%, var(--orb2), transparent 60%),
+              radial-gradient(140px 140px at 45% 60%, var(--orb3), transparent 60%);
+  filter: blur(8px) saturate(120%); box-shadow:0 28px 48px rgba(0,0,0,.08)}
+.shadow{width:160px;height:24px;border-radius:50%;background:radial-gradient(closest-side, rgba(0,0,0,.16), transparent);filter:blur(2px);transform:translateY(-16px)}
+/* ---------- Splash (BEYAZ) ---------- */
+#splash{position:fixed; inset:0; z-index:3000; display:grid; place-items:center; background:#0b0b0b}
+.ringWrap{position:relative; width:min(80vmin,740px); aspect-ratio:1/1; border-radius:50%;
+  display:grid; place-items:center; box-shadow:0 0 0 18px #fff inset, 0 0 48px rgba(255,255,255,.55), 0 0 140px rgba(255,255,255,.35);
+  animation:ringPulse 2.5s ease-in-out forwards}
+.ringWrap .title{font:900 clamp(40px,9vw,160px)/1 Cinzel,serif; letter-spacing:.22em;
+  background:linear-gradient(90deg,#ffffff,#bfe3ff,#7fd0ff,#a6a3ff,#ff9cda,#ffffff);
+  background-size:260% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 26px rgba(255,255,255,.45); animation:hueSlide 6s linear infinite}
+#whiteOut{position:fixed; inset:0; z-index:3001; background:#fff; opacity:0; pointer-events:none; transition:opacity .5s ease}
+#whiteOut.show{opacity:1}
+@keyframes ringPulse{0%{transform:scale(.38)} 35%{transform:scale(1.12)} 60%{transform:scale(.86)} 100%{transform:scale(24)}}
+@keyframes hueSlide{to{background-position:200% 50%}}
+/* ---------- Tema ---------- */
+:root.dark{
+  --fg:#eaf2ff; --mut:#a7b7ca; --card:#0e1621; --b:rgba(255,255,255,.08);
+  --bg:#0a1018; --tileBlue:#0f1f30; --tilePink:#2b1624; --bar:#081725;
+}
+body.dark{background:var(--bg)}
+.card.darkEdge{box-shadow:0 8px 30px rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-
-<!-- SPLASH -->
-<div id="splash" aria-label="Azura Intro">
-  <div class="ring"><div class="logo">AZURA</div></div>
-</div>
+<!-- Splash -->
+<div id="splash" aria-label="Azura Intro"><div class="ringWrap"><div class="title">AZURA</div></div></div>
 <div id="whiteOut" aria-hidden="true"></div>
 
-<!-- ÜST NAV -->
-<header class="topbar">
-  <div class="inner">
-    <button id="openDrawer" class="hamb">☰</button>
-    <div class="clock" id="clock">--:--:--</div>
+<!-- Üst bar -->
+<div class="top">
+  <div class="nav">
+    <div class="clock" id="clk">--:--:--</div>
     <h1 class="brand">A Z U R A</h1>
-    <div class="actions">
-      <a href="login.html">Giriş</a>
-      <a href="login.html#signup">Üye Ol</a>
-    </div>
+    <button id="theme" class="theme">☀︎/☾</button>
+    <a class="btn" href="login.html">Giriş</a>
+    <a class="btn" href="login.html#signup">Üye Ol</a>
   </div>
-</header>
+</div>
 
-<!-- SOL ÇEKMECE -->
-<aside id="drawer">
-  <div class="head">AZURA</div>
-  <nav>
-    <a href="#erkek">🌊 Okyanus (Erkek) <small>— Karizma & Disiplin</small></a>
-    <a href="#kadin">🌿 Doğa (Kadın) <small>— Zarafet & Denge</small></a>
-    <a href="#test">🧭 Seni Tanımak İsteriz — Kısa Test</a>
-    <a href="#orb">🟣 Azura Orb — Dinamik Küre</a>
-    <a href="#hakkimda">👤 Hakkımda</a>
-    <a href="#neler">✨ Neler Yapılabilir?</a>
-  </nav>
-</aside>
-<div id="drawerShade"></div>
-
-<main class="wrap">
-
-  <!-- ERKEK & KADIN -->
-  <div class="grid">
-    <section id="erkek" class="card big maleCard">
-      <div class="head"><div class="chip">🌊 Okyanus • Karizma • Disiplin</div></div>
-      <canvas id="pMale"></canvas>
-      <div class="go"><a class="btn blue" href="male.html">Git →</a></div>
-    </section>
-
-    <section id="kadin" class="card big femaleCard">
-      <div class="head"><div class="chip">🌿 Doğa • Zarafet • Denge</div></div>
-      <canvas id="pFemale"></canvas>
-      <div class="go"><a class="btn pink" href="female.html">Git →</a></div>
-    </section>
+<div class="wrap">
+  <!-- Günün Sözü & İlginç Bilgi -->
+  <div class="row">
+    <article class="card quote">
+      <div class="head">✨ Günün Sözü</div>
+      <div class="box"><b id="qText">…</b><small id="qAuth"></small></div>
+    </article>
+    <article class="card fact">
+      <div class="head">🧠 İlginç Bilgi</div>
+      <div class="box" id="factBox">…</div>
+    </article>
   </div>
 
-  <!-- TEST -->
-  <section id="test" class="card">
-    <div class="head"><h3 class="sec">🧭 Seni Tanımak İsteriz — Kısa Test</h3></div>
-    <div class="body">
-      <div class="q">1) Zor bir hedef görünce ilk hissin?</div>
-      <div class="options" data-q="q1">
-        <button class="opt">Plan yaparım.</button>
-        <button class="opt">İlham alırım.</button>
-        <button class="opt">Adım adım bölerim.</button>
+  <!-- Erkek / Kadın kartları -->
+  <div class="row">
+    <section class="card">
+      <div class="title">🌊 Okyanus • Karizma • Disiplin</div>
+      <div class="tile blue">
+        <canvas id="pMale"></canvas>
+        <div class="go"><a class="to male" href="male.html">Git →</a></div>
       </div>
+    </section>
 
-      <div class="q">2) Ekipte rolün?</div>
-      <div class="options" data-q="q2">
-        <button class="opt">Yön veren</button>
-        <button class="opt">Moral yükselten</button>
-        <button class="opt">Takip/Uygulama</button>
+    <section class="card">
+      <div class="title">🌿 Doğa • Zarafet • Denge</div>
+      <div class="tile pink">
+        <canvas id="pFemale"></canvas>
+        <div class="go"><a class="to female pink" href="female.html">Git →</a></div>
       </div>
+    </section>
+  </div>
 
-      <div class="q">3) Yardım ederken en çok neye dikkat edersin?</div>
-      <div class="options" data-q="q3">
-        <button class="opt">Empati & nezaket</button>
-        <button class="opt">Çözüm & netlik</button>
-      </div>
-
-      <p style="margin-top:10px;color:#6a7a96">Not: Bu mini test eğlence amaçlıdır; öneriler öz-değerlendirme içindir.</p>
+  <!-- Orb -->
+  <section class="card">
+    <div class="head">🪄 Azura Orb — Dinamik Küre</div>
+    <div class="box orb">
+      <div id="orb"></div>
+      <div class="shadow"></div>
     </div>
   </section>
-
-  <!-- ORB -->
-  <section id="orb" class="card">
-    <div class="head"><h3 class="sec">🟣 Azura Orb — Dinamik Küre</h3></div>
-    <div class="body orbWrap">
-      <canvas id="orbCanvas" width="560" height="560"></canvas>
-    </div>
-  </section>
-
-  <!-- HAKKIMDA -->
-  <section id="hakkimda" class="card">
-    <div class="head"><h3 class="sec">👤 Hakkımda (kısa)</h3></div>
-    <div class="body">
-      Azura; üretken, düzenli ve zarafeti önemseyen bir alan. Burada motivasyon, nezaket, minimal tasarım ve bilimsel merak bir arada.
-      Erkek ve kadın temaları, aynı değerin iki farklı yorumu: disiplin & denge.
-    </div>
-  </section>
-
-  <!-- NELER YAPILABİLİR -->
-  <section id="neler" class="card">
-    <div class="head"><h3 class="sec">✨ Neler Yapılabilir?</h3></div>
-    <div class="body">
-      <ul>
-        <li>🚀 Haftalık hedef panosu ve ilerleme çubuğu</li>
-        <li>📚 İçerik kütüphanesi (felsefe, tıp notları, teknik yazılar)</li>
-        <li>⏱️ Günlük kısa yönlendirmeler</li>
-        <li>🎧 Odak için arka plan sesleri (okyanus / orman)</li>
-        <li>🏁 “Mini challenge” görevleri (30dk sprint vb.)</li>
-      </ul>
-    </div>
-  </section>
-</main>
+</div>
 
 <script>
-/* ===== SPLASH zamanlama (toplam ~3 sn) ===== */
+/* ====== Splash zamanlama (Beyaz) ====== */
 (() => {
-  const splash = document.getElementById('splash');
-  const white  = document.getElementById('whiteOut');
-  setTimeout(()=>{ white.style.opacity = 1; }, 2500); // halka büyüdükten sonra beyaza
-  setTimeout(()=>{
-    splash.remove(); white.remove();
-  }, 3000);
+  const INTRO = 2500, WHITE = 500;
+  setTimeout(()=>{ document.getElementById('whiteOut').classList.add('show');
+    setTimeout(()=>{ document.getElementById('splash').remove(); document.getElementById('whiteOut').remove(); }, WHITE);
+  }, INTRO);
 })();
 
-/* === Saat === */
-(() => {
-  const el = document.getElementById('clock');
-  const tick = () => {
-    const d = new Date();
-    const pad = n => String(n).padStart(2,'0');
-    el.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-  };
-  tick(); setInterval(tick, 1000);
-})();
+/* ====== Saat ====== */
+setInterval(()=>{ const d=new Date(); const z=n=>String(n).padStart(2,'0');
+  clk.textContent = `${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`; }, 1000);
 
-/* === Çekmece açık/kapalı === */
-(() => {
-  const drawer = document.getElementById('drawer');
-  const shade  = document.getElementById('drawerShade');
-  const openBtn = document.getElementById('openDrawer');
-  const open = () => { drawer.classList.add('open'); shade.classList.add('show'); };
-  const close= () => { drawer.classList.remove('open'); shade.classList.remove('show'); };
-  openBtn.addEventListener('click', open);
-  shade.addEventListener('click', close);
-  addEventListener('keydown', e => { if(e.key==='Escape') close(); });
-})();
+/* ====== Tema ====== */
+const root=document.documentElement, body=document.body, saved=localStorage.getItem('az_theme');
+if(saved==='dark'){ root.classList.add('dark'); body.classList.add('dark') }
+theme.onclick=()=>{ root.classList.toggle('dark'); body.classList.toggle('dark');
+  localStorage.setItem('az_theme', root.classList.contains('dark')?'dark':'light'); };
 
-/* === Smooth scroll + çekmeceyi kapat === */
-(() => {
-  const drawer = document.getElementById('drawer');
-  const shade  = document.getElementById('drawerShade');
-  const close = () => { drawer.classList.remove('open'); shade.classList.remove('show'); };
-
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const id = a.getAttribute('href');
-    const target = document.querySelector(id);
-    if (!target) return;
-    e.preventDefault();
-    history.pushState(null,'',id);
-    target.scrollIntoView({ behavior:'smooth', block:'start' });
-    close();
-  });
-
-  window.addEventListener('load', () => {
-    if(location.hash){
-      const el = document.querySelector(location.hash);
-      if(el) setTimeout(()=> el.scrollIntoView({behavior:'smooth'}), 150);
-    }
-  });
-})();
-
-/* === Kart içi parçacıklar === */
+/* ====== Kart parçacıkları ====== */
 function particles(canvas, hueBase){
   const c=canvas, x=c.getContext('2d');
   function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
-  const N=120, P=[];
-  for(let i=0;i<N;i++) P.push({x:Math.random()*c.width, y:Math.random()*c.height, r:1+Math.random()*2, a:Math.random()*Math.PI*2, s:.4+.6*Math.random()});
+  const N=90, P=[]; for(let i=0;i<N;i++){ P.push({x:Math.random()*c.width, y:Math.random()*c.height, r:1+Math.random()*2, a:Math.random()*Math.PI*2}); }
   (function loop(){
     x.clearRect(0,0,c.width,c.height);
     for(const p of P){
-      p.a += 0.01; p.x += Math.cos(p.a)*.4; p.y += (Math.sin(p.a)+1)*.6;
-      if(p.y < -10){ p.y = c.height+10 }
+      p.a+=.01; p.x+=Math.cos(p.a)*.3; p.y-=.35;
+      if(p.y<-10){ p.y=c.height+10; p.x=Math.random()*c.width; }
       x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
-      x.fillStyle = `hsla(${hueBase+(p.x/c.width)*40},85%,70%,.9)`; x.fill();
+      x.fillStyle=`hsla(${hueBase+Math.sin(p.a)*10},75%,65%,.85)`; x.fill();
     }
     requestAnimationFrame(loop);
   })();
 }
-particles(document.getElementById('pMale'),   205); // mavi
-particles(document.getElementById('pFemale'), 330); // pembe
+particles(document.getElementById('pMale'), 205);
+particles(document.getElementById('pFemale'), 335);
 
-/* === Azura Orb (yumuşak renk alanı topu) === */
-(() => {
-  const c = document.getElementById('orbCanvas');
-  const x = c.getContext('2d'); let t = 0;
-  function dot(gx, gy, r, col){
-    const g = x.createRadialGradient(gx, gy, 0, gx, gy, r);
-    for(const [stop, clr] of col) g.addColorStop(stop, clr);
-    x.fillStyle = g; x.beginPath(); x.arc(gx, gy, r, 0, Math.PI*2); x.fill();
-  }
-  (function loop(){
-    x.clearRect(0,0,c.width,c.height);
-    const cx = c.width/2, cy = c.height/2 + 40;
-    const sh = x.createRadialGradient(cx, cy+120, 10, cx, cy+120, 110);
-    sh.addColorStop(0,'rgba(0,0,0,.18)'); sh.addColorStop(1,'rgba(0,0,0,0)');
-    x.fillStyle = sh; x.beginPath(); x.ellipse(cx, cy+120, 120, 34, 0, 0, Math.PI*2); x.fill();
-    dot(cx, cy-40, 60, [[0,'rgba(120,220,255,.95)'],[1,'rgba(120,220,255,0)']]);
-    const r = 140 + Math.sin(t/50)*6;
-    dot(cx, cy, r, [
-      [0,'rgba(255,180,220,.95)'],
-      [.35,'rgba(170,160,255,.85)'],
-      [.65,'rgba(120,210,255,.75)'],
-      [1,'rgba(255,255,255,0)']
-    ]);
-    dot(cx-30, cy-10, r*1.1, [[0,'rgba(255,255,255,.18)'],[1,'rgba(255,255,255,0)']]);
-    t++; requestAnimationFrame(loop);
-  })();
-})();
+/* ====== Günün Sözü & İlginç Bilgi ====== */
+const QUOTES=[["Cesaret, korkunun yokluğu değil; ona rağmen yürümektir.","N. Mandela"],
+["Bir hedef, tarihle buluşmuş bir hayaldir.","Napoleon Hill"],
+["Disiplin, özgürlüğün en kısa yoludur.","Epictetus"]];
+const FACTS=["İnsan beyninin %60’ı yağdan oluşur ve bu yüzden omega-3 ile ‘donanım’ güncellemeyi sever 🧬",
+"Kalp günde yaklaşık 100.000 kez atar — dakikada ortalama 5–6 litre kan pompalar ❤️",
+"Uyurken beyniniz gün içindeki bilgileri ‘temizleyip’ arşivler — RAM → SSD gibi düşün 💾"];
+const [qt,qa]=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+qText.textContent='“ '+qt+' ”'; qAuth.textContent='— '+qa; factBox.textContent=FACTS[Math.floor(Math.random()*FACTS.length)];
+
+/* ====== Git butonlarında beyaza yumuşak geçiş ====== */
+for(const a of document.querySelectorAll('a.to')){
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    const cover=document.createElement('div');
+    cover.style.cssText='position:fixed;inset:0;background:#fff;opacity:0;transition:opacity .4s ease;z-index:2000';
+    document.body.appendChild(cover); requestAnimationFrame(()=>cover.style.opacity=1);
+    setTimeout(()=>location.href=a.href, 420);
+  });
+}
 </script>
 </body>
-  </html>
+      </html>
