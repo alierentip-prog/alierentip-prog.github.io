@@ -1,276 +1,323 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Azura • Erkek</title>
-<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AZURA • ERKEK (OKYANUS)</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
 :root{
-  --ink:#eaf6ff;            /* yazılar için krem-beyaz */
-  --glow:rgba(186,235,255,.22);
-  --teal-0:#071720;         /* en koyu zemin */
-  --teal-1:#0a1d28;         /* navbar/katman */
-  --chip:#0e2a37;
-  --chip-ink:#cdefff;
-  --card:#0d2230;
-  --card-top:#123243;
-  --accent:#54b6ff;
-  --soft:rgba(255,255,255,.06);
-  --ring:rgba(84,182,255,.45);
-  --radius:16px;
+  /* Okyanus paleti */
+  --bg-deep:#0C161B;
+  --dot-1:#7CC0D1;
+  --dot-2:#5AA9B8;
+  --dot-3:#3D8FA1;
+
+  --card-top:rgba(21,47,56,0.86);
+  --card-bot:rgba(14,33,40,0.86);
+  --card-border:rgba(120,200,220,0.12);
+
+  --chip-bg:#11262D;
+  --chip-border:rgba(120,200,220,0.22);
+  --chip-text:#CBEAF0;
+
+  --text-body:#D6EDF3;
+  --btn-bg:rgba(11,28,34,0.7);
+  --btn-bd:rgba(120,200,220,0.22);
+  --btn-tx:#D8EEF4;
+
+  --mf-grad-1:#FFFFFF;     /* manifesto yazısı: beyaz -> açık camgöbeği */
+  --mf-grad-2:#D9F3FF;
 }
-*{box-sizing:border-box} html,body{height:100%}
+
+*{box-sizing:border-box}
+html,body{height:100%}
 body{
-  margin:0; color:#dfefff; background:var(--teal-0);
-  font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  margin:0; background:var(--bg-deep); color:var(--text-body);
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
   overflow-x:hidden;
 }
 
-/* ====== TOP BAR ====== */
-.top{
-  position:fixed; inset:0 0 auto 0; height:66px; z-index:30;
-  display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(180deg,rgba(7,23,32,.90),rgba(7,23,32,.75));
-  border-bottom:1px solid rgba(84,182,255,.20);
-  backdrop-filter: blur(6px);
+/* --- Arka plan --- */
+.bg-layer{position:fixed; inset:0; pointer-events:none; z-index:0;}
+.bg-halos{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(1200px 700px at 20% 110%, rgba(80,160,180,0.08), transparent 75%),
+    radial-gradient(900px 600px at 90% -10%, rgba(90,170,190,0.06), transparent 70%);
 }
-.title{ letter-spacing:.3em; font-weight:800; color:#dff6ff; text-shadow:0 0 18px var(--glow)}
-.badges{
-  position:absolute; right:12px; display:flex; gap:8px;
-}
-.badges a,.panelBtn{
-  text-decoration:none; color:#dff6ff; font-weight:800; letter-spacing:.02em;
-  background:rgba(10,29,40,.8); padding:8px 12px; border-radius:12px; border:1px solid var(--ring);
-}
-.panelBtn{ position:absolute; left:12px }
+.canvas{position:absolute; inset:0;} /* mavi noktacıklar */
 
-/* ====== KATMANLAR ====== */
-canvas#bg{ position:fixed; inset:0; z-index:0; background:radial-gradient(60vh 60vh at 50% -10%, rgba(26,80,104,.45), transparent 60%), var(--teal-0); }
-.grid-wrap{ position:relative; z-index:5; padding-top:90px; padding-bottom:64px }
-.page-title{
-  margin:24px auto 14px; text-align:center; font-size:28px; letter-spacing:.25em; font-weight:900; color:#d9f4ff;
-  text-shadow:0 8px 24px rgba(84,182,255,.22)
+/* Üst butonlar */
+.top-buttons{position:fixed; inset:0 0 auto 0; height:0; z-index:5;}
+.btn{
+  position:absolute; top:12px; padding:8px 12px; border-radius:12px;
+  background:var(--btn-bg); color:var(--btn-tx); border:1px solid var(--btn-bd);
+  backdrop-filter: blur(6px); text-decoration:none; font-weight:600; font-size:14px;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+.btn.left{left:12px}
+.btn.right{right:12px}
+
+/* Hoşgeldin */
+.welcome{
+  position:fixed; top:70px; left:50%; transform:translateX(-50%);
+  width:min(720px, calc(100% - 40px));
+  padding:16px 22px; border-radius:16px; z-index:4;
+  background:rgba(8,24,29,0.82); border:1px solid var(--card-border);
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  text-align:left; opacity:0; animation:wel-in .8s ease .2s forwards;
+}
+.welcome h3{
+  margin:0; font-family:Cinzel,serif; letter-spacing:.06em; font-weight:700;
+  line-height:1.25; font-size:18px;
+  background:linear-gradient(180deg,#EFFFFF 0%, #CFEFF6 85%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 16px rgba(140,220,240,.3);
+}
+.welcome p{margin:6px 0 0; color:#CDE8EE; font-size:14px}
+@keyframes wel-in{to{opacity:1; transform:translate(-50%,0)}}
+.fade-out{animation:wel-out .8s ease forwards}
+@keyframes wel-out{to{opacity:0; transform:translate(-50%,-10px)}}
+
+/* Yazıyı geç */
+.skip{position:fixed; top:12px; left:12px; z-index:6; display:none}
+.skip.show{display:inline-block}
+
+/* Manifesto */
+.manifesto-wrap{
+  position:fixed; inset:0; z-index:3; display:none; pointer-events:none;
+}
+.manifesto-scrim{
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(4,10,12,.5), rgba(4,10,12,.2) 30%, transparent 60%);
+}
+.manifesto{
+  position:absolute; left:50%; transform:translateX(-50%);
+  width:min(1100px, 92vw); text-align:center;
+  font-family:Cinzel,serif; font-weight:800; letter-spacing:.04em;
+  font-size: clamp(28px, 8.8vw, 96px); line-height:1.22;
+  background:linear-gradient(180deg, var(--mf-grad-1) 0%, var(--mf-grad-2) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 22px rgba(160,220,240,.45);
+  white-space:pre-wrap; text-transform:uppercase;
+  top:100%; animation: slideUp 45s linear forwards;
+}
+@keyframes slideUp{ to{ top:-120% } }
+
+/* Menü */
+.main{position:relative; z-index:2; padding:86px 18px 64px; display:none;}
+h1.title{
+  margin:0 0 12px; text-align:center; font-family:Cinzel,serif; letter-spacing:.18em;
+  font-size: clamp(24px, 5vw, 40px);
+  background:linear-gradient(180deg,#EFFFFF 0%, #CFEFF6 85%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 18px rgba(140,220,240,.28);
+}
+.grid{
+  max-width:1100px; margin:0 auto; display:grid; gap:20px;
+  grid-template-columns:repeat(2,1fr);
+}
+.card, .card-wide{
+  background:linear-gradient(180deg, var(--card-top), var(--card-bot));
+  border:1px solid var(--card-border); border-radius:18px; padding:20px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.42);
+}
+.card h3, .card-wide h3{
+  margin:0 0 8px; font-family:Cinzel,serif; font-weight:700; letter-spacing:.06em;
+  font-size:22px; line-height:1.1;
+  background:linear-gradient(180deg,#EFFFFF 0%, #CFEFF6 85%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 16px rgba(140,220,240,.28);
+}
+.card p, .card-wide p{margin:6px 0 0; color:var(--text-body)}
+.chips{margin-top:12px; display:flex; flex-wrap:wrap; gap:8px}
+.chips span{
+  background:var(--chip-bg); color:var(--chip-text);
+  border:1px solid var(--chip-border); padding:7px 12px; border-radius:999px;
+  font-weight:600; font-size:12.5px;
+}
+.card-wide{grid-column:1 / -1}
+
+footer{
+  max-width:1100px; margin:32px auto 0; text-align:center; color:#CFE6EC;
+  opacity:.95; font-size:14px;
 }
 
-/* ====== CARD GRID ====== */
-.grid{ max-width:1100px; margin:0 auto; display:grid; gap:18px; grid-template-columns:repeat(2,1fr); }
-.card{
-  background:linear-gradient(180deg,var(--card-top),var(--card));
-  border-radius:18px; padding:18px 18px 14px; border:1px solid rgba(84,182,255,.18);
-  box-shadow:0 16px 40px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.03);
+/* Responsive */
+@media (max-width:760px){
+  .grid{grid-template-columns:1fr 1fr;}
+  .card h3{font-size:18px}
+  .card-wide h3{font-size:20px}
 }
-.card h3{
-  margin:0 0 10px; font-size:20px; letter-spacing:.15em; color:#d6f2ff; text-shadow:0 0 18px var(--glow); font-weight:900;
-}
-.card p{ margin:0 0 12px; color:#c9e9ff; opacity:.95; line-height:1.45 }
-.chips{ display:flex; gap:8px; flex-wrap:wrap }
-.chips span,.chips a{
-  background:var(--chip); color:var(--chip-ink);
-  border:1px solid rgba(84,182,255,.2); padding:6px 10px; border-radius:999px; font-size:13px; text-decoration:none; font-weight:700
-}
-
-/* ====== RESOURCES ====== */
-.resources{
-  grid-column:1 / -1; background:linear-gradient(180deg, #102b39, #0c2330);
-  border:1px solid rgba(84,182,255,.18); border-radius:18px; padding:18px;
-}
-.resources h3{ margin:0 0 10px; letter-spacing:.35em; color:#d7f1ff; text-shadow:0 0 18px var(--glow) }
-.res-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px }
-
-/* ====== MANİFESTO ====== */
-.hidden{display:none}
-#welcomeToast{
-  position:fixed; left:50%; top:90px; transform:translateX(-50%);
-  z-index:40; padding:10px 14px; border-radius:14px;
-  background:rgba(10,25,34,.86); color:#cfe9ff;
-  border:1px solid rgba(84,182,255,.35);
-  box-shadow:0 10px 24px rgba(0,0,0,.35), 0 0 22px rgba(84,182,255,.18);
-  font-weight:800
-}
-#skipBtn{
-  position:fixed; left:12px; top:10px; z-index:50;
-  background:rgba(10,25,34,.85); color:#dff6ff; border:1px solid rgba(84,182,255,.35);
-  padding:8px 12px; border-radius:12px; font-weight:900; letter-spacing:.02em; cursor:pointer
-}
-#manifesto{
-  position:fixed; inset:0; z-index:35; pointer-events:auto;
-  background:linear-gradient(180deg, rgba(7,23,32,.94), rgba(7,23,32,.94)); /* yazı varken düz fon */
-  display:flex; align-items:flex-end; justify-content:flex-start; padding:0 6vw 6vh;
-}
-.manFlow{
-  width:min(1100px,92vw);
-  font-weight:1000; letter-spacing:.02em; color:var(--ink);
-  text-shadow:0 8px 26px rgba(255,255,255,.22);
-  line-height:.92;
-}
-.manFlow .big{ font-size:min(11vw,140px) }
-.manFlow .sign{ margin-top:8vh; font-size:min(5.5vw,58px); opacity:.95 }
-
-@keyframes scrollUp{ from{ transform:translateY(100vh) } to{ transform:translateY(-120%) } }
-.scrolling{ animation:scrollUp var(--dur,28s) linear forwards }
-
-/* ====== RESPONSIVE ====== */
-@media (max-width:840px){
-  .grid{ grid-template-columns:1fr }
-  .page-title{ letter-spacing:.2em }
+@media (max-width:520px){
+  .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- BG -->
-<canvas id="bg" aria-hidden="true"></canvas>
+<!-- Arkaplan -->
+<div class="bg-layer">
+  <div class="bg-halos"></div>
+  <canvas class="canvas" id="stars"></canvas>
+</div>
 
-<!-- TOP -->
-<div class="top">
-  <button class="panelBtn" type="button">Kullanıcı Paneli</button>
-  <div class="title">OKYANUS</div>
-  <div class="badges">
-    <a href="index.html">Ana Menü</a>
+<!-- Üst butonlar -->
+<div class="top-buttons">
+  <a class="btn left" id="userBtn" href="#">Kullanıcı Paneli</a>
+  <a class="btn right" id="homeBtn" href="index.html">Ana Menü</a>
+</div>
+
+<!-- Hoşgeldin -->
+<div class="welcome" id="welcomeBox">
+  <h3>Okyanusa Hoş Geldin 🌊</h3>
+  <p>Sessiz adımlar, derin akış. Birazdan kısa bir manifesto akacak.</p>
+</div>
+
+<!-- Yazıyı Geç -->
+<a class="btn skip" id="skipBtn">Yazıyı Geç</a>
+
+<!-- Manifesto -->
+<div class="manifesto-wrap" id="mfWrap" aria-hidden="true">
+  <div class="manifesto-scrim"></div>
+  <div class="manifesto" id="manifesto">
+ERKEK OLMAK; GÜÇ GÖSTERİSİ DEĞİL, DURUŞ MESELESİDİR.
+KENDİNİ İFADE EDERKEN NEZAKETTEN, KARAR ALIRKEN VİCDANDAN ÖDÜN VERMEZSİN.
+SAYGI GÖRMEK İSTERSEN ÖNCE SAYGI GÖSTERMEYİ BİLİRSİN.
+BİR KADINA, BİR DOSTA, BİR YABANCIYA… FARK ETMEZ; HER İNSANA AYNI ÖZEN.
+
+SÖZÜNÜN ERİ OLUR, SORUMLULUĞU ERTELEMEZSİN.
+ÇÜNKÜ GÜVEN, BİR KEZ SARSILIRSA YILLAR BİLE ONARAMAZ.
+
+ERKEKLİK; EMEK VERMEK, KORUMAK, SAHİP ÇIKMAK
+VE GEREKTİĞİNDE ZARAFETLE GERİ ÇEKİLMEKTİR.
+BİR BAKIŞIYLA DEĞİL, BİR DAVRANIŞIYLA FARK EDİLİR.
+KENDİNE HÂKİM OLMAYI ÖĞRENEN HER ERKEK, GERÇEK OLGUNLUĞA ERİŞİR.
+
+TAVSİYE: KENDİNİ ANLATMAYA DEĞİL, ANLAMAYA ÇALIŞ.
+GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR. — AZURA NOVA
   </div>
 </div>
 
-<!-- HOŞ GELDİN + MANİFESTO -->
-<button id="skipBtn" class="hidden">YAZIYI GEÇ</button>
-<div id="welcomeToast" class="hidden">OKYANUSA HOŞ GELDİN 🌊<br><small>Sessiz adımlar, derin akış. Birazdan manifesto akacak.</small></div>
-
-<section id="manifesto" class="hidden" aria-label="manifesto">
-  <div id="manFlow" class="manFlow"></div>
-</section>
-
-<!-- MENÜ -->
-<main class="grid-wrap">
-  <div class="page-title">OKYANUS</div>
-  <section class="grid">
-    <article class="card">
+<!-- Menü -->
+<main class="main" id="main">
+  <h1 class="title">OKYANUS</h1>
+  <div class="grid">
+    <div class="card">
       <h3>⚙️ KARİZMA &amp; DİSİPLİN</h3>
       <p>Otorite sessiz sakin kurulur: söz kısa, adım nettir. Karizma; tavırdaki tutarlılık ve nezaketle gelir. Disiplin ise hedefin etrafına kurulan saygı çemberidir.</p>
       <div class="chips">
         <span>Odak</span><span>Devamlılık</span><span>Söz &amp; Eylem birliği</span>
       </div>
-    </article>
+    </div>
 
-    <article class="card">
-      <h3>💠 MOTİVASYON</h3>
-      <p>Zor hedefler; parçalandığında kolaylaşır. “Bugün sadece 25 dakika” kuralı, ertelemeyi kırar. Bitince küçük bir ödül ver: kahve, 10 dk. oyun, kısa yürüyüş.</p>
+    <div class="card">
+      <h3>🌊 MOTİVASYON</h3>
+      <p>Zor hedefler; parçalara bölününce kolaylaşır. “Bugün sadece 25 dakika” kuralı, ertelemeyi kırar. Bittiğinde küçük bir ödül ver: kahve, 10 dk. oyun, kısa yürüyüş.</p>
       <div class="chips">
         <span>25 dk sprint</span><span>Küçük ödül</span><span>Takvim çentiği</span>
       </div>
-    </article>
+    </div>
 
-    <article class="card">
+    <div class="card">
       <h3>🤝 KİBARLIK</h3>
-      <p>Keskin olmak kaba olmak değildir. Cümleyi yumuşatan üç söz: teşekkür, açıklık, seçenek. “Şunu istiyorum çünkü X. Uygunsa iki seçeneğimiz var…”</p>
+      <p>Keskin olmak kaba olmak değildir. Cümleyi yumuşatan üç yüz: teşekkür, seçenek, açıklık. “Şunu istiyorum çünkü X. Uygunsa iki seçeneğimiz var…”</p>
       <div class="chips">
         <span>Teşekkür</span><span>Gerekçe</span><span>Seçenek</span>
       </div>
-    </article>
+    </div>
 
-    <article class="card">
-      <h3>⏱️ MİNİ ALIŞTIRMA</h3>
-      <p>Bugünün hedefi: tek bir iş seç. Zamanlayıcıyı 25 dakikaya kur. Bitince 5 dakika ara ver ve “ne öğrendim?” diye not al.</p>
+    <div class="card">
+      <h3>🧭 MİNİ ALIŞTIRMA</h3>
+      <p>Bugünün hedefi: <strong>tek bir iş</strong>. Zamanlayıcıyı 25 dakikaya kur. Bitince 5 dakika ara ver ve “ne öğrendim?” diye not al.</p>
       <div class="chips">
         <span>Tek hedef</span><span>25/5</span><span>Kısa not</span>
       </div>
-    </article>
+    </div>
 
-    <aside class="resources">
+    <div class="card-wide">
       <h3>📚 KAYNAKLAR</h3>
       <p><strong>Deep Work</strong> (Newport) — <strong>Atomic Habits</strong> (Clear) — <strong>Make Time</strong> (Knapp &amp; Zeratsky)</p>
-      <div class="res-actions">
-        <a class="chips" href="index.html"><span>← Ana Menü</span></a>
-        <a class="chips" href="#"><span>Profilim</span></a>
-        <a class="chips" href="#"><span>Görev Panosu</span></a>
+      <div class="chips">
+        <span>← Ana Menü</span><span>Profilim</span><span>Görev Panosu</span>
       </div>
-    </aside>
-  </section>
+    </div>
+  </div>
+
+  <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
 </main>
 
 <script>
-/* ===== BG: sakin nokta alanı (okyanus) ===== */
-(()=>{
-  const c=document.getElementById('bg'),x=c.getContext('2d');
-  let w,h,pts=[]; const COUNT=140;
-  function resize(){ w= c.width = innerWidth; h= c.height = innerHeight; }
-  function rnd(a,b){ return Math.random()*(b-a)+a }
-  function init(){
-    pts=[]; for(let i=0;i<COUNT;i++){
-      pts.push({x:rnd(0,w), y:rnd(0,h), r:rnd(1,2.2), v:rnd(.02,.06)});
+/* ---------- Mavi noktacıklar ---------- */
+(function(){
+  const c = document.getElementById('stars');
+  const ctx = c.getContext('2d');
+  function size(){ c.width = innerWidth; c.height = innerHeight }
+  size(); addEventListener('resize', size);
+  const colors = ['#7CC0D1','#5AA9B8','#3D8FA1'];
+  const dots = Array.from({length: 140}, ()=>({
+    x: Math.random()*c.width,
+    y: Math.random()*c.height,
+    r: (Math.random()*2)+1.2,
+    o: 0.55+Math.random()*0.2,
+    c: colors[(Math.random()*colors.length)|0],
+    vy: 0.02 + Math.random()*0.06
+  }));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    for(const d of dots){
+      ctx.globalAlpha = d.o;
+      ctx.fillStyle = d.c;
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill();
+      d.y += d.vy;
+      if(d.y > c.height+8){ d.y = -8; d.x = Math.random()*c.width }
     }
+    requestAnimationFrame(draw);
   }
-  function tick(){
-    x.clearRect(0,0,w,h);
-    x.fillStyle='rgba(120,200,240,.12)';
-    for(const p of pts){
-      p.y+=p.v; if(p.y-p.r>h)p.y=-p.r, p.x=rnd(0,w);
-      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
-    }
-    requestAnimationFrame(tick);
-  }
-  addEventListener('resize',()=>{resize(); init()});
-  resize(); init(); tick();
+  draw();
 })();
 
-/* ===== Manifesto metni ===== */
-const LINES = [
-"ERKEK OLMAK; GÜÇ GÖSTERİSİ DEĞİL, DURUŞ MESELESİDİR.",
-"KENDİSİNİ İFADE EDERKEN NEZAKETTEN, KARAR ALIRKEN VİCDANDAN ÖDÜN VERMEZ.",
-"TOPLUMDA SAYGI GÖRMEK İÇİN ÖNCE SAYGI GÖSTERMEYİ BİLİR.",
-"BİR KADINA, BİR DOSTA, BİR YABANCIYA... FARK ETMEZ; HER İNSANA AYNI ÖZENİ GÖSTERİR.",
-"SÖZÜNÜN ERİ OLUR, SORUMLULUKLARINI ERTELEMEZ.",
-"ÇÜNKÜ BİLİR Kİ GÜVEN, BİR DEFA SARSILDIĞINDA YILLAR BİLE ONARAMAZ.",
-"",
-"ERKEKLİK; EMEK VERMEK, KORUMAK, SAHİP ÇIKMAK VE GEREKTİĞİNDE GERİ ÇEKİLMEKTİR.",
-"BİR BAKIŞIYLA DEĞİL, BİR DAVRANIŞIYLA FARK EDİLİR.",
-"KENDİNE HÂKİM OLMAYI ÖĞRENMİŞ HER ERKEK, GERÇEK OLGUNLUĞA ERİŞMİŞTİR.",
-"",
-"TAVSİYE:",
-"KENDİNİ ANLATMAYA DEĞİL, ANLAMAYA ÇALIŞ.",
-"GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.",
-"",
-"— AZURA NOVA"
-];
-
-/* katman referansları */
-const tipsWrap = document.querySelector('.grid-wrap'); // menü
-const toast = document.getElementById('welcomeToast');
+/* ---------- Akış ---------- */
+const welcome = document.getElementById('welcomeBox');
+const mfWrap  = document.getElementById('mfWrap');
+const manifesto = document.getElementById('manifesto');
 const skipBtn = document.getElementById('skipBtn');
-const layer = document.getElementById('manifesto');
-const flow = document.getElementById('manFlow');
+const main = document.getElementById('main');
 
-/* menüyü başta gizle */
-tipsWrap.style.visibility='hidden';
+let manifestoTimer = null;
 
-/* manifesto hazırlanışı */
-function build(lines){
-  let html="";
-  for(const t of lines){
-    if(!t.trim()){ html+=`<div style="height:6vh"></div>`; continue; }
-    html+=`<div class="big">${t}</div>`;
-  }
-  html+=`<div class="sign"></div>`;
-  flow.innerHTML=html;
-}
-function start(){
-  toast.classList.add('hidden');
-  layer.classList.remove('hidden');
-  skipBtn.classList.remove('hidden');
-  build(LINES);
-  const dur = Math.max(24, Math.min(38, Math.round(flow.textContent.length/18)));
-  layer.style.setProperty('--dur', dur+'s');
-  flow.classList.add('scrolling');
-  setTimeout(finish, dur*1000+300);
-}
-function finish(){
-  layer.classList.add('hidden'); skipBtn.classList.add('hidden');
-  tipsWrap.style.visibility='visible';
-}
-skipBtn.addEventListener('click', finish);
+/* Hoşgeldin 2.8 sn, sonra manifesto */
+setTimeout(()=>{
+  welcome.classList.add('fade-out');
+  setTimeout(startManifesto, 820);
+}, 2800);
 
-/* zamanlama: hoş geldin -> manifesto -> menü */
-setTimeout(()=>toast.classList.remove('hidden'),400);
-setTimeout(start, 4400);
+function startManifesto(){
+  mfWrap.style.display='block';
+  skipBtn.classList.add('show');
+  manifestoTimer = setTimeout(showMenu, 45000); /* 45 sn */
+}
+
+skipBtn.addEventListener('click', ()=>{
+  if(manifestoTimer){ clearTimeout(manifestoTimer); }
+  showMenu();
+});
+
+function showMenu(){
+  mfWrap.style.display='none';
+  skipBtn.classList.remove('show');
+  main.style.display='block';
+}
+
+/* Sol üst Kullanıcı Paneli placeholder */
+document.getElementById('userBtn').addEventListener('click', (e)=>{
+  e.preventDefault();
+  alert('Kullanıcı Paneli yakında burada 🌊');
+});
 </script>
+
 </body>
 </html>
