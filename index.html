@@ -7,86 +7,118 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --fg:#101318; --mut:#5b6b7e;
+  --fg:#101318; --mut:#5b6b7e; --bg:#ffffff;
   --card:#ffffff; --b:rgba(0,0,0,.08);
-  --bar:#0d2a44; --az1:#a2e3ff; --az2:#9ff2b1; --az3:#ffe36e; --az4:#ff9ad0; --az5:#a8a4ff;
+  --bar:#0d2a44;
+  --az1:#9bd8ff; --az2:#a9f2bd; --az3:#ffe36e; --az4:#ff9ad0; --az5:#a8a4ff;
   --tileBlue:#eaf5ff; --tilePink:#ffeef6;
-  --orb1:#bfe6ff; --orb2:#ffd7ff; --orb3:#c9ffe0; --bg:#f7f9fc;
+  --orb1:#bfe6ff; --orb2:#ffd7ff; --orb3:#c9ffe0;
 }
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0; color:var(--fg); font:16px/1.55 Inter,system-ui; background:var(--bg)}
-/* ---------- Üst şerit ---------- */
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0; color:var(--fg); font:16px/1.6 Inter,system-ui; background:var(--bg)}
+
+/* ===== Splash: BEYAZ ekran + AZURA ===== */
+#splash{position:fixed; inset:0; background:#fff; display:grid; place-items:center; z-index:3000}
+.s-logo{position:relative; width:min(82vmin,780px); aspect-ratio:1/1; border-radius:50%;
+  display:grid; place-items:center;
+  box-shadow:0 0 0 16px #f5f7fb inset, 0 0 80px #e5f1ff, 0 0 160px #e5f1ff;
+  animation:ring 3s ease-in-out forwards}
+.s-title{font:900 clamp(42px,9vw,160px)/1 Cinzel,serif; letter-spacing:.22em;
+  background:linear-gradient(90deg,#6f7f90,#6dc7ff,#9ff2b1,#ffe36e,#ff9ad0,#a8a4ff,#6f7f90);
+  background-size:300% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 10px 24px rgba(0,0,0,.12); animation:hue 10s linear infinite}
+@keyframes ring{0%{transform:scale(.55)} 35%{transform:scale(1.05)} 65%{transform:scale(.9)} 100%{transform:scale(22)}}
+@keyframes hue{to{background-position:200% 50%}}
+#whiteFade{position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; transition:opacity .55s ease; z-index:3001}
+#whiteFade.show{opacity:1}
+
+/* ===== Top bar ===== */
 .top{position:sticky; top:0; z-index:20; background:var(--bar); color:#e8f3ff; box-shadow:0 2px 16px rgba(0,0,0,.08)}
-.nav{display:flex; align-items:center; gap:12px; padding:10px 12px; max-width:1100px; margin:0 auto}
-.brand{margin:0 auto 0 0; font-family:Cinzel,serif; letter-spacing:.38em; font-weight:900;
+.nav{display:flex; align-items:center; gap:12px; padding:10px 12px; max-width:1180px; margin:0 auto}
+.brand{margin:0 auto; font-family:Cinzel,serif; letter-spacing:.38em; font-weight:900;
   background:linear-gradient(90deg,#eaffff,var(--az1),var(--az2),var(--az3),var(--az4),var(--az5),#eaffff);
   background-size:300% 100%; -webkit-background-clip:text; color:transparent; animation:hue 14s linear infinite}
 .clock{font-weight:800; background:#0b2236; border:1px solid rgba(255,255,255,.08); padding:6px 10px; border-radius:10px}
 .btn{font-weight:900; padding:8px 12px; border-radius:12px; text-decoration:none; border:1px solid rgba(255,255,255,.12); background:#113656; color:#eaf4ff}
-.theme{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#113656;color:#d8ecff;font-weight:900}
-@keyframes hue{to{background-position:200% 0}}
-/* ---------- Sayfa ızgarası ---------- */
-.wrap{max-width:1100px; margin:18px auto; padding:0 12px; display:grid; gap:16px}
+.theme, .hamb{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#113656;color:#d8ecff;font-weight:900}
+
+/* ===== Drawer ===== */
+.drawer{position:fixed; inset:0; z-index:25; display:none}
+.drawer.show{display:block}
+.drawer .shade{position:absolute; inset:0; background:rgba(0,0,0,.35)}
+.drawer .panel{position:absolute; inset:0 auto 0 0; width:min(84%,320px); background:#0f2236; color:#eaf4ff;
+  padding:12px; transform:translateX(-100%); transition:transform .25s ease}
+.drawer.show .panel{transform:none}
+.drawer h3{margin:6px 8px 10px; font:900 14px/1 Cinzel,serif; letter-spacing:.24em; opacity:.9}
+.link{display:flex; align-items:center; gap:8px; padding:9px 10px; margin:6px; border-radius:10px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); text-decoration:none; color:#eaf4ff; font-weight:800}
+
+/* ===== Layout ===== */
+.wrap{max-width:1180px; margin:18px auto; padding:0 12px; display:grid; gap:16px}
 .row{display:grid; grid-template-columns:1fr 1fr; gap:16px}
-.card{background:var(--card); border:1px solid var(--b); border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,.04); overflow:hidden}
-.head{display:flex; align-items:center; gap:8px; padding:10px 12px; font-weight:900; color:#314356; border-bottom:1px solid var(--b)}
-.box{padding:14px 16px}
-/* Günün sözü / ilginç bilgi */
-.quote .box{position:relative; padding:18px} 
+.card{background:#fff; border:1px solid var(--b); border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,.06); overflow:hidden}
+.head{display:flex; align-items:center; gap:10px; padding:10px 14px; font-weight:900; color:#314356; border-bottom:1px solid var(--b)}
+.box{padding:16px 18px}
+
+/* Günün Sözü / İlginç Bilgi */
+.quote .box{display:flex; gap:14px; align-items:flex-start}
+.bulb{width:28px;height:28px;border-radius:50%; background:radial-gradient(circle at 40% 35%, #fff7be 0%, #ffd34d 38%, #ffb300 60%, #ffb30000 62%);
+  box-shadow:0 0 18px #ffd34d, 0 0 36px #ffd34d66; animation:flicker 2.2s infinite}
+@keyframes flicker{0%,100%{filter:brightness(1)} 40%{filter:brightness(1.3)} 45%{filter:brightness(.8)} 55%{filter:brightness(1.4)} 60%{filter:brightness(.9)}}
+.brain{width:32px;height:32px;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%, #ff8cd2 0, #e36be0 30%, #b66cff 55%, #9acbff 80%, #9acbff00 82%);
+  box-shadow:0 0 22px #cc8cffaa; animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)} 50%{transform:scale(1.08)}}
 .quote b{display:block; font-weight:900; margin-bottom:6px}
 .quote small{opacity:.7}
-.fact .box{padding:18px}
-.badge{display:inline-flex; align-items:center; gap:6px; font-weight:900; padding:6px 10px; border-radius:999px; background:#eef6ff; color:#1b3b68; border:1px solid var(--b)}
+
 /* Erkek/Kadın kartları */
-.tile{position:relative; height:170px; display:grid; place-items:center; background:linear-gradient(#fff, #fff7), #fff}
-.tile.blue{background:radial-gradient(400px 180px at 20% -20%, #bfe6ff55, transparent 60%), var(--tileBlue)}
-.tile.pink{background:radial-gradient(400px 180px at 80% -20%, #ffd6ef55, transparent 60%), var(--tilePink)}
+.tile{position:relative; height:190px; display:grid; place-items:center}
+.tile.blue{background:radial-gradient(420px 180px at 20% -20%, #bfe6ff55, transparent 60%), var(--tileBlue)}
+.tile.pink{background:radial-gradient(420px 180px at 80% -20%, #ffd6ef55, transparent 60%), var(--tilePink)}
 .tile canvas{position:absolute; inset:0}
 .tile .go{position:absolute; right:12px; bottom:12px}
 .go a{display:inline-flex; align-items:center; gap:6px; font-weight:900; padding:10px 14px; border-radius:12px; text-decoration:none; border:1px solid var(--b); background:#0d47a1; color:#fff; box-shadow:0 8px 22px rgba(13,71,161,.25)}
 .go a.pink{background:#c2185b}
-.title{display:flex; align-items:center; gap:8px; padding:10px 12px; font-weight:900; color:#334}
+.title{display:flex; align-items:center; gap:8px; padding:12px 14px; font-weight:900; color:#334}
+
 /* Orb */
-.orb{height:320px; display:grid; place-items:center}
-#orb{width:220px; height:220px; border-radius:50%;
+.orb{height:330px; display:grid; place-items:center; background:#fff}
+#orb{width:230px; height:230px; border-radius:50%;
   background: radial-gradient(120px 120px at 50% 45%, var(--orb1), transparent 60%),
-              radial-gradient(90px 90px at 60% 55%, var(--orb2), transparent 60%),
-              radial-gradient(140px 140px at 45% 60%, var(--orb3), transparent 60%);
-  filter: blur(8px) saturate(120%); box-shadow:0 28px 48px rgba(0,0,0,.08)}
-.shadow{width:160px;height:24px;border-radius:50%;background:radial-gradient(closest-side, rgba(0,0,0,.16), transparent);filter:blur(2px);transform:translateY(-16px)}
-/* ---------- Splash (BEYAZ) ---------- */
-#splash{position:fixed; inset:0; z-index:3000; display:grid; place-items:center; background:#0b0b0b}
-.ringWrap{position:relative; width:min(80vmin,740px); aspect-ratio:1/1; border-radius:50%;
-  display:grid; place-items:center; box-shadow:0 0 0 18px #fff inset, 0 0 48px rgba(255,255,255,.55), 0 0 140px rgba(255,255,255,.35);
-  animation:ringPulse 2.5s ease-in-out forwards}
-.ringWrap .title{font:900 clamp(40px,9vw,160px)/1 Cinzel,serif; letter-spacing:.22em;
-  background:linear-gradient(90deg,#ffffff,#bfe3ff,#7fd0ff,#a6a3ff,#ff9cda,#ffffff);
-  background-size:260% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 26px rgba(255,255,255,.45); animation:hueSlide 6s linear infinite}
-#whiteOut{position:fixed; inset:0; z-index:3001; background:#fff; opacity:0; pointer-events:none; transition:opacity .5s ease}
-#whiteOut.show{opacity:1}
-@keyframes ringPulse{0%{transform:scale(.38)} 35%{transform:scale(1.12)} 60%{transform:scale(.86)} 100%{transform:scale(24)}}
-@keyframes hueSlide{to{background-position:200% 50%}}
-/* ---------- Tema ---------- */
-:root.dark{
-  --fg:#eaf2ff; --mut:#a7b7ca; --card:#0e1621; --b:rgba(255,255,255,.08);
-  --bg:#0a1018; --tileBlue:#0f1f30; --tilePink:#2b1624; --bar:#081725;
-}
-body.dark{background:var(--bg)}
-.card.darkEdge{box-shadow:0 8px 30px rgba(0,0,0,.35)}
+              radial-gradient(90px 90px at 62% 56%, var(--orb2), transparent 60%),
+              radial-gradient(140px 140px at 45% 62%, var(--orb3), transparent 60%);
+  filter: blur(10px) saturate(120%); box-shadow:0 28px 48px rgba(0,0,0,.08)}
+.shadow{width:170px;height:26px;border-radius:50%;background:radial-gradient(closest-side, rgba(0,0,0,.16), transparent);filter:blur(2px);transform:translateY(-16px)}
+/* Footer boşluk */
+.foot{height:40px}
 </style>
 </head>
 <body>
+
 <!-- Splash -->
-<div id="splash" aria-label="Azura Intro"><div class="ringWrap"><div class="title">AZURA</div></div></div>
-<div id="whiteOut" aria-hidden="true"></div>
+<div id="splash"><div class="s-logo"><div class="s-title">AZURA</div></div></div>
+<div id="whiteFade"></div>
+
+<!-- Drawer -->
+<div class="drawer" id="drawer">
+  <div class="shade" id="shade"></div>
+  <aside class="panel">
+    <h3>ＡＺＵＲＡ</h3>
+    <a class="link" href="#erkek">🌊 Okyanus (Erkek)</a>
+    <a class="link" href="#kadin">🌿 Doğa (Kadın)</a>
+    <a class="link" href="#orbSec">🪄 Azura Orb</a>
+    <a class="link" href="male.html">→ Erkek sayfası</a>
+    <a class="link" href="female.html">→ Kadın sayfası</a>
+  </aside>
+</div>
 
 <!-- Üst bar -->
 <div class="top">
   <div class="nav">
+    <button class="hamb" id="hamb">☰</button>
     <div class="clock" id="clk">--:--:--</div>
     <h1 class="brand">A Z U R A</h1>
-    <button id="theme" class="theme">☀︎/☾</button>
     <a class="btn" href="login.html">Giriş</a>
     <a class="btn" href="login.html#signup">Üye Ol</a>
   </div>
@@ -95,103 +127,100 @@ body.dark{background:var(--bg)}
 <div class="wrap">
   <!-- Günün Sözü & İlginç Bilgi -->
   <div class="row">
-    <article class="card quote">
+    <article class="card quote" id="soz">
       <div class="head">✨ Günün Sözü</div>
-      <div class="box"><b id="qText">…</b><small id="qAuth"></small></div>
+      <div class="box">
+        <div class="bulb" aria-hidden="true"></div>
+        <div><b id="qText">…</b><small id="qAuth"></small></div>
+      </div>
     </article>
-    <article class="card fact">
+    <article class="card quote" id="bilgi">
       <div class="head">🧠 İlginç Bilgi</div>
-      <div class="box" id="factBox">…</div>
+      <div class="box">
+        <div class="brain" aria-hidden="true"></div>
+        <div id="factBox">…</div>
+      </div>
     </article>
   </div>
 
-  <!-- Erkek / Kadın kartları -->
-  <div class="row">
+  <!-- Erkek / Kadın -->
+  <div class="row" id="erkek">
     <section class="card">
       <div class="title">🌊 Okyanus • Karizma • Disiplin</div>
       <div class="tile blue">
         <canvas id="pMale"></canvas>
-        <div class="go"><a class="to male" href="male.html">Git →</a></div>
+        <div class="go"><a class="to" href="male.html">Git →</a></div>
       </div>
     </section>
-
-    <section class="card">
+    <section class="card" id="kadin">
       <div class="title">🌿 Doğa • Zarafet • Denge</div>
       <div class="tile pink">
         <canvas id="pFemale"></canvas>
-        <div class="go"><a class="to female pink" href="female.html">Git →</a></div>
+        <div class="go"><a class="to pink" href="female.html">Git →</a></div>
       </div>
     </section>
   </div>
 
   <!-- Orb -->
-  <section class="card">
+  <section class="card" id="orbSec">
     <div class="head">🪄 Azura Orb — Dinamik Küre</div>
     <div class="box orb">
       <div id="orb"></div>
       <div class="shadow"></div>
     </div>
   </section>
+
+  <div class="foot"></div>
 </div>
 
 <script>
-/* ====== Splash zamanlama (Beyaz) ====== */
-(() => {
-  const INTRO = 2500, WHITE = 500;
-  setTimeout(()=>{ document.getElementById('whiteOut').classList.add('show');
-    setTimeout(()=>{ document.getElementById('splash').remove(); document.getElementById('whiteOut').remove(); }, WHITE);
-  }, INTRO);
-})();
+/* Splash zamanlama — 3sn, yumuşak beyaza geç */
+(()=>{ const INTRO=3000; setTimeout(()=>{whiteFade.classList.add('show');
+  setTimeout(()=>{splash.remove();whiteFade.remove();},550);},INTRO);})();
 
-/* ====== Saat ====== */
-setInterval(()=>{ const d=new Date(); const z=n=>String(n).padStart(2,'0');
-  clk.textContent = `${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`; }, 1000);
+/* Saat */
+setInterval(()=>{const d=new Date(),z=n=>String(n).padStart(2,'0'); clk.textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;},1e3);
 
-/* ====== Tema ====== */
-const root=document.documentElement, body=document.body, saved=localStorage.getItem('az_theme');
-if(saved==='dark'){ root.classList.add('dark'); body.classList.add('dark') }
-theme.onclick=()=>{ root.classList.toggle('dark'); body.classList.toggle('dark');
-  localStorage.setItem('az_theme', root.classList.contains('dark')?'dark':'light'); };
+/* Drawer */
+(()=>{const dr=drawer,shade=document.getElementById('shade'),btn=hamb; const open=()=>dr.classList.add('show'), close=()=>dr.classList.remove('show'); btn.onclick=open; shade.onclick=close; addEventListener('keydown',e=>{if(e.key==='Escape')close();});})();
 
-/* ====== Kart parçacıkları ====== */
+/* Kart parçacıkları */
 function particles(canvas, hueBase){
   const c=canvas, x=c.getContext('2d');
   function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
-  const N=90, P=[]; for(let i=0;i<N;i++){ P.push({x:Math.random()*c.width, y:Math.random()*c.height, r:1+Math.random()*2, a:Math.random()*Math.PI*2}); }
+  const N=95, P=[]; for(let i=0;i<N;i++) P.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,a:Math.random()*6.28});
   (function loop(){
     x.clearRect(0,0,c.width,c.height);
     for(const p of P){
-      p.a+=.01; p.x+=Math.cos(p.a)*.3; p.y-=.35;
-      if(p.y<-10){ p.y=c.height+10; p.x=Math.random()*c.width; }
+      p.a+=.01; p.x+=Math.cos(p.a)*.35; p.y-=.38;
+      if(p.y<-10){p.y=c.height+10; p.x=Math.random()*c.width}
       x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
-      x.fillStyle=`hsla(${hueBase+Math.sin(p.a)*10},75%,65%,.85)`; x.fill();
+      x.fillStyle=`hsla(${hueBase+Math.sin(p.a)*10},80%,60%,.9)`; x.fill();
     }
     requestAnimationFrame(loop);
   })();
 }
-particles(document.getElementById('pMale'), 205);
-particles(document.getElementById('pFemale'), 335);
+particles(document.getElementById('pMale'),205);
+particles(document.getElementById('pFemale'),335);
 
-/* ====== Günün Sözü & İlginç Bilgi ====== */
+/* Günün Sözü & Bilgi */
 const QUOTES=[["Cesaret, korkunun yokluğu değil; ona rağmen yürümektir.","N. Mandela"],
 ["Bir hedef, tarihle buluşmuş bir hayaldir.","Napoleon Hill"],
-["Disiplin, özgürlüğün en kısa yoludur.","Epictetus"]];
-const FACTS=["İnsan beyninin %60’ı yağdan oluşur ve bu yüzden omega-3 ile ‘donanım’ güncellemeyi sever 🧬",
-"Kalp günde yaklaşık 100.000 kez atar — dakikada ortalama 5–6 litre kan pompalar ❤️",
-"Uyurken beyniniz gün içindeki bilgileri ‘temizleyip’ arşivler — RAM → SSD gibi düşün 💾"];
+["Disiplin, özgürlüğün en kısa yoludur.","Epiktetos"],
+["Nezaket, zekânın görünen yüzüdür.","Azura"]];
+const FACTS=["Beyin yaklaşık 86 milyar nörona sahiptir ve her biri saniyede yüzlerce sinyal gönderebilir.",
+"REM uykusunda beynin duygusal merkezleri yoğun çalışır; bu yüzden rüyalar canlıdır.",
+"Kalp günde ~100.000 kez atar; toplamda dakikada 5–6 litre kan pompalar."];
 const [qt,qa]=QUOTES[Math.floor(Math.random()*QUOTES.length)];
 qText.textContent='“ '+qt+' ”'; qAuth.textContent='— '+qa; factBox.textContent=FACTS[Math.floor(Math.random()*FACTS.length)];
 
-/* ====== Git butonlarında beyaza yumuşak geçiş ====== */
+/* Linklerde beyaza yumuşak geçiş */
 for(const a of document.querySelectorAll('a.to')){
-  a.addEventListener('click', e=>{
-    e.preventDefault();
-    const cover=document.createElement('div');
-    cover.style.cssText='position:fixed;inset:0;background:#fff;opacity:0;transition:opacity .4s ease;z-index:2000';
+  a.addEventListener('click',e=>{e.preventDefault();const cover=document.createElement('div');
+    cover.style.cssText='position:fixed;inset:0;background:#fff;opacity:0;transition:opacity .45s ease;z-index:2000';
     document.body.appendChild(cover); requestAnimationFrame(()=>cover.style.opacity=1);
-    setTimeout(()=>location.href=a.href, 420);
-  });
+    setTimeout(()=>location.href=a.href,460);});
 }
 </script>
 </body>
-      </html>
+  </html>
