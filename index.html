@@ -1,264 +1,280 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AZURA</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+<!-- Vahşi başlık için font -->
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
 <style>
+  /* ========= TEMALAR ========= */
   :root{
-    --fg:#eaf1ff; --mut:#b9c7db;
-    --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14);
-    --blue:#55c8ff; --pink:#ff9ad0; --green:#9ff2b1;
-    --bg:#050b12;
+    --bg:#ffffff;
+    --fg:#0b1220;
+    --mut:#6b7280;
+    --bar:#071a3a;              /* koyu mavi şerit */
+    --glass:rgba(5,10,25,.06);
+    --card-b:#e6ebf4;
+    --blue:#1e88ff;
+    --pink:#ff56b6;
+    --ring:rgba(0,0,0,.08);
   }
+  :root.dark{
+    --bg:#0a0f18;
+    --fg:#eaf1ff;
+    --mut:#a8b3c7;
+    --bar:#061024;
+    --glass:rgba(255,255,255,.06);
+    --card-b:#1a2233;
+    --ring:rgba(255,255,255,.08);
+  }
+
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0; color:var(--fg); font:16px/1.55 Inter,system-ui;
-    background: radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.07), transparent 60%), var(--bg);
-    overflow:hidden;
+    margin:0; background:var(--bg); color:var(--fg);
+    font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto;
   }
 
-  /* arka plan aurora */
-  body:before{
-    content:""; position:fixed; inset:-20% -10% auto -10%; height:70%;
-    background:
-      radial-gradient(800px 500px at 15% 20%, rgba(85,200,255,.25), transparent 60%),
-      radial-gradient(700px 450px at 85% 10%, rgba(255,154,208,.22), transparent 60%),
-      radial-gradient(900px 520px at 50% 0%, rgba(159,242,177,.18), transparent 60%);
-    filter: blur(34px);
-    animation: aurora 16s linear infinite alternate;
-    pointer-events:none; z-index:0;
+  /* ========= ÜST ŞERİT ========= */
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    background:var(--bar);
+    color:#fff; height:64px;
+    display:grid; grid-template-columns:64px 1fr auto auto; align-items:center;
+    gap:10px; padding:0 10px; box-shadow:0 2px 14px rgba(0,0,0,.15);
   }
-  @keyframes aurora{0%{transform:translateY(0)}100%{transform:translateY(40px)}}
-
-  /* ======= SPLASH: beyaz halka ve dijital yazı ======= */
-  #splash{
-    position:fixed; inset:0; z-index:200; display:grid; place-items:center;
-    background:var(--bg);
+  /* sol menü butonu */
+  .icon{
+    width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+    cursor:pointer; user-select:none;
   }
-  .ring{
-    width:min(78vmin,720px); aspect-ratio:1/1; border-radius:50%;
-    display:grid; place-items:center;
-    background:
-      radial-gradient(circle,
-        rgba(255,255,255,0) 62%,
-        #ffffff 62%,
-        #ffffff 70%,
-        rgba(255,255,255,.30) 74%,
-        rgba(255,255,255,.10) 86%,
-        rgba(255,255,255,0) 92%);
-    filter:drop-shadow(0 0 28px rgba(255,255,255,.55))
-           drop-shadow(0 0 80px rgba(255,255,255,.35));
-    animation:ringPulse 4.5s ease-in-out forwards;
+  /* saat */
+  .clock{
+    font-weight:800; letter-spacing:.06em; opacity:.9; padding-left:2px;
   }
-  .logo{
-    font-family:Cinzel,serif; font-weight:900; letter-spacing:.22em;
-    font-size:clamp(40px,10vw,160px);
-    background:linear-gradient(90deg,#ffffff,#bde6ff,#8fd6ff,#a7a5ff,#ff9ddb,#ffffff);
+  /* AZURA – vahşi, şekilli, renk geçişli */
+  .brand{
+    text-align:center;
+    font-family:"Black Ops One", system-ui;
+    font-size:clamp(24px,4.8vw,40px);
+    letter-spacing:.22em;
+    background:linear-gradient(90deg,#8be6ff,#8bffd6,#fff8b0,#ffb3e6,#c7a0ff,#8be6ff);
     background-size:300% 100%;
     -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 0 28px rgba(255,255,255,.45),0 0 64px rgba(160,200,255,.25);
-    animation:hueShift 7s linear infinite,popScale 4.5s ease-in-out both;
+    animation:azuraFlow 9s linear infinite;
+    text-shadow:0 0 20px rgba(255,255,255,.15);
   }
-  @keyframes hueShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-  @keyframes popScale{
-    0%{transform:scale(.86);opacity:0}
-    20%{opacity:1}
-    45%{transform:scale(1.08)}
-    70%{transform:scale(.97)}
-    100%{transform:scale(1.1)}
+  @keyframes azuraFlow{
+    0%{background-position:0% 50%} 100%{background-position:200% 50%}
   }
-  @keyframes ringPulse{
-    0%{transform:scale(.8);opacity:.9}
-    40%{transform:scale(1.1);opacity:1}
-    70%{transform:scale(.95)}
-    100%{transform:scale(28);opacity:1}
-  }
-  #whiteOut{
-    position:fixed;inset:0;background:#fff;z-index:210;opacity:0;
-    transition:opacity .7s ease;pointer-events:none;
-  }
-  #whiteOut.show{opacity:1}
 
-  /* üst marka */
-  h1.brand{
-    margin:120px 0 0;text-align:center;font-family:Cinzel,serif;
-    font-weight:900;letter-spacing:.18em;font-size:clamp(34px,6vw,74px);
-    background:linear-gradient(90deg,#dfefff,#bfe0ff,#9fd8ff);
-    -webkit-background-clip:text;color:transparent;
-    text-shadow:0 12px 40px rgba(0,0,0,.5);z-index:1;position:relative;
-    animation:brandpop .9s ease both .1s;
-  }
-  @keyframes brandpop{from{transform:translateY(-10px);opacity:0}to{transform:none;opacity:1}}
-
-  /* kart grid */
-  main{position:relative;z-index:1}
-  .cards{display:flex;justify-content:center;gap:28px;margin-top:54px;}
-  .card{
-    width:min(360px,44vw);height:280px;border:1px solid var(--b);
-    background:var(--glass);backdrop-filter:blur(8px);
-    border-radius:18px;position:relative;overflow:hidden;
-    box-shadow:0 10px 40px rgba(0,0,0,.35);
-    transition:transform .18s ease,box-shadow .18s ease;
-  }
-  .card:hover{transform:translateY(-2px);box-shadow:0 14px 56px rgba(0,0,0,.45)}
-  .card .head{
-    position:absolute;left:16px;top:16px;padding:10px 14px;
-    border:1px solid var(--b);border-radius:12px;
-    background:rgba(255,255,255,.05);font-weight:900;letter-spacing:.04em;
-  }
-  .go{position:absolute;right:16px;bottom:16px}
+  /* sağ taraf: giriş/üye ol + tema */
+  .actions{display:flex; gap:8px; align-items:center}
   .btn{
-    appearance:none;border:1px solid var(--b);background:var(--glass);
-    color:var(--fg);padding:12px 18px;border-radius:12px;font-weight:900;
-    text-decoration:none;display:inline-flex;gap:8px;align-items:center;
-    backdrop-filter:blur(6px);
+    appearance:none; border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.08); color:#fff;
+    padding:10px 14px; border-radius:12px; font-weight:900; text-decoration:none;
+    display:inline-flex; gap:8px; align-items:center;
   }
-  .male{transform:translate(-22px,40px)}
-  .female{transform:translate(22px,40px)}
-  canvas.tile{position:absolute;inset:0;width:100%;height:100%}
+  .theme{
+    border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08);
+    color:#fff; padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:900;
+  }
 
-  /* geçiş sönme */
-  #wipe{position:fixed;inset:0;background:#fff;z-index:100;pointer-events:none;
-    opacity:0;transform:scale(1.05);
-    transition:opacity .45s ease,transform .45s ease}
-  #wipe.show{opacity:1;transform:scale(1)}
-
-  /* hamburger menü */
-  .topbar{position:fixed;left:12px;top:12px;z-index:3}
-  .icon-btn{width:44px;height:44px;border-radius:12px;
-    border:1px solid var(--b);background:var(--glass);
-    color:var(--fg);font-weight:900;display:inline-flex;
-    align-items:center;justify-content:center;
-    backdrop-filter:blur(8px);cursor:pointer}
-  .drawer{position:fixed;inset:0;z-index:110;display:none}
+  /* ========= SOL PANİL (çekmece) ========= */
+  .drawer{position:fixed; inset:0; z-index:30; display:none}
   .drawer.show{display:block}
-  .drawer .shade{position:absolute;inset:0;background:rgba(0,0,0,.35);
-    opacity:0;transition:opacity .3s ease}
+  .shade{position:absolute; inset:0; background:rgba(0,0,0,.35); opacity:0; transition:opacity .25s ease}
   .drawer.show .shade{opacity:1}
-  .drawer .panel{
-    position:absolute;left:0;top:0;bottom:0;width:min(420px,88%);
-    background:rgba(8,14,20,.82);backdrop-filter:blur(12px);
-    border-right:1px solid var(--b);transform:translateX(-100%);
-    transition:transform .35s ease;padding:16px}
+  .panel{
+    position:absolute; left:0; top:0; bottom:0; width:min(420px,88%);
+    background:color-mix(in oklab, var(--bg) 80%, #000 20%);
+    border-right:1px solid var(--card-b);
+    transform:translateX(-100%); transition:transform .3s ease;
+    padding:18px; backdrop-filter:blur(10px);
+  }
   .drawer.show .panel{transform:none}
-  .panel h3{margin:6px 0 12px;font:900 18px/1 Cinzel,serif;letter-spacing:.12em}
-  .list{display:grid;gap:10px}
+  .panel h3{margin:8px 0 12px; font:900 18px/1 Inter; letter-spacing:.08em}
+  .list{display:grid; gap:10px}
   .list a{
-    display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;
-    border:1px solid var(--b);background:var(--glass);
-    color:var(--fg);text-decoration:none;font-weight:800}
-  .muted{color:var(--mut);font-size:14px;margin:8px 0 0}
-  .list small{color:var(--mut)}
-  hr.sep{border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);margin:12px 0}
+    display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--fg);
+    padding:10px 12px; border-radius:12px; background:var(--glass); border:1px solid var(--card-b);
+    font-weight:800;
+  }
+  .muted{color:var(--mut); font-size:14px; margin-top:8px}
 
-  @media (max-width:720px){
-    .cards{flex-direction:column;align-items:center}
-    .male,.female{transform:translate(0,18px)}
+  /* ========= KAHRAMAN BÖLÜMÜ ========= */
+  .hero{
+    position:relative; padding:28px 18px 12px; max-width:1100px; margin:18px auto 0;
+  }
+  .grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:18px;
+  }
+  .card{
+    position:relative; overflow:hidden; border-radius:20px; padding:18px;
+    border:1px solid var(--card-b); background:var(--glass);
+    backdrop-filter:blur(8px); min-height:220px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 16px 50px rgba(0,0,0,.15)}
+  .tag{font-weight:900; letter-spacing:.06em; display:inline-flex; align-items:center; gap:8px}
+
+  /* Erkek — mavi dalga */
+  .male{
+    --accent: var(--blue);
+    background:
+      radial-gradient(1200px 400px at 10% 0%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 60%),
+      var(--glass);
+  }
+  /* Kadın — pembe akış */
+  .female{
+    --accent: var(--pink);
+    background:
+      radial-gradient(1200px 400px at 90% 0%, color-mix(in oklab, var(--accent) 20%, transparent), transparent 60%),
+      var(--glass);
+  }
+
+  .cta{
+    position:absolute; right:16px; bottom:16px;
+    font-weight:900; border-radius:12px; padding:10px 14px;
+    text-decoration:none; color:#fff; border:1px solid color-mix(in oklab, var(--accent) 70%, #fff 30%);
+    background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 70%, #fff 30%), color-mix(in oklab, var(--accent) 90%, #000 10%));
+    box-shadow:0 10px 30px color-mix(in oklab, var(--accent) 35%, #000 65%);
+    transition:transform .15s ease;
+  }
+  .cta:active{ transform:scale(.98) }
+
+  /* kart içi animasyon noktacıklar */
+  canvas.particles{position:absolute; inset:0; pointer-events:none; opacity:.9; mix-blend-mode:plus-lighter}
+
+  /* Halka dekor (çok ince) */
+  .hero:before{
+    content:""; position:absolute; left:-200px; top:-180px; width:420px; height:420px; border-radius:50%;
+    border:2px dashed var(--ring); filter:blur(.2px);
+  }
+
+  /* Responsive */
+  @media (max-width:820px){
+    .grid{grid-template-columns:1fr}
   }
 </style>
 </head>
 <body>
-  <!-- Splash -->
-  <div id="splash"><div class="ring"><div class="logo">AZURA</div></div></div>
-  <div id="whiteOut"></div>
 
-  <!-- Wipe -->
-  <div id="wipe"></div>
+  <!-- ÜST ŞERİT -->
+  <header class="topbar">
+    <div id="menuBtn" class="icon" title="Panel">☰</div>
+    <div class="clock" id="clock">--:--</div>
+    <div class="brand">A Z U R A</div>
+    <div class="actions">
+      <button id="themeBtn" class="theme" title="Tema Değiştir">☀︎/☾</button>
+      <a class="btn" href="login.html">Giriş</a>
+      <a class="btn" href="login.html#signup">Üye Ol</a>
+    </div>
+  </header>
 
-  <!-- Menü -->
-  <div class="topbar"><button id="menuBtn" class="icon-btn">☰</button></div>
-
-  <aside id="drawer" class="drawer">
-    <div class="shade" id="shade"></div>
-    <div class="panel">
+  <!-- SOL PANEL -->
+  <aside id="drawer" class="drawer" aria-hidden="true">
+    <div id="shade" class="shade"></div>
+    <div class="panel" role="dialog" aria-label="AZURA Panel">
       <h3>AZURA • Panel</h3>
-      <div class="list">
-        <a href="#hakkimda">👤 Hakkımda <small>kısa özet</small></a>
-        <a href="#icerikler">🗂️ İçerikler <small>notlar • projeler</small></a>
-        <a href="#erkek">🌊 Erkek • Okyanus <small>karizma • disiplin</small></a>
-        <a href="#kadin">🌿 Kadın • Doğa <small>zarafet • denge</small></a>
-        <a href="#kanallar">✨ Kanallar <small>felsefe • tıp</small></a>
-        <a href="#yapilabilir">🧭 Neler yapılabilir? <small>hedefler</small></a>
-      </div>
-      <p class="muted">Menüyü kapatmak için dışına dokunabilirsin.</p>
-      <hr class="sep">
-      <a class="btn" href="male.html">🌊 Okyanus’a Git</a>
-      <a class="btn" href="female.html" style="margin-left:6px">🌿 Doğa’ya Git</a>
+      <nav class="list">
+        <a href="#hakkimda">👤 Hakkımda</a>
+        <a href="#icerikler">🗂️ İçerikler</a>
+        <a href="#erkek">🌊 Erkek (Okyanus)</a>
+        <a href="#kadin">🌿 Kadın (Doğa)</a>
+        <a href="#kanallar">✨ Kanallar (Felsefe • Tıp)</a>
+        <a href="#yapilabilir">🧭 Neler yapılabilir?</a>
+      </nav>
+      <p class="muted">Paneli kapatmak için dışına dokun veya ESC.</p>
     </div>
   </aside>
 
-  <!-- Marka -->
-  <h1 class="brand">AZURA</h1>
+  <!-- ANA İÇERİK -->
+  <main class="hero">
+    <section class="grid">
+      <!-- ERKEK -->
+      <article class="card male" id="erkek">
+        <span class="tag">🌊 <span style="color:var(--blue)">Okyanus</span> • Karizma • Disiplin</span>
+        <canvas class="particles" id="pMale"></canvas>
+        <a class="cta" href="male.html">Git →</a>
+      </article>
 
-  <!-- Kartlar -->
-  <main>
-    <div class="cards">
-      <section class="card male">
-        <div class="head">🌊 Okyanus • Karizmatik</div>
-        <canvas class="tile" id="sea"></canvas>
-        <div class="go"><a class="btn nav" href="male.html">Giriş →</a></div>
-      </section>
-      <section class="card female">
-        <div class="head">🌿 Doğa • İç ısıtan</div>
-        <canvas class="tile" id="forest"></canvas>
-        <div class="go"><a class="btn nav" href="female.html">Giriş →</a></div>
-      </section>
-    </div>
+      <!-- KADIN -->
+      <article class="card female" id="kadin">
+        <span class="tag">🌿 <span style="color:var(--pink)">Doğa</span> • Zarafet • Denge</span>
+        <canvas class="particles" id="pFem"></canvas>
+        <a class="cta" href="female.html">Git →</a>
+      </article>
+    </section>
   </main>
 
 <script>
-/* Splash akışı */
-(() => {
-  const INTRO_MS=4500,WHITE_MS=700;
-  const splash=document.getElementById('splash');
-  const white=document.getElementById('whiteOut');
-  setTimeout(()=>{
-    white.classList.add('show');
-    setTimeout(()=>{
-      splash.remove();white.remove();
-    },WHITE_MS);
-  },INTRO_MS);
-})();
-
-/* kart animasyonları */
-(function sea(){
-  const c=document.getElementById('sea'),x=c.getContext('2d');
-  function fit(){c.width=c.clientWidth;c.height=c.clientHeight}fit();addEventListener('resize',fit,{passive:true});
-  const B=120,b=[];for(let i=0;i<B;i++)b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
-  (function loop(){x.clearRect(0,0,c.width,c.height);for(const p of b){p.y-=p.s;if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}x.globalAlpha=.28;x.fillStyle='#6ee4ff';x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fill()}requestAnimationFrame(loop)})();
-})();
-(function forest(){
-  const c=document.getElementById('forest'),x=c.getContext('2d');
-  function fit(){c.width=c.clientWidth;c.height=c.clientHeight}fit();addEventListener('resize',fit,{passive:true});
-  const N=100,p=[];for(let i=0;i<N;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40});
-  (function loop(){x.clearRect(0,0,c.width,c.height);for(const s of p){s.y+=.4;s.x+=Math.sin(s.y/45)*.4;if(s.y>c.height+10){s.y=-10;s.x=Math.random()*c.width}x.fillStyle=`hsla(${s.h},80%,72%,.9)`;x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fill()}requestAnimationFrame(loop)})();
-})();
-
-/* sayfa geçiş */
-(() => {
-  const wipe=document.getElementById('wipe');
-  for(const a of document.querySelectorAll('a.nav')){
-    a.addEventListener('click',e=>{
-      e.preventDefault();wipe.classList.add('show');
-      setTimeout(()=>location.href=a.href,420);
-    });
+/* ===== Saat ===== */
+(function clock(){
+  const el = document.getElementById('clock');
+  const f = n=>String(n).padStart(2,'0');
+  function tick(){
+    const d = new Date();
+    el.textContent = `${f(d.getHours())}:${f(d.getMinutes())}:${f(d.getSeconds())}`;
   }
+  tick(); setInterval(tick, 1000);
 })();
 
-/* menü */
-(() => {
-  const drawer=document.getElementById('drawer');
-  const menuBtn=document.getElementById('menuBtn');
-  const shade=document.getElementById('shade');
-  const open=()=>{drawer.classList.add('show')};
-  const close=()=>{drawer.classList.remove('show')};
-  menuBtn.addEventListener('click',open);
-  shade.addEventListener('click',close);
-  addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+/* ===== Tema (aydınlık/karanlık) ===== */
+(function theme(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('azura-theme');
+  if(saved === 'dark') root.classList.add('dark');
+  btn.addEventListener('click', ()=>{
+    root.classList.toggle('dark');
+    localStorage.setItem('azura-theme', root.classList.contains('dark') ? 'dark' : 'light');
+  });
 })();
+
+/* ===== Sol Panel ===== */
+(() => {
+  const drawer = document.getElementById('drawer');
+  const shade  = document.getElementById('shade');
+  const btn    = document.getElementById('menuBtn');
+  const open = ()=>drawer.classList.add('show');
+  const close= ()=>drawer.classList.remove('show');
+  btn.addEventListener('click', open);
+  shade.addEventListener('click', close);
+  addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
+})();
+
+/* ===== Kart içi animasyon (mavi/pembe parçacık) ===== */
+function particles(canvas, hueBase){
+  const c = canvas, x = c.getContext('2d');
+  function fit(){ c.width = c.clientWidth; c.height = c.clientHeight } fit();
+  addEventListener('resize', fit, {passive:true});
+
+  const N = 90, P = [];
+  for(let i=0;i<N;i++){
+    P.push({x:Math.random()*c.width, y:Math.random()*c.height, r:1+Math.random()*2.2, v:.3+.7*Math.random(), a:Math.random()*Math.PI*2});
+  }
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    for(const p of P){
+      p.a += 0.01; p.x += Math.cos(p.a)*0.3; p.y -= p.v;
+      if(p.y < -10){ p.y = c.height+10; p.x = Math.random()*c.width; }
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
+      x.fillStyle = `hsla(${hueBase + (p.x/c.width)*30}, 90%, 70%, .9)`;
+      x.fill();
+    }
+    requestAnimationFrame(loop);
+  })();
+}
+particles(document.getElementById('pMale'), 210); // mavi
+particles(document.getElementById('pFem'), 320);  // pembe
+
 </script>
 </body>
   </html>
