@@ -1,257 +1,152 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Azura • Kadın</title>
-<link rel="icon" href="data:," />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Azura Nova • Kadın</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#ffe8d1;           /* yazılar için koyu krem */
-  --glow:rgba(255,160,195,.22);
-  --maroon-0:#140c11;      /* zemin */
-  --maroon-1:#1b1117;      /* navbar */
-  --card:#1e141a;
-  --card-top:#261821;
-  --chip:#2a1a22;
-  --chip-ink:#ffd9ea;
-  --ring:rgba(255,121,176,.45);
-  --radius:16px;
+  --bg:#f8e6ef;
+  --text:#5a004b;
+  --accent:#ffbde0;
+  --light:#ffe8f4;
 }
-*{box-sizing:border-box} html,body{height:100%}
-body{
-  margin:0; color:#ffe9f4; background:var(--maroon-0);
-  font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  overflow-x:hidden;
+*{box-sizing:border-box;margin:0;padding:0}
+body,html{height:100%;overflow:hidden;background:var(--bg);font-family:"Inter",system-ui;color:var(--text);}
+#field{position:fixed;inset:0;z-index:0}
+#hello{
+  position:absolute;inset:0;display:grid;place-items:center;z-index:2;
+  font-family:"Cinzel",serif;font-weight:900;letter-spacing:.15em;
+  font-size:clamp(32px,5vw,72px);color:#ff7ec4;text-shadow:0 0 18px rgba(255,150,210,.6);
+  animation:fadeIn 1s ease-out forwards,fadeOut 1s ease-in 3s forwards;
 }
-
-/* TOP */
-.top{
-  position:fixed; inset:0 0 auto 0; height:66px; z-index:30;
-  display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(180deg,rgba(20,12,17,.92),rgba(20,12,17,.78));
-  border-bottom:1px solid rgba(255,121,176,.22);
-  backdrop-filter: blur(6px);
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{to{opacity:0}}
+#skip{
+  position:fixed;top:20px;left:20px;z-index:3;
+  background:rgba(255,255,255,.8);color:#7b006a;border:none;
+  font-weight:bold;padding:10px 16px;border-radius:8px;
+  cursor:pointer;box-shadow:0 0 10px rgba(255,150,210,.4);
+  transition:.2s;
 }
-.title{ letter-spacing:.3em; font-weight:900; color:#ffeef7; text-shadow:0 0 18px var(--glow)}
-.badges{ position:absolute; right:12px; display:flex; gap:8px }
-.badges a,.panelBtn{
-  text-decoration:none; color:#ffeef7; font-weight:800; letter-spacing:.02em;
-  background:rgba(27,17,23,.85); padding:8px 12px; border-radius:12px; border:1px solid var(--ring);
+#skip:hover{background:#fff}
+#story{
+  position:absolute;bottom:-100%;width:100%;z-index:1;
+  font-size:clamp(20px,2.6vw,36px);font-family:"Cinzel",serif;
+  text-align:center;line-height:1.5;font-weight:800;
+  background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.7));
+  color:#640052;text-shadow:0 0 14px rgba(255,150,210,.5);
+  padding:10vh 6vw;animation:scrollUp 60s linear forwards;
 }
-.panelBtn{ position:absolute; left:12px }
-
-/* BG */
-canvas#bg{ position:fixed; inset:0; z-index:0; background:var(--maroon-0); }
-
-/* içerik */
-.grid-wrap{ position:relative; z-index:5; padding-top:90px; padding-bottom:64px }
-.page-title{
-  margin:24px auto 14px; text-align:center; font-size:28px; letter-spacing:.25em; font-weight:900; color:#fff1f7;
-  text-shadow:0 8px 24px var(--glow)
+@keyframes scrollUp{to{transform:translateY(-150%)}}
+.menu{
+  position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+  z-index:5;background:rgba(255,255,255,.5);backdrop-filter:blur(10px);
+  animation:fadeIn .8s ease forwards;
 }
-.grid{ max-width:1100px; margin:0 auto; display:grid; gap:18px; grid-template-columns:repeat(2,1fr); }
-.card{
-  background:linear-gradient(180deg,var(--card-top),var(--card));
-  border-radius:18px; padding:18px 18px 14px; border:1px solid rgba(255,121,176,.2);
-  box-shadow:0 16px 40px rgba(0,0,0,.38), inset 0 0 0 1px rgba(255,255,255,.03);
+.menu.active{display:flex}
+.menu h1{
+  font-family:"Cinzel",serif;font-weight:900;font-size:clamp(28px,4vw,52px);
+  color:#7b006a;margin-bottom:20px;text-shadow:0 0 16px rgba(255,150,210,.4);
 }
-.card h3{
-  margin:0 0 10px; font-size:20px; letter-spacing:.15em; color:#ffeef7; text-shadow:0 0 18px var(--glow); font-weight:900;
+.menu .options{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+.menu .card{
+  min-width:220px;background:var(--light);padding:20px 28px;border-radius:20px;
+  box-shadow:0 8px 28px rgba(120,0,80,.2);transition:.25s;
 }
-.card p{ margin:0 0 12px; color:#ffe3ee; opacity:.95; line-height:1.45 }
-.chips{ display:flex; gap:8px; flex-wrap:wrap }
-.chips span,.chips a{
-  background:var(--chip); color:var(--chip-ink);
-  border:1px solid rgba(255,121,176,.28); padding:6px 10px; border-radius:999px; font-size:13px; text-decoration:none; font-weight:700
+.menu .card:hover{transform:translateY(-4px);box-shadow:0 10px 36px rgba(120,0,80,.3)}
+.menu .card h3{font-family:"Inter",sans-serif;margin-bottom:8px;color:#500040}
+.menu .card p{font-size:15px;color:#6a0060}
+.footer{
+  position:absolute;bottom:10px;width:100%;text-align:center;font-size:14px;color:#6a0060;
 }
-.resources{
-  grid-column:1 / -1; background:linear-gradient(180deg, #251822, #1f131b);
-  border:1px solid rgba(255,121,176,.2); border-radius:18px; padding:18px;
-}
-.resources h3{ margin:0 0 10px; letter-spacing:.35em; color:#fff1f7; text-shadow:0 0 18px var(--glow) }
-.res-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px }
-
-/* MANİFESTO */
-.hidden{display:none}
-#welcomeToast{
-  position:fixed; left:50%; top:90px; transform:translateX(-50%);
-  z-index:40; padding:10px 14px; border-radius:14px;
-  background:rgba(27,17,23,.86); color:#ffe7f3;
-  border:1px solid rgba(255,121,176,.35);
-  box-shadow:0 10px 24px rgba(0,0,0,.35), 0 0 22px rgba(255,121,176,.18);
-  font-weight:800
-}
-#skipBtn{
-  position:fixed; left:12px; top:10px; z-index:50;
-  background:rgba(27,17,23,.86); color:#ffe7f3; border:1px solid rgba(255,121,176,.38);
-  padding:8px 12px; border-radius:12px; font-weight:900; letter-spacing:.02em; cursor:pointer
-}
-#manifesto{
-  position:fixed; inset:0; z-index:35; pointer-events:auto;
-  background:linear-gradient(180deg, rgba(20,12,17,.94), rgba(20,12,17,.94));
-  display:flex; align-items:flex-end; justify-content:flex-start; padding:0 6vw 6vh;
-}
-.manFlow{
-  width:min(1100px,92vw);
-  font-weight:1000; letter-spacing:.02em; color:var(--ink);
-  text-shadow:0 8px 26px rgba(255,200,200,.22), 0 0 24px rgba(255,140,190,.18);
-  line-height:.92;
-}
-.manFlow .big{ font-size:min(11vw,140px) }
-.manFlow .sign{ margin-top:8vh; font-size:min(5.5vw,58px); opacity:.95 }
-@keyframes scrollUp{ from{ transform:translateY(100vh) } to{ transform:translateY(-120%) } }
-.scrolling{ animation:scrollUp var(--dur,28s) linear forwards }
-
-@media (max-width:840px){ .grid{ grid-template-columns:1fr } }
 </style>
 </head>
 <body>
+<canvas id="field"></canvas>
+<div id="hello">HOŞGELDİN</div>
+<button id="skip">Yazıyı Geç</button>
+<div id="story">
+Kadın olmak; zarafetiyle birlikte gücü taşımaktır.
+Yeri geldiğinde susmayı, yeri geldiğinde sözünü savunmayı bilmektir.
+Toplumun yüklediği rolleri değil, kendi kimliğini seçmektir.
+Bir anne, bir kardeş, bir dost ya da bir lider olabilir;
+hangi rolde olursa olsun, değerini çevresine hissettirir.
 
-<canvas id="bg" aria-hidden="true"></canvas>
+Kadın; sabrın, emeğin ve adaletin sembolüdür.
+Bir evi yuva yapan, bir düşünceyi hayale dönüştüren odur.
+Hayata kattığı her ayrıntı, bir başkasına umut olur.
+Ve o umut, insanlığın en sessiz ama en güçlü sesidir.
 
-<div class="top">
-  <button class="panelBtn" type="button">Kullanıcı Paneli</button>
-  <div class="title">DOĞA</div>
-  <div class="badges"><a href="index.html">Ana Menü</a></div>
+Tavsiye:
+Değerini hatırlatmak zorunda kalma;
+kendini bilen, zaten seni anlayacaktır.
+
+— Azura Nova
 </div>
 
-<button id="skipBtn" class="hidden">YAZIYI GEÇ</button>
-<div id="welcomeToast" class="hidden">DOĞANIN IŞIĞI’NA HOŞ GELDİN 🌸<br><small>Sakin bir nefes al; birazdan manifesto akacak.</small></div>
-<section id="manifesto" class="hidden" aria-label="manifesto">
-  <div id="manFlow" class="manFlow"></div>
-</section>
-
-<main class="grid-wrap">
-  <div class="page-title">ZARAFET</div>
-  <section class="grid">
-    <article class="card">
-      <h3>🌿 ZARAFET &amp; DENGE</h3>
-      <p>Zarafet; yavaşlamayı bilmek, denge ise payına düşeni üstlenmektir. İkisi beraber olduğunda şefkat üretkenliği boğmaz, üretkenlik de şefkati yıpratmaz.</p>
-      <div class="chips"><span>Sadelik</span><span>Nazik sınır</span><span>Ritüel</span></div>
-    </article>
-
-    <article class="card">
-      <h3>✨ İÇ ISITAN MOTİVASYON</h3>
-      <p>Güne minik bir <em>açılış ritüeli</em> koy: 3 derin nefes, bir bardak su, 1 cümle niyet. Niyet cümlesi: “Bugün şunu bitiriyorum: …”</p>
-      <div class="chips"><span>Niyet cümlesi</span><span>Kısa ısınma</span><span>Şefkatli iç ses</span></div>
-    </article>
-
-    <article class="card">
-      <h3>🤍 NEZAKET</h3>
-      <p>“Sınır koymak kırmak değildir”. Talebi yumuşat: “Bunu X’e kadar yapabilirim; şu iki seçenekten uygunu hangisi rahat?”</p>
-      <div class="chips"><span>Şeffaflık</span><span>Seçenek</span><span>Rica</span></div>
-    </article>
-
-    <article class="card">
-      <h3>⏳ MİNİ ALIŞTIRMA</h3>
-      <p>15 dakikalık nazik odak: telefonu uçuş moduna al, masayı pencereden uzak bir noktaya çevir, “Bittiğinde şu anda kendime teşekkür ediyorum çünkü…” yaz.</p>
-      <div class="chips"><span>15 dk odak</span><span>Tek iş</span><span>Şükran cümlesi</span></div>
-    </article>
-
-    <aside class="resources">
-      <h3>📚 KAYNAKLAR</h3>
-      <p><strong>Essentialism</strong> (McKeown) — <strong>Rest</strong> (Pang) — <strong>Tiny Habits</strong> (Fogg)</p>
-      <div class="res-actions">
-        <a class="chips" href="index.html"><span>← Ana Menü</span></a>
-        <a class="chips" href="#"><span>Kanallar</span></a>
-        <a class="chips" href="#"><span>Alıştırmalar</span></a>
-      </div>
-    </aside>
-  </section>
-</main>
+<div class="menu" id="menu">
+  <h1>Kadın Paneli</h1>
+  <div class="options">
+    <div class="card"><h3>🌸 Zerafet</h3><p>İçsel denge, kibarlık ve zarafet üzerine ilham verici içerikler.</p></div>
+    <div class="card"><h3>💫 Güç</h3><p>Kadının hem fiziksel hem de ruhsal direncini kutlayan yazılar.</p></div>
+    <div class="card"><h3>🌷 Duygular</h3><p>Hayatın içinde duygusal zekayı ve anlayışı geliştiren öneriler.</p></div>
+    <div class="card"><h3>📚 Bilgelik</h3><p>Azura Nova’nın kaleminden geçmişten geleceğe bilgelik notları.</p></div>
+  </div>
+  <div class="footer">© 2025 Azura Nova — Tüm Hakları Saklıdır</div>
+</div>
 
 <script>
-/* ==== BG: pembe benekler + yavaş gezen “güneş” ==== */
-(()=>{
-  const c=document.getElementById('bg'),x=c.getContext('2d');
-  let w,h,pts=[],t=0; const COUNT=120;
-  function R(a,b){ return Math.random()*(b-a)+a }
-  function size(){ w=c.width=innerWidth; h=c.height=innerHeight }
-  function init(){
-    pts=[]; for(let i=0;i<COUNT;i++){
-      pts.push({x:R(0,w), y:R(0,h), r:R(1,2.3), v:R(.02,.06)});
-    }
-  }
-  function sun(gx,gy){
-    const r = Math.min(w,h)*.20;
-    const g = x.createRadialGradient(gx,gy,0,gx,gy,r);
-    g.addColorStop(0,'rgba(255,236,193,.65)');
-    g.addColorStop(.6,'rgba(255,170,150,.18)');
-    g.addColorStop(1,'rgba(0,0,0,0)');
-    x.fillStyle=g; x.beginPath(); x.arc(gx,gy,r,0,Math.PI*2); x.fill();
-  }
-  function tick(){
-    t+=.0025;
-    x.clearRect(0,0,w,h);
-    // güneş yavaşça ekran içinde gezer
-    sun( w*.75 + Math.cos(t)*w*.08, h*.28 + Math.sin(t*.8)*h*.05 );
-    x.fillStyle='rgba(255,140,190,.15)';
-    for(const p of pts){
-      p.y+=p.v; if(p.y-p.r>h) p.y=-p.r, p.x=R(0,w);
-      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
-    }
-    requestAnimationFrame(tick);
-  }
-  addEventListener('resize',()=>{ size(); init() });
-  size(); init(); tick();
+// === CANVAS ARKA PLAN: GÜNEŞ + PEMBE YAPRAKLAR ===
+const c = document.getElementById("field"), x = c.getContext("2d");
+function fit(){c.width=innerWidth;c.height=innerHeight}
+fit(); addEventListener("resize",fit,{passive:true});
+const petals = Array.from({length:Math.floor((innerWidth*innerHeight)/26000)},()=>({
+ x:Math.random()*c.width,
+ y:Math.random()*c.height,
+ r:1+Math.random()*3,
+ hue:330+Math.random()*40,
+ s:.4+.7*Math.random(),
+ d:(Math.random()-.5)*.7
+}));
+let t=0;
+(function loop(){
+ x.fillStyle="#f8e6ef";x.fillRect(0,0,c.width,c.height);
+ // --- GÜNEŞ: geniş gezinti ---
+ const SUN={anchorX:.75,anchorY:.25,baseAmpX:.12,baseAmpY:.08,baseSpeed:.0015,rInner:10,rOuter:280};
+ const jitter=(a,b)=>a+Math.random()*(b-a);
+ if(!window.__sunT)window.__sunT=0;window.__sunT++;
+ const speed=SUN.baseSpeed*(1+Math.sin(window.__sunT*.0006)*.08);
+ const ampX=c.width*(SUN.baseAmpX+Math.sin(window.__sunT*.0009)*.004+jitter(-.0003,.0003));
+ const ampY=c.height*(SUN.baseAmpY+Math.cos(window.__sunT*.0006)*.004+jitter(-.00025,.00025));
+ const sx=c.width*SUN.anchorX+Math.cos(window.__sunT*speed)*ampX;
+ const sy=c.height*SUN.anchorY+Math.sin(window.__sunT*speed*.9)*ampY;
+ const g=x.createRadialGradient(sx,sy,SUN.rInner,sx,sy,SUN.rOuter);
+ g.addColorStop(0,"rgba(255,240,180,.9)");
+ g.addColorStop(0.5,"rgba(255,210,140,.25)");
+ g.addColorStop(1,"rgba(255,210,140,0)");
+ x.fillStyle=g;x.fillRect(0,0,c.width,c.height);
+ // --- YAPRAKLAR ---
+ for(const p of petals){
+  p.y+=p.s;p.x+=Math.sin((t+p.y)/40)*.6+p.d;
+  if(p.y>c.height+10){p.y=-10;p.x=Math.random()*c.width;}
+  x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);
+  x.fillStyle=`hsla(${p.hue},85%,70%,.9)`;x.fill();
+ }
+ t++;requestAnimationFrame(loop);
 })();
 
-/* ==== Manifesto metni ==== */
-const LINES = [
-"KADIN OLMAK; ZARAFETİYLE BİRLİKTE GÜCÜ TAŞIMAKTIR.",
-"YERİ GELDİĞİNDE SUSMAYI, YERİ GELDİĞİNDE SÖZÜNÜ SAVUNMAYI BİLMEKTİR.",
-"TOPLUMUN YÜKLEDİĞİ ROLLERİ DEĞİL, KENDİ KİMLİĞİNİ SEÇMEKTİR.",
-"BİR ANNE, BİR KARDEŞ, BİR DOST YA DA BİR LİDER OLABİLİR;",
-"HANGİ ROLDE OLURSA OLSUN, DEĞERİNİ ÇEVRESİNE HİSSETTİRİR.",
-"",
-"KADIN; SABRIN, EMEĞİN VE ADALETİN SEMBOLÜDÜR.",
-"BİR EVİ YUVA YAPAN, BİR DÜŞÜNCEYİ HAYALE DÖNÜŞTÜREN ODUR.",
-"HAYATA KATTIĞI HER AYRINTI, BİR BAŞKASINA UMUT OLUR.",
-"VE O UMUT, İNSANLIĞIN EN SESSİZ AMA EN GÜÇLÜ SESİDİR.",
-"",
-"TAVSİYE:",
-"DEĞERİNİ HATIRLATMAK ZORUNDA KALMA;",
-"KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR.",
-"",
-"— AZURA NOVA"
-];
+// === METİN GEÇİŞLERİ ===
+const hello=document.getElementById("hello");
+const story=document.getElementById("story");
+const skip=document.getElementById("skip");
+const menu=document.getElementById("menu");
 
-const tipsWrap = document.querySelector('.grid-wrap');
-const toast = document.getElementById('welcomeToast');
-const skipBtn = document.getElementById('skipBtn');
-const layer = document.getElementById('manifesto');
-const flow = document.getElementById('manFlow');
-
-tipsWrap.style.visibility='hidden';
-
-function build(lines){
-  let html="";
-  for(const t of lines){
-    if(!t.trim()){ html+=`<div style="height:6vh"></div>`; continue; }
-    html+=`<div class="big">${t}</div>`;
-  }
-  html+=`<div class="sign"></div>`;
-  flow.innerHTML=html;
-}
-function start(){
-  toast.classList.add('hidden');
-  layer.classList.remove('hidden');
-  skipBtn.classList.remove('hidden');
-  build(LINES);
-  const dur = Math.max(24, Math.min(38, Math.round(flow.textContent.length/18)));
-  layer.style.setProperty('--dur', dur+'s');
-  flow.classList.add('scrolling');
-  setTimeout(finish, dur*1000+300);
-}
-function finish(){
-  layer.classList.add('hidden'); skipBtn.classList.add('hidden');
-  tipsWrap.style.visibility='visible';
-}
-skipBtn.addEventListener('click', finish);
-
-setTimeout(()=>toast.classList.remove('hidden'),400);
-setTimeout(start, 4400);
+setTimeout(()=>{hello.remove();},4000);
+setTimeout(()=>{story.style.bottom="0";},4200);
+setTimeout(()=>{story.addEventListener("animationend",()=>{story.remove();menu.classList.add("active");});},4300);
+skip.onclick=()=>{story.remove();skip.remove();menu.classList.add("active");};
 </script>
 </body>
 </html>
