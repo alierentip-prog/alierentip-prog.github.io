@@ -2,270 +2,344 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AZURA</title>
-
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet"/>
-
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AZURA — Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#ffffff;               /* ana zemin beyaz */
-    --ink:#0b1524;              /* koyu mavi-siyah */
-    --ink-2:#1b2a41;            /* header yazı */
-    --muted:#6e7b90;
-    --brand1:#2ac0ff;           /* mavi-yeşil-pembe gradyan */
-    --brand2:#73f7d0;
-    --brand3:#ffc36e;
-    --brand4:#ff7ac6;
-    --blue:#0f4c81;
-    --panel:#0b2a55;            /* koyu mavi şerit */
-    --glass:rgba(15, 76, 129, .06);
-    --glass-b:rgba(15, 76, 129, .18);
-    --radius:16px;
-    --shadow:0 10px 40px rgba(0,0,0,.10);
-  }
+/* =======================================================
+   AZURA • FULL INDEX (600+ satır)
+   Tema: Beyaz arka plan, koyu mavi üst şerit, solda panel,
+         ortada gradient AZURA, sağda Giriş/Üye Ol.
+   Orta bölüm: Erkek/Kadın kartları (animasyonlu), altında
+   “Seni Tanımak İsteriz” testi + Orb (yumuşak top).
+   Sağ alt: gece modu butonu, linklerde fade geçişler.
+   ======================================================= */
 
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:var(--ink);
-    background:var(--bg);
-    font:16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    overflow-x:hidden;
-  }
+/* ---------- Temel değişkenler ---------- */
+:root{
+  --bg:#ffffff;           /* ana zemin beyaz */
+  --ink:#0d1b2a;          /* ana metin koyu lacivertimsi */
+  --muted:#64748b;        /* ikincil metin */
+  --panel:#0b3a63;        /* üst bar + sol drawer */
+  --panel-ink:#eaf3ff;    /* panel yazı rengi */
+  --line:#e7eef7;         /* kart sınırı */
+  --glass:rgba(13,27,42,.05);
+  --glass-b:rgba(13,27,42,.14);
+  --male:#54c6ff;
+  --female:#ff9ad0;
+  --radius:18px;
+  --shadow:0 10px 38px rgba(13,27,42,.08);
+}
 
-  /* ====== GİRİŞ SPLASH (BEYAZ, HALKA, AZURA) ====== */
-  #splash{
-    position:fixed; inset:0; z-index:1000; display:grid; place-items:center; background:#fff;
-  }
-  .ringWrap{
-    position:relative; width:min(78vmin,720px); aspect-ratio:1/1; border-radius:50%;
-    display:grid; place-items:center; filter: blur(.3px);
-    animation:ringPulse 3.2s ease-in-out forwards; /* toplam ~3.2s */
-  }
-  .ringWrap::before{
-    content:""; position:absolute; inset:0; border-radius:50%;
-    background:
-      radial-gradient(circle at 50% 50%,
-        rgba(0,0,0,0.02) 0%,
-        rgba(0,0,0,0.02) 45%,
-        rgba(0,0,0,0.015) 60%,
-        rgba(0,0,0,0.012) 75%,
-        rgba(0,0,0,0.010) 90%,
-        rgba(0,0,0,0.02) 100%) padding-box,
-      radial-gradient(circle at 50% 50%,
-        transparent 64%,
-        rgba(255,255,255,0.35) 69%,
-        rgba(255,255,255,0.95) 73%,
-        #ffffff 77%,
-        rgba(255,255,255,0.95) 81%,
-        rgba(255,255,255,0.35) 86%,
-        rgba(255,255,255,0.12) 90%,
-        rgba(255,255,255,0.08) 94%,
-        rgba(255,255,255,0.06) 97%,
-        rgba(255,255,255,0.05) 100%) border-box;
-    -webkit-mask: radial-gradient(farthest-side, #000 64%, transparent 65%);
-            mask: radial-gradient(farthest-side, #000 64%, transparent 65%);
-  }
-  .logo{
-    position:relative; z-index:1;
-    font-family:Cinzel,serif; font-weight:900; letter-spacing:.22em;
-    font-size: clamp(40px, 9.2vw, 160px); line-height:1;
-    background:linear-gradient(90deg, #0b1524, #2ac0ff, #73f7d0, #ffc36e, #ff7ac6, #0b1524);
-    background-size:300% 100%;
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 0 24px rgba(0,0,0,.06);
-    animation:hueShift 5.8s linear infinite, logoPop 3.2s ease both;
-  }
-  @keyframes hueShift { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
-  @keyframes logoPop {
-    0%{ transform:scale(.88); opacity:0 }
-    10%{ opacity:1 }
-    45%{ transform:scale(1.06) }
-    70%{ transform:scale(.98) }
-    100%{ transform:scale(1.10) }
-  }
-  @keyframes ringPulse {
-    0%{ transform:scale(.86); opacity:1 }
-    35%{ transform:scale(1.08) }
-    60%{ transform:scale(.96) }
-    100%{ transform:scale(26) } /* devleşip beyaza doldurur */
-  }
-  /* splash → sayfa: yumuşak geçiş */
-  #whiteCurtain{
-    position:fixed; inset:0; background:#fff; z-index:999;
-    opacity:0; transition:opacity .6s ease;
-    pointer-events:none;
-  }
-  #whiteCurtain.show{ opacity:1 }
+/* Reset ufak dokunuş */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  overflow-x:hidden;
+}
 
-  /* ====== ÜST ŞERİT (KOYU MAVİ) ====== */
-  header.top{
-    position:sticky; top:0; z-index:20;
-    background:var(--panel); color:#e7efff;
-    box-shadow:0 4px 20px rgba(0,0,0,.06);
-  }
-  .topbar{
-    max-width:1200px; margin:0 auto; padding:10px 14px;
-    display:grid; grid-template-columns:180px 1fr 220px; align-items:center; gap:12px;
-  }
-  .clock{ font-weight:900; letter-spacing:.12em; opacity:.95 }
-  .brand{
-    text-align:center; font-family:Cinzel,serif; font-weight:900; letter-spacing:.22em;
-    font-size: clamp(22px, 4.5vw, 40px);
-    background:linear-gradient(90deg, #e8f3ff, #9ddcff, #9bffe5, #ffe08d, #ff9ad0, #e8f3ff);
-    background-size:300% 100%;
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    animation: hueShift 10s linear infinite;
-    text-shadow:0 12px 40px rgba(0,0,0,.15);
-  }
-  .actions{justify-self:end; display:flex; gap:10px}
-  .btn{
-    appearance:none; border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.06);
-    color:#f6fbff; padding:10px 14px; border-radius:12px; font-weight:900; text-decoration:none;
-    backdrop-filter: blur(6px); transition:transform .15s ease, background .2s;
-  }
-  .btn:hover{ transform:translateY(-1px); background:rgba(255,255,255,.12) }
+/* ---------- ÜST ŞERİT (HEADER) ---------- */
+header.topbar{
+  position:sticky; top:0; z-index:40;
+  background:var(--panel);
+  color:var(--panel-ink);
+  border-bottom:1px solid rgba(255,255,255,.1);
+  box-shadow:0 6px 20px rgba(0,0,0,.16);
+}
+.topbar .row{
+  max-width:1200px; margin:0 auto; padding:10px 14px;
+  display:grid; grid-template-columns: 120px 1fr 200px; align-items:center; gap:12px;
+}
 
-  /* ====== SOL PANEL (Sabit menü) ====== */
-  .layout{
-    max-width:1400px; margin: 18px auto; padding:0 14px;
-    display:grid; grid-template-columns:280px 1fr; gap:18px;
-  }
-  aside.panel{
-    align-self:start; position:sticky; top:82px;
-    border:1px solid var(--glass-b); background:var(--glass); border-radius:var(--radius);
-    box-shadow:var(--shadow); padding:14px;
-  }
-  .panel h3{margin:6px 6px 8px; font:900 14px/1.1 Inter,system-ui; letter-spacing:.1em; color:var(--muted)}
-  .navlist{display:flex; flex-direction:column; gap:8px}
-  .navlist a{
-    display:flex; align-items:center; gap:10px;
-    border:1px solid var(--glass-b); background:#fff; color:var(--ink);
-    padding:10px 12px; text-decoration:none; border-radius:12px; font-weight:800;
-    transition:transform .12s ease, box-shadow .12s ease, border-color .2s;
-  }
-  .navlist a:hover{ transform:translateX(3px); box-shadow:0 6px 18px rgba(0,0,0,.06); border-color:#d9e7ff }
-  .badge{margin-left:auto; font-size:12px; opacity:.7}
+/* saat (sol) */
+.clock{
+  font-weight:900; letter-spacing:.12em; text-align:left;
+  white-space:nowrap; user-select:none;
+}
 
-  /* ====== ANA İÇERİK ====== */
-  main.content{ align-self:start }
+/* merkez marka */
+.brand{
+  text-align:center;
+  font-family:Cinzel, serif; font-weight:900;
+  letter-spacing:.18em;
+  font-size: clamp(24px, 4.8vw, 58px);
+  line-height:1;
+  background:linear-gradient(90deg,
+    #77ddff, #9ff2b1, #fff799, #ffc9ff, #a9a7ff, #77ddff);
+  background-size:300% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:brandFlow 9s linear infinite;
+  filter: drop-shadow(0 8px 18px rgba(255,255,255,.25));
+}
+@keyframes brandFlow{0%{background-position:0% 50%} 100%{background-position:200% 50%}}
 
-  /* Bilgi kutuları: Günün Sözü & İlginç Bilgi (ampul/beyin) */
-  .infoGrid{
-    display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-bottom:18px;
-  }
-  .ibox{
-    position:relative; min-height:120px;
-    border:1px solid var(--glass-b); background:#fff; border-radius:var(--radius);
-    box-shadow:var(--shadow); padding:16px 16px 16px 62px;
-  }
-  .ibox h4{ margin:0 0 8px; font-size:14px; letter-spacing:.12em; color:#6b7a94 }
-  .ibox p{ margin:0; font-size:18px; font-weight:800; color:var(--ink) }
-  .ibox small{ display:block; margin-top:8px; color:#8a97ad; font-weight:700 }
-  .iconCircle{
-    position:absolute; left:14px; top:14px; width:36px; height:36px; border-radius:50%;
-    display:grid; place-items:center; color:#fff; font-size:18px; font-weight:900;
-    box-shadow:0 8px 22px rgba(0,0,0,.12);
-  }
-  .lamp{ background:linear-gradient(135deg, #ffd34d, #ff9f1a) }
-  .brain{ background:linear-gradient(135deg, #a78bfa, #ff7ac6) }
+/* sağ aksiyonlar */
+.actions{display:flex; gap:10px; justify-content:flex-end; align-items:center}
+.btn{
+  appearance:none; border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.08); color:var(--panel-ink);
+  padding:10px 14px; border-radius:12px; font-weight:800;
+  text-decoration:none; backdrop-filter:blur(6px); transition:.2s;
+}
+.btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.12)}
 
-  /* Erkek/Kadın kartları */
-  .choiceGrid{
-    display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-bottom:18px;
-  }
-  .card{
-    border:1px solid var(--glass-b); background:#fff; border-radius:var(--radius);
-    box-shadow:var(--shadow); padding:16px; position:relative; overflow:hidden;
-  }
-  .card h2{ margin:0 0 6px; font:900 18px/1.1 Inter; letter-spacing:.08em }
-  .card p{ margin:0 0 12px; color:#5a6b82; font-weight:600 }
-  .tag{
-    display:inline-block; margin-right:8px; padding:6px 10px; border-radius:999px; font-weight:900; font-size:12px;
-    color:#083; background:#eafff3; border:1px solid #c7f9df;
-  }
-  .tag.blue{ color:#064; background:#e8fbff; border-color:#c9f1ff }
-  .tag.pink{ color:#802; background:#fff0fa; border-color:#ffd7f2 }
-  .go{ margin-top:8px; display:flex; gap:10px }
-  .go .btn{ color:#0b1524; border-color:#e6eef9; background:#f7fbff }
-  .go .btn:hover{ background:#eef7ff }
+/* ---------- SOL PANEL (DRAWER) ---------- */
+#drawer{
+  position:fixed; top:72px; left:0; bottom:0; width:290px; z-index:35;
+  background:linear-gradient(180deg,#0b3a63,#0a3153);
+  color:var(--panel-ink); border-right:1px solid rgba(255,255,255,.08);
+  transform: translateX(-100%); transition: transform .35s ease;
+  box-shadow: 12px 0 40px rgba(0,0,0,.18);
+}
+#drawer.show{ transform: translateX(0) }
+.drawer-head{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:8px; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.08)
+}
+.drawer-title{font:900 16px/1 Cinzel,serif; letter-spacing:.14em}
+.drawer-closer{cursor:pointer; border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08); color:#fff; border-radius:10px; padding:8px 10px; font-weight:800}
+.nav{
+  padding:10px;
+}
+.nav a{
+  display:flex; gap:10px; align-items:center;
+  color:var(--panel-ink); text-decoration:none;
+  padding:8px 10px; border-radius:10px; transition:.15s;
+}
+.nav a:hover{ background:rgba(255,255,255,.10) }
+.nav .sec{ margin:8px 6px; color:#cfe8ff; opacity:.8; font-weight:800; }
+.hint{ color:#cfe8ff; opacity:.7; padding:10px; border-top:1px solid rgba(255,255,255,.08)}
 
-  /* Kart içi mini canvas thumb */
-  .thumb{ position:absolute; inset:auto 12px 12px auto; width:160px; height:110px; border-radius:12px; border:1px solid #eaf2ff; overflow:hidden; filter:saturate(1.1); }
-  .thumb canvas{ width:100%; height:100% }
+/* Drawer açma düğmesi */
+#openDrawer{
+  position:fixed; top:14px; left:14px; z-index:42;
+  border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08);
+  color:#fff; padding:10px 12px; border-radius:10px; font-weight:900; cursor:pointer;
+}
+#openDrawer span{margin-left:6px}
 
-  /* Test kutusu */
-  .testCard{
-    border:2px dashed #dbe9ff; background:#f8fbff; border-radius:var(--radius);
-    padding:14px; display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px;
-  }
-  .testCard h3{ margin:0; font:900 16px/1.2 Inter }
-  .testCard p{ margin:4px 0 0; color:#5a6b82; font-weight:600 }
-  .spinBall{
-    --s:90px;
-    width:var(--s); height:var(--s); border-radius:50%;
-    background:
-      radial-gradient(120% 120% at 30% 30%, rgba(42,192,255,.35), transparent 60%),
-      radial-gradient(120% 120% at 70% 70%, rgba(255,122,198,.35), transparent 60%),
-      radial-gradient(100% 100% at 50% 50%, rgba(115,247,208,.35), transparent 40%);
-    filter: blur(.2px) contrast(1.02);
-    animation: spin 4.6s linear infinite;
-    border:1px solid #eaf2ff; box-shadow:0 12px 40px rgba(0,0,0,.08) inset, 0 18px 40px rgba(0,0,0,.06);
-  }
-  @keyframes spin { to{ transform:rotate(360deg) } }
+/* ---------- ANA İSKELET ---------- */
+main.wrap{max-width:1200px; margin:26px auto 80px; padding:0 14px}
 
-  /* Orb alanı (büyük küre) */
-  .orbWrap{
-    margin: 18px 0; border:1px solid var(--glass-b); border-radius:var(--radius);
-    background:linear-gradient(180deg,#fff,#fbfeff); box-shadow:var(--shadow);
-    overflow:hidden; position:relative;
-  }
-  .orbHead{
-    display:flex; align-items:center; justify-content:space-between; padding:12px 14px;
-    border-bottom:1px solid #eef4ff; background:#fcfeff;
-  }
-  .orbHead h3{ margin:0; font:900 14px/1.1 Inter; letter-spacing:.1em; color:#50607a }
-  .orbHead .mini{ display:flex; gap:8px }
-  .chip{
-    border:1px solid #e8eef9; background:#fff; padding:6px 10px; border-radius:12px; font-weight:800; color:#334; font-size:12px;
-  }
-  #orbCanvas{ width:100%; height:340px; display:block }
+/* Üst satır: Günün Sözü & İlginç Bilgi */
+.topgrid{
+  display:grid; grid-template-columns: 1.3fr .7fr; gap:16px; align-items:stretch;
+}
+.card{
+  border:1px solid var(--line); background: #fff;
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding:16px; position:relative; overflow:hidden;
+}
+.card h2{ margin:0 0 10px; font-size:18px; letter-spacing:.04em }
+.card .meta{ color:var(--muted); font-size:13px }
 
-  /* Bölüm doldurucu (ileride daha çok içerik) */
-  .sections{
-    display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:18px; margin:18px 0 40px;
-  }
-  .sectionCard{
-    border:1px solid var(--glass-b); background:#fff; border-radius:var(--radius); box-shadow:var(--shadow);
-    padding:14px;
-  }
-  .sectionCard h4{ margin:0 0 10px; font:900 16px/1.2 Inter }
-  .sectionCard p{ margin:0; color:#53617a; font-weight:600 }
+.rowline{ display:flex; gap:10px; align-items:center }
 
-  /* Alt dipnot */
-  footer{ text-align:center; color:#7b8798; padding:28px 12px 50px }
+/* Günün sözü */
+.quote{
+  font-weight:900; font-size: clamp(18px,2.2vw,30px);
+  letter-spacing:.02em; color:#0d1b2a; margin:8px 0 0;
+}
+.quote small{ display:block; margin-top:6px; color:#64748b; font-weight:700 }
 
-  /* Mobil düzenlemeler */
-  @media (max-width:980px){
-    .layout{ grid-template-columns:1fr }
-    aside.panel{ display:none }
-    .infoGrid, .choiceGrid{ grid-template-columns:1fr }
-  }
+/* Ampul ikonu (yanıp sönen) */
+.bulb{
+  width:42px;height:42px;border-radius:50%;
+  background: radial-gradient(circle at 50% 35%, #ffd86b, #ffaf2e 60%, #ff9800 80%, #ff9100 100%);
+  box-shadow: 0 0 16px rgba(255,168,0,.45), inset 0 -6px 12px rgba(0,0,0,.12);
+  animation: bulbBlink 2.6s ease-in-out infinite;
+  border:1px solid #f8c66a;
+}
+@keyframes bulbBlink{
+  0%,100%{ filter:brightness(1) } 50%{ filter:brightness(1.25) }
+}
+
+/* İlginç bilgi */
+.fact{
+  font-size: clamp(14px,1.6vw,18px); color:#0d1b2a; font-weight:700
+}
+.fact .icon{
+  width:42px;height:42px;border-radius:50%;
+  background: radial-gradient(45px 45px at 30% 30%, #e0f2ff, #9dd7ff);
+  display:grid; place-items:center; font-size:22px; box-shadow: inset 0 -8px 12px rgba(0,0,0,.08);
+}
+
+/* Orta satır: Erkek/Kadın kartları + Orb */
+.midgrid{
+  margin-top:18px;
+  display:grid; grid-template-columns: 1fr 1fr; gap:16px; align-items:stretch;
+}
+.tile{
+  border:1px dashed var(--line); background:var(--glass);
+  border-radius:16px; padding:16px; position:relative; overflow:hidden;
+  min-height: 280px;
+}
+.tile h3{ margin:0 0 8px; font-size:16px; letter-spacing:.04em }
+.tile .desc{ margin:0 0 10px; color:var(--muted) }
+.tile .go{ position:absolute; right:16px; bottom:16px }
+.tile .go .btn{
+  background: linear-gradient(135deg, #eef7ff, #f8fbff); color:#0d1b2a; border-color:#cfe6ff;
+}
+.tile .go .btn:hover{ transform:translateY(-1px) scale(1.02) }
+
+/* Erkek / Kadın kutularını boyama */
+.tile.male{ background: linear-gradient(180deg, rgba(84,198,255,.15), rgba(84,198,255,.05)); }
+.tile.female{ background: linear-gradient(180deg, rgba(255,154,208,.16), rgba(255,154,208,.06)); }
+
+/* Canvas thumb alanları */
+.thumb{
+  position:absolute; inset:54px 12px 52px 12px; border-radius:14px; overflow:hidden;
+  border:1px solid var(--line); background:#fff;
+}
+.thumb canvas{position:absolute; inset:0; width:100%; height:100%}
+.badge{
+  position:absolute; left:12px; top:12px; padding:8px 10px; border-radius:10px;
+  background:#fff; border:1px solid var(--line); color:#0d1b2a; font-weight:900;
+  box-shadow:0 8px 24px rgba(0,0,0,.06)
+}
+
+/* Orb kutusu */
+.tile.orb{ grid-column: 1 / span 2; min-height: 300px; }
+#orb{
+  width:100%; height:100%; display:block; border-radius:12px;
+  background: radial-gradient(420px 260px at 30% 40%, #e8f7ff, transparent 60%),
+              radial-gradient(420px 260px at 75% 60%, #ffe8fa, transparent 60%);
+}
+
+/* Alt satır: Test ve Bağlantılar */
+.bottomgrid{
+  margin-top:18px;
+  display:grid; grid-template-columns: 1.1fr .9fr; gap:16px;
+}
+
+/* Test kartı */
+.testcard .head{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:10px 12px; border-radius:12px; border:1px solid var(--line); background:#fff;
+  position:sticky; top:-1px; z-index:1
+}
+.testcard h3{margin:0; font-size:16px}
+.testcard .head .btn{ color:#0d1b2a; background:#f7fbff; border-color:#d9ebff }
+
+.qrow{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin:12px 0 }
+.q{
+  border:1px solid var(--line); background:#fff; border-radius:12px; padding:12px;
+}
+.q h4{ margin:0 0 6px; font-size:15px }
+.opt{ display:flex; gap:8px; flex-wrap:wrap }
+.opt label{ display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid var(--line);
+  border-radius:10px; background:#fff; cursor:pointer }
+.opt input{ accent-color:#0b3a63 }
+
+/* Bağlantılar kutusu */
+.links .linkgrid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:10px }
+.links a{
+  display:flex; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--line);
+  border-radius:12px; text-decoration:none; color:#0d1b2a; background:#fff; font-weight:800;
+}
+.links a:hover{ box-shadow:0 8px 24px rgba(0,0,0,.06) }
+
+/* Footer */
+footer{ text-align:center; color:#64748b; padding:36px 10px }
+
+/* ---------- GİRİŞ (SPLASH) — BEYAZ HALKA + DİJİTAL AZURA ---------- */
+#splash{
+  position:fixed; inset:0; z-index:80; display:grid; place-items:center; background:#ffffff;
+}
+.ring{
+  position:relative; width:min(82vmin,760px); aspect-ratio:1/1; border-radius:50%;
+  display:grid; place-items:center; filter: blur(.2px);
+  animation:ringPulse 3.3s ease-in-out forwards;
+}
+/* halka gradient — merkeze doğru kontrast azalan ama bitmeyen */
+.ring::before{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(0,0,0,0.04) 0%,
+      rgba(0,0,0,0.03) 45%,
+      rgba(0,0,0,0.02) 60%,
+      rgba(0,0,0,0.015) 72%,
+      rgba(0,0,0,0.02) 90%,
+      rgba(0,0,0,0.04) 100%) padding-box,
+    radial-gradient(circle at 50% 50%,
+      transparent 66%,
+      rgba(0,0,0,.12) 70%,
+      rgba(255,255,255,1) 74%,
+      rgba(0,0,0,.12) 78%,
+      rgba(0,0,0,.08) 84%,
+      rgba(0,0,0,.06) 88%,
+      rgba(0,0,0,.04) 92%,
+      rgba(0,0,0,.03) 96%,
+      rgba(0,0,0,.02) 100%) border-box;
+  -webkit-mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
+          mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
+}
+/* AZURA yazısı — vahşi, güçlü */
+.logo{
+  position:relative; z-index:1;
+  font-family:Cinzel,serif; font-weight:900; letter-spacing:.22em;
+  font-size: clamp(40px, 10vw, 160px); line-height:1;
+  background:linear-gradient(90deg,#0b3a63,#2ab6ff,#00e0b8,#ffd76b,#ff77cc,#6f6bff,#0b3a63);
+  background-size:320% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow: 0 0 24px rgba(0,0,0,.08), 0 14px 32px rgba(0,0,0,.08);
+  animation:hueShift 7s linear infinite, popScale 3.3s ease-in-out both;
+}
+@keyframes hueShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes popScale{
+  0%{transform:scale(.86); letter-spacing:.14em; opacity:.0}
+  10%{opacity:1}
+  45%{transform:scale(1.08)}
+  70%{transform:scale(.98)}
+  100%{transform:scale(1.10)}
+}
+@keyframes ringPulse{
+  0%{ transform:scale(.86); opacity:.96 }
+  35%{ transform:scale(1.08); opacity:1 }
+  60%{ transform:scale(.96); opacity:.98 }
+  100%{ transform:scale(22); opacity:1 } /* büyüyüp perde */
+}
+
+/* sayfaya fade ile geçiş */
+#wipe{ position:fixed; inset:0; background:#ffffff; z-index:79; opacity:0; pointer-events:none; transition:opacity .6s ease }
+#wipe.show{ opacity:1 }
+
+/* ---------- Mikro arka plan noktaları ---------- */
+#bgDots{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  opacity:.55; mix-blend-mode:multiply;
+}
+
+/* Mobil uyarlamalar */
+@media (max-width: 920px){
+  .topbar .row{ grid-template-columns: 120px 1fr 160px }
+  .topgrid{ grid-template-columns: 1fr }
+  .midgrid{ grid-template-columns: 1fr }
+  .tile.orb{ grid-column: auto }
+  .bottomgrid{ grid-template-columns: 1fr }
+  #openDrawer{ top:72px }
+}
 </style>
 </head>
 <body>
 
-<!-- ====== SPLASH (BEYAZ, HALKA, AZURA) ====== -->
+<!-- SPLASH -->
 <div id="splash" aria-label="Azura Intro">
-  <div class="ringWrap"><div class="logo">AZURA</div></div>
+  <div class="ring"><div class="logo">AZURA</div></div>
 </div>
-<div id="whiteCurtain" aria-hidden="true"></div>
+<div id="wipe"></div>
+<canvas id="bgDots"></canvas>
 
-<!-- ====== ÜST ŞERİT ====== -->
-<header class="top">
-  <div class="topbar">
+<!-- SOL PANEL AÇMA -->
+<button id="openDrawer">☰ <span>Panel</span></button>
+
+<!-- ÜST ŞERİT -->
+<header class="topbar">
+  <div class="row">
     <div class="clock" id="clock">--:--:--</div>
     <div class="brand">AZURA</div>
     <div class="actions">
@@ -275,413 +349,458 @@
   </div>
 </header>
 
-<!-- ====== SAYFA YERLEŞİMİ ====== -->
-<div class="layout">
+<!-- SOL PANEL -->
+<aside id="drawer" aria-label="Yan Panel">
+  <div class="drawer-head">
+    <div class="drawer-title">MENÜ</div>
+    <button class="drawer-closer" id="closeDrawer">Kapat ✕</button>
+  </div>
+  <nav class="nav">
+    <div class="sec">📚 İçerikler</div>
+    <a href="#gununsozu">💡 Günün Sözü</a>
+    <a href="#ilginclog">🧠 İlginç Bilgi</a>
+    <a href="#erkekkutu">🩵 Erkek Alanı</a>
+    <a href="#kadinkutu">🩷 Kadın Alanı</a>
+    <a href="#test">🧪 Seni Tanımak İsteriz</a>
+    <a href="#baglantilar">🔗 Kanallar & Bağlantılar</a>
 
-  <!-- Sol Panel -->
-  <aside class="panel">
-    <h3>📂 Panel</h3>
-    <nav class="navlist">
-      <a href="#hakkimda">👤 Hakkımda <span class="badge">mini</span></a>
-      <a href="#kanallar">🗂️ İçerikler / Kanallar</a>
-      <a href="#erkek-kadin">🩵🩷 Erkek & Kadın</a>
-      <a href="#test">🧪 Sizi Tanımak İsteriz</a>
-      <a href="#bilgiler">🧠 Bilgi Alanı</a>
-      <a href="#motivasyon">⚡ Motivasyon</a>
-    </nav>
-  </aside>
+    <div class="sec">🧭 Hakkımda & Vizyon</div>
+    <a href="#vizyon">🌟 Vizyon</a>
+    <a href="#neden">❓ Neler Yapılabilir?</a>
+    <a href="#kurallar">🤝 Nezaket & Topluluk</a>
+  </nav>
+  <div class="hint">
+    İpucu: Paneli <strong>☰</strong> ile aç/kapat. Başlıklara tıklayınca
+    sayfa ilgili bölüme <em>yumuşak kayarak</em> iner.
+  </div>
+</aside>
 
-  <!-- Ana İçerik -->
-  <main class="content">
+<!-- ANA İSKELET -->
+<main class="wrap">
 
-    <!-- Günün Sözü & İlginç Bilgi -->
-    <section class="infoGrid" id="bilgiler">
-      <article class="ibox" id="quoteBox">
-        <div class="iconCircle lamp">💡</div>
-        <h4>Günün Sözü</h4>
-        <p id="quoteText">Yükleniyor…</p>
-        <small id="quoteAuthor"></small>
-      </article>
-      <article class="ibox">
-        <div class="iconCircle brain">🧠</div>
-        <h4>İlginç Bilgi</h4>
-        <p id="factText">Yükleniyor…</p>
-        <small>Azura Bilgi Bankası</small>
-      </article>
-    </section>
-
-    <!-- Erkek / Kadın kartları -->
-    <section class="choiceGrid" id="erkek-kadin">
-      <!-- ERKEK -->
-      <article class="card">
-        <h2>🌊 Okyanus • Karizmatik</h2>
-        <p>Serin mavilik, hava kabarcıkları ve metalik çizgiler. Akışına bırak.</p>
-        <span class="tag blue">Mavi</span> <span class="tag">Derin</span>
-        <div class="go">
-          <a class="btn nav" href="male.html">Giriş →</a>
-          <a class="btn" href="#motivasyon">Motivasyon</a>
-        </div>
-        <div class="thumb"><canvas id="seaThumb"></canvas></div>
-      </article>
-
-      <!-- KADIN -->
-      <article class="card">
-        <h2>🌿 Doğa • İç ısıtan</h2>
-        <p>Güneş parıltısı, pembe yapraklar, yumuşak esinti ve sıcak yeşiller.</p>
-        <span class="tag pink">Pembe</span> <span class="tag">Bahar</span>
-        <div class="go">
-          <a class="btn nav" href="female.html">Giriş →</a>
-          <a class="btn" href="#motivasyon">İlham</a>
-        </div>
-        <div class="thumb"><canvas id="forestThumb"></canvas></div>
-      </article>
-    </section>
-
-    <!-- Test Kartı -->
-    <section id="test">
-      <div class="testCard">
+  <!-- Üst satır -->
+  <section class="topgrid" id="gununsozu">
+    <!-- Günün sözü -->
+    <article class="card">
+      <div class="rowline">
+        <div class="bulb" aria-hidden="true"></div>
         <div>
-          <h3>🧪 Sizi Tanımak İsteriz</h3>
-          <p>Kısa bir test ile Azura deneyimini kişiselleştirelim.</p>
+          <h2>Günün Sözü</h2>
+          <div class="meta">Her yenilemede rastgele</div>
         </div>
-        <div class="spinBall" title="Azura Orb"></div>
-        <a class="btn" href="test.html">Teste Başla →</a>
       </div>
-    </section>
+      <p class="quote" id="qtext">“ … ”</p>
+      <small id="qauth">— ‎</small>
+    </article>
 
-    <!-- Büyük Orb Alanı -->
-    <section class="orbWrap" aria-label="Etkileşimli Küre">
-      <div class="orbHead">
-        <h3>🔮 Azura Küresi</h3>
-        <div class="mini"><span class="chip">fareye tepki</span><span class="chip">yumuşak hareket</span></div>
+    <!-- İlginç bilgi -->
+    <article class="card" id="ilginclog">
+      <div class="rowline">
+        <div class="icon fact">🧠</div>
+        <div>
+          <h2>İlginç Bilgi</h2>
+          <div class="meta">Hızlı bir beyin kıvrımı</div>
+        </div>
       </div>
-      <canvas id="orbCanvas"></canvas>
-    </section>
+      <p class="fact" id="fact">Yükleniyor…</p>
+    </article>
+  </section>
 
-    <!-- Bölümler (doldurucu) -->
-    <section class="sections" id="kanallar">
-      <article class="sectionCard" id="hakkimda">
-        <h4>👤 Hakkımda</h4>
-        <p>Azura; sade, hızlı ve göz yormayan bir kişisel portal. Daha fazlası yakında.</p>
-      </article>
-      <article class="sectionCard">
-        <h4>🗂️ İçerik Başlıkları</h4>
-        <p>Echo (konuk defteri), Notlar, Felsefe, Projeler, Tıp Bilgileri, İpuçları…</p>
-      </article>
-      <article class="sectionCard" id="motivasyon">
-        <h4>⚡ Motivasyon</h4>
-        <p>“Sessiz adımlar, en derin izleri bırakır.” • “Dalgalar büyükse, kıyı da yakındır.”</p>
-      </article>
-      <article class="sectionCard">
-        <h4>🧭 Yol Haritası</h4>
-        <p>Üyelik, Echo, kullanıcı paneli, canlı animasyonlar ve daha fazlası sırada.</p>
-      </article>
-    </section>
+  <!-- Orta satır -->
+  <section class="midgrid">
+    <!-- Erkek -->
+    <article class="tile male" id="erkekkutu">
+      <h3>🌊 Okyanus • Karizmatik</h3>
+      <p class="desc">Serin mavilikte hava kabarcıkları yükselir; metalik çizgiler akıp gider.</p>
+      <div class="thumb"><canvas id="seaThumb"></canvas></div>
+      <div class="badge">ERKEK</div>
+      <div class="go"><a class="btn nav" href="male.html">Giriş →</a></div>
+    </article>
 
-    <!-- Dipnot -->
-    <footer>© 2025 AZURA — küçük ama iddialı bir köşe</footer>
+    <!-- Kadın -->
+    <article class="tile female" id="kadinkutu">
+      <h3>🌿 Doğa • İç ısıtan</h3>
+      <p class="desc">Pembe yapraklar usul usul süzülür; tepede güneş parıldar.</p>
+      <div class="thumb"><canvas id="forestThumb"></canvas></div>
+      <div class="badge">KADIN</div>
+      <div class="go"><a class="btn nav" href="female.html">Giriş →</a></div>
+    </article>
 
+    <!-- ORB -->
+    <article class="tile orb">
+      <h3>🔵 Yumuşak Renk Küresi</h3>
+      <p class="desc">Hafif hareket eden bir renk alanı. Üzerine gelince parıldar.</p>
+      <div class="thumb" style="inset:54px 12px 16px 12px; background:#fff;"><canvas id="orb"></canvas></div>
+    </article>
+  </section>
+
+  <!-- Alt satır -->
+  <section class="bottomgrid">
+    <!-- Test -->
+    <article class="card testcard" id="test">
+      <div class="head">
+        <h3>🧪 Seni Tanımak İsteriz</h3>
+        <button id="doTest" class="btn">Testi Tamamla</button>
+      </div>
+
+      <div class="qrow">
+        <div class="q">
+          <h4>1) Günün hangi saatinde daha verimlisin?</h4>
+          <div class="opt">
+            <label><input type="radio" name="q1" value="sabah">Sabah</label>
+            <label><input type="radio" name="q1" value="aksam">Akşam</label>
+            <label><input type="radio" name="q1" value="fark">Farketmez</label>
+          </div>
+        </div>
+        <div class="q">
+          <h4>2) Ortam tercihi?</h4>
+          <div class="opt">
+            <label><input type="radio" name="q2" value="deniz">Deniz sesi</label>
+            <label><input type="radio" name="q2" value="orman">Orman esintisi</label>
+            <label><input type="radio" name="q2" value="sessiz">Tam sessizlik</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="qrow">
+        <div class="q">
+          <h4>3) Hız mı, titizlik mi?</h4>
+          <div class="opt">
+            <label><input type="radio" name="q3" value="hiz">Hız</label>
+            <label><input type="radio" name="q3" value="titizlik">Titizlik</label>
+            <label><input type="radio" name="q3" value="denge">Denge</label>
+          </div>
+        </div>
+        <div class="q">
+          <h4>4) Sosyal enerji?</h4>
+          <div class="opt">
+            <label><input type="radio" name="q4" value="kucuk">Küçük grup</label>
+            <label><input type="radio" name="q4" value="buyuk">Kalabalık</label>
+            <label><input type="radio" name="q4" value="yalniz">Yalnız</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="qrow">
+        <div class="q">
+          <h4>5) İlham kaynağı?</h4>
+          <div class="opt">
+            <label><input type="radio" name="q5" value="muzik">Müzik</label>
+            <label><input type="radio" name="q5" value="yazmak">Yazmak</label>
+            <label><input type="radio" name="q5" value="hareket">Hareket/Spor</label>
+          </div>
+        </div>
+        <div class="q">
+          <h4>6) Odak modu?</h4>
+          <div class="opt">
+            <label><input type="radio" name="q6" value="tek">Tek iş</label>
+            <label><input type="radio" name="q6" value="cok">Çok iş</label>
+            <label><input type="radio" name="q6" value="akiskan">Akışa göre</label>
+          </div>
+        </div>
+      </div>
+
+      <div id="testResult" class="q" style="display:none; margin-top:12px">
+        <h4>🔎 Sonuç</h4>
+        <p id="testText" style="margin:6px 0 0"></p>
+      </div>
+    </article>
+
+    <!-- Bağlantılar -->
+    <article class="card links" id="baglantilar">
+      <h2>🔗 Kanallar & Bağlantılar</h2>
+      <div class="meta">Sık kullanılan alanlar</div>
+      <div class="linkgrid" style="margin-top:10px">
+        <a href="echo.html">🗣️ Echo — Konuk Defteri</a>
+        <a href="felsefe.html">🧭 Felsefe & Notlar</a>
+        <a href="projeler.html">🛠️ Projeler</a>
+        <a href="ipuclari.html">🧠 İpuçları</a>
+        <a href="about.html">👤 Hakkımda</a>
+        <a href="login.html">🔐 Giriş/Üyelik</a>
+      </div>
+    </article>
+  </section>
+
+  <!-- Vizyon / Neler yapılabilir / Kurallar -->
+  <section class="card" id="vizyon" style="margin-top:18px">
+    <h2>🌟 Vizyon</h2>
+    <p>Azura; minimal görsel huzur ile canlı animasyonları birleştirir. Amaç, her girişte “vay” dedirten bir karşılaşma ve içeriklerde net, rahat okunur bir akış.</p>
+  </section>
+
+  <section class="card" id="neden" style="margin-top:12px">
+    <h2>🧭 Neler Yapılabilir?</h2>
+    <ul>
+      <li>Echo’da ziyaretçi notları, beğeni/yorum.</li>
+      <li>Felsefe/İpuçları sayfalarında düzenli içerik.</li>
+      <li>Projelerde canlı demolar.</li>
+      <li>Testlerle kişisel öneriler.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="kurallar" style="margin-top:12px">
+    <h2>🤝 Nezaket & Topluluk</h2>
+    <p>Nezaket, zekânın görünen yüzüdür. Yorumlarda ve paylaşımlarda saygı esastır.</p>
+  </section>
+
+  <footer>© 2025 AZURA — küçük bir dijital köşe</footer>
   </main>
-</div>
-
-<!-- ======================  PART 2 BURADAN SONRA BAŞLAYACAK  ====================== -->
-<script>
-/* Saat */
-(function clock(){
-  const el=document.getElementById('clock');
+  <script>
+/* ================== Saat ================== */
+(function tick(){
   const z=n=>String(n).padStart(2,'0');
-  function tick(){ const d=new Date(); el.textContent=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`; requestAnimationFrame(tick) }
-  tick();
+  const d=new Date();
+  const s=`${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
+  const el=document.getElementById('clock'); if(el) el.textContent=s;
+  requestAnimationFrame(tick);
 })();
 
-/* Splash zamanlama: ~3.2s halka, sonra kısa beyaz perde, sonra aç */
+/* ================== Splash (3.3s halka, 0.6s beyaz wipe) ================== */
 (() => {
-  const INTRO_MS = 3200;
-  const CUT_MS   = 600;
-  const splash = document.getElementById('splash');
-  const white  = document.getElementById('whiteCurtain');
-  setTimeout(()=>{ white.classList.add('show'); }, INTRO_MS - 120);
+  const splash=document.getElementById('splash');
+  const wipe=document.getElementById('wipe');
+  const INTRO_MS=3300, WHITE_MS=600;
   setTimeout(()=>{
-    splash?.remove(); white?.remove();
-  }, INTRO_MS + CUT_MS);
+    wipe.classList.add('show');
+    setTimeout(()=>{ splash.remove(); wipe.classList.remove('show'); }, WHITE_MS);
+  }, INTRO_MS);
 })();
 
-/* Günün Sözü & İlginç Bilgi */
+/* ================== Drawer ================== */
 (() => {
-  const QUOTES = [
-    { t:'Sessiz adımlar, en derin izleri bırakır.', a:'— Azura' },
-    { t:'Derinlerde akıntı hızlıdır; yüzey sakinliği aldatır.', a:'— Azura' },
-    { t:'Güneş başka dağların ardında da doğar.', a:'— Anadolu Sözü' },
-    { t:'Biriktirdiğin sabır, en büyük sermayendir.', a:'— Azura' },
-  ];
-  const FACTS = [
-    'Bir damla kanda ~5 milyon eritrosit bulunur.',
-    'Göz kırpma ortalama 0.3 saniye sürer.',
-    'Beynin %60’ı yağdan oluşur.',
-    'Kalbin günde ~100.000 kez atar.',
-  ];
-  const q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
-  const f = FACTS[Math.floor(Math.random()*FACTS.length)];
-  document.getElementById('quoteText').textContent = `“ ${q.t} ”`;
-  document.getElementById('quoteAuthor').textContent = q.a;
-  document.getElementById('factText').textContent = f;
+  const drawer=document.getElementById('drawer');
+  const open=document.getElementById('openDrawer');
+  const close=document.getElementById('closeDrawer');
+  open.addEventListener('click',()=>drawer.classList.add('show'));
+  close.addEventListener('click',()=>drawer.classList.remove('show'));
 })();
 
-/* Erkek/Kadın küçük canvas önizlemeleri */
-(function seaThumb(){
-  const c=document.getElementById('seaThumb'), x=c.getContext('2d');
-  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
-  const B=80, b=[]; for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*2,s:.4+.9*Math.random()});
-  (function loop(){
-    x.clearRect(0,0,c.width,c.height);
-    x.globalAlpha=.25; x.strokeStyle='rgba(42,192,255,.45)'; x.lineWidth=1;
-    for(let i=0;i<20;i++){ const y=(i/20)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((i+performance.now()/120)*.25)*4); x.lineTo(c.width,y); x.stroke(); }
-    x.globalAlpha=.35; x.fillStyle='#6ee4ff';
-    for(const p of b){ p.y-=p.s; if(p.y<-10){p.y=c.height+10; p.x=Math.random()*c.width} x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill(); }
-    requestAnimationFrame(loop);
-  })();
-})();
-(function forestThumb(){
-  const c=document.getElementById('forestThumb'), x=c.getContext('2d');
-  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
-  const N=60, p=[]; for(let i=0;i<N;i++) p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:330+Math.random()*40});
-  (function loop(){
-    x.clearRect(0,0,c.width,c.height);
-    for(const s of p){ s.y+=.4; s.x+=Math.sin(s.y/30)*.3; if(s.y>c.height+6){s.y=-6; s.x=Math.random()*c.width}
-      x.fillStyle=`hsla(${s.h},80%,70%,.9)`; x.beginPath(); x.arc(s.x,s.y,s.r,0,Math.PI*2); x.fill();
-    }
-    requestAnimationFrame(loop);
-  })();
-})();
-</script>
-<canvas id="bgDots" aria-hidden="true"></canvas>
-
-<style>
-  /* Scroll reveal (yumuşak görünme) */
-  .reveal{ opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease }
-  .reveal.seen{ opacity:1; transform:none }
-
-  /* Ampul hafif yanıp sönsün */
-  .lamp{ position:relative }
-  .lamp::after{
-    content:""; position:absolute; inset:-6px; border-radius:50%;
-    background: radial-gradient(closest-side, rgba(255,211,77,.45), rgba(255,211,77,0));
-    animation: lampPulse 2.2s ease-in-out infinite;
-    z-index:-1; filter: blur(6px);
-  }
-  @keyframes lampPulse{ 0%,100%{opacity:.2} 50%{opacity:.65} }
-
-  /* Orb hover ipucu */
-  .orbWrap::after{
-    content:"Fareyi gezdir"; position:absolute; right:12px; bottom:10px; font-size:12px;
-    color:#93a3bb; background:#fff; border:1px solid #e8eef9; padding:4px 8px; border-radius:8px;
-  }
-
-  /* Zaman çizgisi + ek bloklar */
-  .timeline{
-    position:relative; border-left:3px solid #e6eeff; padding-left:14px; margin: 18px 0 10px;
-  }
-  .timeline .t{ margin:10px 0; }
-  .timeline .t strong{ color:#1b2a41 }
-  .miniGrid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px }
-  .pill{
-    border:1px solid #e6eef9; background:#fff; border-radius:12px; padding:10px; font-weight:700; color:#42526e
-  }
-
-  /* Arka plan dots canvas */
-  #bgDots{
-    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.35;
-    mix-blend-mode:multiply;
-  }
-
-  /* İç link okşama (hover) */
-  a[href^="#"]{ scroll-behavior:smooth }
-</style>
-
-<script>
-/* ========== NAV: dış sayfa linklerinde beyaz “wipe” geçişi ========== */
-(() => {
-  const wipe = document.getElementById('whiteCurtain') || (function(){
-    const d = document.createElement('div'); d.id='whiteCurtain';
-    Object.assign(d.style,{position:'fixed',inset:'0',background:'#fff',zIndex:'999',opacity:'0',transition:'opacity .6s ease',pointerEvents:'none'});
-    document.body.appendChild(d); return d;
-  })();
-
-  document.querySelectorAll('a.nav').forEach(a=>{
-    a.addEventListener('click', e=>{
-      e.preventDefault();
-      wipe.classList.add('show');
-      setTimeout(()=> location.href = a.href, 420);
-    });
-  });
-})();
-
-/* ========== BACKGROUND DOTS: sayfayı dolduran micro parıltılar ========== */
-(() => {
-  const c = document.getElementById('bgDots');
-  const x = c.getContext('2d');
-  function fit(){ c.width = innerWidth; c.height = innerHeight }
-  addEventListener('resize',fit,{passive:true}); fit();
-
-  const N = Math.floor((c.width*c.height)/40000); // yoğunluk ekrana göre
-  const pts = Array.from({length:N}, ()=>({
-    x: Math.random()*c.width,
-    y: Math.random()*c.height,
-    r: Math.random()*1.4 + 0.4,
-    a: Math.random()*Math.PI*2,
-    s: (Math.random()*0.5+0.2)
-  }));
-
-  (function loop(t=0){
-    x.clearRect(0,0,c.width,c.height);
-    for(const p of pts){
-      p.a += 0.005*p.s;
-      const dx = Math.cos(p.a)*0.25;
-      const dy = Math.sin(p.a)*0.25;
-      p.x = (p.x + dx + c.width) % c.width;
-      p.y = (p.y + dy + c.height) % c.height;
-      x.globalAlpha = 0.65;
-      const g = x.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);
-      g.addColorStop(0,'rgba(180,200,255,.55)');
-      g.addColorStop(1,'rgba(180,200,255,0)');
-      x.fillStyle = g;
-      x.beginPath(); x.arc(p.x,p.y,p.r*3,0,Math.PI*2); x.fill();
-    }
-    requestAnimationFrame(loop);
-  })();
-})();
-
-/* ========== ORB: yumuşak gradient küre, fareye tepki ========== */
-(() => {
-  const c = document.getElementById('orbCanvas'); if(!c) return;
-  const x = c.getContext('2d');
-  function fit(){ c.width = c.clientWidth; c.height = c.clientHeight }
-  addEventListener('resize',fit,{passive:true}); fit();
-
-  // hedef nokta (fare), küre merkezi easing ile takip eder
-  let target = { x: c.width*0.55, y: c.height*0.48 };
-  let center = { x: c.width*0.5,  y: c.height*0.5  };
-  let t = 0;
-
-  c.addEventListener('mousemove', e=>{
-    const rect = c.getBoundingClientRect();
-    target.x = e.clientX - rect.left;
-    target.y = e.clientY - rect.top;
-  });
-  c.addEventListener('mouseleave', ()=>{
-    target.x = c.width*0.55; target.y = c.height*0.48;
-  });
-
-  function drawOrb(){
-    x.clearRect(0,0,c.width,c.height);
-    // easing
-    center.x += (target.x - center.x)*0.06;
-    center.y += (target.y - center.y)*0.06;
-    const R = Math.min(c.width,c.height)*0.32;
-
-    // gölge tabanı
-    const baseGrad = x.createRadialGradient(center.x, center.y, R*0.2, center.x, center.y, R*1.15);
-    baseGrad.addColorStop(0, 'rgba(42,192,255,.30)');
-    baseGrad.addColorStop(0.4, 'rgba(115,247,208,.22)');
-    baseGrad.addColorStop(0.9, 'rgba(255,122,198,.15)');
-    baseGrad.addColorStop(1, 'rgba(0,0,0,0)');
-    x.fillStyle = baseGrad;
-    x.beginPath(); x.arc(center.x, center.y, R*1.15, 0, Math.PI*2); x.fill();
-
-    // ana küre
-    const orbGrad = x.createRadialGradient(center.x-R*0.25, center.y-R*0.25, R*0.1, center.x, center.y, R);
-    orbGrad.addColorStop(0,   'rgba(255,255,255,.90)');
-    orbGrad.addColorStop(0.35,'rgba(200,235,255,.80)');
-    orbGrad.addColorStop(0.65,'rgba(140,205,255,.65)');
-    orbGrad.addColorStop(1,   'rgba(110,180,255,.25)');
-    x.fillStyle = orbGrad;
-    x.beginPath(); x.arc(center.x, center.y, R, 0, Math.PI*2); x.fill();
-
-    // ışık şeridi (dönen highlight)
-    t += 0.01;
-    const stripeY = center.y + Math.sin(t)*R*0.4;
-    const stripe = x.createLinearGradient(0, stripeY-8, 0, stripeY+8);
-    stripe.addColorStop(0, 'rgba(255,255,255,0)');
-    stripe.addColorStop(0.5,'rgba(255,255,255,.35)');
-    stripe.addColorStop(1, 'rgba(255,255,255,0)');
-    x.fillStyle = stripe;
-    x.beginPath(); x.ellipse(center.x, stripeY, R*0.85, 18, 0, 0, Math.PI*2); x.fill();
-
-    // parıltı noktası
-    x.globalAlpha = .8;
-    x.fillStyle = 'rgba(255,255,255,.65)';
-    x.beginPath(); x.arc(center.x - R*0.35, center.y - R*0.35, 6, 0, Math.PI*2); x.fill();
-    x.globalAlpha = 1;
-
-    requestAnimationFrame(drawOrb);
-  }
-  drawOrb();
-})();
-
-/* ========== SCROLL REVEAL ========== */
-(() => {
-  const obs = new IntersectionObserver(entries=>{
-    for(const e of entries){
-      if(e.isIntersecting){ e.target.classList.add('seen'); obs.unobserve(e.target); }
-    }
-  }, {threshold:0.12});
-  document.querySelectorAll('.sectionCard, .card, .ibox, .orbWrap, .testCard').forEach(el=>{
-    el.classList.add('reveal'); obs.observe(el);
-  });
-})();
-
-/* ========== İçerik doldurma: zaman çizgisi + mini bloklar ========== */
-(() => {
-  const wrap = document.querySelector('.sections');
-  if(!wrap) return;
-
-  // Zaman çizgisi kartı
-  const tl = document.createElement('article');
-  tl.className = 'sectionCard reveal';
-  tl.innerHTML = `
-    <h4>🕰️ Azura Zaman Çizgisi</h4>
-    <div class="timeline">
-      <div class="t"><strong>2025/01</strong> • Fikir doğdu: hafif, beyaz, göz yormayan bir portal.</div>
-      <div class="t"><strong>2025/03</strong> • İlk animasyon: halka patlama ve yumuşak orb.</div>
-      <div class="t"><strong>2025/06</strong> • Erkek/Kadın sahneleri, kart özetleri ve test.</div>
-      <div class="t"><strong>2025/10</strong> • Panel, günün sözü, bilgi alanı ve doldurucu bölümler.</div>
-    </div>
-  `;
-  wrap.appendChild(tl);
-
-  // Mini hızlı bağlantılar
-  const mg = document.createElement('article');
-  mg.className = 'sectionCard reveal';
-  mg.innerHTML = `
-    <h4>🔗 Hızlı Erişim</h4>
-    <div class="miniGrid" style="margin-top:6px">
-      <a class="pill" href="#erkek-kadin">🩵🩷 Erkek & Kadın</a>
-      <a class="pill" href="#test">🧪 Teste Başla</a>
-      <a class="pill" href="#bilgiler">🧠 Bilgi Alanı</a>
-      <a class="pill" href="#motivasyon">⚡ Motivasyon</a>
-    </div>
-  `;
-  wrap.appendChild(mg);
-})();
-
-/* ========== İç anchor’larda pürüzsüz odak ========== */
+/* ================== Smooth scroll (panel linkleri) ================== */
 (() => {
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
-    a.addEventListener('click', e=>{
-      const id = a.getAttribute('href').slice(1);
-      const el = document.getElementById(id);
+    a.addEventListener('click',e=>{
+      const id=a.getAttribute('href').slice(1);
+      const el=document.getElementById(id);
       if(el){
-        // default smooth behavior var; ekstra highlight:
-        setTimeout(()=>{
-          el.style.outline='2px solid #a8d3ff';
-          el.style.outlineOffset='4px';
-          setTimeout(()=>{ el.style.outline='none'; }, 1200);
-        }, 360);
+        e.preventDefault();
+        document.getElementById('drawer').classList.remove('show');
+        const y = el.getBoundingClientRect().top + window.scrollY - 66;
+        window.scrollTo({top:y, behavior:'smooth'});
+        el.style.transition='box-shadow .6s ease';
+        el.style.boxShadow='0 0 0 4px #69c6ff55';
+        setTimeout(()=>el.style.boxShadow='var(--shadow)',1400);
       }
     });
   });
 })();
-</script>
 
+/* ================== Günün sözü & İlginç bilgi ================== */
+(() => {
+  const QUOTES=[
+    ["Cesaret, korkunun yokluğu değil; korkuya rağmen yürümektir.","Azura"],
+    ["Sessiz adımlar, en derin izleri bırakır.","Azura"],
+    ["Disiplin, özgürlüğün en kısa yoludur.","Azura"],
+    ["Nezaket, zekânın görünen yüzüdür.","Azura"],
+    ["Dalgalar uzaktan gelir; sabırla dinle.","Azura"],
+    ["Kendini tanımak, sessizliğin sesini duymaktır.","Azura"]
+  ];
+  const FACTS=[
+    "Beyinde ~86 milyar nöron vardır.",
+    "Kalp günde ~100.000 kez atar.",
+    "REM uykusunda kalp ritmi oynaktır.",
+    "Göz kırpması 200–400 ms sürer.",
+    "Beynin %60’ı yağdan oluşur.",
+    "Bir nöron saniyede ~200 kez ateşleyebilir."
+  ];
+  const [qt,qa]=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  const q=document.getElementById('qtext'), a=document.getElementById('qauth'), f=document.getElementById('fact');
+  if(q) q.textContent=`“ ${qt} ”`;
+  if(a) a.textContent=`— ${qa}`;
+  if(f) f.textContent=FACTS[Math.floor(Math.random()*FACTS.length)];
+})();
+
+/* ================== BG micro-dots ================== */
+(function bg(){
+  const c=document.getElementById('bgDots'), x=c.getContext('2d');
+  function fit(){c.width=innerWidth; c.height=innerHeight}
+  fit(); addEventListener('resize',fit,{passive:true});
+  let t=0;
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    const dots = Math.floor(Math.max(160, c.width*c.height/14000));
+    for(let i=0;i<dots;i++){
+      const px=(i*37)%c.width;
+      const py=((i*13 + t*1.2)%(c.height+60))-30;
+      const hue = 200 + (i%60);
+      const light = 35 + (i%20);
+      x.fillStyle=`hsla(${hue},40%,${light}%,.10)`;
+      x.fillRect(px, py, 2, 2);
+    }
+    t+=1; requestAnimationFrame(loop);
+  })();
+})();
+
+/* ================== Erkek küçük animasyon (seaThumb) ================== */
+(function(){
+  const c=document.getElementById('seaThumb'); if(!c) return;
+  const x=c.getContext('2d');
+  const fit=()=>{ c.width=c.clientWidth||c.width; c.height=c.clientHeight||c.height }; fit();
+  addEventListener('resize',fit,{passive:true});
+  const B=140, b=[];
+  function init(){
+    b.length=0;
+    for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random(),a:Math.random()*6.28});
+  }
+  init();
+  let t=0;
+  (function loop(){
+    if(!c.width||!c.height){ requestAnimationFrame(loop); return; }
+    x.clearRect(0,0,c.width,c.height);
+    // akıntı çizgileri
+    x.globalAlpha=.18; x.strokeStyle='rgba(90,200,255,.18)'; x.lineWidth=1;
+    for(let i=0;i<28;i++){ const y=(i/28)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.04)*6); x.lineTo(c.width,y); x.stroke(); }
+    // kabarcıklar
+    x.globalAlpha=.9;
+    for(const p of b){
+      p.y-=p.s; p.x+=Math.sin((p.y+t*.2)/40)*.4; p.a+=.02;
+      if(p.y<-20){ p.y=c.height+20; p.x=Math.random()*c.width; p.r=1+Math.random()*3; p.s=.4+.9*Math.random(); }
+      const rg=x.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
+      rg.addColorStop(0,'rgba(110,228,255,.85)'); rg.addColorStop(.5,'rgba(110,228,255,.22)'); rg.addColorStop(1,'rgba(110,228,255,0)');
+      x.fillStyle=rg; x.beginPath(); x.arc(p.x,p.y,p.r*1.8,0,Math.PI*2); x.fill();
+    }
+    x.globalAlpha=1; t+=1; requestAnimationFrame(loop);
+  })();
+  addEventListener('resize',()=>setTimeout(init,80),{passive:true});
+})();
+
+/* ================== Kadın küçük animasyon (forestThumb) ================== */
+(function(){
+  const c=document.getElementById('forestThumb'); if(!c) return;
+  const x=c.getContext('2d');
+  const fit=()=>{ c.width=c.clientWidth||c.width; c.height=c.clientHeight||c.height }; fit();
+  addEventListener('resize',fit,{passive:true});
+  let N=Math.max(90,Math.floor((c.clientWidth*c.clientHeight)/90000));
+  const petals=[];
+  function init(){
+    N=Math.max(90,Math.floor((c.clientWidth*c.clientHeight)/90000));
+    petals.length=0;
+    for(let i=0;i<N;i++){
+      petals.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,s:.4+.6*Math.random(),drift:(Math.random()-.5)*.7,h:320+Math.random()*60,sw:Math.random()*6.28});
+    }
+  }
+  init();
+  let t=0;
+  (function loop(){
+    if(!c.width||!c.height){ requestAnimationFrame(loop); return; }
+    x.clearRect(0,0,c.width,c.height);
+    // güneş parıltısı
+    const sx=c.width*.78, sy=c.height*.18;
+    const g=x.createRadialGradient(sx,sy,10, sx,sy, Math.max(120,c.width*.6));
+    g.addColorStop(0,'rgba(255,240,180,.92)'); g.addColorStop(.6,'rgba(255,205,140,.12)'); g.addColorStop(1,'rgba(255,205,140,0)');
+    x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
+    // dağ siluetleri
+    x.fillStyle='rgba(12,8,12,.12)';
+    for(let k=0;k<2;k++){
+      x.beginPath(); x.moveTo(0,c.height);
+      for(let j=0;j<=6;j++){
+        const px=(j/6)*c.width; const py=c.height*(0.55+k*0.08)+Math.sin((t*.01+j)*.6)*(10+k*6);
+        x.lineTo(px,py);
+      }
+      x.lineTo(c.width,c.height); x.closePath(); x.fill();
+    }
+    // yapraklar
+    for(const p of petals){
+      p.y += p.s; p.x += Math.sin((p.y+p.s*20+p.s*t)/40 + p.sw*.4)*.6 + p.drift; p.sw += .005;
+      if(p.y>c.height+10){ p.y=-10; p.x=Math.random()*c.width; }
+      x.fillStyle=`hsla(${p.h},78%,68%,.92)`; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
+    }
+    t+=1; requestAnimationFrame(loop);
+  })();
+  addEventListener('resize',()=>setTimeout(init,80),{passive:true});
+})();
+
+/* ================== ORB (yumuşak renk topu) ================== */
+(function(){
+  const c=document.getElementById('orb'); if(!c) return;
+  const x=c.getContext('2d');
+  const fit=()=>{ c.width=c.clientWidth||c.width; c.height=c.clientHeight||c.height }; fit();
+  addEventListener('resize',fit,{passive:true});
+  let t=0;
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    const cx=c.width/2, cy=c.height/2, R=Math.min(c.width,c.height)*0.42;
+    for(let i=0;i<32;i++){
+      const r=R*(1-i/32);
+      const g=x.createRadialGradient(cx,cy,r*.05, cx,cy,r);
+      const hue=(t+i*7)%360;
+      g.addColorStop(0,`hsla(${hue},90%,75%,.85)`);
+      g.addColorStop(.6,`hsla(${(hue+60)%360},80%,65%,.55)`);
+      g.addColorStop(1,'rgba(255,255,255,0)');
+      x.fillStyle=g; x.beginPath(); x.arc(cx,cy,r,0,Math.PI*2); x.fill();
+    }
+    t+=.6; requestAnimationFrame(loop);
+  })();
+
+  // hover parlama
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect(); const xk=(e.clientX-r.left)/r.width*100;
+    c.style.filter=`brightness(${1.18+xk/260})`;
+  });
+  c.addEventListener('mouseleave',()=> c.style.filter='brightness(1)');
+})();
+
+/* ================== Test değerlendirme ================== */
+(() => {
+  const btn=document.getElementById('doTest');
+  const box=document.getElementById('testResult');
+  const text=document.getElementById('testText');
+  if(!btn) return;
+  btn.addEventListener('click',()=>{
+    const val = name => (document.querySelector(`input[name="${name}"]:checked`)||{}).value||'';
+    const s1=val('q1'), s2=val('q2'), s3=val('q3'), s4=val('q4'), s5=val('q5'), s6=val('q6');
+    let out=[];
+    if(s1==='sabah') out.push("Sabah enerjisisin; planlı başlarsan verimin artar.");
+    if(s1==='aksam') out.push("Gece kuşusun; sessiz saatleri derin odak için kullan.");
+    if(s2==='deniz') out.push("Deniz sesi seni akışa alıyor; mavi tonları odak alanına taşı.");
+    if(s2==='orman') out.push("Doğa nefesi iyi geliyor; kısa yürüyüşlerle zihin tazele.");
+    if(s3==='hiz') out.push("Hızlı karar + küçük iterasyonlar senin işin.");
+    if(s3==='titizlik') out.push("Titizlik mükemmeliyeti getirir; süre hedefi koymayı unutma.");
+    if(s3==='denge') out.push("Denge modu: Önce taslak, sonra ince ayar.");
+    if(s4==='kucuk') out.push("Küçük grup derin sohbet demektir; iletişimi planla.");
+    if(s4==='buyuk') out.push("Kalabalık seni canlı tutar; sunum fırsatlarını kovala.");
+    if(s5==='muzik') out.push("Ritim odakla birleşiyor; çalma listeni ritme göre kur.");
+    if(s6==='tek') out.push("Tek iş, net sonuç; zaman blokları oluştur.");
+    if(s6==='cok') out.push("Paralel işler seni canlı tutuyor; pano ile ilerlemeni izle.");
+    if(out.length===0) out.push("Kendini daha iyi tanımak için seçenekleri işaretle.");
+    text.textContent=out.join(" ");
+    box.style.display='block';
+    box.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+})();
+
+/* ================== Linklerde beyaz fade geçiş ================== */
+(() => {
+  const cover=document.createElement('div');
+  Object.assign(cover.style,{position:'fixed',inset:'0',background:'#fff',zIndex:99,opacity:'0',transition:'opacity .5s',pointerEvents:'none'});
+  document.body.appendChild(cover);
+  document.querySelectorAll('a.nav, a[href$=".html"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      if(a.target==='_blank') return;
+      e.preventDefault();
+      cover.style.pointerEvents='auto';
+      requestAnimationFrame(()=> cover.style.opacity='1');
+      setTimeout(()=> location.href=a.href, 500);
+    });
+  });
+})();
+
+/* ================== Küçük görsel efektler ================== */
+(() => {
+  // kart hover gölge derinliği
+  document.querySelectorAll('.card, .tile').forEach(el=>{
+    el.addEventListener('mouseenter',()=> el.style.boxShadow='0 14px 40px rgba(13,27,42,.10)');
+    el.addEventListener('mouseleave',()=> el.style.boxShadow='var(--shadow)');
+  });
+})();
+</script>
 </body>
 </html>
