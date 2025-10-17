@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AZURA • KADIN</title>
 
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -27,16 +26,15 @@
   --accent-mor:#B16AD9;
 }
 
-/* Reset */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0; background:var(--bg-deep);
-  color:var(--text-body); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
+  color:var(--text-body); font-family:Inter,system-ui;
   overflow-x:hidden;
 }
 
-/* Arka plan ve güneş */
+/* Arka plan */
 .bg-layer{position:fixed; inset:0; pointer-events:none; z-index:0;}
 .bg-halos{
   position:absolute; inset:0;
@@ -48,16 +46,15 @@ body{
 .sun{
   position:absolute; width:560px; height:560px; border-radius:50%;
   background:radial-gradient(closest-side, rgba(255,243,205,0.95), rgba(255,218,160,0.35) 55%, rgba(255,190,140,0.08) 78%, transparent 90%);
-  opacity:.78; filter:blur(0.2px);
-  animation: sun-walk 42s linear infinite alternate;
+  opacity:.78;
+  animation:sun-walk 42s linear infinite alternate;
 }
 @keyframes sun-walk{
-  0%   { transform:translate(50vw, 4vh) }
-  20%  { transform:translate(78vw, 16vh) }
-  40%  { transform:translate(58vw, 32vh) }
-  60%  { transform:translate(70vw, 10vh) }
-  80%  { transform:translate(40vw, 22vh) }
-  100% { transform:translate(62vw, 28vh) }
+  0%{transform:translate(50vw,4vh)}
+  25%{transform:translate(80vw,18vh)}
+  50%{transform:translate(55vw,30vh)}
+  75%{transform:translate(70vw,12vh)}
+  100%{transform:translate(40vw,25vh)}
 }
 
 /* Butonlar */
@@ -65,28 +62,25 @@ body{
 .btn{
   position:absolute; top:12px; padding:8px 12px; border-radius:12px;
   background:var(--btn-bg); color:var(--btn-tx); border:1px solid var(--btn-bd);
-  backdrop-filter: blur(6px);
-  text-decoration:none; font-weight:600; font-size:14px;
-  box-shadow:0 8px 24px rgba(17,0,30,.28);
+  backdrop-filter:blur(6px); text-decoration:none; font-weight:600;
+  font-size:14px; box-shadow:0 8px 24px rgba(17,0,30,.28);
 }
-.btn:hover{transform:translateY(-1px); box-shadow:0 10px 30px rgba(255,160,210,.18)}
 .btn.left{left:12px}
 .btn.right{right:12px}
+.btn:hover{transform:translateY(-1px); box-shadow:0 10px 30px rgba(255,160,210,.18)}
 
-/* Hoşgeldin kutusu */
+/* Hoşgeldin */
 .welcome{
   position:fixed; top:70px; left:50%; transform:translateX(-50%);
-  width:min(720px, calc(100% - 40px));
-  padding:16px 22px; border-radius:16px; z-index:4;
+  width:min(720px,calc(100% - 40px)); padding:16px 22px; border-radius:16px; z-index:4;
   background:rgba(30,24,33,0.8); border:1px solid var(--card-border);
   box-shadow:0 8px 30px rgba(17,0,30,0.35);
   text-align:left; opacity:0; animation:wel-in .8s ease .2s forwards;
 }
 .welcome h3{
-  margin:0; font-family:Cinzel,serif; letter-spacing:.06em; font-weight:700;
-  line-height:1.25; font-size:18px;
+  margin:0; font-family:Cinzel,serif; font-weight:700; font-size:18px;
   background:linear-gradient(180deg,#FFD2E8 0%, #FFFFFF 85%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
+  -webkit-background-clip:text; color:transparent;
   text-shadow:0 0 18px rgba(255,120,180,.35);
 }
 .welcome p{margin:6px 0 0; color:#E9C7D9; font-size:14px}
@@ -98,29 +92,27 @@ body{
 .skip{position:fixed; top:12px; left:12px; z-index:6; display:none}
 .skip.show{display:inline-block}
 
-/* Manifesto (slayt) */
+/* Manifesto */
 .manifesto-wrap{
   position:fixed; inset:0; z-index:3; display:none; pointer-events:none;
 }
 .manifesto-scrim{
   position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(8,6,10,.46), rgba(8,6,10,.18) 30%, transparent 60%);
+  background:linear-gradient(180deg,rgba(8,6,10,.46),rgba(8,6,10,.18) 30%,transparent 60%);
 }
 .manifesto{
   position:absolute; left:50%; transform:translateX(-50%);
-  width:min(1100px, 92vw); text-align:center;
+  width:min(1100px,92vw); text-align:center;
   font-family:Cinzel,serif; font-weight:700; letter-spacing:.04em;
-  font-size: clamp(28px, 8.8vw, 96px); line-height:1.25;
-  background:linear-gradient(180deg, var(--accent-mor) 0%, #D6B9FF 100%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
+  font-size:clamp(28px,8.8vw,96px); line-height:1.25;
+  background:linear-gradient(180deg,var(--accent-mor) 0%,#D6B9FF 100%);
+  -webkit-background-clip:text; color:transparent;
   text-shadow:0 0 22px rgba(177,106,217,.45);
   white-space:pre-wrap; text-transform:uppercase;
   top:100%;
-  animation: slideUp 53s linear forwards; /* Uzatıldı 53s */
+  animation:slideUp 73s linear forwards; /* 73 saniye */
 }
-@keyframes slideUp{
-  to{ top:-120% }
-}
+@keyframes slideUp{to{top:-120%}}
 
 /* Menü */
 .main{position:relative; z-index:2; padding:90px 18px 64px; display:none;}
@@ -128,58 +120,48 @@ body{
   max-width:1100px; margin:0 auto; display:grid; gap:20px;
   grid-template-columns:repeat(2,1fr);
 }
-.card, .card-wide{
-  background:linear-gradient(180deg, var(--card-top), var(--card-bot));
+.card,.card-wide{
+  background:linear-gradient(180deg,var(--card-top),var(--card-bot));
   border:1px solid var(--card-border); border-radius:18px; padding:20px;
   box-shadow:0 15px 40px rgba(17,0,30,0.35);
 }
-.card h3, .card-wide h3{
-  margin:0 0 8px; font-family:Cinzel,serif; font-weight:700; letter-spacing:.06em;
-  font-size:22px; line-height:1.1;
-  background:linear-gradient(180deg,#FFD2E8 0%, #FFFFFF 85%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
+.card h3,.card-wide h3{
+  margin:0 0 8px; font-family:Cinzel,serif; font-weight:700;
+  background:linear-gradient(180deg,#FFD2E8 0%,#FFFFFF 85%);
+  -webkit-background-clip:text; color:transparent;
   text-shadow:0 0 18px rgba(255,120,180,.35);
 }
-.card p, .card-wide p{margin:6px 0 0; color:var(--text-body)}
-.chips{margin-top:12px; display:flex; flex-wrap:wrap; gap:8px}
+.card p,.card-wide p{margin:6px 0 0; color:var(--text-body)}
+.chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
 .chips span{
   background:var(--chip-bg); color:var(--chip-text);
   border:1px solid var(--chip-border); padding:7px 12px; border-radius:999px;
   font-weight:600; font-size:12.5px;
 }
 .card-wide{grid-column:1 / -1}
-
-footer{
-  max-width:1100px; margin:32px auto 0; text-align:center; color:#E7CCDB;
-  opacity:.95; font-size:14px;
-}
+footer{text-align:center;color:#E7CCDB;opacity:.95;font-size:14px;margin-top:32px}
 </style>
 </head>
 <body>
 
-<!-- Arkaplan -->
 <div class="bg-layer">
   <div class="bg-halos"></div>
   <canvas class="canvas" id="stars"></canvas>
   <div class="sun" id="sun"></div>
 </div>
 
-<!-- Üst butonlar -->
 <div class="top-buttons">
   <a class="btn left" id="userBtn" href="#">Kullanıcı Paneli</a>
   <a class="btn right" id="homeBtn" href="index.html">Ana Menü</a>
 </div>
 
-<!-- Hoşgeldin -->
 <div class="welcome" id="welcomeBox">
   <h3>Doğanın Işığı’na Hoş Geldin 🌸</h3>
   <p>Sakin bir nefes al; birazdan kısa bir manifesto akacak.</p>
 </div>
 
-<!-- Yazıyı Geç -->
 <a class="btn skip" id="skipBtn">Yazıyı Geç</a>
 
-<!-- Manifesto -->
 <div class="manifesto-wrap" id="mfWrap" aria-hidden="true">
   <div class="manifesto-scrim"></div>
   <div class="manifesto" id="manifesto">
@@ -199,103 +181,69 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
   </div>
 </div>
 
-<!-- Menü -->
 <main class="main" id="main">
   <div class="grid">
     <div class="card">
       <h3>🌸 ZARAFET &amp; DENGE</h3>
-      <p>Zarafet; yavaşlamayı bilmek, denge ise payına düşeni üstlenmektir. İkisi beraber olduğunda şefkat üretkenliği boğmaz, üretkenlik de şefkati yıpratmaz.</p>
-      <div class="chips">
-        <span>Sadelik</span><span>Nazik sınır</span><span>Ritüel</span>
-      </div>
+      <p>Zarafet; yavaşlamayı bilmek, denge ise payına düşeni üstlenmektir.</p>
     </div>
-
     <div class="card">
-      <h3>✨ İÇ ISITAN MOTİVASYON</h3>
-      <p>Güne minik bir <em>açılış ritüeli</em> koy: 3 derin nefes, bir bardak su, 1 cümle niyet. Niyet cümlesi: “Bugün şunu bitiriyorum: …”</p>
-      <div class="chips">
-        <span>Niyet cümlesi</span><span>Kısa ısınma</span><span>Şefkatli iç ses</span>
-      </div>
+      <h3>✨ MOTİVASYON</h3>
+      <p>Güne minik bir <em>niyet</em> ile başla: “Bugün şunu tamamlıyorum.”</p>
     </div>
-
     <div class="card">
       <h3>🫶 NEZAKET</h3>
-      <p>“Sınır koymak kırmak değildir.” Talebi yumuşatan vurgular: “Bunu şu kadar yapabilir miyiz?”, “Bu iki seçeneği görüyorum, hangisi rahat?”</p>
-      <div class="chips">
-        <span>Şeffaflık</span><span>Seçenek</span><span>Rica</span>
-      </div>
+      <p>“Sınır koymak kırmak değildir.” Sözlerini şefkatle seç.</p>
     </div>
-
-    <div class="card">
-      <h3>🌙 MİNİ ALIŞTIRMA</h3>
-      <p>15 dakikalık nazik odak: telefonu sessize al, modunu “pencere” yap; minik notluk. Bitince “Bu anda kendime teşekkür ediyorum çünkü…” yaz.</p>
-      <div class="chips">
-        <span>15 dk odak</span><span>Tek iş</span><span>Şükran cümlesi</span>
-      </div>
-    </div>
-
     <div class="card-wide">
       <h3>🌺 KAYNAKLAR</h3>
-      <p><strong>Essentialism</strong> (McKeown) — <strong>Rest</strong> (Pang) — <strong>Tiny Habits</strong> (Fogg)</p>
-      <div class="chips">
-        <span>← Ana Menü</span><span>Kanallar</span><span>Alıştırmalar</span>
-      </div>
+      <p><strong>Essentialism</strong> — <strong>Rest</strong> — <strong>Tiny Habits</strong></p>
     </div>
   </div>
-
   <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
 </main>
 
 <script>
-/* ---------- Pembe partiküller ---------- */
+/* Pembe partiküller */
 (function(){
-  const c = document.getElementById('stars');
-  const ctx = c.getContext('2d');
-  function size(){ c.width = innerWidth; c.height = innerHeight }
-  size(); addEventListener('resize', size);
-  const colors = ['#FF9DC3','#FFB7D3','#FF8FB6'];
-  const dots = Array.from({length: 160}, ()=>({
-    x: Math.random()*c.width,
-    y: Math.random()*c.height,
-    r: (Math.random()*2)+1.2,
-    o: 0.55+Math.random()*0.2,
-    c: colors[(Math.random()*colors.length)|0],
-    vy: 0.02 + Math.random()*0.06
+  const c=document.getElementById('stars'),x=c.getContext('2d');
+  function size(){c.width=innerWidth;c.height=innerHeight}
+  size();addEventListener('resize',size);
+  const colors=['#FF9DC3','#FFB7D3','#FF8FB6'];
+  const dots=Array.from({length:160},()=>({
+    x:Math.random()*c.width,y:Math.random()*c.height,
+    r:(Math.random()*2)+1.2,o:0.55+Math.random()*0.2,
+    c:colors[(Math.random()*colors.length)|0],
+    vy:0.02+Math.random()*0.06
   }));
   (function draw(){
-    ctx.clearRect(0,0,c.width,c.height);
+    x.clearRect(0,0,c.width,c.height);
     for(const d of dots){
-      ctx.globalAlpha = d.o;
-      ctx.fillStyle = d.c;
-      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill();
-      d.y += d.vy;
-      if(d.y > c.height+8){ d.y = -8; d.x = Math.random()*c.width }
+      x.globalAlpha=d.o;x.fillStyle=d.c;
+      x.beginPath();x.arc(d.x,d.y,d.r,0,Math.PI*2);x.fill();
+      d.y+=d.vy;if(d.y>c.height+8){d.y=-8;d.x=Math.random()*c.width}
     }
     requestAnimationFrame(draw);
   })();
 })();
 
-/* ---------- Akış ---------- */
-const welcome = document.getElementById('welcomeBox');
-const mfWrap  = document.getElementById('mfWrap');
-const skipBtn = document.getElementById('skipBtn');
-const main = document.getElementById('main');
+/* Akış */
+const welcome=document.getElementById('welcomeBox');
+const mfWrap=document.getElementById('mfWrap');
+const skipBtn=document.getElementById('skipBtn');
+const main=document.getElementById('main');
+let manifestoTimer=null;
 
-let manifestoTimer = null;
-
-setTimeout(()=>{
-  welcome.classList.add('fade-out');
-  setTimeout(startManifesto, 820);
-}, 2800);
+setTimeout(()=>{welcome.classList.add('fade-out');
+  setTimeout(startManifesto,820);},2800);
 
 function startManifesto(){
-  mfWrap.style.display='block';
-  skipBtn.classList.add('show');
-  manifestoTimer = setTimeout(showMenu, 53000); // 53 saniye
+  mfWrap.style.display='block'; skipBtn.classList.add('show');
+  manifestoTimer=setTimeout(showMenu,73000); // 73 saniye
 }
 
-skipBtn.addEventListener('click', ()=>{
-  if(manifestoTimer){ clearTimeout(manifestoTimer); }
+skipBtn.addEventListener('click',()=>{
+  if(manifestoTimer){clearTimeout(manifestoTimer);}
   showMenu();
 });
 
@@ -305,7 +253,7 @@ function showMenu(){
   main.style.display='block';
 }
 
-document.getElementById('userBtn').addEventListener('click', (e)=>{
+document.getElementById('userBtn').addEventListener('click',(e)=>{
   e.preventDefault();
   alert('Kullanıcı Paneli yakında burada 🌸');
 });
