@@ -3,395 +3,336 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>AZURA 2.0 • Nova Pulse</title>
-<meta name="theme-color" content="#0a355c">
+<title>AZURA</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600..900&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0c375d">
 
 <style>
-/* ========== RESET ========== */
+/* ---------- Reset ---------- */
 *,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;padding:0;height:100%}
+html,body{height:100%;margin:0}
 img,svg,canvas{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
-button{font:inherit}
+button{font:inherit;cursor:pointer}
 
-/* ========== THEME ========== */
+/* ---------- Theme ---------- */
 :root{
-  --ink:#0b1420;          /* ana metin */
-  --muted:#5b6b7a;        /* ikincil metin */
-  --bg:#f6fbff;           /* arka plan */
-  --card:#ffffff;         /* kart */
-  --ring:#e6eef6;         /* vurgular */
-  --brand:#0a355c;        /* marka */
-  --sea:#0c4a6e;          /* erkek kartı ana */
-  --forest:#6b305a;       /* kadın kartı ana */
-  --pill:#eef6ff;
-  --shadow:0 10px 30px rgba(6,24,44,.14);
+  --ink:#0e1a26; --muted:#6c7b8a;
+  --bg:#f6fbff; --panel:#ffffff; --ring:#e6eef6;
+  --nav:#0c375d; --chip:#0e4a7a; --pill:#edf6ff;
+  --shadow:0 10px 30px rgba(9,31,57,.14);
+  --male1:#0b3d63; --male2:#1490d8;
+  --fem1:#5a214a; --fem2:#ea77bf;
 }
 .dark{
-  --ink:#e9f0f6;
-  --muted:#99a7b6;
-  --bg:#0b1118;
-  --card:#0f1620;
-  --ring:#111c27;
-  --pill:#0f2236;
-  --shadow:0 10px 26px rgba(2,10,18,.5);
+  --ink:#e7eef5; --muted:#95a8ba;
+  --bg:#0b121a; --panel:#0f1823; --ring:#142130; --pill:#0e2135;
+  --shadow:0 10px 26px rgba(0,0,0,.45);
 }
 body{
   font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   color:var(--ink);
-  background:radial-gradient(1000px 700px at 50% -200px,#ffffff,transparent),
-             radial-gradient(600px 400px at 90% -60px,#dff0ff,transparent),
-             var(--bg);
-}
-
-/* ========== TOAST/HINT ========== */
-.hint{position:fixed;right:16px;bottom:16px;background:var(--card);color:var(--muted);
-  border:1px solid var(--ring);box-shadow:var(--shadow);padding:10px 14px;border-radius:10px;z-index:30;font-size:12px}
-
-/* ========== SPLASH ========== */
-#splash{
-  position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:#fff;z-index:9999;animation:splashOut 2.6s ease forwards;
-}
-#splash .logo{
-  font-family:"Cinzel",serif;letter-spacing:8px;font-weight:800;color:#0a355c;font-size:46px;
-  text-shadow:0 8px 30px rgba(10,53,92,.14);
-  animation:zoomLogo 1.2s ease both;
-}
-#splash .ring{
-  width:240px;height:240px;border-radius:999px;border:10px solid #eaf3ff;
-  box-shadow:0 0 0 10px rgba(10,53,92,.08),0 0 60px 0 rgba(10,53,92,.35) inset;
-  margin-bottom:22px;filter:blur(.3px);
-}
-@keyframes zoomLogo{0%{transform:scale(.65);opacity:0}50%{transform:scale(1.12);opacity:1}100%{transform:scale(1);opacity:1}}
-@keyframes splashOut{0%,80%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
-
-/* ========== TOPBAR ========== */
-.topbar{
-  position:sticky;top:0;z-index:25;backdrop-filter:saturate(150%) blur(10px);
-  background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(255,255,255,.65));
-  border-bottom:1px solid var(--ring);
-}
-.topbar .inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 14px}
-.brand{font-family:"Cinzel",serif;color:var(--brand);font-weight:800;letter-spacing:.5em}
-.brand span{display:inline-block;transform:translateY(.06em)}
-.clock{font-variant-numeric:tabular-nums;font-weight:700;background:var(--card);border:1px solid var(--ring);padding:8px 10px;border-radius:12px;box-shadow:var(--shadow);color:var(--brand)}
-.chip{border:1px solid var(--ring);padding:8px 12px;border-radius:12px;background:var(--card)}
-.hamburger{width:40px;height:40px;border-radius:10px;border:1px solid var(--ring);background:var(--card)}
-.hamburger svg{width:22px;height:22px;margin:auto;display:block}
-
-/* ========== DRAWER ========== */
-.drawer{position:fixed;inset:0;z-index:40;pointer-events:none}
-.drawer .shade{position:absolute;inset:0;background:rgba(0,22,40,.45);opacity:0;transition:.25s}
-.drawer .panel{position:absolute;inset:0 auto 0 0;width:min(86vw,310px);transform:translateX(-100%);transition:.25s;
-  background:linear-gradient(180deg,var(--card),#0f1a27 240%);color:var(--ink);border-right:1px solid var(--ring);box-shadow:var(--shadow)}
-.drawer.open{pointer-events:auto}
-.drawer.open .shade{opacity:1}
-.drawer.open .panel{transform:none}
-.drawer .head{display:flex;align-items:center;justify-content:space-between;padding:14px;border-bottom:1px solid var(--ring)}
-.drawer .list{display:grid;gap:8px;padding:12px}
-.drawer .link{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--ring);padding:10px 12px;border-radius:12px}
-.drawer .kbd{font-family:ui-monospace,Menlo,Consolas,monospace;background:#192532;border:1px solid #102235;color:#a6d8ff;border-radius:6px;padding:2px 6px}
-
-/* ========== LAYOUT ========== */
-.container{max-width:1100px;margin:40px auto;padding:0 14px;display:grid;gap:16px}
-.section{background:var(--card);border:1px solid var(--ring);border-radius:18px;box-shadow:var(--shadow);padding:18px}
-.section h2{margin:0 0 10px 0;font-size:20px}
-
-/* ========== HERO ========== */
-.hero{position:relative;display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:center}
-.cards{display:grid;gap:12px}
-.card{position:relative;border-radius:16px;padding:16px;border:1px solid var(--ring);color:#fff;overflow:hidden;box-shadow:var(--shadow);isolation:isolate}
-.card h3{margin:0 0 8px 0;font-family:"Cinzel",serif;letter-spacing:.04em}
-.card p{margin:0;opacity:.9}
-.card .bg{position:absolute;inset:-20% -20% auto -20%;height:160%;z-index:-1;filter:blur(20px);opacity:.5}
-.card.male{background:linear-gradient(160deg,#0b2f4a,#136395 60%,#3aa0d8)}
-.card.male .bg{background:
- radial-gradient(300px 180px at 10% 20%,rgba(107,198,255,.9),transparent 60%),
- radial-gradient(240px 200px at 80% 40%,rgba(0,173,255,.65),transparent 70%),
- radial-gradient(200px 200px at 60% 90%,rgba(0,91,206,.55),transparent 70%)}
-.card.female{background:linear-gradient(160deg,#4a193d,#7c2a66 58%,#e86fb4)}
-.card.female .bg{background:
- radial-gradient(300px 180px at 10% 20%,rgba(255,194,230,.9),transparent 60%),
- radial-gradient(220px 200px at 80% 40%,rgba(255,123,200,.65),transparent 70%),
- radial-gradient(200px 200px at 60% 90%,rgba(123,0,86,.55),transparent 70%)}
-.card .cta{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.15);backdrop-filter:blur(3px);margin-top:12px;border:1px solid rgba(255,255,255,.28)}
-.card:hover{transform:translateY(-2px);transition:.18s ease}
-
-/* ========== ORB ========== */
-.orbWrap{position:relative;display:grid;place-items:center}
-.orb{--size:min(64vw,520px);width:var(--size);height:var(--size);border-radius:999px;
   background:
-   radial-gradient(closest-side at 50% 46%,rgba(255,255,255,.95),rgba(255,255,255,.18) 60%,transparent 61%),
-   radial-gradient(closest-side at 48% 42%,#bde3ff,transparent 62%),
-   radial-gradient(closest-side at 54% 58%,#ffd7f5,transparent 62%),
-   radial-gradient(closest-side at 52% 48%,#a1d0ff,transparent 68%);
+    radial-gradient(700px 420px at 50% -160px,#ffffff,transparent),
+    radial-gradient(480px 380px at 90% -60px,#def0ff,transparent),
+    var(--bg);
+}
+
+/* ---------- Topnav (screenshot’a uygun) ---------- */
+.topnav{
+  position:sticky; top:0; z-index:30;
+  background:#0c375d; color:#dff1ff;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.topnav .wrap{max-width:1050px;margin:0 auto;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.clock{
+  font-variant-numeric:tabular-nums;font-weight:800;letter-spacing:.03em;
+  background:rgba(255,255,255,.08); padding:8px 10px;border-radius:12px; border:1px solid rgba(255,255,255,.18)
+}
+.brand{
+  margin:0 auto; font-family:Cinzel,serif; letter-spacing:.55em; font-weight:700; color:#b4e1ff
+}
+.chip{background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22); color:#e9f6ff; padding:8px 12px; border-radius:12px}
+
+/* ---------- Layout ---------- */
+.container{max-width:1050px;margin:18px auto;padding:0 12px;display:grid;gap:14px}
+
+/* Genel kart stili */
+.card{
+  background:var(--panel); border:1px solid var(--ring); border-radius:16px; box-shadow:var(--shadow);
+  padding:16px; position:relative; overflow:hidden
+}
+.card h4{margin:0 0 8px 0; font-weight:800}
+.card small{color:var(--muted)}
+
+/* ---------- Quote & Fact ---------- */
+.quote .icon, .fact .icon{font-size:20px;margin-right:8px}
+.quote h4,.fact h4{display:flex;align-items:center}
+
+/* ---------- Okyanus / Doğa panelleri ---------- */
+.panelRow{display:grid;gap:14px}
+.panel{
+  display:grid; grid-template-columns:1fr 200px; gap:10px; align-items:center;
+  border-radius:16px; padding:16px; position:relative; overflow:hidden;
+  border:1px solid var(--ring); box-shadow:var(--shadow)
+}
+.panel .meta{display:flex; gap:6px; margin:8px 0}
+.badge{padding:6px 10px;border-radius:999px;background:var(--pill); color:#11486e; font-weight:700; border:1px solid var(--ring)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--ring);padding:10px 12px;border-radius:12px;box-shadow:var(--shadow);font-weight:800}
+.thumb{height:120px;border-radius:12px; overflow:hidden; position:relative}
+.thumb canvas{position:absolute;inset:0;width:100%;height:100%}
+.panel.male{background:linear-gradient(180deg,#f2f8ff,#ffffff)}
+.panel.male .accent{background:linear-gradient(160deg,var(--male1),var(--male2))}
+.panel.female{background:linear-gradient(180deg,#fff5fb,#ffffff)}
+.panel.female .accent{background:linear-gradient(160deg,var(--fem1),var(--fem2))}
+.accent{position:absolute; inset:-20% 30% auto -20%; height:140%; filter:blur(26px); opacity:.35; z-index:0}
+
+/* ---------- “Sizi tanımak isteriz” ---------- */
+.ctaSoft{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:linear-gradient(180deg,#eef6ff,#ffffff); border:1px dashed var(--ring)
+}
+.ctaSoft .miniOrb{width:56px;height:56px;border-radius:999px;
+  background:radial-gradient(circle at 38% 38%,#c8e9ff 0 40%,#ffd8f2 50%,transparent 65%);
+  box-shadow:inset 0 0 16px rgba(255,255,255,.9), 0 8px 28px rgba(16,68,122,.16)
+}
+
+/* ---------- Küre ---------- */
+.sphere{position:relative}
+.orb{--s:min(70vw,560px); width:var(--s); height:var(--s); margin:0 auto; border-radius:999px;
+  background:
+    radial-gradient(closest-side at 50% 46%,rgba(255,255,255,.95),rgba(255,255,255,.18) 60%,transparent 61%),
+    radial-gradient(closest-side at 48% 42%,#bde3ff,transparent 62%),
+    radial-gradient(closest-side at 54% 58%,#ffd7f5,transparent 62%),
+    radial-gradient(closest-side at 52% 48%,#a1d0ff,transparent 68%);
   box-shadow:
-   inset 0 0 40px rgba(255,255,255,.6),
-   0 30px 80px rgba(38,90,140,.18),
-   0 0 120px rgba(132,188,255,.25);
+    inset 0 0 40px rgba(255,255,255,.6),
+    0 30px 80px rgba(38,90,140,.18),
+    0 0 120px rgba(132,188,255,.25);
   transition:transform .15s ease;
 }
-.orbShadow{width:60%;height:24px;background:radial-gradient(closest-side,rgba(0,0,0,.25),transparent 80%);border-radius:999px;filter:blur(2px);margin-top:14px}
+.orbShadow{width:60%;height:24px;margin:14px auto 0;border-radius:999px;
+  background:radial-gradient(closest-side,rgba(0,0,0,.25),transparent 80%); filter:blur(2px)}
+.sphere .chips{position:absolute;right:12px;top:12px;display:flex;gap:8px}
+.small{font-size:12px;padding:6px 10px}
 
-/* ========== INFO BOXES ========== */
-.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.infoBox{background:var(--card);border:1px solid var(--ring);padding:16px;border-radius:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-.infoBox h4{margin:0 0 8px 0}
-.infoBox .icon{font-size:20px;margin-right:6px}
+/* ---------- Micro dots ---------- */
+#bgDots{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* ========== BG MICRO DOTS ========== */
-#bgDots{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1000px 700px at 50% -220px,#ffffff,transparent)}
+/* ---------- Animations ---------- */
+.fade{animation:fade .4s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* ========== TRANSITIONS / ANIMS ========== */
-.fadeIn{animation:fadeIn .6s ease both}
-.fadeSlide{animation:fadeSlide .6s ease both}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-
-@media (max-width:920px){
-  .hero{grid-template-columns:1fr}
-  .orbWrap{order:2}
-}
-@media (max-width:560px){
-  .brand{letter-spacing:.38em}
-  .clock{font-size:12px;padding:6px 8px}
-  .hamburger{width:36px;height:36px}
+@media (max-width:760px){
+  .panel{grid-template-columns:1fr}
+  .thumb{height:110px}
 }
 </style>
 </head>
 <body>
 
-<!-- Splash (tek kopya) -->
-<div id="splash" aria-label="Açılış">
-  <div class="ring"></div>
-  <div class="logo">AZURA</div>
-</div>
+<!-- Üst çubuk -->
+<nav class="topnav">
+  <div class="wrap">
+    <div id="clock" class="clock">00:00:00</div>
+    <div class="brand">A Z U R A</div>
+    <a class="chip" href="login.html">Giriş Yap</a>
+    <a class="chip" href="#">Üye Ol</a>
+  </div>
+</nav>
 
-<!-- BG micro dots (tek canvas) -->
+<!-- Arkaplan mikro noktalar -->
 <canvas id="bgDots" aria-hidden="true"></canvas>
 
-<!-- Topbar -->
-<header class="topbar">
-  <div class="inner">
-    <button class="hamburger" id="btnDrawer" aria-label="Sol menüyü aç">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-    <div id="clock" class="clock">00:00:00</div>
-    <div class="brand" aria-hidden="true">A Z U R A</div>
-    <nav style="margin-left:auto;display:flex;gap:10px">
-      <a class="chip" href="login.html">Giriş Yap</a>
-      <a class="chip" href="#">Üye Ol</a>
-      <button class="chip" id="btnTheme">Tema</button>
-    </nav>
-  </div>
-</header>
-
-<!-- Drawer -->
-<aside class="drawer" id="drawer" aria-hidden="true">
-  <div class="shade" id="drawerShade"></div>
-  <div class="panel" role="navigation">
-    <div class="head">
-      <strong>AZURA Panel</strong>
-      <button class="chip" id="btnDrawerClose">Kapat</button>
-    </div>
-    <div class="list">
-      <a class="link" href="#hero">🏠 Ana Menü <span style="margin-left:auto" class="kbd">G</span></a>
-      <a class="link" href="#male">🌊 Okyanus (Erkek)</a>
-      <a class="link" href="#female">🌸 Doğa (Kadın)</a>
-      <a class="link" href="#orb">🪄 Azura Küresi</a>
-    </div>
-  </div>
-</aside>
-
+<!-- İçerik -->
 <main class="container">
 
-  <!-- HERO -->
-  <section id="hero" class="section hero fadeIn">
-    <div class="cards fadeSlide">
-      <div class="card male" id="male">
-        <div class="bg"></div>
-        <h3>🌊 Okyanus</h3>
-        <p>Serin mavilik, metalik çizgiler ve tertipli disiplin. Akışa gir.</p>
-        <a class="cta" href="male.html">Giriş →</a>
-      </div>
-      <div class="card female" id="female">
-        <div class="bg"></div>
-        <h3>🌸 Rüzgâr</h3>
-        <p>Zarafet, iç ısıtan tonlar, hafif esinti ve dengeli bakım.</p>
-        <a class="cta" href="female.html">Giriş →</a>
-      </div>
-    </div>
-
-    <div class="orbWrap fadeSlide" id="orb">
-      <div class="orb" id="azOrb" aria-hidden="true"></div>
-      <div class="orbShadow" aria-hidden="true"></div>
-    </div>
+  <!-- Günün Sözü -->
+  <section class="card quote fade">
+    <h4><span class="icon">💡</span>Günün Sözü</h4>
+    <p id="qText">Yükleniyor…</p>
+    <small id="qAuth"></small>
   </section>
 
-  <!-- Günün Sözü & İlginç Bilgi -->
-  <section class="section fadeIn">
-    <div class="infoGrid">
-      <div class="infoBox" id="quoteBox">
-        <h4><span class="icon">💡</span>Günün Sözü</h4>
-        <p id="qText">Yükleniyor…</p>
-        <small id="qAuth" style="opacity:.7"></small>
-      </div>
-      <div class="infoBox" id="factBox">
-        <h4><span class="icon">🧠</span>İlginç Bilgi</h4>
-        <p id="fText">Yükleniyor…</p>
-      </div>
-    </div>
+  <!-- İlginç Bilgi -->
+  <section class="card fact fade">
+    <h4><span class="icon">🧠</span>İlginç Bilgi</h4>
+    <p id="fText">Yükleniyor…</p>
+    <small>Azura Bilgi Bankası</small>
   </section>
 
-  <!-- Küre açıklama -->
-  <section class="section fadeIn">
-    <h2>Azura Küresi</h2>
-    <p>Küre, imlecin hareketine ince tepki vererek parıltıyı merkezden kaydırır. Hızlı oynatma yerine yumuşak gecikme uygulanır.</p>
+  <!-- Okyanus / Doğa panelleri -->
+  <section class="panelRow fade">
+    <article class="panel male">
+      <div class="accent"></div>
+      <div style="position:relative;z-index:1">
+        <h3>🌊 Okyanus • Karizmatik</h3>
+        <p>Serin mavilik, hava kabarcıkları ve metalik çizgiler. Akışına bırak.</p>
+        <div class="meta">
+          <span class="badge">Mavi</span>
+          <span class="badge">Derin</span>
+        </div>
+        <a class="btn" href="male.html">Giriş →</a>
+      </div>
+      <div class="thumb"><canvas id="seaThumb"></canvas></div>
+    </article>
+
+    <article class="panel female">
+      <div class="accent"></div>
+      <div style="position:relative;z-index:1">
+        <h3>🌸 Doğa • İç ısıtan</h3>
+        <p>Güneş parıltısı, pembe yapraklar, yumuşak esinti ve sıcak yeşiller.</p>
+        <div class="meta">
+          <span class="badge">Pembe</span>
+          <span class="badge">Bahar</span>
+        </div>
+        <a class="btn" href="female.html">Giriş →</a>
+      </div>
+      <div class="thumb"><canvas id="forestThumb"></canvas></div>
+    </article>
+  </section>
+
+  <!-- Sizi tanımak isteriz -->
+  <section class="card ctaSoft fade">
+    <div>
+      <h4>🧪 Sizi tanımak isteriz</h4>
+      <p style="margin:6px 0 0 0;color:var(--muted)">Kısa bir test ile Azura deneyimini kişiselleştirelim.</p>
+    </div>
+    <div class="miniOrb" aria-hidden="true"></div>
+  </section>
+
+  <!-- Küre -->
+  <section class="card sphere fade">
+    <h4>Azura Küresi</h4>
+    <div class="chips">
+      <span class="chip small">fareye tepki</span>
+      <span class="chip small">yumuşak hareket</span>
+    </div>
+    <div class="orb" id="orb"></div>
+    <div class="orbShadow"></div>
+  </section>
+
+  <!-- Alt 3 kutu -->
+  <section style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px" class="fade">
+    <div class="card">
+      <h4>📘 Hakkımda</h4>
+      <p>Azura; sade, hızlı ve göz yormayan bir kişisel portal. Daha fazlası yakında.</p>
+    </div>
+    <div class="card">
+      <h4>📑 İçerik Başlıkları</h4>
+      <p>Echo (konuk defteri), Notlar, Felsefe, Projeler, Tıp Bilgileri…</p>
+    </div>
+    <div class="card">
+      <h4>⚡ Motivasyon</h4>
+      <p>“Sessiz adımlar, en derin izleri bırakır.” “Dalgalar büyükse, kıyı da yakındır.”</p>
+    </div>
   </section>
 
 </main>
 
-<div class="hint">İpucu: <span class="kbd">Alt</span> + <span class="kbd">↑ / ↓</span> bölümler arası atla.</div>
+<!-- İpucu -->
+<div class="card" style="position:fixed;right:12px;bottom:12px;padding:10px 12px;border-radius:12px">
+  İpucu: Tema için <strong>T</strong> tuşu.
+</div>
 
 <script>
-/* ===================== UTIL ===================== */
-const $  = (s,root=document)=>root.querySelector(s);
-const $$ = (s,root=document)=>Array.from(root.querySelectorAll(s));
-
-/* ===================== SPLASH CONTROL ===================== */
+/* -------- Saat -------- */
 (function(){
-  const splash = $('#splash'); if(!splash) return;
-  const hide = ()=>{ splash.style.display='none'; };
-  splash.addEventListener('animationend', hide, {once:true});
-  splash.addEventListener('click', hide);
-  setTimeout(hide, 2800); // emniyet
-})();
-
-/* ===================== CLOCK ===================== */
-(function clock(){
-  const el = $('#clock'); if(!el) return;
+  const el=document.getElementById('clock'); if(!el) return;
   const two=n=>String(n).padStart(2,'0');
-  const tick=()=>{
-    const d=new Date();
-    el.textContent=`${two(d.getHours())}:${two(d.getMinutes())}:${two(d.getSeconds())}`;
-    requestAnimationFrame(()=>setTimeout(tick,250));
-  };
+  const tick=()=>{const d=new Date(); el.textContent=
+    `${two(d.getHours())}:${two(d.getMinutes())}:${two(d.getSeconds())}`; setTimeout(tick,250)}
   tick();
 })();
 
-/* ===================== THEME TOGGLE ===================== */
-(function theme(){
-  const key='azura:theme';
-  const btn=$('#btnTheme');
-  const apply = m => document.body.classList.toggle('dark', m==='dark');
-  apply(localStorage.getItem(key)|| (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
-  btn?.addEventListener('click',()=>{
-    const next = document.body.classList.contains('dark')?'light':'dark';
-    localStorage.setItem(key,next); apply(next);
-  });
-})();
+/* -------- Tema kısayolu (T) -------- */
+addEventListener('keydown',e=>{
+  if(e.key.toLowerCase()==='t'){
+    document.body.classList.toggle('dark');
+  }
+});
 
-/* ===================== DRAWER ===================== */
-(function drawer(){
-  const root=$('#drawer'), shade=$('#drawerShade'), openBtn=$('#btnDrawer'), closeBtn=$('#btnDrawerClose');
-  if(!root) return;
-  const open=()=>root.classList.add('open');
-  const close=()=>root.classList.remove('open');
-  openBtn?.addEventListener('click',open);
-  closeBtn?.addEventListener('click',close);
-  shade?.addEventListener('click',close);
-  addEventListener('keydown',e=>{
-    if(e.key==='Escape') close();
-    if(e.altKey && (e.key==='ArrowUp' || e.key==='ArrowDown')){
-      e.preventDefault();
-      const ids=['hero','quoteBox','orb']; // basit sıralama
-      const y=scrollY, tops=ids.map(id=>({id,top: Math.max(0,$('#'+id)?.getBoundingClientRect().top + scrollY - 10)})).filter(v=>!isNaN(v.top));
-      if(e.key==='ArrowDown'){
-        const next=tops.find(v=>v.top>y+10); if(next) scrollTo({top:next.top,behavior:'smooth'});
-      }else{
-        const prev=[...tops].reverse().find(v=>v.top<y-10); if(prev) scrollTo({top:prev.top,behavior:'smooth'});
-      }
-    }
-  });
-})();
-
-/* ===================== BG MICRO DOTS ===================== */
-(function bg(){
-  const c=$('#bgDots'), x=c.getContext('2d');
-  const fit=()=>{ c.width=innerWidth; c.height=innerHeight; };
-  fit(); addEventListener('resize',fit,{passive:true});
+/* -------- BG micro-dots -------- */
+(function(){
+  const c=document.getElementById('bgDots'), x=c.getContext('2d');
+  function fit(){ c.width=innerWidth; c.height=innerHeight } fit();
+  addEventListener('resize',fit,{passive:true});
   let t=0;
   (function loop(){
     x.clearRect(0,0,c.width,c.height);
-    const dots=Math.floor(Math.max(120, c.width*c.height/16000));
-    for(let i=0;i<dots;i++){
-      const y=((i*13+t)%c.height), hue=200+(i%60);
-      x.fillStyle=`hsla(${hue},38%,${34 + (i%20)}%,.18)`;
-      x.fillRect((i*37)%c.width, y, 2, 2);
+    const n=Math.floor(Math.max(120,c.width*c.height/16000));
+    for(let i=0;i<n;i++){
+      const y=((i*13+t)%c.height);
+      const hue=200+(i%60);
+      x.fillStyle=`hsla(${hue},40%,${35+(i%20)}%,.18)`;
+      x.fillRect((i*37)%c.width,y,2,2);
     }
     t+=1.15; requestAnimationFrame(loop);
   })();
 })();
 
-/* ===================== QUOTE & FACT ===================== */
-(function quotes(){
-  const QUOTES=[
-    ["Cesaret, korkunun yokluğu değil; onun efendisidir.","Mandela"],
-    ["Nezaket, zekânın görünen yüzüdür.","Azura"],
-    ["Disiplin, özgürlüğün en kısa yoludur.","Jocko"],
-    ["Sessiz adımlar, en derin izleri bırakır.","Azura"],
-    ["Sabır, hızın yakıtıdır.","Azura"]
-  ];
-  const FACTS=[
-    "Beynin yaklaşık %60'ı yağdan oluşur.",
-    "REM uykusunda duygusal merkezler daha aktiftir.",
-    "Kalp günde ~100.000 kez atar.",
-    "İnsan burnu 1 trilyon kokuyu ayırt edebilir.",
-    "Kısa aralar hafızayı güçlendirir."
-  ];
-  const [q,auth]=QUOTES[Math.floor(Math.random()*QUOTES.length)];
-  $('#qText').textContent='“ '+q+' ”';
-  $('#qAuth').textContent='— '+auth;
-  $('#fText').textContent=FACTS[Math.floor(Math.random()*FACTS.length)];
-})();
-
-/* ===================== ORB REACT ===================== */
-(function orb(){
-  const wrap=$('#orb'); const orb=$('#azOrb'); if(!wrap||!orb) return;
-  const lerp=(a,b,t)=>a+(b-a)*t; let tx=0,ty=0, cx=0, cy=0;
-  const update=()=>{
-    cx=lerp(cx,tx,.06); cy=lerp(cy,ty,.06);
-    orb.style.transform=`translate(${cx}px,${cy}px)`;
-    requestAnimationFrame(update);
-  };
-  update();
+/* -------- Küre tepki -------- */
+(function(){
+  const orb=document.getElementById('orb'); if(!orb) return;
+  let tx=0,ty=0,cx=0,cy=0;
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const upd=()=>{ cx=lerp(cx,tx,.06); cy=lerp(cy,ty,.06); orb.style.transform=`translate(${cx}px,${cy}px)`; requestAnimationFrame(upd) };
+  upd();
+  const wrap=orb.parentElement;
   wrap.addEventListener('pointermove',e=>{
     const r=wrap.getBoundingClientRect();
-    const dx=e.clientX-(r.left+r.width/2);
-    const dy=e.clientY-(r.top+r.height/2);
-    tx = Math.max(-30,Math.min(30,dx*.06));
-    ty = Math.max(-30,Math.min(30,dy*.06));
+    tx=Math.max(-30,Math.min(30,(e.clientX-(r.left+r.width/2))*0.06));
+    ty=Math.max(-30,Math.min(30,(e.clientY-(r.top+r.height/2))*0.06));
   });
   wrap.addEventListener('pointerleave',()=>{tx=0;ty=0});
 })();
 
-/* ===================== CARD CLICKS (SOFT TRANSITION) ===================== */
-(function softLinks(){
-  const cover=document.createElement('div');
-  cover.style.cssText='position:fixed;inset:0;background:#fff;opacity:0;transition:opacity .25s;z-index:60;pointer-events:none';
-  document.body.appendChild(cover);
-  for(const a of $$('a[href$=".html"]')){
-    a.addEventListener('click',e=>{
-      if(a.target==='_blank') return;
-      e.preventDefault();
-      cover.style.pointerEvents='auto'; cover.style.opacity='1';
-      setTimeout(()=>location.href=a.href,180);
-    });
-  }
+/* -------- Erkek/Kadın küçük canvas önizlemeleri -------- */
+(function sea(){
+  const c=document.getElementById('seaThumb'); if(!c) return; const x=c.getContext('2d');
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
+  const B=80, b=[]; for(let i=0;i<B;i++) b.push({x:Math.random()*c.width, y:c.height*Math.random(), a:Math.random()*6});
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    x.globalAlpha=.25; x.strokeStyle='rgba(80,160,220,.25)';
+    for(let i=0;i<18;i++){ const y=(i/18)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((i)*.4)*4); x.lineTo(c.width,y); x.stroke(); }
+    x.globalAlpha=.35; x.fillStyle='rgba(110,200,255,.45)';
+    for(const p of b){ p.a+=.03; p.x+=Math.cos(p.a)*.6; p.y-=.6; if(p.y<-6) p.y=c.height+6; x.beginPath(); x.arc(p.x,p.y,1.7,0,6.283); x.fill(); }
+    requestAnimationFrame(loop);
+  })();
+})();
+(function forest(){
+  const c=document.getElementById('forestThumb'); if(!c) return; const x=c.getContext('2d');
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit(); addEventListener('resize',fit,{passive:true});
+  const N=60, petals=[]; for(let i=0;i<N;i++) petals.push({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*2,h:310+Math.random()*40});
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    for(const s of petals){
+      s.y+=.4; s.x+=Math.sin(s.y/45)*.4; if(s.y>c.height+6){s.y=-6; s.x=Math.random()*c.width}
+      x.fillStyle=`hsla(${s.h},80%,70%,.75)`; x.beginPath(); x.arc(s.x,s.y,s.r,0,6.283); x.fill();
+    }
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* -------- Söz & Bilgi -------- */
+(function(){
+  const QUOTES=[
+    ["Sessiz adımlar, en derin izleri bırakır.","Azura"],
+    ["Nezaket, zekânın görünen yüzüdür.","Azura"],
+    ["Disiplin, özgürlüğün kısa yoludur.","Jocko"]
+  ];
+  const FACTS=[
+    "Beynin %60'ı yağdan oluşur.",
+    "Kalp günde ~100.000 kez atar.",
+    "REM uykusu duygusal merkezleri güçlendirir."
+  ];
+  const [q,a]=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  document.getElementById('qText').textContent='“ '+q+' ”';
+  document.getElementById('qAuth').textContent='— '+a;
+  document.getElementById('fText').textContent=FACTS[Math.floor(Math.random()*FACTS.length)];
 })();
 </script>
 </body>
-   </html>
+        </html>
