@@ -5,12 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AZURA • ERKEK</title>
 
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  /* Mavi tema */
   --bg-deep:#0B1117;
   --blue-1:#7CD0FF;
   --blue-2:#A5E1FF;
@@ -25,11 +23,9 @@
   --btn-bg:rgba(15,24,36,0.72);
   --btn-bd:rgba(140,200,255,0.28);
   --btn-tx:#E8F4FF;
-  --accent-blue:#9ED7FF; /* manifesto gradyanı üst */
-  --accent-cyan:#D6F2FF;  /* manifesto gradyanı alt */
+  --accent-blue:#9ED7FF;
+  --accent-cyan:#D6F2FF;
 }
-
-/* Reset */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -37,8 +33,6 @@ body{
   color:var(--text-body); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
   overflow-x:hidden;
 }
-
-/* --- Arkaplan: aurora + mavi noktacıklar --- */
 .bg-layer{position:fixed; inset:0; pointer-events:none; z-index:0;}
 .bg-halos{
   position:absolute; inset:0;
@@ -47,10 +41,7 @@ body{
     radial-gradient(1300px 700px at 10% 110%, rgba(60,140,220,0.10), transparent 75%);
   filter: blur(0.2px);
 }
-/* mavi noktacıklar */
 .canvas{position:absolute; inset:0;}
-
-/* Üst butonlar */
 .top-buttons{position:fixed; inset:0 0 auto 0; height:0; z-index:5;}
 .btn{
   position:absolute; top:12px; padding:8px 12px; border-radius:12px;
@@ -62,8 +53,6 @@ body{
 .btn:hover{box-shadow:0 10px 30px rgba(120,180,255,.18)}
 .btn.left{left:12px}
 .btn.right{right:12px}
-
-/* Hoşgeldin kutusu */
 .welcome{
   position:fixed; top:70px; left:50%; transform:translateX(-50%);
   width:min(720px, calc(100% - 40px));
@@ -83,12 +72,8 @@ body{
 @keyframes wel-in{to{opacity:1; transform:translate(-50%,0)}}
 .fade-out{animation:wel-out .8s ease forwards}
 @keyframes wel-out{to{opacity:0; transform:translate(-50%,-10px)}}
-
-/* Yazıyı geç */
 .skip{position:fixed; top:12px; left:12px; z-index:6; display:none}
 .skip.show{display:inline-block}
-
-/* Manifesto (slayt) */
 .manifesto-wrap{
   position:fixed; inset:0; z-index:3; display:none; pointer-events:none;
 }
@@ -105,14 +90,10 @@ body{
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-shadow:0 0 22px rgba(120,190,255,.45);
   white-space:pre-wrap; text-transform:uppercase;
-  top:100%; /* alttan başla */
-  animation: slideUp 55s linear forwards; /* 55 saniye */
+  top:100%;
+  animation: slideUp 120s linear forwards;
 }
-@keyframes slideUp{
-  to{ top:-120% }
-}
-
-/* Menü (kartlar) */
+@keyframes slideUp{to{ top:-120% }}
 .main{position:relative; z-index:2; padding:90px 18px 64px; display:none;}
 .grid{
   max-width:1100px; margin:0 auto; display:grid; gap:20px;
@@ -138,47 +119,26 @@ body{
   font-weight:600; font-size:12.5px;
 }
 .card-wide{grid-column:1 / -1}
-
 footer{
   max-width:1100px; margin:32px auto 0; text-align:center; color:#CFE2F5;
   opacity:.95; font-size:14px;
 }
-
-/* Küçük ekran uyarlamaları */
-@media (max-width:760px){
-  .grid{grid-template-columns:1fr 1fr;}
-  .card h3{font-size:18px}
-  .card-wide h3{font-size:20px}
-}
-@media (max-width:520px){
-  .grid{grid-template-columns:1fr}
-}
 </style>
 </head>
 <body>
-
-<!-- Arkaplan -->
 <div class="bg-layer">
   <div class="bg-halos"></div>
   <canvas class="canvas" id="stars"></canvas>
 </div>
-
-<!-- Üst butonlar -->
 <div class="top-buttons">
   <a class="btn left" id="userBtn" href="#">Kullanıcı Paneli</a>
   <a class="btn right" id="homeBtn" href="index.html">Ana Menü</a>
 </div>
-
-<!-- Hoşgeldin -->
 <div class="welcome" id="welcomeBox">
   <h3>Derin Sular’a Hoş Geldin ⚙️</h3>
   <p>Birazdan kısa bir manifesto alttan akacak. Dilersen “Yazıyı Geç” ile menüye geçebilirsin.</p>
 </div>
-
-<!-- Yazıyı Geç -->
 <a class="btn skip" id="skipBtn">Yazıyı Geç</a>
-
-<!-- Manifesto -->
 <div class="manifesto-wrap" id="mfWrap" aria-hidden="true">
   <div class="manifesto-scrim"></div>
   <div class="manifesto" id="manifesto">
@@ -200,123 +160,61 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
 — AZURA NOVA
   </div>
 </div>
-
-<!-- Menü (Manifesto bitince görünecek) -->
 <main class="main" id="main">
   <div class="grid">
     <div class="card">
       <h3>🧭 DURUŞ &amp; SORUMLULUK</h3>
       <p>Duruş; söze değil, alışkanlığa yazılır. Rutinlerini sadeleştir; “söz verdim” cümlesini takvimde somutlaştır.</p>
-      <div class="chips">
-        <span>Net ajanda</span><span>Öncelik 3</span><span>Takip alışkanlığı</span>
-      </div>
+      <div class="chips"><span>Net ajanda</span><span>Öncelik 3</span><span>Takip alışkanlığı</span></div>
     </div>
-
     <div class="card">
       <h3>🤝 NEZAKET • GÜÇ</h3>
       <p>Güç, sesi yükseltmek değildir. İhtiyacı doğru anlamak, net ve nazik talepte bulunmaktır: “Bunu şu şekilde çözebilir miyiz?”</p>
-      <div class="chips">
-        <span>Netlik</span><span>Ölçülülük</span><span>Alternatif</span>
-      </div>
+      <div class="chips"><span>Netlik</span><span>Ölçülülük</span><span>Alternatif</span></div>
     </div>
-
     <div class="card">
       <h3>🛠️ DİSİPLİN</h3>
       <p>Her gün 20 dakikalık “ağır kaldırış”: zor ama küçük bir iş. Bitince kısa not: “Bugün kendime saygım arttı çünkü…”</p>
-      <div class="chips">
-        <span>20 dk blok</span><span>Tek hedef</span><span>Kısa rapor</span>
-      </div>
+      <div class="chips"><span>20 dk blok</span><span>Tek hedef</span><span>Kısa rapor</span></div>
     </div>
-
     <div class="card">
       <h3>🌬️ SAKİNLİK EGZERSİZİ</h3>
       <p>4-6 nefes (4 sn al, 6 sn ver). Gözlem cümlesi: “Şu an benden beklenen tek adım ne?”</p>
-      <div class="chips">
-        <span>Nefes 4-6</span><span>Tek adım</span><span>Gözlem</span>
-      </div>
+      <div class="chips"><span>Nefes 4-6</span><span>Tek adım</span><span>Gözlem</span></div>
     </div>
-
     <div class="card-wide">
       <h3>📚 KAYNAKLAR</h3>
       <p><strong>Atomic Habits</strong> (Clear) — <strong>Deep Work</strong> (Newport) — <strong>Ego Is the Enemy</strong> (Holiday)</p>
-      <div class="chips">
-        <span>← Ana Menü</span><span>Kanallar</span><span>Alıştırmalar</span>
-      </div>
+      <div class="chips"><span>← Ana Menü</span><span>Kanallar</span><span>Alıştırmalar</span></div>
     </div>
   </div>
-
   <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
 </main>
 
 <script>
-/* ---------- Mavi partiküller (çizgi yok) ---------- */
 (function(){
-  const c = document.getElementById('stars');
-  const ctx = c.getContext('2d');
-  function size(){ c.width = innerWidth; c.height = innerHeight }
-  size(); addEventListener('resize', size);
-  const colors = ['#7CD0FF','#A5E1FF','#58BFF5','#C3ECFF'];
-  const dots = Array.from({length: 150}, ()=>({
-    x: Math.random()*c.width,
-    y: Math.random()*c.height,
-    r: (Math.random()*2)+1.1,
-    o: 0.45+Math.random()*0.25,
-    c: colors[(Math.random()*colors.length)|0],
-    vy: 0.025 + Math.random()*0.065
-  }));
-  function draw(){
-    ctx.clearRect(0,0,c.width,c.height);
-    for(const d of dots){
-      ctx.globalAlpha = d.o;
-      ctx.fillStyle = d.c;
-      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill();
-      d.y += d.vy;
-      if(d.y > c.height+8){ d.y = -8; d.x = Math.random()*c.width }
-    }
-    requestAnimationFrame(draw);
-  }
+  const c=document.getElementById('stars');const ctx=c.getContext('2d');
+  function size(){c.width=innerWidth;c.height=innerHeight}
+  size();addEventListener('resize',size);
+  const colors=['#7CD0FF','#A5E1FF','#58BFF5','#C3ECFF'];
+  const dots=Array.from({length:150},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:(Math.random()*2)+1.1,o:0.45+Math.random()*0.25,c:colors[(Math.random()*colors.length)|0],vy:0.025+Math.random()*0.065}));
+  function draw(){ctx.clearRect(0,0,c.width,c.height);for(const d of dots){ctx.globalAlpha=d.o;ctx.fillStyle=d.c;ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();d.y+=d.vy;if(d.y>c.height+8){d.y=-8;d.x=Math.random()*c.width}}requestAnimationFrame(draw);}
   draw();
 })();
-
-/* ---------- Akış mantığı ---------- */
-const welcome = document.getElementById('welcomeBox');
-const mfWrap  = document.getElementById('mfWrap');
-const manifesto = document.getElementById('manifesto');
-const skipBtn = document.getElementById('skipBtn');
-const main = document.getElementById('main');
-
-let manifestoTimer = null;
-
-/* Hoşgeldin ~2.2sn; sonra kısa bekleme ile manifesto başlar */
-setTimeout(()=>{
-  welcome.classList.add('fade-out');
-  setTimeout(startManifesto, 600); // kısa bekleme
-}, 2200);
-
+const welcome=document.getElementById('welcomeBox');
+const mfWrap=document.getElementById('mfWrap');
+const skipBtn=document.getElementById('skipBtn');
+const main=document.getElementById('main');
+let manifestoTimer=null;
+setTimeout(()=>{welcome.classList.add('fade-out');setTimeout(startManifesto,600);},2200);
 function startManifesto(){
   mfWrap.style.display='block';
   skipBtn.classList.add('show');
-  /* 55 sn sonra menüye */
-  manifestoTimer = setTimeout(showMenu, 55000);
+  manifestoTimer=setTimeout(showMenu,120000);
 }
-
-/* Yazıyı geç */
-skipBtn.addEventListener('click', ()=>{
-  if(manifestoTimer){ clearTimeout(manifestoTimer); }
-  showMenu();
-});
-
-function showMenu(){
-  mfWrap.style.display='none';
-  skipBtn.classList.remove('show');
-  main.style.display='block';
-}
-
-/* Sol üst Kullanıcı Paneli şimdilik dummy */
-document.getElementById('userBtn').addEventListener('click', (e)=>{
-  e.preventDefault();
-  alert('Kullanıcı Paneli yakında burada ⚙️');
-});
+skipBtn.addEventListener('click',()=>{if(manifestoTimer){clearTimeout(manifestoTimer);}showMenu();});
+function showMenu(){mfWrap.style.display='none';skipBtn.classList.remove('show');main.style.display='block';}
+document.getElementById('userBtn').addEventListener('click',e=>{e.preventDefault();alert('Kullanıcı Paneli yakında burada ⚙️');});
 </script>
 </body>
   </html>
