@@ -821,7 +821,7 @@ body{
   addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
 })();
 
-/
+
    /* BG micro-dots */
 (function bg(){
   const c=document.getElementById('bgDots'), x=c.getContext('2d');
@@ -842,6 +842,7 @@ body{
     requestAnimationFrame(loop);
   })();
 })();
+   <canvas id="bgDots" aria-hidden="true"></canvas>
 
 /* Günün sözü & Bilgi */
 (function quotes(){
