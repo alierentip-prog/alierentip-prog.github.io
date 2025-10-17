@@ -588,13 +588,77 @@ body{
   background: radial-gradient(circle at center, #eaf3ff 0%, #f9fcff 100%);
 }
 </style>
+   <!-- 🌊 Arka Plan Mikro Noktalar ve Splash -->
+<style>
+#bgDots {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, #eaf3ff 0%, #f9fcff 100%);
+}
+
+#splash {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, #c2e0ff 0%, #f9fcff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: splashOut 2.4s ease-in-out forwards;
+  z-index: 9999;
+}
+
+#splash .logo {
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 38px;
+  letter-spacing: 4px;
+  color: #0a355c;
+  animation: zoomLogo 1.8s ease-in-out forwards;
+}
+
+@keyframes zoomLogo {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes splashOut {
+  0%, 80% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+</style>
+
+<canvas id="bgDots" aria-hidden="true"></canvas>
+<div id="splash">
+  <div class="logo">AZURA</div>
+</div>
+
+<script>
+/* Mikro Nokta Efekti */
+(function(){
+  const c = document.getElementById('bgDots');
+  const x = c.getContext('2d');
+  function fit(){ c.width = innerWidth; c.height = innerHeight; }
+  fit(); addEventListener('resize', fit, {passive:true});
+  let t = 0;
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    const dots = Math.floor(c.width * c.height / 16000);
+    for(let i=0;i<dots;i++){
+      const y = ((i*13+t)%c.height);
+      const hue = 200 + (i%80);
+      x.fillStyle = `hsla(${hue},40%,60%,.25)`;
+      x.fillRect((i*37)%c.width, y, 2, 2);
+    }
+    t += 1.1;
+    requestAnimationFrame(loop);
+  })();
+})();
+ </script>
 </head>
 <body>
-
-<!-- ========= Splash ========= -->
-<div id="splash" class="splash" aria-label="Giriş">
-  <div class="ring"><div class="logo">AZURA</div></div>
-</div>
 
 <!-- ========= Topbar ========= -->
 <header class="topbar" id="top">
