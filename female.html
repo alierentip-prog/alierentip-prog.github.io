@@ -8,13 +8,17 @@
 <style>
   :root{ --b:rgba(255,255,255,.16); --glass:rgba(255,255,255,.06); --fg:#fff7fb; --bg:#0c0a0f }
   *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(255,154,208,.09), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui}
+  body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(255,154,208,.09), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui; overflow-x:hidden}
   header{position:sticky; top:0; z-index:10; background:rgba(0,0,0,.35); backdrop-filter:blur(6px); border-bottom:1px solid rgba(255,255,255,.12)}
   nav{display:flex; gap:8px; padding:10px; justify-content:center}
   nav a{border:1px solid var(--b); background:var(--glass); color:#fff; text-decoration:none; font-weight:800; padding:8px 12px; border-radius:12px}
-  main{max-width:960px; margin:16px auto; padding:0 12px; display:grid; gap:12px}
+  main{max-width:980px; margin:16px auto; padding:0 12px; display:grid; gap:12px}
   .card{border:1px solid var(--b); background:rgba(12,10,15,.78); border-radius:18px; padding:16px}
   canvas.field{position:relative; width:100%; height:260px; border-radius:14px; background:rgba(255,255,255,.06)}
+  /* kayan manifesto */
+  #storyBox{position:relative; height:300px; overflow:hidden; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04)}
+  #story{position:absolute; left:0; right:0; transform:translateY(100%); padding:16px; line-height:1.9}
+  #story p{margin:0 0 18px}
 </style>
 </head>
 <body>
@@ -22,7 +26,7 @@
 <header>
   <nav>
     <a href="#intro">Giriş</a>
-    <a href="#manifesto">Metin</a>
+    <a href="#manifesto">Kayan Yazı</a>
     <a href="#menu">Menü</a>
     <a href="index.html">← Ana Menü</a>
   </nav>
@@ -37,8 +41,17 @@
 
   <section id="manifesto" class="card">
     <h2>Kadına Değer • Kadın</h2>
-    <p>Türkiye’de kadın olmak; gündoğumunda ekmeğin buharı, akşamüstü pencereden sokağa taşan gülüş, yollara düşmüş bir cesaret ve evlere sinmiş bir bilgeliktir…</p>
-    <p>Değer; yalnız alkışta değil, gündeliğin sessiz kahramanlığındadır. Başını göğe kaldırıp “yapabilirim” diyen her kadında memleket göğünün mavisi bir ton daha derinleşir.</p>
+    <div id="storyBox">
+      <div id="story">
+        <p><b>Türkiye’de kadın olmak</b>; gündoğumunda ekmeğin buharı, akşamüstü pencereden sokağa taşan gülüş, yollara düşmüş bir cesaret ve evlere sinmiş bir bilgeliktir.</p>
+        <p>Nice yüzyılın türkülerinde “yar” diye çağrılan, masallarda “anasultan” diye ağırlanan kadın; sofranın bereketi, evin direği, mahallenin hafızasıdır.</p>
+        <p>Kadının emeği; tandırın sıcak taşında, tarlanın serin toprağında, atölyenin çıtırtısında, laboratuvarın mikroskobunda aynı ışıltıyla parlar.</p>
+        <p>“Komşu komşunun külüne muhtaçtır” diyen kültürde kadın, komşuluğun kendisidir: kapı eşiğinde paylaşılan çorba, “geçmiş olsun”a eşlik eden kek kokusu, birlikte uyanan mahalledir.</p>
+        <p>Değer; yalnız alkışta değil, gündeliğin sessiz kahramanlığındadır. Başını göğe kaldırıp “yapabilirim” diyen her kadında memleket göğünün mavisi bir ton daha derinleşir.</p>
+        <p>Şehirde ya da köyde; kadının adı üretendir. Bazen ebru teknesinde suya nakış, bazen bir yazılım satırında geleceğe köprü, bazen bir sınıfta ilk harftir.</p>
+        <p>Bir ülke, kadınlarının ufku kadar genişler. Fırsatı çoğaltmak, sözü kuvvetlendirmek, emeği görünür kılmak—hepsi aynı kapıya çıkar: <b>saygı</b>.</p>
+      </div>
+    </div>
   </section>
 
   <section id="menu" class="card">
@@ -77,6 +90,28 @@ document.addEventListener('click', (e)=>{
     }
     t++; requestAnimationFrame(loop);
   })();
+})();
+
+/* kayan manifesto */
+(() => {
+  const box = document.getElementById('storyBox');
+  const inner= document.getElementById('story');
+  let start, total;
+  function run(){
+    const vh = box.clientHeight;
+    const ih = inner.scrollHeight;
+    total = ih + vh + 40;
+    start = performance.now();
+    const speed = 46; // px/sn
+    const loop = (now) => {
+      const dt = (now-start)/1000;
+      const dy = Math.min(total, dt*speed);
+      inner.style.transform = `translateY(${vh - dy}px)`;
+      if (dy < total) requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+  addEventListener('load', run, {once:true});
 })();
 </script>
 </body>
