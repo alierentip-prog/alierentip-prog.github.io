@@ -4,7 +4,6 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AZURA</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -35,8 +34,7 @@
     border-bottom:1px solid rgba(255,255,255,.08);
   }
   .nav .menuBtn{appearance:none;border:0;background:transparent;color:#d9ebff;
-    width:36px;height:36px;border-radius:10px;display:grid;place-items:center}
-  .nav .menuBtn:active{transform:scale(.96)}
+    width:36px;height:36px;border-radius:10px;display:grid;place-items:center;cursor:pointer}
   .nav .clock{font-weight:900; letter-spacing:.06em; padding:6px 10px;
     border-radius:10px; background:rgba(255,255,255,.08)}
   .nav .brand{
@@ -104,9 +102,10 @@
   .answers{display:flex; gap:8px; flex-wrap:wrap}
   .chip{
     appearance:none; border:1px solid var(--b); background:#fff; color:#0c1520;
-    padding:8px 12px; border-radius:999px; font-weight:700;
+    padding:8px 12px; border-radius:999px; font-weight:700; cursor:pointer;
   }
   [data-theme="dark"] .chip{ background:#0f1722; color:#eaf4ff }
+  .chip[aria-pressed="true"]{ outline:2px solid var(--accent) }
   .result{margin-top:10px; padding:12px; border-radius:12px; border:1px dashed var(--b); font-weight:700}
   .mut{color:var(--mut); font-weight:600; font-size:12px; margin-top:8px}
 
@@ -123,61 +122,58 @@
          transform:scale(1.05); transition:opacity .45s ease, transform .45s ease }
   #wipe.show{opacity:1; transform:scale(1)}
 
-  /* ====== (SPLASH – dokunulmadı) ====== */
-  #splash{ position:fixed; inset:0; z-index:50; display:grid; place-items:center; background:#0a0a0a; }
+  /* ====== (SPLASH) ====== */
+  #splash{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; background:transparent; pointer-events:none; }
   .ring{
-    position:relative; width:min(78vmin,720px); aspect-ratio:1/1; border-radius:50%;
-    display:grid; place-items:center; filter: blur(.3px);
-    animation:ringPulse 2.4s ease-in-out forwards; /* 1 sn kısaltıldı */
+    position:relative; width:min(68vmin,620px); aspect-ratio:1/1; border-radius:50%;
+    display:grid; place-items:center; filter: drop-shadow(0 40px 60px rgba(0,0,0,.6));
+    animation:ringPulse 1.4s ease-in-out forwards;
   }
   .ring::before{
     content:""; position:absolute; inset:0; border-radius:50%;
     background:
       radial-gradient(circle at 50% 50%,
-        rgba(255,255,255,0.08) 0%,
-        rgba(255,255,255,0.08) 45%,
-        rgba(255,255,255,0.06) 60%,
-        rgba(255,255,255,0.05) 75%,
-        rgba(255,255,255,0.04) 90%,
-        rgba(255,255,255,0.08) 100%) padding-box,
-      radial-gradient(circle at 50% 50%,
-        transparent 66%,
-        rgba(255,255,255,0.35) 70%,
-        rgba(255,255,255,0.95) 74%,
-        #ffffff 78%,
-        rgba(255,255,255,0.95) 82%,
-        rgba(255,255,255,0.35) 86%,
-        rgba(255,255,255,0.12) 90%,
-        rgba(255,255,255,0.08) 94%,
-        rgba(255,255,255,0.06) 97%,
-        rgba(255,255,255,0.05) 100%) border-box;
-    -webkit-mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
-            mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
+        rgba(255,255,255,0.98) 0%,
+        rgba(255,255,255,0.90) 10%,
+        rgba(255,255,255,0.70) 30%,
+        rgba(255,255,255,0.45) 50%,
+        rgba(255,255,255,0.28) 70%,
+        rgba(255,255,255,0.14) 86%,
+        rgba(255,255,255,0.08) 92%,
+        rgba(255,255,255,0.06) 98%
+      );
+    box-shadow:0 0 40px rgba(255,255,255,.45), inset 0 0 26px rgba(255,255,255,.35);
+    -webkit-mask: radial-gradient(farthest-side, #000 0%, rgba(0,0,0,0.02) 66%, transparent 68%);
+            mask: radial-gradient(farthest-side, #000 0%, rgba(0,0,0,0.02) 66%, transparent 68%);
   }
   .logo{
-    position:relative; z-index:1; font-family:Cinzel,serif; font-weight:900; letter-spacing:.20em;
-    font-size: clamp(36px, 9.5vw, 150px); line-height:1;
-    background:linear-gradient(90deg,#ffffff,#b8e7ff,#7cd2ff,#a5a3ff,#ff9ddb,#ffffff);
-    background-size:300% 100%; -webkit-background-clip:text; color:transparent;
-    text-shadow:0 0 24px rgba(255,255,255,.35); animation:hue 6s linear infinite, pop 2.4s ease both;
+    position:relative; z-index:2; font-family:Cinzel,serif; font-weight:900; letter-spacing:.18em;
+    font-size: clamp(36px, 9.5vw, 110px); line-height:1;
+    background:linear-gradient(90deg,#bff0ff,#9fe6ff,#a7d1ff,#e9b6ff,#ffd6e8);
+    background-size:400% 100%; -webkit-background-clip:text; color:transparent;
+    text-shadow:0 6px 10px rgba(0,0,0,.5), 0 0 28px rgba(150,200,255,.35);
+    animation:hue 6s linear infinite, logoPop 1.4s ease both;
   }
-  @keyframes pop{0%{transform:scale(.86);opacity:0}15%{opacity:1}60%{transform:scale(1.06)}100%{transform:scale(1.10)}}
-  #whiteOut{ position:fixed; inset:0; background:#fff; z-index:60; opacity:0; transition:opacity .38s ease; pointer-events:none; }
+  @keyframes logoPop{
+    0%{transform:translateY(8px) scale(.84); opacity:0}
+    18%{opacity:1}
+    48%{transform:translateY(-6px) scale(1.06)}
+    100%{transform:scale(24)}
+  }
+  @keyframes ringPulse{ 0%{transform:scale(.88);opacity:1} 35%{transform:scale(1.06)} 70%{transform:scale(.94)} 100%{transform:scale(26);opacity:1} }
+  #whiteOut{ position:fixed; inset:0; background:#fff; z-index:70; opacity:0; transition:opacity .42s ease; pointer-events:none; }
   #whiteOut.show{opacity:1}
-  @keyframes ringPulse{0%{transform:scale(.86);opacity:.92}35%{transform:scale(1.08)}60%{transform:scale(.96)}
-    100%{transform:scale(26);opacity:1}}
-
 </style>
 </head>
 <body>
 
-<!-- ===== Splash (dokunma) ===== -->
+<!-- SPLASH -->
 <div id="splash" aria-label="Azura Intro">
   <div class="ring"><div class="logo">AZURA</div></div>
 </div>
 <div id="whiteOut" aria-hidden="true"></div>
 
-<!-- ===== Navbar ===== -->
+<!-- NAV -->
 <nav class="nav">
   <button id="drawerBtn" class="menuBtn" aria-label="Menü">☰</button>
   <div id="clock" class="clock">--:--:--</div>
@@ -189,101 +185,97 @@
   </div>
 </nav>
 
-<!-- ===== Drawer ===== -->
-<div id="drawer">
+<!-- DRAWER -->
+<aside id="drawer" aria-label="Yan Menü">
   <header>AZURA</header>
   <div class="sideGroup">
     <div class="sideTitle">📚 İçerikler</div>
-    <a class="nav-item" href="#sec-male">🌊 Okyanus (Erkek) — Karizma • Disiplin</a>
-    <a class="nav-item" href="#sec-female">🌿 Doğa (Kadın) — Zarafet • Denge</a>
-    <a class="nav-item" href="#sec-test">🧠 Seni Tanımak İsteriz – Kısa Test</a>
-    <a class="nav-item" href="#sec-orb">🟣 Azura Orb – Dinamik Küre</a>
+    <a class="nav-item" href="#erkek">🌊 Okyanus (Erkek) — Karizma • Disiplin</a>
+    <a class="nav-item" href="#kadin">🌿 Doğa (Kadın) — Zarafet • Denge</a>
+    <a class="nav-item" href="#quiz">🧩 Seni Tanımak İsteriz — Kısa Test</a>
+    <a class="nav-item" href="#orb">🫧 Azura Orb — Dinamik Küre</a>
   </div>
   <div class="sideGroup">
     <div class="sideTitle">👤 Hakkımda</div>
-    <a class="nav-item" href="#sec-about">Kısa biyografi</a>
+    <a class="nav-item" href="#about">👥 Kısa Biyografi</a>
+    <a class="nav-item" href="#todo">✨ Neler Yapılabilir?</a>
   </div>
-  <div class="sideGroup">
-    <div class="sideTitle">✨ Neler Yapılabilir?</div>
-    <a class="nav-item" href="#sec-ideas">Fikir listesi</a>
-    <a class="nav-item" data-nav href="male.html">➡️ Okyanus alanına git</a>
-    <a class="nav-item" data-nav href="female.html">➡️ Doğa alanına git</a>
-  </div>
-</div>
+</aside>
 <div id="drawerShade" class="shade"></div>
 
-<!-- ===== İçerik ===== -->
+<!-- CONTENT -->
 <div class="wrap">
 
-  <!-- Erkek/Kadın kartları -->
-  <div class="grid">
-    <section id="sec-male" class="card" style="min-height:200px">
-      <div class="head">🌊 <b>Okyanus</b> • Karizma • Disiplin</div>
-      <canvas id="pMale" class="tile"></canvas>
-      <a class="goBtn" data-nav href="male.html">Git →</a>
+  <!-- ERKEK / KADIN KARTLARI -->
+  <div class="grid" id="erkek">
+    <section class="card">
+      <div class="head">🌊 <strong>Okyanus</strong> • Karizma • Disiplin</div>
+      <canvas class="tile" id="pMale"></canvas>
+      <a class="goBtn" href="male.html" data-nav>Git →</a>
     </section>
 
-    <section id="sec-female" class="card" style="min-height:200px">
-      <div class="head">🌿 <b>Doğa</b> • Zarafet • Denge</div>
-      <canvas id="pFemale" class="tile"></canvas>
-      <a class="goBtn pink" data-nav href="female.html">Git →</a>
-    </section>
-  </div>
-
-  <!-- Test + Orb -->
-  <div class="grid">
-    <section id="sec-test" class="card">
-      <div class="head">🧠 Seni Tanımak İsteriz</div>
-      <div class="body" id="testArea">
-        <div class="q">
-          <b>1)</b> Zor bir hedef görünce ilk hissin?
-          <div class="answers" data-q="q1">
-            <button class="chip" data-v="plan">“Plan yaparım.”</button>
-            <button class="chip" data-v="ilham">“İlham aldım.”</button>
-            <button class="chip" data-v="bol">“Adım adım bölerim.”</button>
-          </div>
-        </div>
-        <div class="q" style="margin-top:10px">
-          <b>2)</b> Ekipte rolün?
-          <div class="answers" data-q="q2">
-            <button class="chip" data-v="yon">Yön veren</button>
-            <button class="chip" data-v="moral">Moral yükselten</button>
-            <button class="chip" data-v="takip">Takip/Uygulama</button>
-          </div>
-        </div>
-        <div class="q" style="margin-top:10px">
-          <b>3)</b> Birine yardım ederken en çok önemsediğin?
-          <div class="answers" data-q="q3">
-            <button class="chip" data-v="empati">Empati ve nezaket</button>
-            <button class="chip" data-v="cozum">Çözüm ve netlik</button>
-          </div>
-        </div>
-        <div id="result" class="result" style="display:none"></div>
-        <div class="mut">Not: Bu mini test eğlence amaçlıdır; öneriler öz-değerlendirme içindir.</div>
-      </div>
-    </section>
-
-    <section id="sec-orb" class="card">
-      <div class="orbTitle">🟣 Azura Orb</div>
-      <div class="orbBox"><canvas id="orb" width="360" height="360"></canvas></div>
+    <section class="card" id="kadin">
+      <div class="head">🌿 <strong>Doğa</strong> • Zarafet • Denge</div>
+      <canvas class="tile" id="pFemale"></canvas>
+      <a class="goBtn pink" href="female.html" data-nav>Git →</a>
     </section>
   </div>
 
-  <!-- Hakkımda -->
-  <section id="sec-about" class="card">
-    <div class="head">👋 Hakkımda (kısa)</div>
+  <!-- TEST -->
+  <section class="card" id="quiz">
+    <div class="head">🧩 Seni Tanımak İsteriz</div>
     <div class="body">
-      Azura; üretken, düzenli ve zarafeti önemseyen bir alan. Burada motivasyon, nezaket,
-      minimal tasarım ve bilimsel merak bir arada.
+      <ol style="padding-left:18px;margin:0">
+        <li style="margin-bottom:12px">
+          Zor bir hedef görünce ilk hissin?
+          <div class="answers" data-q="q1">
+            <button class="chip">Plan yaparım.</button>
+            <button class="chip">İlham alırım.</button>
+            <button class="chip">Adım adım bölerim.</button>
+          </div>
+        </li>
+        <li style="margin-bottom:12px">
+          Ekipte rolün?
+          <div class="answers" data-q="q2">
+            <button class="chip">Yön veren</button>
+            <button class="chip">Moral yükselten</button>
+            <button class="chip">Takip/Uygulama</button>
+          </div>
+        </li>
+        <li style="margin-bottom:12px">
+          Birine yardım ederken en çok neye dikkat edersin?
+          <div class="answers" data-q="q3">
+            <button class="chip">Empati & nezaket</button>
+            <button class="chip">Çözüm & netlik</button>
+          </div>
+        </li>
+      </ol>
+      <div class="mut">Not: Bu mini test eğlence amaçlıdır; çıkan öneriler öz-değerlendirme içindir.</div>
+      <div id="testResult" class="result" style="display:none"></div>
     </div>
   </section>
 
-  <!-- Neler yapılabilir -->
-  <section id="sec-ideas" class="card">
+  <!-- ORB -->
+  <section class="card" id="orb">
+    <div class="orbTitle">🫧 Azura Orb — Dinamik Küre</div>
+    <div class="orbBox"><canvas id="orbCanvas" width="560" height="340" aria-label="Azura Orb"></canvas></div>
+  </section>
+
+  <!-- HAKKIMDA -->
+  <section class="card" id="about">
+    <div class="head">👥 Hakkımda (kısa)</div>
+    <div class="body">
+      Azura; üretken, düzenli ve zarafeti önemseyen bir alan. Burada motivasyon, nezaket, minimal tasarım ve
+      bilimsel merak bir arada. Erkek ve kadın temaları, aynı değerin iki farklı yorumu: disiplin & denge.
+    </div>
+  </section>
+
+  <!-- NELER YAPILABİLİR -->
+  <section class="card" id="todo">
     <div class="head">✨ Neler Yapılabilir?</div>
     <ul class="list">
-      <li>📌 Haftalık hedef panosu + ilerleme çubuğu</li>
-      <li>📚 İçerik kütüphanesi (felsefe, notlar, teknik yazılar)</li>
+      <li>🚀 Haftalık hedef panosu ve ilerleme çubuğu</li>
+      <li>📚 İçerik kütüphanesi (felsefe, tip notları, teknik yazılar)</li>
       <li>⏱️ Günlük kısa yönlendirmeler ve alıştırmalar</li>
       <li>🎧 Odak için arka plan sesleri (okyanus / orman)</li>
       <li>🏁 “Mini challenge” görevleri (30dk sprint vb.)</li>
@@ -291,150 +283,209 @@
   </section>
 </div>
 
-<!-- Beyaz geçiş -->
+<!-- BEYAZ GEÇİŞ -->
 <div id="wipe"></div>
 
 <script>
-/* ====== Saat ====== */
-setInterval(()=>{ const d=new Date();
-  const z=n=>String(n).padStart(2,'0');
-  clock.textContent = `${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
+/* ================== Genel ================== */
+
+/* Saat */
+setInterval(()=>{ const d=new Date(); const z=n=>String(n).padStart(2,'0');
+  const el=document.getElementById('clock'); if(el) el.textContent = `${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
 },1000);
 
-/* ====== Tema ====== */
+/* Tema */
 (() => {
   const key='azura-theme';
   const set = t => document.documentElement.setAttribute('data-theme', t);
   const cur = localStorage.getItem(key) || 'light';
   set(cur);
-  mode.textContent = cur==='dark'?'☾':'✦';
-  mode.onclick = () => { const n = (document.documentElement.getAttribute('data-theme')==='dark')?'light':'dark';
-    set(n); localStorage.setItem(key,n); mode.textContent = n==='dark'?'☾':'✦'; };
+  const modeBtn=document.getElementById('mode'); if(modeBtn) modeBtn.textContent = cur==='dark'?'☾':'✦';
+  if(modeBtn) modeBtn.onclick = () => { const n = (document.documentElement.getAttribute('data-theme')==='dark')?'light':'dark';
+    set(n); localStorage.setItem(key,n); modeBtn.textContent = n==='dark'?'☾':'✦';
+  };
 })();
 
-/* ====== Drawer ====== */
+/* Drawer */
 (() => {
   const drawer = document.getElementById('drawer');
   const shade  = document.getElementById('drawerShade');
   const open = ()=>{drawer.classList.add('open'); shade.classList.add('show');};
   const close= ()=>{drawer.classList.remove('open'); shade.classList.remove('show');};
-  document.getElementById('drawerBtn').addEventListener('click',open);
-  shade.addEventListener('click',close);
+  document.getElementById('drawerBtn')?.addEventListener('click',open);
+  shade?.addEventListener('click',close);
   addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+  // Drawer içi anchorlar kapatsın:
+  drawer.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',close));
 })();
 
-/* ====== İçeride kaydırma + aktif vurgusu ====== */
-(() => {
-  const drawer = document.getElementById('drawer'); const shade=document.getElementById('drawerShade');
-  const close=()=>{drawer.classList.remove('open'); shade.classList.remove('show');};
-  document.querySelectorAll('a.nav-item[href^="#"]').forEach(a=>{
-    a.addEventListener('click',e=>{
-      e.preventDefault();
-      document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth',block:'start'});
-      close();
-    });
+/* Sayfa içi yumuşak kaydırma */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href').slice(1);
+    if(!id) return;
+    const el=document.getElementById(id);
+    if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); }
   });
-  const links=[...document.querySelectorAll('a.nav-item[href^="#"]')];
-  const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
-  const obs=new IntersectionObserver(es=>{
-    const v=es.filter(x=>x.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-    if(!v) return; links.forEach(x=>x.classList.remove('active')); map.get(v.target.id)?.classList.add('active');
-  },{rootMargin:'0px 0px -65% 0px',threshold:[0,.1,.25,.5,.75,1]});
-  ['sec-male','sec-female','sec-test','sec-orb','sec-about','sec-ideas']
-    .forEach(id=>{const el=document.getElementById(id); if(el) obs.observe(el);});
-})();
+});
 
-/* ====== Dış sayfa: beyaz geçiş ====== */
+/* Dış link / diğer sayfaya geçişlerde beyaz fade */
 (() => {
   const wipe=document.getElementById('wipe');
   document.querySelectorAll('[data-nav]').forEach(a=>{
-    a.addEventListener('click',e=>{
-      e.preventDefault(); wipe.classList.add('show');
-      setTimeout(()=>location.href=a.href,420);
-    });
+    a.addEventListener('click',e=>{ e.preventDefault(); wipe.classList.add('show'); setTimeout(()=>location.href=a.href,420); });
   });
 })();
 
-/* ====== Kart içi parçacık animasyonları ====== */
+/* ================== Splash (hızlı + yumuşak beyaz) ================== */
+(() => {
+  const INTRO_MS = 1400; // 1.4s
+  const WHITE_MS = 420;  // yumuşak beyaz
+  const splash = document.getElementById('splash');
+  const white  = document.getElementById('whiteOut');
+  setTimeout(()=>{ white.classList.add('show');
+    setTimeout(()=>{ splash?.remove(); white?.remove(); }, WHITE_MS);
+  }, INTRO_MS);
+})();
+
+/* ================== Kart içi parçacıklar ================== */
 function particles(canvas, hueBase){
-  const c=canvas, x=c.getContext('2d');
-  const fit=()=>{ c.width=c.clientWidth; c.height=c.clientHeight }; fit(); addEventListener('resize',fit,{passive:true});
-  const N=90, P=[];
-  for(let i=0;i<N;i++){ P.push({x:Math.random()*c.width,y:c.height*Math.random(),r:1+Math.random()*2,a:Math.random()*Math.PI*2,s:.6+Math.random()}); }
+  const c = canvas, x = c.getContext('2d');
+  function fit(){ c.width = c.clientWidth; c.height = c.clientHeight }
+  fit(); addEventListener('resize', fit, {passive:true});
+
+  const N = 90, P = [];
+  for(let i=0;i<N;i++){
+    P.push({x:Math.random()*c.width, y:Math.random()*c.height, r:1+Math.random()*2, a:Math.random()*Math.PI*2});
+  }
   (function loop(){
     x.clearRect(0,0,c.width,c.height);
     for(const p of P){
-      p.a+=0.01; p.x+=Math.cos(p.a)*.3; p.y-=p.s*.4; if(p.y<-10){p.y=c.height+10; p.x=Math.random()*c.width}
+      p.a += 0.01; p.x += Math.cos(p.a)*0.4; p.y -= 0.6;
+      if(p.y < -10){ p.y = c.height+10; p.x = Math.random()*c.width }
       x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
-      x.fillStyle=`hsla(${hueBase+Math.sin(p.a)*20},70%,${60+Math.sin(p.a*3)*10}%,.9)`; x.fill();
+      x.fillStyle = `hsla(${hueBase + ((p.x/c.width)*40|0)}, 85%, 70%, .9)`;
+      x.fill();
     }
     requestAnimationFrame(loop);
   })();
 }
-particles(document.getElementById('pMale'), 205);
-particles(document.getElementById('pFemale'), 330);
+particles(document.getElementById('pMale'), 200);   // mavi
+particles(document.getElementById('pFemale'), 330); // pembe
 
-/* ====== Mini Test (öneri metni) ====== */
+/* ================== Mini Test ================== */
 (() => {
-  const state={};
-  function evalResult(){
-    if(!state.q1||!state.q2||!state.q3) return;
-    const box=document.getElementById('result');
-    let txt=[];
-    if(state.q1==='plan'||state.q3==='cozum') txt.push('Analitik ve sistemli yaklaşımın güçlü. Net hedefler ve yol haritalarıyla hızlanırsın.');
-    if(state.q1==='ilham'||state.q2==='moral'||state.q3==='empati') txt.push('İlham ve nezaket tarafın belirgin. Takımı motive eder, kırılgan anlarda toparlarsın.');
-    if(state.q1==='bol'||state.q2==='takip') txt.push('Adım adım ilerlemeyi seviyorsun. Uygulama ve takibin sağlam; teslim tarihleri sende güvende.');
-    if(!txt.length) txt.push('Dengeli bir profil: plan, ilham ve uygulama arasında uyum kuruyorsun.');
-    box.style.display='block';
-    box.textContent = txt.join(' ');
-  }
-  document.querySelectorAll('#testArea .answers').forEach(set=>{
-    set.addEventListener('click',e=>{
-      const b=e.target.closest('.chip'); if(!b) return;
-      state[set.dataset.q]=b.dataset.v;
-      set.querySelectorAll('.chip').forEach(x=>x.style.outline='0'); b.style.outline='3px solid #8ec5ff';
-      evalResult();
+  const answers = {q1:null,q2:null,q3:null};
+  const resBox = document.getElementById('testResult');
+
+  document.querySelectorAll('.answers').forEach(group=>{
+    const q = group.dataset.q;
+    group.querySelectorAll('.chip').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        group.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        answers[q] = btn.textContent.trim();
+        showResult();
+      });
     });
   });
+
+  function showResult(){
+    if(!answers.q1 || !answers.q2 || !answers.q3) return;
+    const mapQ1 = {
+      'Plan yaparım.':'Strateji zihni güçlü; uzun yolu kısaltmayı iyi biliyorsun.',
+      'İlham alırım.':'Yaratıcılığın tetikleniyor; fikir kıvılcımı sende bol.',
+      'Adım adım bölerim.':'Sistem kurucusun; küçük adımlarla büyük hedefe yürürsün.'
+    };
+    const mapQ2 = {
+      'Yön veren':'Doğal liderlik var. Netlik ve sorumluluk sende.',
+      'Moral yükselten':'Takımı diri tutan enerji sensin.',
+      'Takip/Uygulama':'İşi bitiren elde somut sonuç getiren güç sensin.'
+    };
+    const mapQ3 = {
+      'Empati & nezaket':'İnsan odaklı yaklaşımın güven inşa eder.',
+      'Çözüm & netlik':'Belirsizliği dağıtıp rotayı gösteriyorsun.'
+    };
+    const tips = [];
+    tips.push(mapQ1[answers.q1]); tips.push(mapQ2[answers.q2]); tips.push(mapQ3[answers.q3]);
+
+    // hafif yönlendirme
+    const focus = (answers.q1.includes('Plan') ? 'disiplin' :
+                   answers.q1.includes('İlham') ? 'yaratıcılık' : 'süreç');
+    const rec = {
+      disiplin:'Haftalık mini hedef + günlük 20dk sessiz odak. Küçük istikrar büyük fark yaratır.',
+      yaratıcılık:'Her gün 10dk fikir notu. Kötü fikir yok; miktar kaliteyi doğurur.',
+      süreç:'“2 dakika kuralı”: 2dk süren işi erteleme, hemen yap. Akış hızlanır.'
+    }[focus];
+
+    resBox.style.display='block';
+    resBox.innerHTML = `🧭 <strong>Kısa yorum:</strong> ${tips.join(' • ')}<br><br>💡 <em>Bugün için öneri:</em> ${rec}`;
+  }
 })();
 
-/* ====== Azura Orb (dönen top) ====== */
+/* ================== Azura ORB (yumuşak renk alanı topu) ==================
+   Tel tel çizgiler yerine: çok katmanlı yumuşak gradientler + hareketli highlight.
+*/
 (() => {
-  const c=document.getElementById('orb'), x=c.getContext('2d');
-  const W=c.width, H=c.height, R=120;
-  let t=0;
-  (function loop(){
-    x.clearRect(0,0,W,H);
-    // iç parıltı
-    const g=x.createRadialGradient(W/2,H/2,10,W/2,H/2,160);
-    g.addColorStop(0,'rgba(90,200,255,.45)'); g.addColorStop(1,'rgba(90,200,255,0)');
-    x.fillStyle=g; x.fillRect(0,0,W,H);
+  const c = document.getElementById('orbCanvas');
+  const x = c.getContext('2d');
+  let t = 0;
 
-    // teller
-    for(let i=0;i<28;i++){
-      const a=i/28*Math.PI; x.beginPath();
-      for(let j=0;j<=120;j++){
-        const p=j/120*Math.PI*2;
-        const yy=Math.sin(p+t*.02)*12;
-        const r=R + Math.sin(p*2 + a*3 + t*.05)*6;
-        const X=W/2 + Math.cos(a)*(Math.cos(p)*r);
-        const Y=H/2 + Math.sin(a)*(Math.cos(p)*r) + Math.sin(p)*8 + yy;
-        j?x.lineTo(X,Y):x.moveTo(X,Y);
-      }
-      x.strokeStyle=`hsla(${260 + Math.sin(t*.02+i)*40},80%,70%,.5)`;
-      x.lineWidth=1.2; x.stroke();
+  function draw(){
+    const w=c.width, h=c.height;
+    x.clearRect(0,0,w,h);
+
+    // merkez ve yarıçap
+    const cx = w*0.5, cy = h*0.54, R = Math.min(w,h)*0.28;
+
+    // taban: yumuşak mavi-mor-pembe geçişli küre
+    const g = x.createRadialGradient(cx,cy, R*0.2, cx,cy, R*1.15);
+    g.addColorStop(0,   'rgba(120,200,255,0.95)');
+    g.addColorStop(0.45,'rgba(170,150,255,0.85)');
+    g.addColorStop(0.8, 'rgba(255,160,220,0.60)');
+    g.addColorStop(1,   'rgba(255,255,255,0)');
+    x.fillStyle=g; x.beginPath(); x.arc(cx,cy,R*1.15,0,Math.PI*2); x.fill();
+
+    // hafif gölge tabanı
+    const sg = x.createRadialGradient(cx,cy+R*0.95, 1, cx,cy+R*0.95, R*1.2);
+    sg.addColorStop(0,'rgba(0,0,0,0.22)');
+    sg.addColorStop(1,'rgba(0,0,0,0)');
+    x.fillStyle=sg; x.beginPath(); x.ellipse(cx, cy+R*0.95, R*0.9, R*0.25, 0, 0, Math.PI*2); x.fill();
+
+    // parlak highlight (hareketli)
+    const kx = cx + Math.cos(t/90)*R*0.35;
+    const ky = cy - Math.sin(t/120)*R*0.28;
+    const hg = x.createRadialGradient(kx,ky,2, kx,ky, R*0.6);
+    hg.addColorStop(0,'rgba(255,255,255,0.95)');
+    hg.addColorStop(0.25,'rgba(255,255,255,0.45)');
+    hg.addColorStop(1,'rgba(255,255,255,0)');
+    x.globalCompositeOperation='lighter';
+    x.fillStyle=hg; x.beginPath(); x.arc(kx,ky,R*0.7,0,Math.PI*2); x.fill();
+    x.globalCompositeOperation='source-over';
+
+    // aurora dalgaları (çok hafif)
+    for(let i=0;i<3;i++){
+      const phase = t/70 + i*2;
+      const ax = cx + Math.cos(phase)*R*0.15;
+      const ay = cy + Math.sin(phase)*R*0.08;
+      const ag = x.createRadialGradient(ax,ay,1, ax,ay, R*0.9);
+      const col = i===0?'rgba(120,200,255,.16)': i===1?'rgba(200,150,255,.14)':'rgba(255,170,210,.12)';
+      ag.addColorStop(0,col); ag.addColorStop(1,'rgba(255,255,255,0)');
+      x.fillStyle=ag; x.beginPath(); x.arc(ax,ay,R*0.95,0,Math.PI*2); x.fill();
     }
-    t+=1; requestAnimationFrame(loop);
-  })();
+
+    // dış hat—çok yumuşak parıltı
+    const og = x.createRadialGradient(cx,cy,R*0.9, cx,cy,R*1.25);
+    og.addColorStop(0,'rgba(255,255,255,0.25)');
+    og.addColorStop(1,'rgba(255,255,255,0)');
+    x.fillStyle=og; x.beginPath(); x.arc(cx,cy,R*1.25,0,Math.PI*2); x.fill();
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
 })();
 
-/* ====== Splash zamanlama (1 sn daha kısa & yumuşak geçiş) ====== */
-(() => {
-  const INTRO_MS=2400, WHITE_MS=380;
-  setTimeout(()=>{ whiteOut.classList.add('show');
-    setTimeout(()=>{ splash.remove(); whiteOut.remove(); }, WHITE_MS);
-  }, INTRO_MS);
-})();
 </script>
 </body>
-  </html>
+                                                                        </html>
