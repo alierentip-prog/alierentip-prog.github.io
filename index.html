@@ -1,164 +1,130 @@
 <!doctype html>
-<html lang="tr">
+<html lang="tr" data-theme="light">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AZURA</title>
-
-<!-- Vahşi başlık için font -->
-<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  /* ========= TEMALAR ========= */
+  /* ================== THEME TOKENS ================== */
   :root{
-    --bg:#ffffff;
-    --fg:#0b1220;
-    --mut:#6b7280;
-    --bar:#071a3a;              /* koyu mavi şerit */
-    --glass:rgba(5,10,25,.06);
-    --card-b:#e6ebf4;
-    --blue:#1e88ff;
-    --pink:#ff56b6;
-    --ring:rgba(0,0,0,.08);
+    --fg:#0b1020; --mut:#5b6a7d; --card:#ffffff; --bg:#f7fbff;
+    --nav:#0a2a45; --glass:rgba(255,255,255,.55); --b:rgba(0,0,0,.08);
+    --blue:#4db8ff; --pink:#ff9ad0; --grad1:#73d2ff; --grad2:#b0ffd4; --grad3:#ffd0ff;
+    --shadow:0 12px 40px rgba(11,16,32,.08);
   }
-  :root.dark{
-    --bg:#0a0f18;
-    --fg:#eaf1ff;
-    --mut:#a8b3c7;
-    --bar:#061024;
-    --glass:rgba(255,255,255,.06);
-    --card-b:#1a2233;
-    --ring:rgba(255,255,255,.08);
+  [data-theme="dark"]{
+    --fg:#eaf1ff; --mut:#a8b6c9; --card:#0d1522; --bg:#050b12;
+    --nav:#0b2740; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14);
+    --blue:#55c8ff; --pink:#ff9ad0; --grad1:#7fd8ff; --grad2:#9ff2b1; --grad3:#e8a7ff;
+    --shadow:0 12px 50px rgba(0,0,0,.35);
   }
 
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{
-    margin:0; background:var(--bg); color:var(--fg);
-    font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto;
-  }
+  body{margin:0; color:var(--fg); background:var(--bg); font:15px/1.55 Inter,system-ui; overflow-x:hidden}
 
-  /* ========= ÜST ŞERİT ========= */
-  .topbar{
-    position:sticky; top:0; z-index:20;
-    background:var(--bar);
-    color:#fff; height:64px;
-    display:grid; grid-template-columns:64px 1fr auto auto; align-items:center;
-    gap:10px; padding:0 10px; box-shadow:0 2px 14px rgba(0,0,0,.15);
+  /* ======= TOP BAR ======= */
+  .top{
+    position:sticky; top:0; z-index:50; height:56px;
+    background:var(--nav); color:#cfe8ff; display:grid; grid-template-columns:1fr auto 1fr;
+    align-items:center; padding:0 10px; box-shadow:var(--shadow);
   }
-  /* sol menü butonu */
-  .icon{
-    width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
-    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
-    cursor:pointer; user-select:none;
+  .left, .center, .right{display:flex; align-items:center; gap:8px}
+  .left{justify-content:flex-start}
+  .center{justify-content:center}
+  .right{justify-content:flex-end}
+  .badge{
+    border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06);
+    color:#eaf4ff; border-radius:10px; padding:6px 10px; font-weight:800; letter-spacing:.04em;
+    text-decoration:none; display:inline-flex; align-items:center; gap:6px
   }
-  /* saat */
-  .clock{
-    font-weight:800; letter-spacing:.06em; opacity:.9; padding-left:2px;
-  }
-  /* AZURA – vahşi, şekilli, renk geçişli */
   .brand{
-    text-align:center;
-    font-family:"Black Ops One", system-ui;
-    font-size:clamp(24px,4.8vw,40px);
-    letter-spacing:.22em;
-    background:linear-gradient(90deg,#8be6ff,#8bffd6,#fff8b0,#ffb3e6,#c7a0ff,#8be6ff);
-    background-size:300% 100%;
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    animation:azuraFlow 9s linear infinite;
-    text-shadow:0 0 20px rgba(255,255,255,.15);
+    font:900 22px/1 Cinzel,serif; letter-spacing:.35em; padding:4px 10px; border-radius:10px;
+    color:transparent; -webkit-background-clip:text; background-clip:text;
+    background-image:linear-gradient(90deg, #fff, var(--grad1), var(--grad2), var(--grad3), #fff);
+    background-size:300% 100%; animation:shift 9s linear infinite;
+    text-shadow:0 0 18px rgba(255,255,255,.25);
   }
-  @keyframes azuraFlow{
-    0%{background-position:0% 50%} 100%{background-position:200% 50%}
-  }
+  @keyframes shift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 
-  /* sağ taraf: giriş/üye ol + tema */
-  .actions{display:flex; gap:8px; align-items:center}
-  .btn{
-    appearance:none; border:1px solid rgba(255,255,255,.18);
-    background:rgba(255,255,255,.08); color:#fff;
-    padding:10px 14px; border-radius:12px; font-weight:900; text-decoration:none;
-    display:inline-flex; gap:8px; align-items:center;
-  }
-  .theme{
-    border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08);
-    color:#fff; padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:900;
-  }
+  /* ======= LAYOUT ======= */
+  main{max-width:1100px; margin:20px auto; padding:0 14px}
+  .grid{display:grid; gap:18px; grid-template-columns:1fr 1fr}
 
-  /* ========= SOL PANİL (çekmece) ========= */
-  .drawer{position:fixed; inset:0; z-index:30; display:none}
-  .drawer.show{display:block}
-  .shade{position:absolute; inset:0; background:rgba(0,0,0,.35); opacity:0; transition:opacity .25s ease}
-  .drawer.show .shade{opacity:1}
-  .panel{
-    position:absolute; left:0; top:0; bottom:0; width:min(420px,88%);
-    background:color-mix(in oklab, var(--bg) 80%, #000 20%);
-    border-right:1px solid var(--card-b);
-    transform:translateX(-100%); transition:transform .3s ease;
-    padding:18px; backdrop-filter:blur(10px);
-  }
-  .drawer.show .panel{transform:none}
-  .panel h3{margin:8px 0 12px; font:900 18px/1 Inter; letter-spacing:.08em}
-  .list{display:grid; gap:10px}
-  .list a{
-    display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--fg);
-    padding:10px 12px; border-radius:12px; background:var(--glass); border:1px solid var(--card-b);
-    font-weight:800;
-  }
-  .muted{color:var(--mut); font-size:14px; margin-top:8px}
-
-  /* ========= KAHRAMAN BÖLÜMÜ ========= */
-  .hero{
-    position:relative; padding:28px 18px 12px; max-width:1100px; margin:18px auto 0;
-  }
-  .grid{
-    display:grid; grid-template-columns:1fr 1fr; gap:18px;
-  }
   .card{
-    position:relative; overflow:hidden; border-radius:20px; padding:18px;
-    border:1px solid var(--card-b); background:var(--glass);
-    backdrop-filter:blur(8px); min-height:220px;
-    box-shadow:0 8px 30px rgba(0,0,0,.08);
-    transition:transform .2s ease, box-shadow .2s ease;
+    position:relative; overflow:hidden; border-radius:18px; border:1px solid var(--b);
+    background:var(--card); box-shadow:var(--shadow); min-height:220px;
   }
-  .card:hover{ transform:translateY(-3px); box-shadow:0 16px 50px rgba(0,0,0,.15)}
-  .tag{font-weight:900; letter-spacing:.06em; display:inline-flex; align-items:center; gap:8px}
-
-  /* Erkek — mavi dalga */
-  .male{
-    --accent: var(--blue);
-    background:
-      radial-gradient(1200px 400px at 10% 0%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 60%),
-      var(--glass);
-  }
-  /* Kadın — pembe akış */
-  .female{
-    --accent: var(--pink);
-    background:
-      radial-gradient(1200px 400px at 90% 0%, color-mix(in oklab, var(--accent) 20%, transparent), transparent 60%),
-      var(--glass);
-  }
-
-  .cta{
+  .card-head{display:flex; align-items:center; gap:6px; font-weight:900; color:var(--fg);
+    padding:12px 14px; letter-spacing:.02em}
+  .tag{opacity:.7}
+  .go{
     position:absolute; right:16px; bottom:16px;
-    font-weight:900; border-radius:12px; padding:10px 14px;
-    text-decoration:none; color:#fff; border:1px solid color-mix(in oklab, var(--accent) 70%, #fff 30%);
-    background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 70%, #fff 30%), color-mix(in oklab, var(--accent) 90%, #000 10%));
-    box-shadow:0 10px 30px color-mix(in oklab, var(--accent) 35%, #000 65%);
-    transition:transform .15s ease;
+    background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.35)); border:1px solid var(--b);
+    padding:10px 16px; border-radius:14px; font-weight:900; text-decoration:none; color:var(--fg);
+    box-shadow:0 10px 24px rgba(0,0,0,.12)
   }
-  .cta:active{ transform:scale(.98) }
+  .go:hover{transform:translateY(-1px)}
 
-  /* kart içi animasyon noktacıklar */
-  canvas.particles{position:absolute; inset:0; pointer-events:none; opacity:.9; mix-blend-mode:plus-lighter}
+  /* CANVAS overlay */
+  .tile{position:absolute; inset:0; width:100%; height:100%}
 
-  /* Halka dekor (çok ince) */
-  .hero:before{
-    content:""; position:absolute; left:-200px; top:-180px; width:420px; height:420px; border-radius:50%;
-    border:2px dashed var(--ring); filter:blur(.2px);
+  /* ======= FLOATING FAB QUIZ ======= */
+  .fab{
+    position:fixed; right:18px; bottom:22px; z-index:40;
+    background:linear-gradient(135deg, var(--blue), var(--pink)); color:#fff;
+    width:56px; height:56px; border-radius:50%; display:grid; place-items:center;
+    box-shadow:0 12px 30px rgba(0,0,0,.3); font-size:22px; cursor:pointer;
   }
 
-  /* Responsive */
+  /* ======= DRAWER (SOL PANEL) ======= */
+  .drawerShade{position:fixed; inset:0; background:rgba(0,0,0,.25); backdrop-filter:blur(3px);
+    opacity:0; pointer-events:none; transition:opacity .25s}
+  .drawer{position:fixed; inset:0 auto 0 0; width:min(360px,92%); background:var(--card); border-right:1px solid var(--b);
+    transform:translateX(-102%); transition:transform .28s; z-index:60; box-shadow:var(--shadow); display:flex; flex-direction:column}
+  .drawer header{display:flex; align-items:center; justify-content:space-between; padding:14px; border-bottom:1px solid var(--b)}
+  .drawer nav a{display:flex; gap:10px; align-items:center; padding:12px 14px; color:var(--fg); text-decoration:none; border-bottom:1px dashed var(--b)}
+  .drawer nav a b{font-weight:900}
+  .drawer.open{transform:none}
+  .drawerShade.show{opacity:1; pointer-events:auto}
+
+  /* ======= SPLASH PORTAL ======= */
+  #splash{position:fixed; inset:0; z-index:80; display:grid; place-items:center; background:var(--bg)}
+  .ring{
+    position:relative; width:min(72vmin,720px); aspect-ratio:1/1; border-radius:50%; display:grid; place-items:center;
+    animation:ringPulse 4.6s ease-in-out forwards;
+  }
+  .ring::before{
+    /* beyaz kalın halka + merkezde kontrast azalan doku */
+    content:""; position:absolute; inset:0; border-radius:50%;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,.10), rgba(255,255,255,.05) 60%, rgba(255,255,255,.10) 100%) padding-box,
+      conic-gradient(from 0turn, rgba(255,255,255,.0), rgba(255,255,255,.85) 10%, #fff 15%, rgba(255,255,255,.85) 20%, rgba(255,255,255,.0) 32%) border-box;
+    -webkit-mask: radial-gradient(farthest-side, #000 68%, transparent 69%);
+            mask: radial-gradient(farthest-side, #000 68%, transparent 69%);
+    filter:blur(.2px);
+  }
+  .logo{
+    font:900 clamp(38px,9.5vw,150px)/1 Cinzel,serif; letter-spacing:.22em; color:transparent;
+    -webkit-background-clip:text; background-clip:text;
+    background-image:linear-gradient(90deg,#fff,var(--grad1),var(--grad2),var(--grad3),#fff);
+    background-size:300% 100%; animation:shift 8s linear infinite, pop 4.6s ease-in-out both;
+    text-shadow:0 0 24px rgba(255,255,255,.25);
+  }
+  @keyframes pop{
+    0%{transform:scale(.86);opacity:0} 18%{opacity:1} 46%{transform:scale(1.08)} 72%{transform:scale(.98)} 100%{transform:scale(1.12)}
+  }
+  @keyframes ringPulse{
+    0%{transform:scale(.86);opacity:.96} 35%{transform:scale(1.08)} 60%{transform:scale(.96)}
+    100%{transform:scale(26);opacity:1}
+  }
+  #whiteOut{position:fixed; inset:0; background:#fff; z-index:90; opacity:0; transition:opacity .6s}
+
+  /* ======= LOGIN BUTTONS (HEADER RIGHT) ======= */
+  .top .right a{color:#eaf4ff}
+
+  /* ======= MEDIA ======= */
   @media (max-width:820px){
     .grid{grid-template-columns:1fr}
   }
@@ -166,203 +132,226 @@
 </head>
 <body>
 
-  <!-- ÜST ŞERİT -->
-  <header class="topbar">
-    <div id="menuBtn" class="icon" title="Panel">☰</div>
-    <div class="clock" id="clock">--:--</div>
-    <div class="brand">A Z U R A</div>
-    <div class="actions">
-      <button id="themeBtn" class="theme" title="Tema Değiştir">☀︎/☾</button>
-      <a class="btn" href="login.html">Giriş</a>
-      <a class="btn" href="login.html#signup">Üye Ol</a>
-    </div>
-  </header>
+  <!-- ===== Splash (Portal) ===== -->
+  <div id="splash" aria-label="Azura Intro">
+    <div class="ring"><div class="logo">AZURA</div></div>
+  </div>
+  <div id="whiteOut" aria-hidden="true"></div>
 
-  <!-- SOL PANEL -->
-  <aside id="drawer" class="drawer" aria-hidden="true">
-    <div id="shade" class="shade"></div>
-    <div class="panel" role="dialog" aria-label="AZURA Panel">
-      <h3>AZURA • Panel</h3>
-      <nav class="list">
-        <a href="#hakkimda">👤 Hakkımda</a>
-        <a href="#icerikler">🗂️ İçerikler</a>
-        <a href="#erkek">🌊 Erkek (Okyanus)</a>
-        <a href="#kadin">🌿 Kadın (Doğa)</a>
-        <a href="#kanallar">✨ Kanallar (Felsefe • Tıp)</a>
-        <a href="#yapilabilir">🧭 Neler yapılabilir?</a>
-      </nav>
-      <p class="muted">Paneli kapatmak için dışına dokun veya ESC.</p>
+  <!-- ===== Top bar ===== -->
+  <div class="top">
+    <div class="left">
+      <button id="menuBtn" class="badge" title="Menü">☰</button>
+      <span id="clock" class="badge">--:--:--</span>
     </div>
+    <div class="center">
+      <div class="brand">A Z U R A</div>
+    </div>
+    <div class="right">
+      <button id="themeBtn" class="badge" title="Tema">✨/🌙</button>
+      <a class="badge" href="login.html">Giriş</a>
+      <a class="badge" href="login.html#signup">Üye Ol</a>
+    </div>
+  </div>
+
+  <!-- ===== Drawer (Side Panel) ===== -->
+  <div id="drawerShade" class="drawerShade"></div>
+  <aside id="drawer" class="drawer" aria-label="Yan Menü">
+    <header>
+      <b>🔷 Azura Portal</b>
+      <button id="closeDrawer" class="badge">Kapat</button>
+    </header>
+    <nav>
+      <a href="#about">💡 <b>Azura Nedir?</b> — iki kutbun dengesi</a>
+      <a href="#ocean">🌊 <b>Erkek (Okyanus)</b> — karizma & disiplin</a>
+      <a href="#nature">🌷 <b>Kadın (Doğa)</b> — zarafet & denge</a>
+      <a href="#balance">⚖️ <b>Denge</b> — birlikte yükseliş</a>
+      <a href="#discover">🧭 <b>Kendini Keşfet</b> — mini test</a>
+      <a href="#roadmap">📜 <b>Yol Haritası</b> — kanallar & içerikler</a>
+    </nav>
   </aside>
 
-  <!-- ANA İÇERİK -->
-  <main class="hero">
-    <section class="grid">
-      <!-- ERKEK -->
-      <article class="card male" id="erkek">
-        <span class="tag">🌊 <span style="color:var(--blue)">Okyanus</span> • Karizma • Disiplin</span>
-        <canvas class="particles" id="pMale"></canvas>
-        <a class="cta" href="male.html">Git →</a>
-      </article>
+  <!-- ===== Content ===== -->
+  <main>
+    <div class="grid">
+      <!-- Male -->
+      <section class="card" id="maleCard">
+        <div class="card-head">🌊 <b>Okyanus</b> <span class="tag">• Karizma • Disiplin</span></div>
+        <canvas class="tile" id="cMale"></canvas>
+        <a class="go nav" href="male.html">Git →</a>
+      </section>
 
-      <!-- KADIN -->
-      <article class="card female" id="kadin">
-        <span class="tag">🌿 <span style="color:var(--pink)">Doğa</span> • Zarafet • Denge</span>
-        <canvas class="particles" id="pFem"></canvas>
-        <a class="cta" href="female.html">Git →</a>
-      </article>
-    </section>
+      <!-- Female -->
+      <section class="card" id="femaleCard">
+        <div class="card-head">🌿 <b>Doğa</b> <span class="tag">• Zarafet • Denge</span></div>
+        <canvas class="tile" id="cFemale"></canvas>
+        <a class="go nav" href="female.html">Git →</a>
+      </section>
+    </div>
   </main>
 
+  <!-- Quiz FAB -->
+  <button id="quizFab" class="fab" title="Hangi tarafa daha yakınsın?">❓</button>
+
+  <!-- Quiz Modal (lightweight) -->
+  <template id="quizTpl">
+    <style>
+      .shade{position:fixed; inset:0; background:rgba(0,0,0,.32); display:grid; place-items:center; z-index:70}
+      .box{width:min(640px,92%); background:var(--card); color:var(--fg); border:1px solid var(--b);
+           border-radius:16px; padding:16px; box-shadow:var(--shadow); max-height:85vh; overflow:auto}
+      .q{margin:10px 0 6px; font-weight:900}
+      .opts{display:grid; gap:8px}
+      .opts label{display:flex; gap:8px; align-items:center; padding:8px; border:1px solid var(--b); border-radius:10px; cursor:pointer}
+      .actions{display:flex; gap:12px; justify-content:flex-end; margin-top:10px}
+      .btn{padding:10px 14px; border-radius:10px; border:1px solid var(--b); background:var(--glass); font-weight:900}
+      .result{padding:10px; border-radius:10px; margin-top:8px; background:linear-gradient(90deg, rgba(77,184,255,.18), rgba(255,154,208,.18))}
+    </style>
+    <div class="shade">
+      <div class="box" role="dialog" aria-label="Azura Testi">
+        <h3>🔎 Hangi tarafa daha yakınsın?</h3>
+        <div id="qs"></div>
+        <div class="actions">
+          <button class="btn" data-act="close">Kapat</button>
+          <button class="btn" data-act="eval">Değerlendir</button>
+        </div>
+        <div class="result" id="rez"></div>
+      </div>
+    </div>
+  </template>
+
 <script>
-/* ===== Saat ===== */
-(function clock(){
-  const el = document.getElementById('clock');
-  const f = n=>String(n).padStart(2,'0');
-  function tick(){
-    const d = new Date();
-    el.textContent = `${f(d.getHours())}:${f(d.getMinutes())}:${f(d.getSeconds())}`;
-  }
-  tick(); setInterval(tick, 1000);
-})();
-
-/* ===== Tema (aydınlık/karanlık) ===== */
-(function theme(){
-  const root = document.documentElement;
-  const btn  = document.getElementById('themeBtn');
-  const saved = localStorage.getItem('azura-theme');
-  if(saved === 'dark') root.classList.add('dark');
-  btn.addEventListener('click', ()=>{
-    root.classList.toggle('dark');
-    localStorage.setItem('azura-theme', root.classList.contains('dark') ? 'dark' : 'light');
-  });
-})();
-
-/* ===== Sol Panel ===== */
+/* ================ INTRO: ring -> white ================== */
 (() => {
-  const drawer = document.getElementById('drawer');
-  const shade  = document.getElementById('shade');
-  const btn    = document.getElementById('menuBtn');
-  const open = ()=>drawer.classList.add('show');
-  const close= ()=>drawer.classList.remove('show');
-  btn.addEventListener('click', open);
-  shade.addEventListener('click', close);
+  const INTRO_MS = 4600, WHITE_MS = 600;
+  const splash = document.getElementById('splash');
+  const white  = document.getElementById('whiteOut');
+  setTimeout(()=>{ white.style.opacity = '1';
+    setTimeout(()=>{ splash.remove(); white.remove(); }, WHITE_MS);
+  }, INTRO_MS);
+})();
+
+/* ================ CLOCK ================== */
+(() => {
+  const el = document.getElementById('clock');
+  const tick = () => {
+    const d=new Date();
+    const pad=n=>String(n).padStart(2,'0');
+    el.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  };
+  tick(); setInterval(tick,1000);
+})();
+
+/* ================ THEME TOGGLE ================== */
+(() => {
+  const btn = document.getElementById('themeBtn');
+  const root = document.documentElement;
+  const saved = localStorage.getItem('azura-theme');
+  if(saved) root.setAttribute('data-theme', saved);
+  btn.onclick = () => {
+    const cur = root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme', cur); localStorage.setItem('azura-theme', cur);
+  };
+})();
+
+/* ================ DRAWER ================== */
+(() => {
+  const shade = document.getElementById('drawerShade');
+  const drawer= document.getElementById('drawer');
+  const open  = () => {drawer.classList.add('open'); shade.classList.add('show');};
+  const close = () => {drawer.classList.remove('open'); shade.classList.remove('show');};
+  document.getElementById('menuBtn').onclick = open;
+  document.getElementById('closeDrawer').onclick = close;
+  shade.onclick = close;
   addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
 })();
 
-/* ===== Kart içi animasyon (mavi/pembe parçacık) ===== */
+/* ================ CARD PARTICLES ================== */
 function particles(canvas, hueBase){
-  const c = canvas, x = c.getContext('2d');
-  function fit(){ c.width = c.clientWidth; c.height = c.clientHeight } fit();
+  const c=canvas, x=c.getContext('2d');
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight } fit();
   addEventListener('resize', fit, {passive:true});
 
-  const N = 90, P = [];
+  const N=90, P=[];
   for(let i=0;i<N;i++){
-    P.push({x:Math.random()*c.width, y:Math.random()*c.height, r:1+Math.random()*2.2, v:.3+.7*Math.random(), a:Math.random()*Math.PI*2});
+    P.push({x:Math.random()*c.width, y:Math.random()*c.height, a:Math.random()*6.28, r:1+Math.random()*2});
   }
   (function loop(){
     x.clearRect(0,0,c.width,c.height);
     for(const p of P){
-      p.a += 0.01; p.x += Math.cos(p.a)*0.3; p.y -= p.v;
-      if(p.y < -10){ p.y = c.height+10; p.x = Math.random()*c.width; }
+      p.a += 0.01; p.x += Math.cos(p.a)*.35; p.y += .6;
+      if(p.y > c.height+10){ p.y = -10; p.x = Math.random()*c.width }
       x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
-      x.fillStyle = `hsla(${hueBase + (p.x/c.width)*30}, 90%, 70%, .9)`;
+      x.fillStyle = `hsla(${hueBase + (p.x/c.width)*30}, 75%, 65%, .9)`;
       x.fill();
     }
     requestAnimationFrame(loop);
   })();
 }
-particles(document.getElementById('pMale'), 210); // mavi
-particles(document.getElementById('pFem'), 320);  // pembe
+particles(document.getElementById('cMale'), 205);   // mavi
+particles(document.getElementById('cFemale'), 330); // pembe
 
+/* ================ NAV fade-to-white ================== */
+(() => {
+  for(const a of document.querySelectorAll('a.nav')){
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      const w = document.createElement('div');
+      w.style.cssText='position:fixed;inset:0;background:#fff;z-index:99;opacity:0;transition:opacity .45s';
+      document.body.appendChild(w); requestAnimationFrame(()=> w.style.opacity='1');
+      setTimeout(()=> location.href=a.href, 450);
+    });
+  }
+})();
+
+/* ================ MINI QUIZ ================== */
+(() => {
+  const fab = document.getElementById('quizFab');
+  const tpl = document.getElementById('quizTpl').content;
+
+  const QUESTIONS = [
+    {q:"Zor bir görevde ilk refleksin?", a:["Plan yapıp adım adım ilerlerim (O)","Önce hissiyatı dinler, sonra hareket ederim (D)"]},
+    {q:"Boş gün tercihin?", a:["Yalnızlık + derin odak (O)","Sevdiklerimle doğada/şehirde akış (D)"]},
+    {q:"İletişim tarzın?", a:["Net, kısa, doğrudan (O)","Yumuşak, kapsayıcı, hisli (D)"]},
+    {q:"Karar anında baskın kriterin?", a:["Mantık & verim (O)","Uyum & sezgi (D)"]},
+    {q:"Rutin bozulduğunda?", a:["Hemen yeni çerçeve koyarım (O)","Durumu hisseder, esnek kalırım (D)"]},
+  ];
+
+  fab.onclick = () => {
+    const frag = document.importNode(tpl, true);
+    const shade = frag.querySelector('.shade');
+    const box   = frag.querySelector('.box');
+    const qs    = frag.querySelector('#qs');
+    const rez   = frag.querySelector('#rez');
+
+    QUESTIONS.forEach((it,i)=>{
+      const wrap = document.createElement('div');
+      wrap.innerHTML = `<div class="q">${i+1}. ${it.q}</div>`;
+      const opts = document.createElement('div'); opts.className='opts';
+      it.a.forEach((opt,j)=>{
+        const id = `q${i}_${j}`;
+        const lab = document.createElement('label');
+        lab.innerHTML = `<input type="radio" name="q${i}" id="${id}" value="${/O/.test(opt)?'O':'D'}"/> ${opt}`;
+        opts.appendChild(lab);
+      });
+      wrap.appendChild(opts); qs.appendChild(wrap);
+    });
+
+    box.querySelector('[data-act="close"]').onclick = ()=> shade.remove();
+    box.querySelector('[data-act="eval"]').onclick = ()=>{
+      let o=0,d=0, all=true;
+      QUESTIONS.forEach((_,i)=>{
+        const sel = box.querySelector(`input[name="q${i}"]:checked`);
+        if(!sel) all=false; else (sel.value==='O'?o++:d++);
+      });
+      if(!all){ rez.textContent="Lütfen tüm soruları işaretle ✨"; return; }
+      const side = o>d? 'Okyanus (Erkek)':'Doğa (Kadın)';
+      const href = o>d? 'male.html' : 'female.html';
+      rez.innerHTML = `Baskın yönün: <b>${side}</b>.  <a class="btn" href="${href}">Oraya git →</a>`;
+    };
+
+    document.body.appendChild(frag);
+  };
+})();
 </script>
-<!-- ==== AZURA INTRO (drop-in) ==== -->
-<div id="azIntro" aria-hidden="true">
-  <div class="ring"><span class="logo">AZURA</span></div>
-  <button class="skip" type="button">Geç</button>
-  <div class="whiteout"></div>
-</div>
-
-<style>
-  #azIntro{position:fixed;inset:0;background:#0a0a0a;display:grid;place-items:center;z-index:9999}
-  #azIntro .ring{position:relative;width:min(78vmin,720px);aspect-ratio:1/1;border-radius:50%;
-    display:grid;place-items:center;animation:ringPulse 3.7s ease-in-out forwards;filter:blur(.15px)}
-  /* dış beyaz kalın halka (merkeze doğru kontrast azalan) */
-  #azIntro .ring::before{content:"";position:absolute;inset:0;border-radius:50%;
-    background:
-      radial-gradient(circle at 50% 50%,
-        rgba(255,255,255,.08) 0%,
-        rgba(255,255,255,.06) 60%,
-        rgba(255,255,255,.05) 80%,
-        rgba(255,255,255,.08) 100%) padding-box,
-      radial-gradient(circle at 50% 50%,
-        transparent 66%,
-        rgba(255,255,255,.4) 70%,
-        rgba(255,255,255,1) 76%,
-        rgba(255,255,255,.4) 86%,
-        rgba(255,255,255,.12) 92%,
-        rgba(255,255,255,.06) 100%) border-box;
-    -webkit-mask:radial-gradient(farthest-side,#000 66%,transparent 67%);
-            mask:radial-gradient(farthest-side,#000 66%,transparent 67%);
-  }
-  /* yazı: vahşi/fütüristik metalik gradient + yansıma */
-  #azIntro .logo{font:900 clamp(36px,9.5vw,150px)/1 "Orbitron",system-ui;
-    letter-spacing:.20em;
-    background:linear-gradient(90deg,#fff,#b8e7ff,#7cd2ff,#8fe1c7,#a5a3ff,#ff9ddb,#fff);
-    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
-    text-shadow:0 0 24px rgba(255,255,255,.35);
-    animation:hueShift 6s linear infinite, popScale 3.7s ease-in-out both}
-  /* skip butonu */
-  #azIntro .skip{position:fixed;right:14px;bottom:14px;padding:10px 14px;border-radius:12px;
-    border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-weight:800}
-  /* tam beyaz örtü (en sonda kısa süre) */
-  #azIntro .whiteout{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .6s ease}
-  #azIntro.flash .whiteout{opacity:1}
-
-  @keyframes hueShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-  @keyframes popScale{
-    0%{transform:scale(.86);opacity:0}
-    12%{opacity:1}
-    45%{transform:scale(1.08)}
-    70%{transform:scale(.96)}
-    100%{transform:scale(1.08)}
-  }
-  @keyframes ringPulse{
-    0%{transform:scale(.86);opacity:.92}
-    35%{transform:scale(1.12);opacity:1}
-    60%{transform:scale(.94);opacity:.98}
-    100%{transform:scale(26);opacity:1} /* ekranı kapla */
-  }
-  @media (prefers-reduced-motion:reduce){
-    #azIntro .ring{animation:none;transform:scale(1)} #azIntro .logo{animation:none}
-  }
-</style>
-
-<script>
-  (()=>{
-    const intro = document.getElementById('azIntro');
-    const white = intro.querySelector('.whiteout');
-    const skip  = intro.querySelector('.skip');
-    const INTRO_MS = 3700;   // halka + yazı
-    const FLASH_MS = 600;    // tam beyaz kalma
-
-    function endIntro(){
-      intro.classList.add('flash');
-      setTimeout(()=>{ intro.remove(); }, FLASH_MS);
-    }
-
-    // otomatik bitiş
-    setTimeout(endIntro, INTRO_MS);
-
-    // tıklayınca/skip ile atla
-    intro.addEventListener('click', e=>{
-      if(e.target===skip) { endIntro(); }
-    }, {passive:true});
-
-    // ESC ile de atlat
-    addEventListener('keydown',e=>{ if(e.key==='Escape') endIntro(); });
-  })();
-</script>
-<!-- ==== /AZURA INTRO ==== -->
 </body>
   </html>
