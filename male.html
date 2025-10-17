@@ -8,13 +8,17 @@
 <style>
   :root{ --fg:#eaf4ff; --b:rgba(255,255,255,.16); --glass:rgba(255,255,255,.06); --bg:#07131b }
   *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.08), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui}
+  body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.08), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui; overflow-x:hidden}
   header{position:sticky; top:0; z-index:10; background:rgba(0,0,0,.35); backdrop-filter:blur(6px); border-bottom:1px solid rgba(255,255,255,.12)}
   nav{display:flex; gap:8px; padding:10px; justify-content:center}
   nav a{border:1px solid var(--b); background:var(--glass); color:#fff; text-decoration:none; font-weight:800; padding:8px 12px; border-radius:12px}
-  main{max-width:960px; margin:16px auto; padding:0 12px; display:grid; gap:12px}
+  main{max-width:980px; margin:16px auto; padding:0 12px; display:grid; gap:12px}
   .card{border:1px solid var(--b); background:rgba(8,14,20,.75); border-radius:18px; padding:16px}
   canvas.sea{position:relative; width:100%; height:260px; border-radius:14px; background:rgba(0,0,0,.18)}
+  /* kayan metin alanı */
+  #scrollBox{position:relative; height:260px; overflow:hidden; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04)}
+  #scrollInner{position:absolute; left:0; right:0; transform:translateY(100%); padding:14px 16px; line-height:1.9}
+  #scrollInner p{margin:0 0 18px}
 </style>
 </head>
 <body>
@@ -22,7 +26,7 @@
 <header>
   <nav>
     <a href="#intro">Giriş</a>
-    <a href="#hikaye">Metin</a>
+    <a href="#kayanyazi">Kayan Yazı</a>
     <a href="#menu">Menü</a>
     <a href="index.html">← Ana Menü</a>
   </nav>
@@ -35,20 +39,23 @@
     <canvas id="sea" class="sea"></canvas>
   </section>
 
-  <section id="hikaye" class="card">
+  <section id="kayanyazi" class="card">
     <h2>Motivasyon • Nezaket • Disiplin</h2>
-    <p>Güç; en çok sessizlikte anlaşılır. Gürültü çekildiğinde geriye kalan: çalışma düzeni, söze sadakat ve ölçülü bir kibarlıktır.</p>
-    <ul>
-      <li>🧭 <b>Kibarlık</b> ilk temastır; kararlılık ise yolu yürütür.</li>
-      <li>🔧 <b>Disiplin</b> lüks değil; özgürlüğün bedelidir.</li>
-      <li>🌊 <b>Okyanus</b> gibi: dalga gelir-gider; sen akıntını korursun.</li>
-    </ul>
+    <div id="scrollBox">
+      <div id="scrollInner">
+        <p><b>Güç</b>; en çok sessizlikte anlaşılır. Gürültü çekildiğinde geriye kalan: çalışma düzeni, söze sadakat ve ölçülü bir kibarlıktır.</p>
+        <p>Kararlılık; <b>her gün küçük bir adım</b> daha atmanın sonucudur. Planı sade tut, uygulamayı berrak yap; gerisi kendiliğinden hızlanır.</p>
+        <p><b>Kibarlık</b> ilk temastır; kararlılık ise yolu yürütür. İnsanlar yol arkadaşını hatırlar; işler de ritme aşık olur.</p>
+        <p>Disiplin lüks değil; <b>özgürlüğün bedeli</b>. Zihnini toplarsın, zaman sana yer açar.</p>
+        <p>Okyanus gibi düşün: dalga gelir-gider, <b>akıntın sabit</b> kalır.</p>
+      </div>
+    </div>
   </section>
 
   <section id="menu" class="card">
     <h2>Erkek Menüsü</h2>
     <div class="actions">
-      <a href="#hikaye">Metne in</a>
+      <a href="#kayanyazi">Metne in</a>
       <a href="index.html">← Ana Menü</a>
     </div>
   </section>
@@ -79,6 +86,28 @@ document.addEventListener('click', (e)=>{
       x.globalAlpha=.28; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill(); }
     t++; requestAnimationFrame(loop);
   })();
+})();
+
+/* kayan yazı (otomatik yukarı kayar) */
+(() => {
+  const box = document.getElementById('scrollBox');
+  const inner= document.getElementById('scrollInner');
+  let start, total;
+  function run(){
+    const vh = box.clientHeight;
+    const ih = inner.scrollHeight;
+    total = ih + vh + 40;
+    start = performance.now();
+    const speed = 48; // px/sn
+    const loop = (now) => {
+      const dt = (now-start)/1000;
+      const dy = Math.min(total, dt*speed);
+      inner.style.transform = `translateY(${vh - dy}px)`;
+      if (dy < total) requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+  addEventListener('load', run, {once:true});
 })();
 </script>
 </body>
