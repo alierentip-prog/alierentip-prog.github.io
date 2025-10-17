@@ -20,6 +20,67 @@
   /* çıkışta sönerek beyaz */
   #leave{position:fixed; inset:0; background:#ffffff; z-index:5; opacity:0; transform:scale(1.05); transition:opacity .45s ease, transform .45s ease}
   #leave.show{opacity:1; transform:scale(1)}
+
+  /* ========= MANİFESTO OVERLAY ========= */
+  #manWrap, #manWrap .viewport { position:fixed; inset:0 }
+  #manWrap{
+    z-index:2; /* sheet (z:1) üstünde, header (z:3) altında olması için barı ayrıca veriyoruz */
+    background: linear-gradient(180deg, #061018 0%, #07131b 100%);
+    display:grid; grid-template-rows:auto 1fr auto;
+  }
+  /* üst bar */
+  .man-bar{
+    position:relative; z-index:4;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));
+    color:#dff5ff; font-weight:900; letter-spacing:.16em;
+    font-size:clamp(18px, 3.6vw, 42px);
+    text-shadow:0 0 24px rgba(80,200,255,.45);
+    font-family:Cinzel,serif;
+  }
+  .man-skip{
+    appearance:none; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.07);
+    color:#fff; border-radius:12px; padding:8px 12px; font-weight:800; cursor:pointer; backdrop-filter:blur(6px)
+  }
+
+  .viewport{ overflow:hidden }
+  #manInner{
+    position:absolute; left:0; right:0;
+    transform:translateY(100%); /* alttan başla */
+    padding:0 5vw 10vh;
+    color:#eaf4ff;
+    text-align:center;
+    font-family:"Playfair Display","Cinzel","Times New Roman",serif;
+    font-size:clamp(28px,9vw,120px);      /* 🔥 normal paragraflar (dev) */
+    line-height:1.3;
+    letter-spacing:.05em;
+    text-shadow:
+      0 0 45px rgba(120,200,255,.55),
+      0 0 120px rgba(80,180,255,.35),
+      0 0 240px rgba(100,200,255,.25);
+  }
+  #manInner p{ margin:0 0 clamp(24px,5vw,80px); text-wrap:pretty }
+  #manInner p.lead{
+    font-size:clamp(36px,12vw,160px);     /* 💥 giriş/çıkış cümleleri daha büyük */
+    font-weight:900;
+    color:#ffffff;
+    letter-spacing:.08em;
+    text-shadow:
+      0 0 80px rgba(160,220,255,.7),
+      0 0 180px rgba(90,180,255,.5),
+      0 0 320px rgba(60,160,255,.35);
+  }
+  /* üst/alt fade mask */
+  .viewport::before, .viewport::after{
+    content:""; position:absolute; left:0; right:0; height:clamp(120px,20vh,240px); pointer-events:none; z-index:1
+  }
+  .viewport::before{ top:0; background:linear-gradient(180deg, #061018, rgba(6,16,24,0)) }
+  .viewport::after{ bottom:0; background:linear-gradient(0deg, #07131b, rgba(7,19,27,0)) }
+
+  /* kapanış fade */
+  .fade-out{ animation: mf .6s ease forwards }
+  @keyframes mf{ to{ opacity:0; visibility:hidden } }
 </style>
 </head>
 <body>
@@ -35,8 +96,38 @@
     <p>Serin mavilikte hava kabarcıkları yükselir; derinlerde metalik mavi çizgiler akıp gider. Arkanı yasla; akışın tadını çıkar.</p>
   </section>
 
+  <!-- ======== ERKEK MANİFESTOSU (alttan-yukarı dev yazılar) ======== -->
+  <section id="manWrap" aria-label="Erkeklik Manifestosu">
+    <div class="man-bar">
+      <div>ERKEK OLMAK • DURU GÜÇ, SESSİZ ZARAFET</div>
+      <button class="man-skip" id="manSkip">Menüye geç</button>
+    </div>
+    <div class="viewport">
+      <div id="manInner">
+        <p class="lead">Erkek olmak; sesi yükseltmeden de var olabilmek, kudreti nezaketle taşımaktır. Sessizliğin içindeki gücü, yüreğin içindeki sabrı bilmektir.</p>
+
+        <p>Gerçek güç; bağırarak değil, anlayarak kendini belli eder. Zor zamanlarda sakin kalabilmek, öfke yerine çözüm aramak, kelimeleri kalkan değil köprü yapmak, olgunluğun en sade hâlidir.</p>
+
+        <p>Kibarlık zayıflık değil, ustalıktır. Kapıyı tutmak bir alışkanlık, teşekkür etmek bir erdem, özür dilemek bir büyüklüktür. Çünkü erkeklik; elindekini göstermek değil, kalbindekini taşımaktır.</p>
+
+        <p>Bir toplumun temeli, saygının renginde örülür. Kadına, dosta, insana saygı — karakterin asıl ölçüsüdür. Kaba olmak kolaydır, zarif olmak irade ister. Güç, kontrol edebildiğin duygulardır.</p>
+
+        <p>Erkek; kardeşinin arkasında duran, dostuna omuz olan, düşeni kaldıran insandır. Duruşu tehdit değil, güven verir. Sözü sert değil, nettir.</p>
+
+        <p>Gerçek erkek; çalışkandır, üretkendir, ailesinin yükünü taşırken yüzüne huzur yansır. Terini gizlemez ama kimseye yük de olmaz. Kendini geliştirir, yeniler, affetmeyi bilir.</p>
+
+        <p>Şunu unutma: “Kabalık kısa vadeli bir güçtür; nezaket kalıcı bir asalettir.”</p>
+
+        <p class="lead">Erkeklik, yıkmak değil; inşa etmektir. Koruyan, öğreten, yönlendiren ve anlayan olmaktır. Çünkü gerçek olgunluk, gücüyle değil, vicdanıyla ölçülür.</p>
+      </div>
+    </div>
+    <div class="hint" style="text-align:center;color:#cfeeff;opacity:.75;padding:10px;border-top:1px solid rgba(255,255,255,.08)">
+      ⏳ Metin bittiğinde otomatik kapanacak • İstersen “Menüye geç” ile atla
+    </div>
+  </section>
+
 <script>
-  // baloncuk + çizgiler
+  // baloncuk + çizgiler (arka sahne)
   (()=>{ const c=sea, x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
     const B=220,b=[]; for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
     let t=0; (function loop(){
@@ -57,6 +148,40 @@
     document.querySelector('.back').addEventListener('click',e=>{
       e.preventDefault(); leave.classList.add('show'); setTimeout(()=>location.href='index.html', 420);
     });
+  })();
+
+  // ===== Erkek Manifestosu: otomatik kaydır, bitince kapan =====
+  (()=>{
+    const wrap = document.getElementById('manWrap');
+    const inner = document.getElementById('manInner');
+    const viewport = document.querySelector('#manWrap .viewport');
+    const skip = document.getElementById('manSkip');
+    let rafId, start, totalDist;
+
+    function startScroll(){
+      const vh = viewport.clientHeight;
+      const ih = inner.scrollHeight;
+      totalDist = ih + vh + 40; // tamamen yukarıdan çıkana kadar
+      start = performance.now();
+      loop();
+    }
+    function loop(now){
+      const t = now ?? performance.now();
+      const elapsed = t - start;
+      const speed = 42; // px/sn – istersen 36-60 arası ayarlayabilirsin
+      const dy = Math.min(totalDist, (elapsed/1000)*speed);
+      inner.style.transform = `translateY(${viewport.clientHeight - dy}px)`;
+      if(dy >= totalDist){ finish(); }
+      else { rafId = requestAnimationFrame(loop); }
+    }
+    function finish(){
+      cancelAnimationFrame(rafId);
+      wrap.classList.add('fade-out');
+      setTimeout(()=> wrap.remove(), 620);
+    }
+    skip.addEventListener('click', finish);
+    // başlat
+    startScroll();
   })();
 </script>
 </body>
