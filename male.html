@@ -6,113 +6,76 @@
 <title>AZURA • Okyanus</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --fg:#eaf4ff; --mut:#a8c7e7; --ink:#061621;
-    --b:rgba(255,255,255,.18); --glass:rgba(8,14,20,.5);
-    --accent:#5cc3ff; --accent2:#9fe3ff; --chip:#103046;
-    --bg:#07131b;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;color:var(--fg);background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.08), transparent 60%),var(--bg);font:16px/1.65 Inter,system-ui;overflow-x:hidden}
-  header{position:fixed;inset:12px 12px auto auto;z-index:3}
-  a.btn{padding:10px 14px;border-radius:12px;border:1px solid var(--b);background:rgba(255,255,255,.06);color:var(--fg);text-decoration:none;font-weight:900}
-  h1{position:fixed;left:50%;transform:translateX(-50%);top:22px;margin:0;font-family:Cinzel,serif;letter-spacing:.16em}
-  canvas{position:fixed;inset:0;z-index:0}
-
-  /* sayfa ızgarası */
-  .wrap{position:relative;z-index:1;max-width:1100px;margin:120px auto 80px;padding:0 16px;display:grid;gap:18px}
-  .row{display:grid;grid-template-columns:1fr;gap:18px}
-  @media(min-width:860px){ .row{grid-template-columns:1fr 1fr} }
-
-  /* BÜYÜK RENKLİ YAZI KARELERİ */
-  .block{
-    padding:22px 22px 20px;border-radius:22px;border:1px solid var(--b);
-    background:linear-gradient(180deg, rgba(16,48,70,.65), rgba(16,48,70,.35));
-    backdrop-filter: blur(10px); box-shadow:0 12px 40px rgba(0,0,0,.35);
-  }
-  .block h2{
-    margin:0 0 8px; font:900 clamp(18px,3.6vw,28px)/1.15 Cinzel,serif; letter-spacing:.12em;
-    background:linear-gradient(90deg,#bfe8ff,#5cc3ff,#9fe3ff); -webkit-background-clip:text; color:transparent;
-    text-shadow:0 0 14px rgba(140,220,255,.25)
-  }
-  .block p{margin:0 0 10px;color:var(--fg)}
-  .chip{display:inline-block;margin:.25rem .35rem .1rem 0;padding:.42rem .66rem;border-radius:999px;font-weight:800;font-size:.9rem;background:rgba(255,255,255,.08);border:1px solid var(--b);color:#d7eeff}
-  .block.blue{background:linear-gradient(180deg, rgba(16,48,70,.72), rgba(16,48,70,.38))}
-  .block.cyan{background:linear-gradient(180deg, rgba(10,60,80,.65), rgba(10,60,80,.32))}
-  .block.deeper{background:linear-gradient(180deg, rgba(7,30,45,.7), rgba(7,30,45,.34))}
-
-  /* menü kartı */
-  .menu{display:flex;flex-wrap:wrap;gap:10px}
-  .menu a{border:1px solid var(--b);background:rgba(255,255,255,.06);color:var(--fg);text-decoration:none;font-weight:900;border-radius:12px;padding:10px 14px}
-
-  /* geçiş sönme (beyaz) */
-  #wipe{position:fixed;inset:0;background:#ffffff;z-index:10;pointer-events:none;opacity:0;transform:scale(1.05);transition:opacity .45s ease,transform .45s ease}
-  #wipe.show{opacity:1;transform:scale(1)}
+:root{ --fg:#eaf4ff; --bg:#07131b; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14) }
+*{box-sizing:border-box} html,body{height:100%} body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.08), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui; overflow:hidden}
+header{position:fixed; inset:12px 12px auto auto; z-index:4}
+a.btn{padding:10px 14px; border-radius:12px; border:1px solid var(--b); background:var(--glass); color:var(--fg); text-decoration:none; font-weight:900}
+h1{position:fixed; left:50%; transform:translateX(-50%); top:24px; margin:0; font-family:Cinzel,serif; letter-spacing:.16em}
+canvas{position:fixed; inset:0; z-index:0}
+/* ---------- MANİFESTO OVERLAY (alttan yukarı) ---------- */
+#story{position:fixed; inset:0; display:grid; grid-template-rows:auto 1fr auto; z-index:3; background:linear-gradient(180deg, rgba(10,24,38,.96), rgba(7,19,27,.94))}
+#story .bar{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.08)}
+#story h2{margin:0; font:900 18px/1 Cinzel,serif; letter-spacing:.16em}
+#story .skip{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff; border-radius:12px; padding:8px 12px; font-weight:900}
+#viewport{position:relative; overflow:hidden}
+#inner{position:absolute; left:0; right:0; transform:translateY(100%); padding:16px 18px 60px; font-size:20px; line-height:1.9; text-shadow:0 0 10px rgba(0,0,0,.3)}
+#inner p{margin:0 0 22px}
+#inner p.lead{font-size:22px; font-weight:900; color:#aee3ff}
+/* ---------- Ana içerik kartı ---------- */
+.sheet{position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(920px,92%); border:1px solid var(--b); background:rgba(8,14,20,.75); border-radius:20px; padding:22px; z-index:1; backdrop-filter: blur(8px)}
+/* ---------- Giriş sönerek beyaz ---------- */
+#enter{position:fixed; inset:0; background:#ffffff; z-index:5; opacity:1; transform:scale(1.05); animation:fadeIn .55s ease forwards}
+@keyframes fadeIn{to{opacity:0; transform:scale(1)}}
 </style>
 </head>
 <body>
-  <div id="wipe"></div>
-  <header><a class="btn back" href="index.html">← Ana Menü</a></header>
-  <h1>OKYANUS</h1>
-  <canvas id="sea"></canvas>
+<div id="enter"></div>
+<header><a class="btn" href="index.html">← Ana Menü</a></header>
+<h1>OKYANUS</h1>
+<canvas id="sea"></canvas>
 
-  <main class="wrap">
-    <section class="row">
-      <article class="block blue">
-        <h2>⚙️ Karizma & Disiplin</h2>
-        <p>Otorite sessiz sakin kurulur: söz kısa, adım nettir. Karizma; tavırdaki tutarlılık ve nezaketle gelir. Disiplin ise hedefin etrafına kurulan saygı çemberidir.</p>
-        <span class="chip">Odak</span><span class="chip">Devamlılık</span><span class="chip">Söz & Eylem birliği</span>
-      </article>
-      <article class="block cyan">
-        <h2>🎯 Motivasyon</h2>
-        <p>Zor hedefler; parçalandığında kolaylaşır. “Bugün sadece 25 dakika” kuralı, ertelemeyi kırar. Bittiğinde küçük bir ödül ver: kahve, 10 dk. oyun, kısa yürüyüş.</p>
-        <span class="chip">25 dk sprint</span><span class="chip">Küçük ödül</span><span class="chip">Takvim çentiği</span>
-      </article>
-    </section>
+<!-- MANİFESTO -->
+<section id="story" aria-label="Motivasyon">
+  <div class="bar">
+    <h2>OKYANUS • KARİZMA • DİSİPLİN</h2>
+    <button id="skip" class="skip">Geç</button>
+  </div>
+  <div id="viewport"><div id="inner">
+    <p class="lead">Derin sular sakindir; gücünü göstermez, gerektiğinde hatırlatır.</p>
+    <p>Hedef koyduğunda, önce nefesini ayarlarsın. Panik yok; ritim var. Disiplin dalga gibi: sürekli, sabırlı, yıkıcı değil; şekil verici.</p>
+    <p>Karizma, en yüksek ses olmak değil; en net mesajı vermektir. Netlik; hazırlığın, bilginin ve özsaygının sesidir.</p>
+    <p>Bugün: Küçük bir ilerleme. Yarın: Bir küçük daha. Okyanus böyle büyür; damlalarla.</p>
+    <p class="lead">Yola devam. Derinlik sende.</p>
+  </div></div>
+  <div style="text-align:center; padding:10px; opacity:.75">⏳ Metin bitince sayfa otomatik açılacak • İstersen “Geç”e bas</div>
+</section>
 
-    <section class="row">
-      <article class="block deeper">
-        <h2>🤝 Kibarlık</h2>
-        <p>Keskin olmak kaba olmak değildir. Cümleyi yumuşatan üç şey: teşekkür, açıklık, seçenek. “Şunu istiyorum, çünkü X. Uygunsa iki seçeneğimiz var…”</p>
-        <span class="chip">Teşekkür</span><span class="chip">Gerekçe</span><span class="chip">Seçenek</span>
-      </article>
-
-      <article class="block blue">
-        <h2>🧭 Mini Alıştırma</h2>
-        <p>Bugünün hedefi: <strong>tek bir iş</strong> seç. Zamanlayıcıyı 25 dakikaya kur. Bitince 5 dakika ara ver ve “ne öğrendim?” diye not düş.</p>
-        <span class="chip">Tek hedef</span><span class="chip">25/5</span><span class="chip">Kısa not</span>
-      </article>
-    </section>
-
-    <section class="block cyan">
-      <h2>📚 Kaynaklar</h2>
-      <p><strong>Deep Work</strong> (Newport) — <strong>Atomic Habits</strong> (Clear) — <strong>Make Time</strong> (Knapp & Zeratsky)</p>
-      <div class="menu">
-        <a href="index.html" class="nav">← Ana Menü</a>
-        <a href="#!" class="nav">Profilim</a>
-        <a href="#!" class="nav">Görev Panosu</a>
-      </div>
-    </section>
-  </main>
+<!-- Ana içerik -->
+<section class="sheet" id="main" style="visibility:hidden">
+  <h2>Hoş geldin kaptan ⚓️</h2>
+  <p>Burada günlük hedeflerini, kısa alıştırmaları ve ilerleme durumunu tutabilirsin. Sağ üstten ana menüye dönebilirsin.</p>
+</section>
 
 <script>
-/* okyanus baloncukları */
-(()=>{ const c=sea, x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
- const B=240,b=[]; for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
- let t=0; (function loop(){ x.clearRect(0,0,c.width,c.height);
-  x.strokeStyle='rgba(80,200,255,.18)'; x.lineWidth=1;
-  for(let i=0;i<40;i++){ const y=(i/40)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.04)*6); x.lineTo(c.width,y); x.stroke(); }
-  for(const p of b){ p.y-=p.s; if(p.y<-20){p.y=c.height+20; p.x=Math.random()*c.width }
-    x.globalAlpha=.3; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill(); }
-  t++; requestAnimationFrame(loop); })(); })();
+/* Deniz baloncuk/çizgi */
+(()=>{const c=sea,x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
+const B=220,b=[]; for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
+let t=0;(function loop(){x.clearRect(0,0,c.width,c.height);x.strokeStyle='rgba(80,200,255,.2)';x.lineWidth=1;
+for(let i=0;i<40;i++){const y=(i/40)*c.height;x.beginPath();x.moveTo(0,y+Math.sin((t+i)*.04)*6);x.lineTo(c.width,y);x.stroke();}
+for(const p of b){p.y-=p.s; if(p.y<-20){p.y=c.height+20; p.x=Math.random()*c.width} x.globalAlpha=.28; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();}
+t++; requestAnimationFrame(loop);})();})();
 
-/* linklerde sönerek geçiş + geri */
-(()=>{ const wipe=document.getElementById('wipe');
-  for(const a of document.querySelectorAll('a.nav, .back')) a.addEventListener('click',e=>{
-    e.preventDefault(); wipe.classList.add('show'); setTimeout(()=>location.href=a.getAttribute('href'),420);
-  });
+/* Manifesto akışı */
+(()=>{const vp=document.getElementById('viewport'), inner=document.getElementById('inner'), skip=document.getElementById('skip'), main=document.getElementById('main'), story=document.getElementById('story');
+const vh=()=>vp.clientHeight; let start; const SPEED=52; // px/sn
+function startScroll(){ const ih=inner.scrollHeight, dist=ih + vh() + 60; start=performance.now();
+ (function step(now){ const d=(now-start)/1000*SPEED; inner.style.transform=`translateY(${vh()-Math.min(d,dist)}px)`; 
+   if(d>=dist) finish(); else requestAnimationFrame(step); })(performance.now());}
+function finish(){ story.style.display='none'; main.style.visibility='visible'; }
+skip.onclick=finish; // Geç
+// giriş animasyonu bittikten biraz sonra başlat
+setTimeout(()=>{ startScroll(); }, 500);
 })();
 </script>
 </body>
-          </html>
+</html>
