@@ -210,7 +210,7 @@ setTimeout(()=>{welcome.classList.add('fade-out');setTimeout(startManifesto,600)
 function startManifesto(){
   mfWrap.style.display='block';
   skipBtn.classList.add('show');
-  manifestoTimer=setTimeout(showMenu,120000);
+  manifestoTimer=setTimeout(showMenu,45000);
 }
 skipBtn.addEventListener('click',()=>{if(manifestoTimer){clearTimeout(manifestoTimer);}showMenu();});
 function showMenu(){mfWrap.style.display='none';skipBtn.classList.remove('show');main.style.display='block';}
