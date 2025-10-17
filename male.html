@@ -240,36 +240,5 @@ skipBtn.addEventListener('click',()=>{if(manifestoTimer){clearTimeout(manifestoT
 function showMenu(){mfWrap.style.display='none';skipBtn.classList.remove('show');main.style.display='block';}
 document.getElementById('userBtn').addEventListener('click',e=>{e.preventDefault();alert('Kullanıcı Paneli yakında burada 🌸');});
 </script>
-  <!-- Arka plan müziği (m4a + mp3 fallback) -->
-<audio id="bgMusic" preload="auto" loop>
-  <source src="derinsular.m4a" type="audio/mp4">   <!-- .m4a için doğru tip -->
-  <source src="derinsular.mp3" type="audio/mpeg">  <!-- opsiyonel yedek -->
-</audio>
-
-<script>
-  // Otomatik çalmayı tarayıcılar genelde engeller;
-  // ilk dokunuş/klik ile başlatıyoruz.
-  const music = document.getElementById('bgMusic');
-
-  // İstersen sayfa yüklenince sessizce buffer etsin:
-  music.volume = 0.4;   // %40 ses
-  music.currentTime = 0;
-
-  // İlk kullanıcı etkileşiminde oynat
-  function kickOff() {
-    if (music.paused) {
-      music.play().catch(()=>{ /* sessizce geç */ });
-    }
-    // bir kez tetiklendikten sonra dinleyicileri kaldır
-    window.removeEventListener('click', kickOff);
-    window.removeEventListener('touchstart', kickOff);
-  }
-  window.addEventListener('click', kickOff, { once:true });
-  window.addEventListener('touchstart', kickOff, { once:true });
-
-  // (İsteğe bağlı) manifeston bittiğinde başlatmak istersen:
-  // showMenu() fonksiyonunun başına:
-  //   if (music.paused) music.play().catch(()=>{});
-</script>
 </body>
 </html>
