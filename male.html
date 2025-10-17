@@ -3,81 +3,83 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AZURA • ERKEK (OKYANUS)</title>
+<title>AZURA • ERKEK</title>
 
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  /* Okyanus paleti */
-  --bg-deep:#0C161B;
-  --dot-1:#7CC0D1;
-  --dot-2:#5AA9B8;
-  --dot-3:#3D8FA1;
-
-  --card-top:rgba(21,47,56,0.86);
-  --card-bot:rgba(14,33,40,0.86);
-  --card-border:rgba(120,200,220,0.12);
-
-  --chip-bg:#11262D;
-  --chip-border:rgba(120,200,220,0.22);
-  --chip-text:#CBEAF0;
-
-  --text-body:#D6EDF3;
-  --btn-bg:rgba(11,28,34,0.7);
-  --btn-bd:rgba(120,200,220,0.22);
-  --btn-tx:#D8EEF4;
-
-  --mf-grad-1:#FFFFFF;     /* manifesto yazısı: beyaz -> açık camgöbeği */
-  --mf-grad-2:#D9F3FF;
+  /* Mavi tema */
+  --bg-deep:#0B1117;
+  --blue-1:#7CD0FF;
+  --blue-2:#A5E1FF;
+  --blue-3:#58BFF5;
+  --card-top:rgba(23,30,42,0.86);
+  --card-bot:rgba(14,20,31,0.86);
+  --card-border:rgba(140,200,255,0.16);
+  --chip-bg:#111A24;
+  --chip-border:rgba(140,200,255,0.28);
+  --chip-text:#D6EEFF;
+  --text-body:#DCEAF7;
+  --btn-bg:rgba(15,24,36,0.72);
+  --btn-bd:rgba(140,200,255,0.28);
+  --btn-tx:#E8F4FF;
+  --accent-blue:#9ED7FF; /* manifesto gradyanı üst */
+  --accent-cyan:#D6F2FF;  /* manifesto gradyanı alt */
 }
 
+/* Reset */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; background:var(--bg-deep); color:var(--text-body);
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
+  margin:0; background:var(--bg-deep);
+  color:var(--text-body); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
   overflow-x:hidden;
 }
 
-/* --- Arka plan --- */
+/* --- Arkaplan: aurora + mavi noktacıklar --- */
 .bg-layer{position:fixed; inset:0; pointer-events:none; z-index:0;}
 .bg-halos{
   position:absolute; inset:0;
   background:
-    radial-gradient(1200px 700px at 20% 110%, rgba(80,160,180,0.08), transparent 75%),
-    radial-gradient(900px 600px at 90% -10%, rgba(90,170,190,0.06), transparent 70%);
+    radial-gradient(1100px 680px at 80% 12%, rgba(120,190,255,0.14), rgba(80,160,230,0.08) 40%, transparent 70%),
+    radial-gradient(1300px 700px at 10% 110%, rgba(60,140,220,0.10), transparent 75%);
+  filter: blur(0.2px);
 }
-.canvas{position:absolute; inset:0;} /* mavi noktacıklar */
+/* mavi noktacıklar */
+.canvas{position:absolute; inset:0;}
 
 /* Üst butonlar */
 .top-buttons{position:fixed; inset:0 0 auto 0; height:0; z-index:5;}
 .btn{
   position:absolute; top:12px; padding:8px 12px; border-radius:12px;
   background:var(--btn-bg); color:var(--btn-tx); border:1px solid var(--btn-bd);
-  backdrop-filter: blur(6px); text-decoration:none; font-weight:600; font-size:14px;
-  box-shadow:0 8px 24px rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+  text-decoration:none; font-weight:600; font-size:14px;
+  box-shadow:0 8px 24px rgba(0,20,40,.28);
 }
+.btn:hover{box-shadow:0 10px 30px rgba(120,180,255,.18)}
 .btn.left{left:12px}
 .btn.right{right:12px}
 
-/* Hoşgeldin */
+/* Hoşgeldin kutusu */
 .welcome{
   position:fixed; top:70px; left:50%; transform:translateX(-50%);
   width:min(720px, calc(100% - 40px));
   padding:16px 22px; border-radius:16px; z-index:4;
-  background:rgba(8,24,29,0.82); border:1px solid var(--card-border);
-  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  background:rgba(12,18,28,0.82); border:1px solid var(--card-border);
+  box-shadow:0 8px 30px rgba(0,12,24,0.35);
   text-align:left; opacity:0; animation:wel-in .8s ease .2s forwards;
 }
 .welcome h3{
   margin:0; font-family:Cinzel,serif; letter-spacing:.06em; font-weight:700;
   line-height:1.25; font-size:18px;
-  background:linear-gradient(180deg,#EFFFFF 0%, #CFEFF6 85%);
+  background:linear-gradient(180deg,#E8F6FF 0%, #FFFFFF 85%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 16px rgba(140,220,240,.3);
+  text-shadow:0 0 18px rgba(120,190,255,.35);
 }
-.welcome p{margin:6px 0 0; color:#CDE8EE; font-size:14px}
+.welcome p{margin:6px 0 0; color:#CFE6F8; font-size:14px}
 @keyframes wel-in{to{opacity:1; transform:translate(-50%,0)}}
 .fade-out{animation:wel-out .8s ease forwards}
 @keyframes wel-out{to{opacity:0; transform:translate(-50%,-10px)}}
@@ -86,36 +88,32 @@ body{
 .skip{position:fixed; top:12px; left:12px; z-index:6; display:none}
 .skip.show{display:inline-block}
 
-/* Manifesto */
+/* Manifesto (slayt) */
 .manifesto-wrap{
   position:fixed; inset:0; z-index:3; display:none; pointer-events:none;
 }
 .manifesto-scrim{
   position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(4,10,12,.5), rgba(4,10,12,.2) 30%, transparent 60%);
+  background:linear-gradient(180deg, rgba(5,8,12,.48), rgba(5,8,12,.18) 30%, transparent 60%);
 }
 .manifesto{
   position:absolute; left:50%; transform:translateX(-50%);
   width:min(1100px, 92vw); text-align:center;
-  font-family:Cinzel,serif; font-weight:800; letter-spacing:.04em;
-  font-size: clamp(28px, 8.8vw, 96px); line-height:1.22;
-  background:linear-gradient(180deg, var(--mf-grad-1) 0%, var(--mf-grad-2) 100%);
+  font-family:Cinzel,serif; font-weight:700; letter-spacing:.04em;
+  font-size: clamp(28px, 8.8vw, 96px); line-height:1.25;
+  background:linear-gradient(180deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 22px rgba(160,220,240,.45);
+  text-shadow:0 0 22px rgba(120,190,255,.45);
   white-space:pre-wrap; text-transform:uppercase;
-  top:100%; animation: slideUp 45s linear forwards;
+  top:100%; /* alttan başla */
+  animation: slideUp 55s linear forwards; /* 55 saniye */
 }
-@keyframes slideUp{ to{ top:-120% } }
+@keyframes slideUp{
+  to{ top:-120% }
+}
 
-/* Menü */
-.main{position:relative; z-index:2; padding:86px 18px 64px; display:none;}
-h1.title{
-  margin:0 0 12px; text-align:center; font-family:Cinzel,serif; letter-spacing:.18em;
-  font-size: clamp(24px, 5vw, 40px);
-  background:linear-gradient(180deg,#EFFFFF 0%, #CFEFF6 85%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 18px rgba(140,220,240,.28);
-}
+/* Menü (kartlar) */
+.main{position:relative; z-index:2; padding:90px 18px 64px; display:none;}
 .grid{
   max-width:1100px; margin:0 auto; display:grid; gap:20px;
   grid-template-columns:repeat(2,1fr);
@@ -123,14 +121,14 @@ h1.title{
 .card, .card-wide{
   background:linear-gradient(180deg, var(--card-top), var(--card-bot));
   border:1px solid var(--card-border); border-radius:18px; padding:20px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.42);
+  box-shadow:0 15px 40px rgba(0,20,40,0.35);
 }
 .card h3, .card-wide h3{
   margin:0 0 8px; font-family:Cinzel,serif; font-weight:700; letter-spacing:.06em;
   font-size:22px; line-height:1.1;
-  background:linear-gradient(180deg,#EFFFFF 0%, #CFEFF6 85%);
+  background:linear-gradient(180deg,#E8F6FF 0%, #FFFFFF 85%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 16px rgba(140,220,240,.28);
+  text-shadow:0 0 18px rgba(120,190,255,.35);
 }
 .card p, .card-wide p{margin:6px 0 0; color:var(--text-body)}
 .chips{margin-top:12px; display:flex; flex-wrap:wrap; gap:8px}
@@ -142,11 +140,11 @@ h1.title{
 .card-wide{grid-column:1 / -1}
 
 footer{
-  max-width:1100px; margin:32px auto 0; text-align:center; color:#CFE6EC;
+  max-width:1100px; margin:32px auto 0; text-align:center; color:#CFE2F5;
   opacity:.95; font-size:14px;
 }
 
-/* Responsive */
+/* Küçük ekran uyarlamaları */
 @media (max-width:760px){
   .grid{grid-template-columns:1fr 1fr;}
   .card h3{font-size:18px}
@@ -173,8 +171,8 @@ footer{
 
 <!-- Hoşgeldin -->
 <div class="welcome" id="welcomeBox">
-  <h3>Okyanusa Hoş Geldin 🌊</h3>
-  <p>Sessiz adımlar, derin akış. Birazdan kısa bir manifesto akacak.</p>
+  <h3>Derin Sular’a Hoş Geldin ⚙️</h3>
+  <p>Birazdan kısa bir manifesto alttan akacak. Dilersen “Yazıyı Geç” ile menüye geçebilirsin.</p>
 </div>
 
 <!-- Yazıyı Geç -->
@@ -185,64 +183,64 @@ footer{
   <div class="manifesto-scrim"></div>
   <div class="manifesto" id="manifesto">
 ERKEK OLMAK; GÜÇ GÖSTERİSİ DEĞİL, DURUŞ MESELESİDİR.
-KENDİNİ İFADE EDERKEN NEZAKETTEN, KARAR ALIRKEN VİCDANDAN ÖDÜN VERMEZSİN.
-SAYGI GÖRMEK İSTERSEN ÖNCE SAYGI GÖSTERMEYİ BİLİRSİN.
-BİR KADINA, BİR DOSTA, BİR YABANCIYA… FARK ETMEZ; HER İNSANA AYNI ÖZEN.
+KENDİNİ İFADE EDERKEN NEZAKETTEN, KARAR ALIRKEN VİCDANDAN ÖDÜN VERMEZ.
+TOPLUMDA SAYGI GÖRMEK İÇİN ÖNCE SAYGI GÖSTERMEYİ BİLİR.
+BİR KADINA, BİR DOSTA, BİR YABANCIYA… FARK ETMEZ; HER İNSANA AYNI ÖZENİ GÖSTERİR.
+SÖZÜNÜN ERİ OLUR, SORUMLULUKLARINI ERTELEMEZ.
+ÇÜNKÜ BİLİR Kİ GÜVEN, BİR DEFA SARSILDIĞINDA YILLAR BİLE ONARAMAZ.
 
-SÖZÜNÜN ERİ OLUR, SORUMLULUĞU ERTELEMEZSİN.
-ÇÜNKÜ GÜVEN, BİR KEZ SARSILIRSA YILLAR BİLE ONARAMAZ.
-
-ERKEKLİK; EMEK VERMEK, KORUMAK, SAHİP ÇIKMAK
-VE GEREKTİĞİNDE ZARAFETLE GERİ ÇEKİLMEKTİR.
+ERKEKLİK; EMEK VERMEK, KORUMAK, SAHİP ÇIKMAK VE GEREKTİĞİNDE GERİ ÇEKİLMEKTİR.
 BİR BAKIŞIYLA DEĞİL, BİR DAVRANIŞIYLA FARK EDİLİR.
-KENDİNE HÂKİM OLMAYI ÖĞRENEN HER ERKEK, GERÇEK OLGUNLUĞA ERİŞİR.
+KENDİNE HÂKİM OLMAYI ÖĞRENMİŞ HER ERKEK, GERÇEK OLGUNLUĞA ERİŞMİŞTİR.
 
-TAVSİYE: KENDİNİ ANLATMAYA DEĞİL, ANLAMAYA ÇALIŞ.
-GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR. — AZURA NOVA
+TAVSİYE:
+KENDİNİ ANLATMAYA DEĞİL, ANLAMAYA ÇALIŞ.
+GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
+
+— AZURA NOVA
   </div>
 </div>
 
-<!-- Menü -->
+<!-- Menü (Manifesto bitince görünecek) -->
 <main class="main" id="main">
-  <h1 class="title">OKYANUS</h1>
   <div class="grid">
     <div class="card">
-      <h3>⚙️ KARİZMA &amp; DİSİPLİN</h3>
-      <p>Otorite sessiz sakin kurulur: söz kısa, adım nettir. Karizma; tavırdaki tutarlılık ve nezaketle gelir. Disiplin ise hedefin etrafına kurulan saygı çemberidir.</p>
+      <h3>🧭 DURUŞ &amp; SORUMLULUK</h3>
+      <p>Duruş; söze değil, alışkanlığa yazılır. Rutinlerini sadeleştir; “söz verdim” cümlesini takvimde somutlaştır.</p>
       <div class="chips">
-        <span>Odak</span><span>Devamlılık</span><span>Söz &amp; Eylem birliği</span>
+        <span>Net ajanda</span><span>Öncelik 3</span><span>Takip alışkanlığı</span>
       </div>
     </div>
 
     <div class="card">
-      <h3>🌊 MOTİVASYON</h3>
-      <p>Zor hedefler; parçalara bölününce kolaylaşır. “Bugün sadece 25 dakika” kuralı, ertelemeyi kırar. Bittiğinde küçük bir ödül ver: kahve, 10 dk. oyun, kısa yürüyüş.</p>
+      <h3>🤝 NEZAKET • GÜÇ</h3>
+      <p>Güç, sesi yükseltmek değildir. İhtiyacı doğru anlamak, net ve nazik talepte bulunmaktır: “Bunu şu şekilde çözebilir miyiz?”</p>
       <div class="chips">
-        <span>25 dk sprint</span><span>Küçük ödül</span><span>Takvim çentiği</span>
+        <span>Netlik</span><span>Ölçülülük</span><span>Alternatif</span>
       </div>
     </div>
 
     <div class="card">
-      <h3>🤝 KİBARLIK</h3>
-      <p>Keskin olmak kaba olmak değildir. Cümleyi yumuşatan üç yüz: teşekkür, seçenek, açıklık. “Şunu istiyorum çünkü X. Uygunsa iki seçeneğimiz var…”</p>
+      <h3>🛠️ DİSİPLİN</h3>
+      <p>Her gün 20 dakikalık “ağır kaldırış”: zor ama küçük bir iş. Bitince kısa not: “Bugün kendime saygım arttı çünkü…”</p>
       <div class="chips">
-        <span>Teşekkür</span><span>Gerekçe</span><span>Seçenek</span>
+        <span>20 dk blok</span><span>Tek hedef</span><span>Kısa rapor</span>
       </div>
     </div>
 
     <div class="card">
-      <h3>🧭 MİNİ ALIŞTIRMA</h3>
-      <p>Bugünün hedefi: <strong>tek bir iş</strong>. Zamanlayıcıyı 25 dakikaya kur. Bitince 5 dakika ara ver ve “ne öğrendim?” diye not al.</p>
+      <h3>🌬️ SAKİNLİK EGZERSİZİ</h3>
+      <p>4-6 nefes (4 sn al, 6 sn ver). Gözlem cümlesi: “Şu an benden beklenen tek adım ne?”</p>
       <div class="chips">
-        <span>Tek hedef</span><span>25/5</span><span>Kısa not</span>
+        <span>Nefes 4-6</span><span>Tek adım</span><span>Gözlem</span>
       </div>
     </div>
 
     <div class="card-wide">
       <h3>📚 KAYNAKLAR</h3>
-      <p><strong>Deep Work</strong> (Newport) — <strong>Atomic Habits</strong> (Clear) — <strong>Make Time</strong> (Knapp &amp; Zeratsky)</p>
+      <p><strong>Atomic Habits</strong> (Clear) — <strong>Deep Work</strong> (Newport) — <strong>Ego Is the Enemy</strong> (Holiday)</p>
       <div class="chips">
-        <span>← Ana Menü</span><span>Profilim</span><span>Görev Panosu</span>
+        <span>← Ana Menü</span><span>Kanallar</span><span>Alıştırmalar</span>
       </div>
     </div>
   </div>
@@ -251,20 +249,20 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR. — AZURA NOVA
 </main>
 
 <script>
-/* ---------- Mavi noktacıklar ---------- */
+/* ---------- Mavi partiküller (çizgi yok) ---------- */
 (function(){
   const c = document.getElementById('stars');
   const ctx = c.getContext('2d');
   function size(){ c.width = innerWidth; c.height = innerHeight }
   size(); addEventListener('resize', size);
-  const colors = ['#7CC0D1','#5AA9B8','#3D8FA1'];
-  const dots = Array.from({length: 140}, ()=>({
+  const colors = ['#7CD0FF','#A5E1FF','#58BFF5','#C3ECFF'];
+  const dots = Array.from({length: 150}, ()=>({
     x: Math.random()*c.width,
     y: Math.random()*c.height,
-    r: (Math.random()*2)+1.2,
-    o: 0.55+Math.random()*0.2,
+    r: (Math.random()*2)+1.1,
+    o: 0.45+Math.random()*0.25,
     c: colors[(Math.random()*colors.length)|0],
-    vy: 0.02 + Math.random()*0.06
+    vy: 0.025 + Math.random()*0.065
   }));
   function draw(){
     ctx.clearRect(0,0,c.width,c.height);
@@ -280,7 +278,7 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR. — AZURA NOVA
   draw();
 })();
 
-/* ---------- Akış ---------- */
+/* ---------- Akış mantığı ---------- */
 const welcome = document.getElementById('welcomeBox');
 const mfWrap  = document.getElementById('mfWrap');
 const manifesto = document.getElementById('manifesto');
@@ -289,18 +287,20 @@ const main = document.getElementById('main');
 
 let manifestoTimer = null;
 
-/* Hoşgeldin 2.8 sn, sonra manifesto */
+/* Hoşgeldin ~2.2sn; sonra kısa bekleme ile manifesto başlar */
 setTimeout(()=>{
   welcome.classList.add('fade-out');
-  setTimeout(startManifesto, 820);
-}, 2800);
+  setTimeout(startManifesto, 600); // kısa bekleme
+}, 2200);
 
 function startManifesto(){
   mfWrap.style.display='block';
   skipBtn.classList.add('show');
-  manifestoTimer = setTimeout(showMenu, 45000); /* 45 sn */
+  /* 55 sn sonra menüye */
+  manifestoTimer = setTimeout(showMenu, 55000);
 }
 
+/* Yazıyı geç */
 skipBtn.addEventListener('click', ()=>{
   if(manifestoTimer){ clearTimeout(manifestoTimer); }
   showMenu();
@@ -312,12 +312,11 @@ function showMenu(){
   main.style.display='block';
 }
 
-/* Sol üst Kullanıcı Paneli placeholder */
+/* Sol üst Kullanıcı Paneli şimdilik dummy */
 document.getElementById('userBtn').addEventListener('click', (e)=>{
   e.preventDefault();
-  alert('Kullanıcı Paneli yakında burada 🌊');
+  alert('Kullanıcı Paneli yakında burada ⚙️');
 });
 </script>
-
 </body>
-</html>
+  </html>
