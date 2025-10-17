@@ -2,250 +2,134 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>AZURA • Okyanus</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#07131b; --fg:#eaf4ff; --mut:#a9c2d6;
-  --card:#0b1f2a; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14);
-  --accent:#57c3ff; --accent2:#8fe3ff;
+  --bg:#07131b; --ink:#eaf4ff; --muted:#a3bdd3; --line:rgba(255,255,255,.14);
+  --glass:rgba(255,255,255,.07); --card:rgba(8,16,24,.72); --accent:#65d4ff;
 }
 *{box-sizing:border-box} html,body{height:100%}
-body{
-  margin:0; color:var(--fg); background:var(--bg); font:16px/1.6 Inter,system-ui;
-  overflow-x:hidden;
-}
-/* Üst çubuk */
-header{
-  position:fixed; inset:10px 10px auto 10px; z-index:5; display:flex; gap:8px; align-items:center;
-}
-header .title{flex:1; text-align:center; font:900 22px/1 Cinzel,serif; letter-spacing:.22em}
-.btn{
-  appearance:none; border:1px solid var(--b); background:var(--glass); color:var(--fg);
-  padding:10px 14px; border-radius:12px; font-weight:900; text-decoration:none; backdrop-filter: blur(8px);
-}
+body{margin:0;background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.12), transparent 60%), var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui;overflow:hidden}
+header{position:fixed; inset:12px 12px auto 12px; z-index:3; display:flex; gap:10px}
+a.btn{padding:10px 14px; border-radius:12px; text-decoration:none; color:var(--ink); background:var(--glass); border:1px solid var(--line); font-weight:900}
+h1{position:fixed; left:50%; transform:translateX(-50%); top:20px; margin:0; font-family:Cinzel,serif; letter-spacing:.18em}
 
-/* GİRİŞ — alttan yukarı, arka fonlu büyük yazı */
-#intro{
-  position:fixed; inset:0; display:grid; place-items:center; z-index:9; background:rgba(7,19,27,.85);
-  backdrop-filter: blur(2px);
-}
-.intro-card{
-  width:min(900px,92%); border:1px solid rgba(255,255,255,.18); border-radius:22px;
-  padding:28px 24px; background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.10), transparent 60%), #0b1f2a;
-  box-shadow:0 30px 100px rgba(0,0,0,.45);
-  transform: translateY(30px); opacity:0; animation:introUp .9s ease forwards .1s;
-}
-#skip{ position:absolute; left:10px; top:10px }
-.intro-card h1{
-  margin:6px 0 10px; font:900 clamp(28px,6.2vw,70px)/1.08 Cinzel,serif; letter-spacing:.16em;
-  background:linear-gradient(90deg,#dff7ff,#8fe3ff,#57c3ff); -webkit-background-clip:text; color:transparent;
-  text-shadow:0 10px 40px rgba(0,0,0,.5);
-}
-.intro-card p{ margin:0; color:var(--mut); font-size:clamp(16px,3.6vw,21px) }
-@keyframes introUp{ to{ transform:none; opacity:1 } }
+/* intro fade-in from white */
+#enter{position:fixed; inset:0; background:#fff; z-index:10; transform:scale(1.02); animation:fadeIn .6s ease forwards}
+@keyframes fadeIn{to{opacity:0;transform:scale(1)}}
+#leave{position:fixed; inset:0; background:#fff; z-index:10; opacity:0; transition:opacity .45s ease}
+#leave.show{opacity:1}
+canvas{position:fixed; inset:0; z-index:0; display:block}
 
-/* İçerik alanı */
-main{ opacity:0; transform:translateY(10px); transition:opacity .6s ease, transform .6s ease; padding:90px 16px 60px }
-main.show{ opacity:1; transform:none }
-
-/* Arka plan canvas */
-#bg{ position:fixed; inset:0; z-index:0 }
-
-/* Kart ızgara */
-.grid{
-  position:relative; z-index:1;
-  display:grid; gap:14px; grid-template-columns: repeat(2, minmax(0,1fr));
+/* scrolling manifesto */
+.layer{position:fixed; inset:0; display:grid; grid-template-rows:auto 1fr auto; z-index:2; background:linear-gradient(180deg, rgba(7,19,27,.9), rgba(7,19,27,.7))}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,0))}
+.topbar h2{margin:0; font:900 20px/1 Cinzel,serif; letter-spacing:.16em}
+.topbar .skip{appearance:none; border:1px solid var(--line); background:var(--glass); color:var(--ink); border-radius:12px; padding:8px 12px; font-weight:900; cursor:pointer}
+.view{position:relative; overflow:hidden}
+.story{
+  position:absolute; left:0; right:0; transform:translateY(100%);
+  padding:0 22px 60px; color:#dff4ff; font:900 24px/2 Cinzel,serif; letter-spacing:.02em; text-shadow:0 0 18px rgba(60,180,255,.25)
 }
-@media(max-width:760px){ .grid{ grid-template-columns: 1fr } }
+.story p{margin:0 0 28px}
+.story p.lead{font-size:28px; color:#bfe9ff; text-shadow:0 0 18px rgba(120,220,255,.35)}
+.hint{padding:10px; text-align:center; color:var(--muted); border-top:1px solid var(--line)}
+
+/* menu after story */
+#menu{position:fixed; inset:0; display:none; place-items:center; z-index:2}
 .card{
-  border:1px solid rgba(255,255,255,.14);
-  background:linear-gradient(180deg, rgba(87,195,255,.10), rgba(87,195,255,.04) 60%, rgba(255,255,255,.02));
-  backdrop-filter: blur(8px); border-radius:18px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,.35);
+  width:min(900px,92%); background:var(--card); border:1px solid var(--line); padding:18px; border-radius:18px; backdrop-filter: blur(8px);
+  transform:scale(.9); opacity:0; transition:transform .6s ease, opacity .6s ease;
 }
-.card h3{
-  margin:0 0 8px; font:900 22px/1.15 Cinzel,serif; letter-spacing:.12em;
-  color:#dff7ff; text-shadow:0 0 22px rgba(135,220,255,.35)
-}
-.pills{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px }
-.pill{
-  display:inline-block; padding:8px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.06); font-weight:800; color:#cfeaff; font-size:13px;
-}
+.card.show{transform:scale(1); opacity:1}
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:10px}
+.item{background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px; padding:12px; font-weight:800}
+.item a{color:var(--ink); text-decoration:none}
 
-/* mini aksiyon butonları */
-.actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px }
-.action{
-  padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.07);
-  color:#eaf4ff; font-weight:900; cursor:pointer; transition:transform .12s ease;
+/* big welcome block that slides up first */
+.sheet{
+  position:fixed; left:50%; top:50%; transform:translate(-50%,calc(-50% + 20px)); width:min(920px,92%);
+  border:1px solid var(--line); background:var(--card); border-radius:20px; padding:22px; z-index:1; backdrop-filter: blur(8px);
+  animation: sheetOut .6s ease forwards 3.2s; /* 3.2s sonra kaybolur */
 }
-.action:active{ transform:scale(.98) }
+@keyframes sheetOut{to{opacity:0; visibility:hidden}}
+.sheet h3{margin:0 0 8px}
+.sheet p{margin:0}
 
-/* Dalga vurgu */
-.wave{
-  position:absolute; inset:auto 20px 18px auto; padding:8px 12px; border:1px solid rgba(255,255,255,.18);
-  border-radius:12px; background:rgba(255,255,255,.06); font-weight:800; color:#bfe7ff
-}
-
-/* Sol çekmece (mini gezinme) */
-#drawerBtn{ position:fixed; left:10px; top:56px; z-index:4 }
-#drawer{
-  position:fixed; left:0; top:0; bottom:0; width:min(320px,86%); background:#091820; border-right:1px solid rgba(255,255,255,.14);
-  transform:translateX(-100%); transition:transform .35s ease; z-index:6; padding:14px;
-}
-#drawer.show{ transform:none }
-#shade{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:5 }
-#shade.show{ display:block }
-
-/* beyaza yumuşak geçiş */
-#wipe{ position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; transition:opacity .45s ease; z-index:10 }
-#wipe.show{ opacity:1 }
+/* bubbles + lines canvas runs always behind */
 </style>
 </head>
 <body>
+<div id="enter"></div>
+<div id="leave"></div>
 
-<!-- GİRİŞ -->
-<section id="intro" aria-label="Giriş">
-  <button id="skip" class="btn">GEÇ →</button>
-  <div class="intro-card">
-    <h1>Okyanus seni çağırıyor.</h1>
-    <p>Derinlik sakinliği öğretir; hedefi parçalara bölen akıntı yol gösterir. Nefesini ayarla, dalgayı dinle: bugün yapacağın tek hamleyi seç.</p>
+<header>
+  <a class="btn back" href="index.html">← Ana Menü</a>
+  <a class="btn" href="#menu">Menü</a>
+</header>
+<h1>OKYANUS</h1>
+<canvas id="sea"></canvas>
+
+<section class="sheet">
+  <h3>Okyanus seni çağırıyor ⚙️</h3>
+  <p>Serin mavilikte hava kabarcıkları yükselir; metalik çizgiler derinde akıp gider. Omuzlarını indir; nefes al: ritim sende.</p>
+</section>
+
+<!-- Manifesto -->
+<section id="layer" class="layer" aria-label="Manifesto">
+  <div class="topbar"><h2>DERİNLİK • KİBARLIK • ODAK</h2><button class="skip" id="skip">Menüye geç</button></div>
+  <div class="view"><div class="story" id="story">
+    <p class="lead">Karizma gürültüde değil; netlik ve kibarlıkta saklıdır. Güç, sakin kalabilenin omuzlarına yerleşir.</p>
+    <p>Derin sular, yüzeyin fırtınasını sessizce seyreder. Hızlı kararlar, sakin bir zihnin meyvesidir. Söz az, saygı çok; hareket net, ses ölçülüdür.</p>
+    <p>Kibarlık zayıflık değil, ustalıktır. Kapıyı tutmak bir jesttir; yeri gelince masayı kurmak bir beceri, gerektiğinde özür dilemek bir özgüvendir.</p>
+    <p>Odağını bölmeyen; güne başladığında neye “evet”, neye “hayır” diyeceğini bilen kişi, yola hükmeder. Derin nefes, net bakış, temiz hedef.</p>
+    <p class="lead">Okyanus şunu fısıldar: “Gürültüyü yasakla, ritmi dinle.” Kararlılığın tonu mavidir.</p>
+  </div></div>
+  <div class="hint">⏳ Metin bittiğinde menü açılır • “Menüye geç” ile atlayabilirsin</div>
+</section>
+
+<!-- Menü -->
+<section id="menu" aria-label="Erkek Menüsü">
+  <div class="card" id="menuCard">
+    <h3>⚙️ Okyanus Alanı</h3>
+    <div class="grid">
+      <div class="item"><a href="index.html">← Ana Menü</a></div>
+      <div class="item"><a href="#motivasyon">Motivasyon Notları</a></div>
+      <div class="item"><a href="#kibarlik">Kibarlığın İncelikleri</a></div>
+      <div class="item"><a href="#odak">Odak Rutinleri</a></div>
+    </div>
   </div>
 </section>
 
-<header>
-  <a id="drawerBtn" class="btn">☰</a>
-  <a class="btn" href="index.html" id="back">← Ana Menü</a>
-  <div class="title">OKYANUS</div>
-</header>
-
-<canvas id="bg"></canvas>
-
-<main id="content">
-  <div class="grid">
-
-    <article class="card">
-      <h3>⚙️ Karizma & Disiplin</h3>
-      <p>Otorite sakin kurulur: söz kısa, adım nettir. Karizma; tavırdaki tutarlılık ve nezaketle gelir. Disiplin ise hedefin etrafına kurulan saygı çemberidir.</p>
-      <div class="pills">
-        <span class="pill">Odak</span><span class="pill">Devamlılık</span><span class="pill">Söz & Eylem birliği</span>
-      </div>
-      <div class="actions">
-        <button class="action" data-toast="Bugünün tek işi seçildi.">Tek iş</button>
-        <button class="action" data-toast="25’lik sprint başlıyor.">25 dk Sprint</button>
-        <button class="action" data-toast="Takvimine çentik atıldı.">Takvim çentiği</button>
-      </div>
-      <div class="wave">~ gentle wave</div>
-    </article>
-
-    <article class="card">
-      <h3>🌊 Motivasyon</h3>
-      <p>Zor hedefler; parçalandığında kolaylaşır. “Bugün sadece 25 dakika” kuralı, ertelemeyi kırar. Bittiğinde küçük bir ödül ver: kahve, 10 dk. oyun, kısa yürüyüş.</p>
-      <div class="pills">
-        <span class="pill">25/5</span><span class="pill">Küçük ödül</span><span class="pill">Velvele yok</span>
-      </div>
-      <div class="actions">
-        <button class="action" data-toast="Ödül kuyruğa eklendi.">Ödül yaz</button>
-        <button class="action" data-toast="Mini not kaydedildi.">Kısa not</button>
-      </div>
-    </article>
-
-    <article class="card">
-      <h3>🤝 Kibarlık</h3>
-      <p>Keskin olmak kaba olmak değildir. Cümleyi yumuşatan üç şey: teşekkür, seçenek, gerekçe. “Sunu istiyorum çünkü X. Uygunsa iki seçenekimiz var…”</p>
-      <div class="pills">
-        <span class="pill">Teşekkür</span><span class="pill">Gerekçe</span><span class="pill">Seçenek</span>
-      </div>
-      <div class="actions">
-        <button class="action" data-toast="Kibar şablon panoya kopyalandı.">Cümle kopyala</button>
-      </div>
-    </article>
-
-    <article class="card">
-      <h3>🧩 Mini Alıştırma</h3>
-      <p>Bugünün hedefi: <b>tek bir iş</b> seç. Zamanlayıcıyı 25 dakikaya kur. Bitince 5 dakika ara ver ve “ne öğrendim?” diye yaz.</p>
-      <div class="pills">
-        <span class="pill">Tek hedef</span><span class="pill">25/5</span><span class="pill">Kısa not</span>
-      </div>
-      <div class="actions">
-        <button class="action" data-toast="Zamanlayıcı önerisi gösterildi.">Zamanlayıcı</button>
-      </div>
-    </article>
-
-  </div>
-</main>
-
-<!-- Sol çekmece -->
-<aside id="drawer" aria-label="Hızlı Menü">
-  <h3 style="margin:6px 0 10px; font:900 18px/1 Cinzel,serif; letter-spacing:.18em; color:#dff7ff">OKYANUS</h3>
-  <div style="display:grid; gap:8px">
-    <a class="btn" href="#content">İçeriğe in</a>
-    <a class="btn" href="index.html">← Ana Menü</a>
-    <a class="btn" href="#bg">Arka plan</a>
-  </div>
-</aside>
-<div id="shade"></div>
-<div id="wipe"></div>
-
 <script>
-/* ---------- Intro kontrol ---------- */
-const intro = document.getElementById('intro');
-const skip  = document.getElementById('skip');
-const main  = document.getElementById('content');
-
-function closeIntro(){
-  intro.style.opacity = '0';
-  intro.style.transition = 'opacity .45s ease';
-  setTimeout(()=>{ intro.remove(); main.classList.add('show'); }, 460);
-}
-skip.addEventListener('click', closeIntro);
-// otomatik kapanış (3.5s)
-setTimeout(closeIntro, 3500);
-
-/* ---------- Sol çekmece ---------- */
-const drawer = document.getElementById('drawer');
-const shade  = document.getElementById('shade');
-document.getElementById('drawerBtn').onclick = () => { drawer.classList.add('show'); shade.classList.add('show'); };
-shade.onclick = () => { drawer.classList.remove('show'); shade.classList.remove('show'); };
-
-/* ---------- Linklerde beyaza yumuşak geçiş ---------- */
-const wipe = document.getElementById('wipe');
-document.getElementById('back').addEventListener('click', e=>{
-  e.preventDefault(); wipe.classList.add('show'); setTimeout(()=>location.href='index.html', 420);
-});
-
-/* ---------- Toast (küçük bildirim) ---------- */
-function toast(txt){
-  const el = document.createElement('div');
-  el.textContent = txt;
-  el.style.cssText = 'position:fixed;left:50%;bottom:20px;transform:translateX(-50%);padding:10px 14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);backdrop-filter:blur(6px);border-radius:12px;font-weight:900;z-index:8;opacity:0;transition:opacity .2s ease';
-  document.body.appendChild(el);
-  requestAnimationFrame(()=>{ el.style.opacity = '1'; });
-  setTimeout(()=>{ el.style.opacity='0'; setTimeout(()=>el.remove(),220); },1500);
-}
-for(const b of document.querySelectorAll('.action')) b.addEventListener('click',()=> toast(b.dataset.toast||'Kaydedildi'));
-
-/* ---------- Okyanus arka plan: çizgiler + baloncuk ---------- */
-(function sea(){
-  const c=document.getElementById('bg'), x=c.getContext('2d');
-  function fit(){ c.width=innerWidth; c.height=innerHeight } fit(); addEventListener('resize',fit,{passive:true});
-  const bubbles=[], B=220;
-  for(let i=0;i<B;i++) bubbles.push({x:Math.random()*c.width, y:c.height+Math.random()*c.height, r:1+Math.random()*3, s:.4+.9*Math.random()});
-  let t=0;
-  (function loop(){
-    x.fillStyle=getComputedStyle(document.body).getPropertyValue('--bg').trim()||'#07131b';
-    x.fillRect(0,0,c.width,c.height);
-    // çizgiler (dalga)
-    x.strokeStyle='rgba(80,200,255,.16)'; x.lineWidth=1;
-    for(let i=0;i<40;i++){ const y=(i/40)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.04)*6); x.lineTo(c.width,y); x.stroke(); }
-    // baloncuklar
-    for(const p of bubbles){ p.y-=p.s; if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
-      x.globalAlpha=.28; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
+/* arka plan: çizgiler + kabarcıklar */
+(()=>{const c=sea,x=c.getContext('2d');function fit(){c.width=innerWidth;c.height=innerHeight}fit();addEventListener('resize',fit,{passive:true});
+  const B=240,b=[];for(let i=0;i<B;i++)b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+Math.random()*1});
+  let t=0;(function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    x.globalAlpha=.22;x.strokeStyle='rgba(90,180,255,.35)';x.lineWidth=1;
+    for(let i=0;i<44;i++){const y=(i/44)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.04)*6); x.lineTo(c.width,y); x.stroke();}
+    for(const p of b){ p.y-=p.s; if(p.y<-20){p.y=c.height+20;p.x=Math.random()*c.width}
+      x.globalAlpha=.32; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
     }
     t++; requestAnimationFrame(loop);
   })();
 })();
+
+/* manifesto: aşağıdan yukarı akış + skip */
+(()=>{const layer=document.getElementById('layer'); const story=document.getElementById('story'); const skip=document.getElementById('skip');
+  const viewH=()=>innerHeight-100; let start; const speed=46; let raf;
+  function flow(ts){ if(!start) start=ts; const el=ts-start; const dy=(el/1000)*speed; story.style.transform=`translateY(${viewH()-dy}px)`;
+    if(dy>story.scrollHeight+viewH()){ openMenu(); } else { raf=requestAnimationFrame(flow); } }
+  raf=requestAnimationFrame(flow);
+  function openMenu(){ cancelAnimationFrame(raf); layer.style.display='none'; const m=document.getElementById('menu'); m.style.display='grid'; requestAnimationFrame(()=>document.getElementById('menuCard').classList.add('show')); }
+  skip.addEventListener('click',openMenu,{once:true});
+})();
+
+/* back → beyaz sönerek */
+(()=>{const leave=document.getElementById('leave'); document.querySelector('.back').addEventListener('click',e=>{ e.preventDefault(); leave.classList.add('show'); setTimeout(()=>location.href='index.html',420); });})();
 </script>
 </body>
 </html>
