@@ -7,24 +7,32 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{ --fg:#eaf4ff; --bg:#07131b; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14) }
-*{box-sizing:border-box} html,body{height:100%} body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.08), transparent 60%), var(--bg); font:16px/1.55 Inter,system-ui; overflow:hidden}
-header{position:fixed; inset:12px 12px auto auto; z-index:4}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0; color:var(--fg); background:radial-gradient(1200px 800px at 50% -10%, rgba(85,200,255,.08), transparent 60%), var(--bg); font:16px/1.6 Inter,system-ui; overflow-x:hidden}
+header{position:fixed; inset:12px 12px auto auto; z-index:5}
 a.btn{padding:10px 14px; border-radius:12px; border:1px solid var(--b); background:var(--glass); color:var(--fg); text-decoration:none; font-weight:900}
 h1{position:fixed; left:50%; transform:translateX(-50%); top:24px; margin:0; font-family:Cinzel,serif; letter-spacing:.16em}
 canvas{position:fixed; inset:0; z-index:0}
-/* ---------- MANİFESTO OVERLAY (alttan yukarı) ---------- */
+
+/* Manifesto overlay */
 #story{position:fixed; inset:0; display:grid; grid-template-rows:auto 1fr auto; z-index:3; background:linear-gradient(180deg, rgba(10,24,38,.96), rgba(7,19,27,.94))}
-#story .bar{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.08)}
-#story h2{margin:0; font:900 18px/1 Cinzel,serif; letter-spacing:.16em}
-#story .skip{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff; border-radius:12px; padding:8px 12px; font-weight:900}
+#story .bar{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.08)}
+#story h2{margin:0; font:900 clamp(18px,3.6vw,28px)/1 Cinzel,serif; letter-spacing:.16em}
+#story .skip, #story .home{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff; border-radius:12px; padding:10px 14px; font-weight:900}
 #viewport{position:relative; overflow:hidden}
-#inner{position:absolute; left:0; right:0; transform:translateY(100%); padding:16px 18px 60px; font-size:20px; line-height:1.9; text-shadow:0 0 10px rgba(0,0,0,.3)}
-#inner p{margin:0 0 22px}
-#inner p.lead{font-size:22px; font-weight:900; color:#aee3ff}
-/* ---------- Ana içerik kartı ---------- */
-.sheet{position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(920px,92%); border:1px solid var(--b); background:rgba(8,14,20,.75); border-radius:20px; padding:22px; z-index:1; backdrop-filter: blur(8px)}
-/* ---------- Giriş sönerek beyaz ---------- */
-#enter{position:fixed; inset:0; background:#ffffff; z-index:5; opacity:1; transform:scale(1.05); animation:fadeIn .55s ease forwards}
+#inner{position:absolute; left:0; right:0; transform:translateY(100%); padding:20px 24px 70px; font-size:clamp(20px,3.8vw,26px); line-height:1.85; text-shadow:0 0 12px rgba(0,0,0,.35)}
+#inner p{margin:0 0 26px}
+#inner p.lead{font-size:clamp(22px,4.4vw,30px); font-weight:900; color:#aee3ff}
+
+/* İçerik kartları */
+.page{position:relative; z-index:1; padding:110px 14px 60px; max-width:1100px; margin:0 auto}
+.grid{display:grid; gap:16px; grid-template-columns:1fr 1fr}
+.card{background:rgba(11,33,46,.72); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:16px; box-shadow:0 10px 40px rgba(0,0,0,.28); backdrop-filter:blur(8px)}
+.card h3{margin:0 0 4px; font:900 20px/1.1 Cinzel,serif; letter-spacing:.12em}
+.pill{display:inline-block; margin:6px 6px 0 0; padding:6px 10px; border:1px solid rgba(255,255,255,.2); border-radius:999px; background:rgba(255,255,255,.06); font-weight:800}
+
+/* Giriş beyaz fade */
+#enter{position:fixed; inset:0; background:#ffffff; z-index:6; opacity:1; transform:scale(1.05); animation:fadeIn .55s ease forwards}
 @keyframes fadeIn{to{opacity:0; transform:scale(1)}}
 </style>
 </head>
@@ -38,7 +46,10 @@ canvas{position:fixed; inset:0; z-index:0}
 <section id="story" aria-label="Motivasyon">
   <div class="bar">
     <h2>OKYANUS • KARİZMA • DİSİPLİN</h2>
-    <button id="skip" class="skip">Geç</button>
+    <div style="display:flex;gap:8px">
+      <button id="homeTop" class="home" onclick="location.href='index.html'">Ana Menü</button>
+      <button id="skip" class="skip">Geç</button>
+    </div>
   </div>
   <div id="viewport"><div id="inner">
     <p class="lead">Derin sular sakindir; gücünü göstermez, gerektiğinde hatırlatır.</p>
@@ -50,31 +61,60 @@ canvas{position:fixed; inset:0; z-index:0}
   <div style="text-align:center; padding:10px; opacity:.75">⏳ Metin bitince sayfa otomatik açılacak • İstersen “Geç”e bas</div>
 </section>
 
-<!-- Ana içerik -->
-<section class="sheet" id="main" style="visibility:hidden">
-  <h2>Hoş geldin kaptan ⚓️</h2>
-  <p>Burada günlük hedeflerini, kısa alıştırmaları ve ilerleme durumunu tutabilirsin. Sağ üstten ana menüye dönebilirsin.</p>
-</section>
+<!-- ANA SAYFA İÇERİĞİ -->
+<main class="page" id="main" style="visibility:hidden">
+  <div class="grid">
+    <section class="card">
+      <h3>⚙️ Karizma & Disiplin</h3>
+      <p>Otorite sessiz sakin kurulur; söz kısa, adım nettir. Disiplin ile hedefin etrafına saygı çemberi çizilir.</p>
+      <span class="pill">Odak</span><span class="pill">Devamlılık</span><span class="pill">Söz & Eylem birliği</span>
+    </section>
+    <section class="card">
+      <h3>⚡ Motivasyon</h3>
+      <p>Hedef büyüdükçe parçala: <b>25/5 kuralı</b>. Bitince küçük bir ödül ver: kahve, 10 dk yürüyüş, kısa yazı.</p>
+      <span class="pill">25 dk sprint</span><span class="pill">Küçük ödül</span><span class="pill">Takvim çentiği</span>
+    </section>
+    <section class="card">
+      <h3>🤝 Kibarlık</h3>
+      <p>Keskin olmak kaba olmak değildir. Cümleyi yumuşatan üç şey: teşekkür, seçenek, açıklık.</p>
+      <span class="pill">Teşekkür</span><span class="pill">Gerekçe</span><span class="pill">Seçenek</span>
+    </section>
+    <section class="card">
+      <h3>🎯 Mini Alıştırma</h3>
+      <p>Bugünün hedefi: tek bir işi seç → 25 dakika. Bitince 5 dakika ara ve “ne devrildim?” kısa notu.</p>
+      <span class="pill">Tek hedef</span><span class="pill">25/5</span><span class="pill">Kısa not</span>
+    </section>
+  </div>
+</main>
 
 <script>
-/* Deniz baloncuk/çizgi */
+/* Okyanus animasyonu: çizgiler + baloncuk + hafif parıltı */
 (()=>{const c=sea,x=c.getContext('2d'); function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
 const B=220,b=[]; for(let i=0;i<B;i++) b.push({x:Math.random()*c.width,y:c.height+Math.random()*c.height,r:1+Math.random()*3,s:.4+.9*Math.random()});
-let t=0;(function loop(){x.clearRect(0,0,c.width,c.height);x.strokeStyle='rgba(80,200,255,.2)';x.lineWidth=1;
-for(let i=0;i<40;i++){const y=(i/40)*c.height;x.beginPath();x.moveTo(0,y+Math.sin((t+i)*.04)*6);x.lineTo(c.width,y);x.stroke();}
-for(const p of b){p.y-=p.s; if(p.y<-20){p.y=c.height+20; p.x=Math.random()*c.width} x.globalAlpha=.28; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();}
-t++; requestAnimationFrame(loop);})();})();
+let t=0;(function loop(){
+  x.clearRect(0,0,c.width,c.height);
+  // çizgiler
+  x.strokeStyle='rgba(80,200,255,.16)'; x.lineWidth=1;
+  for(let i=0;i<40;i++){const y=(i/40)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.04)*6); x.lineTo(c.width,y); x.stroke();}
+  // baloncuk
+  for(const p of b){ p.y-=p.s; if(p.y<-20){p.y=c.height+20; p.x=Math.random()*c.width}
+    x.globalAlpha=.3; x.fillStyle='#6ee4ff'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill(); }
+  // parıltı
+  const gx=c.width*.42+Math.sin(t/60)*80, gy=c.height*.35+Math.cos(t/70)*40;
+  const g=x.createRadialGradient(gx,gy,10,gx,gy,180);
+  g.addColorStop(0,'rgba(140,220,255,.25)'); g.addColorStop(1,'rgba(140,220,255,0)');
+  x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
+  t++; requestAnimationFrame(loop);
+})();})();
 
 /* Manifesto akışı */
 (()=>{const vp=document.getElementById('viewport'), inner=document.getElementById('inner'), skip=document.getElementById('skip'), main=document.getElementById('main'), story=document.getElementById('story');
-const vh=()=>vp.clientHeight; let start; const SPEED=52; // px/sn
-function startScroll(){ const ih=inner.scrollHeight, dist=ih + vh() + 60; start=performance.now();
+const vh=()=>vp.clientHeight; const SPEED=58;
+function startScroll(){const ih=inner.scrollHeight, dist=ih + vh() + 80, start=performance.now();
  (function step(now){ const d=(now-start)/1000*SPEED; inner.style.transform=`translateY(${vh()-Math.min(d,dist)}px)`; 
    if(d>=dist) finish(); else requestAnimationFrame(step); })(performance.now());}
 function finish(){ story.style.display='none'; main.style.visibility='visible'; }
-skip.onclick=finish; // Geç
-// giriş animasyonu bittikten biraz sonra başlat
-setTimeout(()=>{ startScroll(); }, 500);
+skip.onclick=finish; setTimeout(startScroll, 600);
 })();
 </script>
 </body>
