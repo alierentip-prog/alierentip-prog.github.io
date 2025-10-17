@@ -216,5 +216,23 @@ skipBtn.addEventListener('click',()=>{if(manifestoTimer){clearTimeout(manifestoT
 function showMenu(){mfWrap.style.display='none';skipBtn.classList.remove('show');main.style.display='block';}
 document.getElementById('userBtn').addEventListener('click',e=>{e.preventDefault();alert('Kullanıcı Paneli yakında burada ⚙️');});
 </script>
+  <audio id="bgMusic" preload="auto" loop>
+  <source src="yenidosya.m4a" type="audio/mp4">
+</audio>
+
+<script>
+const music = document.getElementById('bgMusic');
+music.volume = 0.4;
+
+// manifesto bittikten sonra müzik başlasın:
+function playMusic() {
+  if (music.paused) {
+    music.play().catch(() => {});
+  }
+}
+
+// 2 dakikalık manifesto bittikten sonra otomatik başlat:
+setTimeout(playMusic, 120000);
+</script>
 </body>
   </html>
