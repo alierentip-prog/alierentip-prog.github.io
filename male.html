@@ -35,6 +35,8 @@
   body.manifest-on header, body.manifest-on .sheet{ visibility:hidden }
 
   .man-bar{
+    position: sticky; top: 0;
+    z-index: 50; /* skip en üstte */
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.08);
     background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));
@@ -45,10 +47,13 @@
   }
   .man-skip{
     appearance:none; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.07);
-    color:#fff; border-radius:12px; padding:8px 12px; font-weight:800; cursor:pointer; backdrop-filter:blur(6px)
+    color:#fff; border-radius:12px; padding:8px 12px; font-weight:800; cursor:pointer; backdrop-filter:blur(6px);
+    position: relative; z-index: 60; pointer-events:auto;
   }
 
-  .viewport{ overflow:hidden }
+  .viewport{
+    overflow:hidden; position: relative; z-index: 1;
+  }
   #manInner{
     position:absolute; left:0; right:0;
     transform:translate3d(0,100%,0); /* alttan başla */
@@ -58,6 +63,7 @@
     font-size:clamp(28px,9vw,120px); line-height:1.3; letter-spacing:.05em;
     text-shadow:0 0 45px rgba(120,200,255,.55), 0 0 120px rgba(80,180,255,.35), 0 0 240px rgba(100,200,255,.25);
     will-change: transform;
+    pointer-events: none; /* yazı tıklamayı engellemesin */
   }
   #manInner p{ margin:0 0 clamp(24px,5vw,80px); text-wrap:pretty }
   #manInner p.lead{
@@ -100,7 +106,7 @@
     <p>Serin mavilikte hava kabarcıkları yükselir; derinlerde metalik mavi çizgiler akıp gider. Arkanı yasla; akışın tadını çıkar.</p>
   </section>
 
-  <!-- ======== ERKEK MANİFESTOSU (alttan-yukarı dev, akıcı) ======== -->
+  <!-- ======== ERKEK MANİFESTOSU (akıcı + skip tıklandığında kesin çalışır) ======== -->
   <section id="manWrap" aria-label="Erkeklik Manifestosu">
     <div class="man-bar">
       <div>ERKEK OLMAK • DURU GÜÇ, SESSİZ ZARAFET</div>
@@ -162,7 +168,7 @@
     });
   })();
 
-  // ————— Manifesto: AKICI (Web Animations API) —————
+  // ————— Manifesto: AKICI (Web Animations API) + Skip garanti —————
   (()=>{
     const wrap = document.getElementById('manWrap');
     const inner = document.getElementById('manInner');
@@ -183,7 +189,14 @@
       setTimeout(()=> { wrap.remove(); document.body.classList.remove('manifest-on'); openMenu(); }, 620);
     }
 
-    // HIZ (px/sn) — daha hızlı/ yavaş istersen değiştir
+    // Skip butonu: click + touch, baloncuklanmayı kes
+    function bindSkipOnce(){
+      if(!skipBtn) return;
+      const handler = (e)=>{ e.preventDefault(); e.stopPropagation(); finish(); };
+      ['click','touchstart'].forEach(ev => skipBtn.addEventListener(ev, handler, { once: true }));
+    }
+
+    // HIZ (px/sn)
     const SPEED = 72;
 
     // Toplam mesafe = içerik yüksekliği + viewport (alttan girip üstten çıkış)
@@ -192,9 +205,8 @@
     let anim;
 
     function start(){
-      const distance = ih() + vh() + 40;        // px
-      const duration = (distance / SPEED) * 1000; // ms
-      // translateY: başlangıç vh, bitiş -(ih)
+      const distance = ih() + vh() + 40;           // px
+      const duration = (distance / SPEED) * 1000;  // ms
       anim = inner.animate(
         [
           { transform: `translate3d(0, ${vh()}px, 0)` },
@@ -206,17 +218,15 @@
     }
 
     // Başlat
+    bindSkipOnce();
     start();
 
-    // Skip çalışsın
-    skipBtn.addEventListener('click', (e)=>{ e.preventDefault(); finish(); }, {once:true});
-
-    // Ekran boyutu değişirse animasyonu yenile (akıcı kalır)
+    // Ekran boyutu değişirse animasyonu yenile
     let resizeTimer;
     addEventListener('resize', ()=>{
       if(anim) anim.cancel();
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(start, 120);
+      resizeTimer = setTimeout(()=>{ start(); }, 120);
     });
   })();
 </script>
