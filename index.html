@@ -78,81 +78,100 @@
   }
   #wipe.show{ opacity:1; transform:scale(1) }
 
-  /* ======= SPLASH (İSTEDİĞİN YENİ HALKA INTRO) ======= */
+  /* ======= SPLASH (yeni halka intro) ======= */
   #splash{ position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:#0a0a0a; }
-  /* Halka: merkeze doğru kontrast azalan ama sıfırlanmayan yapı */
   .ring{
     position:relative; width:min(78vmin,720px); aspect-ratio:1/1; border-radius:50%;
-    display:grid; place-items:center; filter: blur(.3px);
-    animation:ringPulse 3.4s ease-in-out forwards;
+    display:grid; place-items:center;
+    animation:ringPulse 4.2s ease-in-out forwards;
   }
+  /* Ortası hafif parıltılı, kenarında güçlü beyaz halka – merkezde kontrast azalıyor ama bitmiyor */
   .ring::before{
     content:""; position:absolute; inset:0; border-radius:50%;
     background:
       radial-gradient(circle at 50% 50%,
-        rgba(255,255,255,0.08) 0%,
-        rgba(255,255,255,0.08) 45%,
-        rgba(255,255,255,0.06) 60%,
-        rgba(255,255,255,0.05) 75%,
-        rgba(255,255,255,0.04) 90%,
-        rgba(255,255,255,0.08) 100%) padding-box,
+        rgba(255,255,255,0.06) 0%,
+        rgba(255,255,255,0.06) 46%,
+        rgba(255,255,255,0.05) 60%,
+        rgba(255,255,255,0.045) 74%,
+        rgba(255,255,255,0.04) 88%,
+        rgba(255,255,255,0.06) 100%) padding-box,
       radial-gradient(circle at 50% 50%,
         transparent 66%,
-        rgba(255,255,255,0.35) 70%,
-        rgba(255,255,255,0.95) 74%,
+        rgba(255,255,255,0.32) 70%,
+        rgba(255,255,255,0.92) 74%,
         #ffffff 78%,
-        rgba(255,255,255,0.95) 82%,
-        rgba(255,255,255,0.35) 86%,
-        rgba(255,255,255,0.12) 90%,
-        rgba(255,255,255,0.08) 94%,
-        rgba(255,255,255,0.06) 97%,
-        rgba(255,255,255,0.05) 100%) border-box;
+        rgba(255,255,255,0.92) 82%,
+        rgba(255,255,255,0.30) 86%,
+        rgba(255,255,255,0.10) 92%,
+        rgba(255,255,255,0.06) 100%) border-box;
     -webkit-mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
             mask: radial-gradient(farthest-side, #000 66%, transparent 67%);
+    filter: drop-shadow(0 0 28px rgba(255,255,255,.55))
+            drop-shadow(0 0 80px rgba(255,255,255,.35));
   }
 
-  /* AZURA yazısı: renk kaydırmalı dijital */
+  /* AZURA yazısı: daha parlak, sürekli renk kaydırma */
   .logo{
     position:relative; z-index:1;
-    font-family:Cinzel,serif; font-weight:900; letter-spacing:.20em;
-    font-size: clamp(36px, 9.5vw, 150px); line-height:1;
-    background:linear-gradient(90deg,#ffffff,#b8e7ff,#7cd2ff,#a5a3ff,#ff9ddb,#ffffff);
+    font-family:Cinzel,serif; font-weight:900; letter-spacing:.22em;
+    font-size: clamp(40px, 10vw, 160px); line-height:1;
+    background:linear-gradient(90deg,#ffffff,#cfeaff,#8fd6ff,#a7a5ff,#ff9ddb,#ffffff);
     background-size:300% 100%;
     -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 0 24px rgba(255,255,255,.35);
-    animation:hueShift 6s linear infinite, popScale 3.4s ease-in-out both;
+    text-shadow:0 0 28px rgba(255,255,255,.45), 0 0 64px rgba(160,200,255,.25);
+    animation:hueShift 7.2s linear infinite, popScale 4.2s ease-in-out both;
   }
 
   /* Tam beyaz örtü: en sonda tam beyaza çıkar */
-  #whiteOut{ position:fixed; inset:0; background:#fff; z-index:210; opacity:0; transition:opacity .48s ease; pointer-events:none; }
+  #whiteOut{ position:fixed; inset:0; background:#fff; z-index:210; opacity:0; transition:opacity .65s ease; pointer-events:none; }
   #whiteOut.show{ opacity:1; }
 
-  /* Animasyonlar */
   @keyframes hueShift { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
   @keyframes popScale {
     0%{ transform:scale(.86); opacity:0 }
-    12%{ opacity:1 }
-    45%{ transform:scale(1.06) }
-    70%{ transform:scale(.98) }
-    100%{ transform:scale(1.10) }
+    18%{ opacity:1 }
+    48%{ transform:scale(1.08) }
+    72%{ transform:scale(.98) }
+    100%{ transform:scale(1.12) }
   }
   @keyframes ringPulse {
     0%{ transform:scale(.86); opacity:.92 }
-    35%{ transform:scale(1.08); opacity:1 }
-    60%{ transform:scale(.96); opacity:.98 }
-    100%{ transform:scale(26); opacity:1 } /* devleşip ekranı kaplar */
+    38%{ transform:scale(1.10); opacity:1 }
+    66%{ transform:scale(.98); opacity:.98 }
+    100%{ transform:scale(28); opacity:1 } /* devleşip ekranı kaplar */
   }
 
-  /* Hoş geldiniz metni: patlamanın sonunda belirip sönsün */
-  #hello{
-    position:fixed; inset:auto 0 24vh 0; text-align:center; z-index:205;
-    font-family:Cinzel,serif; font-size:clamp(22px,4.2vw,42px); letter-spacing:.12em; font-weight:900;
-    color:#ffffff; text-shadow:0 0 22px rgba(255,255,255,.65);
-    opacity:0; transform:translateY(8px);
-    animation: helloIn .8s ease 3.0s forwards, helloOut .7s ease 4.2s forwards;
+  /* Hamburger ve yan panel */
+  .topbar{position:fixed; left:12px; top:12px; z-index:3}
+  .icon-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:44px; height:44px; border-radius:12px;
+    border:1px solid var(--b); background:var(--glass); color:var(--fg); font-weight:900;
+    backdrop-filter:blur(8px); cursor:pointer;
   }
-  @keyframes helloIn{ to{opacity:1; transform:none} }
-  @keyframes helloOut{ to{opacity:0; transform:translateY(-6px)} }
+  .drawer{
+    position:fixed; inset:0; z-index:110; display:none;
+  }
+  .drawer.show{display:block}
+  .drawer .shade{position:absolute; inset:0; background:rgba(0,0,0,.35); opacity:0; transition:opacity .3s ease;}
+  .drawer .panel{
+    position:absolute; left:0; top:0; bottom:0; width:min(420px,88%);
+    background:rgba(8,14,20,.82); backdrop-filter: blur(12px);
+    border-right:1px solid var(--b); transform:translateX(-100%); transition:transform .35s ease;
+    padding:16px;
+  }
+  .drawer.show .shade{opacity:1}
+  .drawer.show .panel{transform:none}
+  .panel h3{ margin:6px 0 12px; font:900 18px/1 Cinzel,serif; letter-spacing:.12em }
+  .list{display:grid; gap:10px}
+  .list a{
+    display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px;
+    border:1px solid var(--b); background:var(--glass); color:var(--fg); text-decoration:none; font-weight:800;
+  }
+  .muted{color:var(--mut); font-size:14px; margin:8px 0 0}
+  .list small{color:var(--mut)}
+  hr.sep{border:none; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent); margin:12px 0}
 
   /* Mobil */
   @media (max-width:720px){
@@ -168,10 +187,34 @@
     <div class="ring"><div class="logo">AZURA</div></div>
   </div>
   <div id="whiteOut" aria-hidden="true"></div>
-  <div id="hello">Hoş geldiniz 🩵🩷</div>
 
   <!-- Wipe (sayfa geçişi: sönerek beyaza) -->
   <div id="wipe"></div>
+
+  <!-- Hamburgermenu -->
+  <div class="topbar">
+    <button id="menuBtn" class="icon-btn" aria-label="Menü">☰</button>
+  </div>
+
+  <!-- Yan Panel -->
+  <aside id="drawer" class="drawer" aria-hidden="true">
+    <div class="shade" id="shade"></div>
+    <div class="panel">
+      <h3>AZURA • Panel</h3>
+      <div class="list">
+        <a href="#hakkimda">👤 Hakkımda <small>kısa özet</small></a>
+        <a href="#icerikler">🗂️ İçerikler <small>notlar • makaleler • projeler</small></a>
+        <a href="#erkek">🌊 Erkek • Okyanus <small>karizma • disiplin • odak</small></a>
+        <a href="#kadin">🌿 Kadın • Doğa <small>şefkat • zarafet • denge</small></a>
+        <a href="#kanallar">✨ Kanallar <small>felsefe • tıp • echolar</small></a>
+        <a href="#yapilabilir">🧭 Neler yapılabilir? <small>hedefler • yol haritası</small></a>
+      </div>
+      <p class="muted">Menüyü kapatmak için dışına dokunabilirsin.</p>
+      <hr class="sep">
+      <a class="btn" href="male.html">🌊 Okyanus’a Git</a>
+      <a class="btn" href="female.html" style="margin-left:6px">🌿 Doğa’ya Git</a>
+    </div>
+  </aside>
 
   <!-- Marka -->
   <h1 class="brand">AZURA</h1>
@@ -196,24 +239,19 @@
   </main>
 
 <script>
-/* ---------- SPLASH zamanlama: halka → tam beyaz → index ---------- */
+/* ---------- SPLASH zamanlama: halka → tam beyaz → sayfa ---------- */
 (() => {
-  const INTRO_MS = 3400;   // halka + yazı sahnesi
-  const WHITE_MS = 520;    // tam beyaza yükselme süresi
+  const INTRO_MS = 4200;   // halka + yazı sahnesi (biraz uzun)
+  const WHITE_MS = 650;    // tam beyaza yükselme
 
   const splash = document.getElementById('splash');
   const white  = document.getElementById('whiteOut');
-  const hello  = document.getElementById('hello');
 
-  // 1) Halka sahnesi oynar (CSS animasyonları)
-  // 2) Süre dolunca tam beyaza çıkar
   setTimeout(()=>{
-    white.classList.add('show');
-    // 3) Kısa süre sonra tüm overlay'leri kaldır, sayfa görünür
+    white.classList.add('show');     // tam beyaz
     setTimeout(()=>{
-      splash.remove();
-      white.remove();
-      hello.remove();
+      splash.remove();               // sahneyi kaldır
+      white.remove();                // beyaz perdenin kalkması
     }, WHITE_MS);
   }, INTRO_MS);
 })();
@@ -259,6 +297,21 @@
     });
   }
 })();
+
+/* ---------- yan panel (hamburger) ---------- */
+(() => {
+  const drawer = document.getElementById('drawer');
+  const menuBtn = document.getElementById('menuBtn');
+  const shade = document.getElementById('shade');
+
+  function open(){ drawer.classList.add('show'); drawer.setAttribute('aria-hidden','false'); }
+  function close(){ drawer.classList.remove('show'); drawer.setAttribute('aria-hidden','true'); }
+
+  menuBtn.addEventListener('click', open);
+  shade.addEventListener('click', close);
+  // Esc ile kapat
+  addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
+})();
 </script>
 </body>
-  </html>
+</html>
