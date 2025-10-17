@@ -48,24 +48,22 @@ body{
 }
 /* pembe noktacıklar */
 .canvas{position:absolute; inset:0;}
-/* Güneş */
+/* Güneş (daha geniş gezinti) */
 .sun{
   position:absolute; width:560px; height:560px; border-radius:50%;
   filter:blur(0.2px);
   background:
     radial-gradient(closest-side, rgba(255,243,205,0.95), rgba(255,218,160,0.35) 55%, rgba(255,190,140,0.08) 78%, transparent 90%);
   opacity:.75;
-  /* daha geniş gezi alanı */
   animation: sun-walk 42s linear infinite alternate;
 }
 @keyframes sun-walk{
-  /* ekranın sağ üst-orta geniş elipsinde gezinir */
-  0%   { transform:translate(50vw, 6vh) }
-  20%  { transform:translate(78vw, 12vh) }
-  40%  { transform:translate(62vw, 26vh) }
-  60%  { transform:translate(72vw, 8vh) }
-  80%  { transform:translate(55vw, 24vh) }
-  100% { transform:translate(68vw, 16vh) }
+  0%   { transform:translate(48vw,  4vh) }
+  20%  { transform:translate(76vw, 14vh) }
+  40%  { transform:translate(58vw, 28vh) }
+  60%  { transform:translate(72vw,  8vh) }
+  80%  { transform:translate(50vw, 24vh) }
+  100% { transform:translate(62vw, 12vh) }
 }
 
 /* Üst menü butonları */
@@ -88,7 +86,7 @@ body{
   padding:16px 22px; border-radius:16px; z-index:4;
   background:rgba(30,24,33,0.8); border:1px solid var(--card-border);
   box-shadow:0 8px 30px rgba(17,0,30,0.35);
-  text-align:left; opacity:0; animation:wel-in .8s ease .2s forwards;
+  text-align:left; opacity:0; animation:wel-in .6s ease .15s forwards;
 }
 .welcome h3{
   margin:0; font-family:Cinzel,serif; letter-spacing:.06em; font-weight:700;
@@ -99,14 +97,14 @@ body{
 }
 .welcome p{margin:6px 0 0; color:#E9C7D9; font-size:14px}
 @keyframes wel-in{to{opacity:1; transform:translate(-50%,0)}}
-.fade-out{animation:wel-out .8s ease forwards}
+.fade-out{animation:wel-out .55s ease forwards}
 @keyframes wel-out{to{opacity:0; transform:translate(-50%,-10px)}}
 
 /* Yazıyı geç */
 .skip{position:fixed; top:12px; left:12px; z-index:6; display:none}
 .skip.show{display:inline-block}
 
-/* Manifesto (slayt) */
+/* Manifesto (slayt) – 1.5x hızlı (≈38.6s) */
 .manifesto-wrap{
   position:fixed; inset:0; z-index:3; display:none; pointer-events:none;
 }
@@ -123,9 +121,8 @@ body{
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-shadow:0 0 22px rgba(177,106,217,.45);
   white-space:pre-wrap; text-transform:uppercase;
-  /* kaydırma */
   top:100%; /* alttan başla */
-  animation: slideUp 58s linear forwards; /* 58 saniye */
+  animation: slideUp 38.6s linear forwards; /* 58s → 38.6s */
 }
 @keyframes slideUp{
   to{ top:-120% }
@@ -274,7 +271,7 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
   function size(){ c.width = innerWidth; c.height = innerHeight }
   size(); addEventListener('resize', size);
   const colors = ['#FF9DC3','#FFB7D3','#FF8FB6'];
-  const dots = Array.from({length: 160}, ()=>({
+  const dots = Array.from({length: 140}, ()=>({
     x: Math.random()*c.width,
     y: Math.random()*c.height,
     r: (Math.random()*2)+1.2,
@@ -296,7 +293,7 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
   draw();
 })();
 
-/* ---------- Akış mantığı ---------- */
+/* ---------- Akış mantığı (daha kısa bekleme) ---------- */
 const welcome = document.getElementById('welcomeBox');
 const mfWrap  = document.getElementById('mfWrap');
 const manifesto = document.getElementById('manifesto');
@@ -305,17 +302,17 @@ const main = document.getElementById('main');
 
 let manifestoTimer = null;
 
-/* Hoşgeldin 2.5sn görünür, 0.4sn sonra manifesto başlar */
+/* Hoşgeldin ≈1.9sn görünür, .55sn fade ve direkt manifesto */
 setTimeout(()=>{
   welcome.classList.add('fade-out');
-  setTimeout(startManifesto, 400); // beklemeyi kısalttık
-}, 2500);
+  setTimeout(startManifesto, 560);
+}, 1900);
 
 function startManifesto(){
   mfWrap.style.display='block';
   skipBtn.classList.add('show');
-  /* 58sn sonra menüye */
-  manifestoTimer = setTimeout(showMenu, 58000);
+  /* 38.6sn sonra menüye */
+  manifestoTimer = setTimeout(showMenu, 38600);
 }
 
 /* Yazıyı geç */
