@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AZURA • Kaynaklar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{ --fg:#eef5ff; --mut:#b9c7db; --bg:#0a0f1b; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14) }
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui}
+.top{position:fixed;inset:0 0 auto 0;height:0;z-index:3}
+.btn{position:absolute;top:12px;padding:9px 12px;border-radius:12px;border:1px solid var(--b);background:var(--glass);color:var(--fg);text-decoration:none;font-weight:700;backdrop-filter:blur(6px)}
+.btn.left{left:12px}.btn.right{right:12px}
+main{max-width:1100px;margin:90px auto 64px;padding:0 18px}
+h1{margin:0 0 8px;font-family:Cinzel,serif;letter-spacing:.08em;background:linear-gradient(180deg,#fff,#e2f0ff);-webkit-background-clip:text;color:transparent}
+.lead{color:var(--mut);margin:6px 0 22px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.filters button{padding:8px 12px;border-radius:10px;border:1px solid var(--b);background:rgba(255,255,255,.06);color:var(--fg);cursor:pointer}
+.grid{display:grid;gap:16px;grid-template-columns:1fr 1fr 1fr}
+.card{border:1px solid var(--b);background:var(--glass);border-radius:16px;padding:16px}
+.card h3{margin:0 0 6px}
+.card p{margin:0;color:#d6e6ff}
+footer{text-align:center;color:#cfd6ea;margin-top:22px}
+@media (max-width:980px){ .grid{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){ .grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="btn left" href="community.html">← Topluluk</a>
+  <a class="btn right" href="index.html">Ana Menü</a>
+</div>
+
+<main>
+  <h1>Kaynaklar</h1>
+  <p class="lead">Özenle seçilmiş kitaplar, makaleler, videolar. Etiketlere tıkla, filtrele.</p>
+
+  <div class="filters">
+    <button onclick="filterCat('book')">📘 Kitap</button>
+    <button onclick="filterCat('article')">📰 Makale</button>
+    <button onclick="filterCat('video')">🎬 Video</button>
+    <button onclick="filterCat('all')">Tümü</button>
+  </div>
+
+  <div class="grid" id="grid">
+    <article class="card" data-cat="book"><h3>Atomic Habits</h3><p>James Clear — Mikro alışkanlıklarla büyük sonuçlar.</p></article>
+    <article class="card" data-cat="book"><h3>Essentialism</h3><p>Greg McKeown — Daha az ama daha iyi.</p></article>
+    <article class="card" data-cat="video"><h3>Deep Work • Talk</h3><p>Cal Newport — Derin odak sunumu.</p></article>
+    <article class="card" data-cat="article"><h3>Kindness in Feedback</h3><p>Niyet ve çıpa cümlelerle geri bildirim.</p></article>
+    <article class="card" data-cat="video"><h3>Pomodoro Done Right</h3><p>Ritimli çalışma örnekleri.</p></article>
+    <article class="card" data-cat="article"><h3>Boundaries 101</h3><p>Nazik sınır nasıl kurulur?</p></article>
+  </div>
+
+  <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
+</main>
+
+<script>
+function filterCat(cat){
+  document.querySelectorAll('#grid .card').forEach(c=>{
+    c.style.display = (cat==='all' || c.dataset.cat===cat) ? 'block' : 'none';
+  });
+}
+</script>
+</body>
+</html>
