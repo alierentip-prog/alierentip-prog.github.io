@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kullanıcı Paneli • Azura</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1411; --surface:#1A201C; --text:#E8F5ED; --muted:#B8D3C2;
+  --border:#2E4738; --green:#2EE59D; --red:#FF4D6D; --chip:#0F1512;
+}
+*{box-sizing:border-box} body{margin:0; background:var(--bg); color:var(--text); font-family:Inter,system-ui}
+.wrap{max-width:1100px; margin:28px auto; padding:0 16px}
+.topbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:16px}
+.btn{background:#101612; color:var(--text); padding:8px 12px; border:1px solid var(--border); border-radius:12px; text-decoration:none; font-weight:600}
+.grid{display:grid; grid-template-columns:repeat(12,1fr); gap:14px}
+.card{grid-column:span 6; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.card.h12{grid-column:span 12}
+h3{margin:0 0 8px; font-family:Cinzel,serif; letter-spacing:.06em}
+p{margin:0; color:var(--muted)}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.chips span{background:var(--chip); border:1px solid var(--border); color:var(--text); padding:7px 12px; border-radius:999px; font-size:12.5px; font-weight:600}
+.badge{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:10px; font-weight:600}
+.badge.ok{background:rgba(46,229,157,.12); color:var(--green); border:1px solid rgba(46,229,157,.35)}
+.badge.warn{background:rgba(255,77,109,.10); color:var(--red); border:1px solid rgba(255,77,109,.35)}
+.kpi{display:flex; gap:16px; margin-top:10px}
+.kpi div{background:#101612; border:1px solid var(--border); padding:10px 12px; border-radius:12px; min-width:120px}
+a{text-decoration:none}
+@media (max-width:800px){ .card{grid-column:span 12} }
+</style>
+</head><body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="btn" href="male.html">← Geri</a>
+    <div style="display:flex; gap:8px">
+      <a class="btn" href="notes.html">Notlar</a>
+      <a class="btn" href="practices.html">Alıştırmalar</a>
+      <a class="btn" href="resources.html">Kaynaklar</a>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>🧭 Günün Odak Hedefi</h3>
+      <p>30 dk derin çalışma: telefon uçak modunda.</p>
+      <div class="kpi">
+        <div><strong>Öneri:</strong> 30 dk</div>
+        <div class="badge ok">✓ Hazırım</div>
+      </div>
+      <div class="chips">
+        <span>Tek pencere</span><span>Not</span><span>Mola</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>⚡ Mikro Meydan Okuma</h3>
+      <p>Çalışma alanını 3 dk topla.</p>
+      <div class="chips"><span>Temiz masa</span><span>Sade görünüm</span></div>
+    </div>
+
+    <div class="card">
+      <h3>🗣️ İletişim & Nezaket</h3>
+      <p>Geri bildirim kalıbı: Gözlem → Etki → İstek.</p>
+      <div class="chips"><span>Netlik</span><span>Seçenek</span><span>Onay</span></div>
+    </div>
+
+    <div class="card">
+      <h3>🔁 Alışkanlık Serisi</h3>
+      <p>Peş peşe gün: 0</p>
+      <div class="chips"><span>Hedef: min 10 gün</span><span>Günlük işaretle</span></div>
+    </div>
+
+    <div class="card">
+      <h3>🌬️ Sakinlik Egzersizi</h3>
+      <p>4–6 nefes: 4 sn al, 6 sn ver.</p>
+      <div class="chips"><span>2 dakika</span><span>Nefes sayacı</span></div>
+    </div>
+
+    <div class="card h12">
+      <h3>📚 Kaynaklar</h3>
+      <div class="chips">
+        <span>Pratikler</span><span>Mini Alışkanlıklar</span><span>Netlik</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>
