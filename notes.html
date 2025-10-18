@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AZURA • Jurnal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{ --fg:#f0f5ff; --mut:#b9c7db; --bg:#0a0f1b; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14) }
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui}
+.top{position:fixed;inset:0 0 auto 0;height:0;z-index:3}
+.btn{position:absolute;top:12px;padding:9px 12px;border-radius:12px;border:1px solid var(--b);background:var(--glass);color:var(--fg);text-decoration:none;font-weight:700;backdrop-filter:blur(6px)}
+.btn.left{left:12px}.btn.right{right:12px}
+main{max-width:900px;margin:90px auto 64px;padding:0 18px}
+h1{margin:0 0 8px;font-family:Cinzel,serif;letter-spacing:.08em;background:linear-gradient(180deg,#fff,#e2f0ff); -webkit-background-clip:text; color:transparent}
+.lead{color:var(--mut);margin:6px 0 22px}
+.card{border:1px solid var(--b);background:var(--glass);border-radius:16px;padding:18px}
+label{display:block;margin:8px 0 4px;color:#d6e6ff}
+textarea,input{width:100%;padding:10px;border-radius:10px;border:1px solid var(--b);background:rgba(255,255,255,.06);color:var(--fg)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+button{padding:10px 12px;border-radius:10px;border:1px solid var(--b);background:rgba(255,255,255,.08);color:var(--fg);cursor:pointer}
+.list{margin-top:16px;display:grid;gap:10px}
+.note{padding:12px;border:1px solid var(--b);background:rgba(255,255,255,.04);border-radius:12px}
+footer{text-align:center;color:#cfd6ea;margin-top:22px}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="btn left" href="community.html">← Topluluk</a>
+  <a class="btn right" href="index.html">Ana Menü</a>
+</div>
+
+<main>
+  <h1>Jurnal</h1>
+  <p class="lead">Kısa not, hızlı rahatlama. Sadece sen görürsün (tarayıcında saklanır).</p>
+
+  <section class="card">
+    <label>Tarih</label>
+    <input id="d" type="date"/>
+    <label>Başlık</label>
+    <input id="t" type="text" placeholder="Bugünün başlığı"/>
+    <label>Not</label>
+    <textarea id="n" rows="6" placeholder="Ne oldu, ne öğrendim?"></textarea>
+    <div class="row">
+      <button onclick="save()">Kaydet</button>
+      <button onclick="wipe()">Hepsini Sil</button>
+    </div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
+</main>
+
+<script>
+function key(){ return 'az_notes' }
+function load(){
+  const box=document.getElementById('list'); box.innerHTML='';
+  const data=JSON.parse(localStorage.getItem(key())||'[]');
+  data.forEach(it=>{
+    const div=document.createElement('div'); div.className='note';
+    div.textContent=`${it.date} — ${it.title}: ${it.note}`;
+    box.appendChild(div);
+  });
+}
+function save(){
+  const date=document.getElementById('d').value || new Date().toISOString().slice(0,10);
+  const title=(document.getElementById('t').value||'Başlıksız').trim();
+  const note=(document.getElementById('n').value||'').trim();
+  if(!note){ alert('Bir şeyler yaz :)'); return }
+  const data=JSON.parse(localStorage.getItem(key())||'[]');
+  data.unshift({date,title, note});
+  localStorage.setItem(key(), JSON.stringify(data));
+  document.getElementById('t').value=''; document.getElementById('n').value='';
+  load();
+}
+function wipe(){
+  if(confirm('Tüm kayıtlar silinsin mi?')){ localStorage.removeItem(key()); load(); }
+}
+load();
+</script>
+</body>
+</html>
