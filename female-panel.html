@@ -1,1 +1,273 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AZURA • Kadın Paneli</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* Tema renkleri */
+  --sidebar:#3b0f3e;          /* koyu erik */
+  --sidebar-2:#2b0b2d;
+  --accent-1:#ff6aa2;         /* pembe */
+  --accent-2:#b17bff;         /* mor */
+  --accent-mint:#46e0c3;      /* kontrast */
+  --ink:#1a1a1a;
+  --muted:#6b6b80;
+  --paper:#ffffff;
+  --paper-2:#faf7fb;          /* çok açık mor/krem */
+  --bd:#ece3f2;
+  --chip:#f4e8f6;
+  --chip-bd:#ebd7f0;
+  --ok:#24c8a5;
+  --warn:#ff9e5e;
+  --danger:#ff6b84;
+  --shadow: 0 12px 40px rgba(36,16,48,.12);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--paper-2); color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+}
+
+/* Layout */
+.wrap{min-height:100%; display:grid; grid-template-columns: 280px 1fr}
+@media (max-width:960px){ .wrap{grid-template-columns:1fr} }
+
+/* === Sidebar === */
+.sidebar{
+  background: linear-gradient(180deg,var(--sidebar), var(--sidebar-2));
+  color:#ffeefe; padding:18px; position:relative;
+}
+.sidebar .brand{
+  display:flex; align-items:center; gap:10px; padding:10px 8px 16px;
+  border-bottom:1px dashed rgba(255,255,255,.18);
+}
+.logo-dot{
+  width:36px;height:36px;border-radius:50%;
+  background: radial-gradient(90% 90% at 30% 30%, #fff, #ffd4ec 45%, #ff9ed0 70%, transparent 75%),
+              radial-gradient(120% 120% at 70% 70%, #b17bff44 0,transparent 70%);
+  box-shadow:0 8px 28px rgba(255,140,220,.38), inset 0 0 0 2px rgba(255,255,255,.7);
+}
+.brand h1{
+  margin:0; font:700 18px Cinzel,serif; letter-spacing:.08em;
+  background:linear-gradient(180deg,#fff,#ffe1ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 18px rgba(255,160,230,.25)
+}
+.nav{
+  display:flex; flex-direction:column; gap:8px; padding:16px 6px 8px;
+}
+.nav a{
+  text-decoration:none; color:#ffeefe; display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:12px; font-weight:600;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(180deg,rgba(255,255,255,.06), rgba(255,255,255,.02));
+  transition:.2s ease;
+}
+.nav a:hover{ transform:translateX(4px); background:rgba(255,255,255,.12) }
+.kit{
+  position:sticky; bottom:12px; margin-top:18px; padding:12px;
+  border-radius:14px; border:1px dashed rgba(255,255,255,.18);
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+  font-size:13px; color:#ffeefecc;
+}
+.kit .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+.kit .chips span{
+  padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18)
+}
+
+/* === Main === */
+.main{ background:var(--paper); padding:22px 22px 28px }
+.topbar{
+  display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+}
+.search{
+  flex:1; min-width:260px; display:flex; align-items:center; gap:8px;
+  background:#fff; border:1px solid var(--bd); border-radius:14px; padding:10px 12px;
+  box-shadow:0 6px 18px rgba(60,0,70,.06);
+}
+.search input{border:0; outline:0; flex:1; font:500 14px Inter; color:var(--ink)}
+.btn{
+  appearance:none; border:1px solid var(--bd); background:linear-gradient(180deg,#ffffff,#faf8ff);
+  border-radius:12px; padding:10px 12px; font-weight:700; color:#5c3a84; cursor:pointer;
+  box-shadow:0 8px 26px rgba(120,30,160,.08); transition:.2s;
+}
+.btn:hover{transform:translateY(-1px); box-shadow:0 12px 34px rgba(120,30,160,.12)}
+.btn.primary{
+  background:linear-gradient(180deg, #ff7eb5, #ff5fa1);
+  color:white; border-color:#ff7eb5; text-shadow:0 1px 0 rgba(0,0,0,.2)
+}
+
+.grid{ display:grid; gap:18px; grid-template-columns: repeat(12,1fr); margin-top:18px }
+.card{
+  grid-column: span 12; background:linear-gradient(180deg,#fff,#fefbff);
+  border:1px solid var(--bd); border-radius:16px; padding:18px; box-shadow:var(--shadow);
+}
+@media (min-width:860px){
+  .col-6{ grid-column: span 6 }
+  .col-4{ grid-column: span 4 }
+  .col-8{ grid-column: span 8 }
+  .col-12{ grid-column: span 12 }
+}
+.card h3{
+  margin:0 0 6px; font:700 18px Cinzel,serif; letter-spacing:.06em;
+  background:linear-gradient(180deg,#3c1e55,#7e45a8);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.card p{margin:6px 0 0; color:var(--muted)}
+
+.badge{display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12px;
+  padding:6px 10px; border-radius:999px; border:1px solid var(--chip-bd); background:var(--chip); color:#7a467f}
+.row{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+
+.kpi{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:14px; border-radius:14px; border:1px dashed var(--bd);
+  background:linear-gradient(180deg,#fff,#fff7ff);
+}
+.kpi strong{font-size:22px; letter-spacing:.02em; color:#6a2f73}
+
+/* subtle confetti line */
+.confetti{position:relative; overflow:hidden; border-radius:12px}
+.confetti::after{
+  content:""; position:absolute; inset:auto 0 0 0; height:4px;
+  background:linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-mint));
+  filter:saturate(1.2) blur(.2px); opacity:.9
+}
+
+/* alert */
+.alert{
+  border:1px solid #ffd4a8; background:linear-gradient(180deg,#fff6eb,#fff1e0);
+  color:#6b3a00; border-radius:16px; padding:16px; box-shadow:0 10px 30px rgba(255,160,80,.18)
+}
+.alert .tag{background:#ffe6c6; border:1px solid #ffd5a8; color:#a8641a}
+
+/* mini interactions */
+.card:hover{ transform:translateY(-2px) }
+
+/* footer */
+footer{margin-top:18px; text-align:center; color:#8a8195; font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo-dot"></div>
+      <h1>Azura Nova<br><span style="font:600 11px Inter; letter-spacing:.12em; opacity:.8">Kullanıcı Paneli</span></h1>
+    </div>
+
+    <nav class="nav">
+      <a href="#"><span>🏠</span> Genel Bakış</a>
+      <a href="#"><span>👤</span> Profilim</a>
+      <a href="#"><span>📈</span> İlerleme</a>
+      <a href="#"><span>📚</span> Kaynaklar</a>
+      <a href="#"><span>🌸</span> Topluluk</a>
+      <a href="#"><span>⚙️</span> Ayarlar</a>
+    </nav>
+
+    <div class="kit">
+      <div style="font-weight:700; margin-bottom:6px">Hızlı Etiketler</div>
+      <div class="chips">
+        <span>#nazik</span><span>#odak</span><span>#mini-adım</span><span>#şefkat</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== Main ===== -->
+  <main class="main">
+    <div class="topbar">
+      <div class="search">
+        <span>🔎</span>
+        <input placeholder="Panelde ara… (ör. ‘rutin’, ‘nazik iletişim’)">
+      </div>
+      <button class="btn">⟳ Otomatik Güncelleme</button>
+      <button class="btn primary">💾 Kaydet</button>
+    </div>
+
+    <section class="grid">
+
+      <article class="card col-12 confetti">
+        <span class="badge">✨ Hoş geldin!</span>
+        <h3>Günün akışı hazır.</h3>
+        <p>Bu alan ana menüden farklı olarak <strong>kişisel çalışma</strong> bölümü. Soldan dilediğin sekmeye geç. Sağda kartların içindeki “mini aksiyonlar” ile hızla ilerle.</p>
+        <div class="row">
+          <span class="badge">Tanıtım</span>
+          <span class="badge">Günlük</span>
+          <span class="badge">Mini hedef</span>
+        </div>
+      </article>
+
+      <article class="card col-6">
+        <span class="badge" style="background:#e9fff9; border-color:#c9ffee; color:#008a74">🌿 Odak Bloku</span>
+        <h3>Bugün 20 dk • Tek İş</h3>
+        <div class="kpi" style="margin-top:8px">
+          <div>Seçilen görev:</div>
+          <strong>“Derin okuma”</strong>
+          <button class="btn" style="padding:8px 10px">Başlat</button>
+        </div>
+        <div class="row"><span class="badge">Tek pencere</span><span class="badge">Uçak modu</span><span class="badge">Pomodoro 20</span></div>
+      </article>
+
+      <article class="card col-6">
+        <span class="badge">💬 Nazik Hatırlatma</span>
+        <h3>“Sınır koymak kırmak değildir.”</h3>
+        <p style="margin-top:8px">Bugün bir talebi reddederken şu kalıbı dene: <em>“Şu an kapasitem dolu, X günü yapabilir miyim?”</em></p>
+        <div class="row"><span class="badge">Netlik</span><span class="badge">Ölçülülük</span></div>
+      </article>
+
+      <article class="card col-4">
+        <span class="badge">🗓️ Gündem</span>
+        <h3>Mini başlıklar (tanıtım)</h3>
+        <div class="row"><span class="badge">Rutin</span><span class="badge">Net Ajanda</span><span class="badge">Şefkatli Disiplin</span></div>
+      </article>
+
+      <article class="card col-4">
+        <span class="badge">📚 Kaynaklar</span>
+        <h3>Okuma listesi</h3>
+        <ul style="margin:8px 0 0 18px; color:#544b5d">
+          <li><strong>Atomic Habits</strong> — Clear</li>
+          <li><strong>Deep Work</strong> — Newport</li>
+          <li><strong>Ego Is the Enemy</strong> — Holiday</li>
+        </ul>
+      </article>
+
+      <article class="card col-4">
+        <span class="badge" style="background:#f0fffa;border-color:#d6fff2;color:#0a9f83">🧘🏻‍♀️ Sakinlik</span>
+        <h3>4-6 nefes • Tek adım</h3>
+        <p>4 sn al, 6 sn ver. Sonra sadece şu soruya cevap ver: <em>“Şu an benden beklenen tek adım ne?”</em></p>
+      </article>
+
+      <article class="card col-12 alert">
+        <span class="badge tag">Uyarı</span>
+        <h3 style="margin:6px 0">Aşırı Yüklenme Belirtisi</h3>
+        <p>Bugün 5’ten fazla hedef eklediysen, önce 3’e indir. Fazlası motivasyonu düşürebilir.</p>
+      </article>
+
+    </section>
+
+    <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
+  </main>
+</div>
+
+<!-- Küçük JS: butonlara dummy davranış -->
+<script>
+document.querySelectorAll('.nav a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    const btn = e.currentTarget;
+    btn.style.transform='translateX(6px) scale(1.02)';
+    setTimeout(()=>btn.style.transform='',180);
+  });
+});
+</script>
+</body>
+</html>
