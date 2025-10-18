@@ -1,664 +1,394 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AZURA • Kullanıcı Paneli</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Azura Nova • Kullanıcı Paneli</title>
 
-<!-- Yazı tipleri -->
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+/* ================== TOKMAKLAR ================== */
 :root{
-  /* Temel renk paleti */
-  --deep-bg:#0a0f0c;
-  --green-1:#00ffb3;
-  --green-2:#6affc3;
-  --green-3:#caffef;
-  --panel-bg:#101511;
-  --card-bg:#121a15;
-  --border:#1c2b22;
-  --text:#e7fff3;
-  --accent:#00ffaa;
-  --hover:#0b2e22;
+  --ink-900:#0f1b16;
+  --ink-700:#1f2d27;
+  --muted:#6a7f76;
+
+  --mint-25:#ffffff;
+  --mint-50:#f6fbf8;
+  --mint-100:#eaf7f0;
+  --mint-200:#c7edd9;
+  --mint-300:#a6e5c9;
+  --mint-400:#8fe0bf;
+  --mint-500:#34caa0;
+
+  --card:#ffffff;
+  --card-bd:#e9f1ec;
+  --chip:#f4faf7;
+
+  --shadow: 0 6px 28px rgba(15,27,22,.08);
 }
 
-/* Genel reset */
-*{box-sizing:border-box;margin:0;padding:0}
-body,html{height:100%;font-family:Inter,system-ui;background:var(--deep-bg);color:var(--text);overflow:hidden;}
-a{text-decoration:none;color:inherit}
-button{cursor:pointer;font-family:inherit}
-  /* ======= GİRİŞ SPLASH (yeşil spiral) ======= */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:#fff; color:var(--ink-900);
+  font:16px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+
+/* ================== SPLASH ================== */
 .splash{
   position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
-  background:
-    radial-gradient(1400px 800px at 50% -10%, rgba(0,255,170,0.08), transparent 60%),
-    radial-gradient(1200px 900px at 50% 120%, rgba(0,180,120,0.08), transparent 70%),
-    #08110c;
+  background:#fff; overflow:hidden; transition:opacity .5s ease, visibility .5s ease;
 }
-.splash-inner{position:relative; width:min(72vmin,680px); aspect-ratio:1/1;}
+.splash.fade{opacity:0; visibility:hidden}
+.splash .stage{ position:relative; width:min(480px,78vw); aspect-ratio:1/1; }
+
 .ring{
-  position:absolute; left:50%; top:50%;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  filter:drop-shadow(0 0 20px rgba(0,255,170,.25));
-  will-change:transform;
-}
-/* her halka için maske kalınlığı */
-.ring.mask-1{ -webkit-mask: radial-gradient(circle, transparent 0 56%, #000 58% 100%); mask: radial-gradient(circle, transparent 0 56%, #000 58% 100%); }
-.ring.mask-2{ -webkit-mask: radial-gradient(circle, transparent 0 48%, #000 50% 100%); mask: radial-gradient(circle, transparent 0 48%, #000 50% 100%); }
-.ring.mask-3{ -webkit-mask: radial-gradient(circle, transparent 0 40%, #000 42% 100%); mask: radial-gradient(circle, transparent 0 40%, #000 42% 100%); }
-.ring.mask-4{ -webkit-mask: radial-gradient(circle, transparent 0 32%, #000 34% 100%); mask: radial-gradient(circle, transparent 0 32%, #000 34% 100%); }
-.ring.mask-5{ -webkit-mask: radial-gradient(circle, transparent 0 24%, #000 26% 100%); mask: radial-gradient(circle, transparent 0 24%, #000 26% 100%); }
-.ring.mask-6{ -webkit-mask: radial-gradient(circle, transparent 0 14%, #000 16% 100%); mask: radial-gradient(circle, transparent 0 14%, #000 16% 100%); }
-
-/* yeşil alanlar: konik degrade ile “dilimler” */
-.ring.fill{
+  position:absolute; inset:0; border-radius:50%;
   background:
-    conic-gradient(
-      from 0deg,
-      rgba(0,255,170,.18) 0 16deg,
-      transparent 16deg 42deg,
-      rgba(0,255,170,.14) 42deg 64deg,
-      transparent 64deg 94deg,
-      rgba(0,255,170,.20) 94deg 124deg,
-      transparent 124deg 162deg,
-      rgba(0,255,170,.12) 162deg 192deg,
-      transparent 192deg 234deg,
-      rgba(0,255,170,.18) 234deg 262deg,
-      transparent 262deg 304deg,
-      rgba(0,255,170,.22) 304deg 330deg,
-      transparent 330deg 360deg
-    );
+    repeating-conic-gradient(from 0deg,
+      rgba(52,202,160,.18) 0 28deg,
+      transparent 28deg 50deg);
+  -webkit-mask: radial-gradient(circle,
+                 transparent calc(50% - var(--thick)),
+                 #000 calc(50% - var(--thick)) 50%,
+                 transparent 51%);
+          mask: radial-gradient(circle,
+                 transparent calc(50% - var(--thick)),
+                 #000 calc(50% - var(--thick)) 50%,
+                 transparent 51%);
+  filter: drop-shadow(0 8px 24px rgba(52,202,160,.22));
 }
+.r1{ transform:scale(1.00); --thick:22%; animation:spinCw 6.5s linear infinite; }
+.r2{ transform:scale(.76);  --thick:18%; animation:spinCcw 8.5s linear infinite; }
+.r3{ transform:scale(.50);  --thick:16%; animation:spinCw 11s linear infinite; }
 
-/* boyutlar + hızlar */
-.r1{ width:92%;  height:92%;  animation:spinCW 6.5s linear infinite}
-.r2{ width:78%;  height:78%;  animation:spinCCW 7.8s linear infinite}
-.r3{ width:64%;  height:64%;  animation:spinCW 9.4s linear infinite}
-.r4{ width:50%;  height:50%;  animation:spinCCW 11.2s linear infinite}
-.r5{ width:36%;  height:36%;  animation:spinCW 13.6s linear infinite}
-.r6{ width:22%;  height:22%;  animation:spinCCW 16.5s linear infinite}
+@keyframes spinCw  { to{ transform:rotate(360deg)   scale(var(--scale,1)); } }
+@keyframes spinCcw { to{ transform:rotate(-360deg)  scale(var(--scale,1)); } }
 
-/* merkez glow */
-.core{
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:18%; height:18%; border-radius:50%;
-  background:
-    radial-gradient(closest-side, rgba(0,255,170,.75), rgba(0,255,170,.12) 60%, transparent 70%);
-  filter:blur(0.2px) drop-shadow(0 0 28px rgba(0,255,170,.45));
+.brand{
+  position:absolute; inset:0; display:grid; place-items:center;
+  font-family:Cinzel,serif; letter-spacing:.22em; text-transform:uppercase;
+  font-weight:700; font-size: clamp(18px, 5.8vw, 36px);
+  color:var(--ink-900);
 }
-
-/* logo ve yazı */
-.brand-wrap{
-  position:absolute; inset:0; display:grid; place-items:center; text-align:center; pointer-events:none;
+.brand .glow{
+  position:absolute; top:50%; left:50%; translate:-50% -50%;
+  width:220px; height:220px; border-radius:50%;
+  background:radial-gradient(circle,
+             rgba(52,202,160,.16), rgba(52,202,160,.06) 60%, transparent 70%);
+  filter:blur(6px); pointer-events:none;
 }
-.brand-title{
-  font:700 clamp(22px,5.2vw,44px)/1 Cinzel,serif; letter-spacing:.12em;
-  background:linear-gradient(90deg,#ccffee,#9affd6,#5affc1,#ccffee);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 22px rgba(0,255,170,.28);
+.sub{
+  position:absolute; left:50%; top:62%;
+  translate:-50% 0; font: 600 12px/1 Inter,system-ui,sans-serif;
+  letter-spacing:.06em; color:#2d6a57; opacity:.85;
 }
-.brand-sub{
-  margin-top:10px; font-weight:600; font-size:clamp(12px,2.8vw,14px); opacity:.9; color:#baffea;
-}
-
-/* progress */
 .progress{
-  position:absolute; left:50%; transform:translateX(-50%); bottom:-38px;
-  width:min(380px,58vw); height:10px; border-radius:99px;
-  background:rgba(0,255,170,.08); border:1px solid rgba(0,255,170,.18);
-  overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.35);
+  position:absolute; left:50%; bottom:14%; translate:-50% 0;
+  width:min(320px, 74vw); height:6px; border-radius:999px;
+  background:linear-gradient(90deg, #e7f7ef, #d8f3ea);
+  overflow:hidden; box-shadow:0 8px 24px rgba(52,202,160,.18) inset;
 }
-.progress > i{
-  display:block; height:100%; width:0%;
-  background:linear-gradient(90deg, rgba(0,255,170,.0), rgba(0,255,170,.85), rgba(0,255,170,.0));
-  filter:drop-shadow(0 0 10px rgba(0,255,170,.55));
-  animation:loadbar 2.8s ease-out forwards;
+.progress::before{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent, var(--mint-400), transparent);
+  width:38%; animation:bar 1.4s ease-in-out infinite;
 }
-@keyframes loadbar{ to{width:100%} }
-
-@keyframes spinCW{
-  from{transform:translate(-50%,-50%) rotate(0deg)}
-  to  {transform:translate(-50%,-50%) rotate(360deg)}
-}
-@keyframes spinCCW{
-  from{transform:translate(-50%,-50%) rotate(0deg)}
-  to  {transform:translate(-50%,-50%) rotate(-360deg)}
+@keyframes bar{
+  0%{ transform:translateX(-100%); } 100%{ transform:translateX(260%); }
 }
 
-/* Splash kapanınca body kaydırılabilsin (Part 5 JS kapatacak) */
-body.ready{overflow:auto}
+/* ================== ÜST BAR ================== */
+.topbar{
+  position:sticky; top:0; z-index:10;
+  background:#fff; border-bottom:1px solid var(--card-bd);
+  display:flex; align-items:center; gap:12px;
+  padding:10px 14px;
+}
+.logoMark{
+  width:34px; height:34px; border-radius:50%;
+  background: radial-gradient(circle at 50% 45%, var(--mint-300), var(--mint-200));
+  box-shadow: 0 0 0 3px #fff, 0 6px 20px rgba(52,202,160,.25);
+}
+.brandname{ font-family:Cinzel,serif; letter-spacing:.16em; font-weight:700; }
+.search{
+  flex:1; display:flex; gap:8px; align-items:center;
+  background:var(--mint-50); border:1px solid var(--card-bd); border-radius:10px; padding:8px 10px;
+}
+.search input{
+  border:0; outline:none; background:transparent; width:100%;
+  font: 500 14px Inter,sans-serif; color:var(--ink-900);
+}
+.btn{
+  appearance:none; border:1px solid var(--card-bd); background:#fff; color:var(--ink-900);
+  padding:8px 12px; border-radius:10px; font-weight:700; cursor:pointer;
+}
+.btn.mint{ background:var(--mint-400); color:#053a2e; border-color:transparent; }
+.btn.ghost{ background:#fff; }
+.badge{font:700 11px/1 Inter; padding:6px 8px; border-radius:999px; background:var(--mint-100); border:1px solid var(--card-bd)}
+
+/* ================== DİZGİ ================== */
+.page{ display:grid; grid-template-columns: 260px 1fr 320px; gap:16px; padding:16px; }
+@media (max-width:1100px){ .page{ grid-template-columns: 1fr; } .right{ order:3 } .left{ order:2 } }
+
+/* Sol menü */
+.left{
+  position:sticky; top:66px; align-self:start;
+  background:#fff; border:1px solid var(--card-bd); border-radius:14px; box-shadow:var(--shadow);
+}
+.menu{ list-style:none; margin:0; padding:8px }
+.menu li a{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; text-decoration:none; color:var(--ink-900);
+}
+.menu li a:hover{ background:var(--mint-50) }
+.menu .active a{ background:var(--mint-100); font-weight:700; }
+
+/* Orta alan */
+.center{ display:flex; flex-direction:column; gap:16px; }
+.card{
+  background:var(--card); border:1px solid var(--card-bd);
+  border-radius:14px; box-shadow:var(--shadow); padding:14px;
+}
+.card h3{ margin:0 0 8px; font:700 15px Inter }
+.chips{ display:flex; gap:8px; flex-wrap:wrap; }
+.chips span{
+  padding:6px 10px; border-radius:999px; font:700 11px/1 Inter;
+  background:var(--chip); border:1px solid var(--card-bd); color:var(--muted);
+}
+.textarea{
+  width:100%; min-height:84px; resize:vertical; border-radius:10px;
+  border:1px solid var(--card-bd); padding:10px; background:#fff; color:var(--ink-900);
+}
+.post{ display:flex; justify-content:flex-end; gap:8px; margin-top:8px; }
+
+/* Akış */
+.feed{ display:flex; flex-direction:column; gap:10px; }
+.postcard{
+  background:#fff; border:1px solid var(--card-bd); border-radius:12px; padding:12px;
+}
+.postcard .meta{ color:var(--muted); font-size:12px; margin-bottom:6px }
+.postcard .bubble{ font-size:15px }
+
+/* Sağ panel */
+.right{ position:sticky; top:66px; align-self:start; display:flex; flex-direction:column; gap:16px; }
+.kv{
+  background:#fff; border:1px solid var(--card-bd); border-radius:14px; padding:14px; box-shadow:var(--shadow);
+}
+.kv h4{ margin:0 0 8px; font:700 14px Inter }
+
+/* Alt */
+footer{ text-align:center; color:var(--muted); padding:24px 12px }
+
+/* Seçici kısayollar */
+.kb{display:flex; gap:8px; margin-top:10px}
+.kb .badge{cursor:pointer}
 </style>
 </head>
 <body>
 
-<!-- ========= GİRİŞ SPLASH ========= -->
+<!-- =============== SPLASH =============== -->
 <div class="splash" id="splash">
-  <div class="splash-inner">
-    <!-- halka katmanları -->
-    <div class="ring fill mask-1 r1"></div>
-    <div class="ring fill mask-2 r2"></div>
-    <div class="ring fill mask-3 r3"></div>
-    <div class="ring fill mask-4 r4"></div>
-    <div class="ring fill mask-5 r5"></div>
-    <div class="ring fill mask-6 r6"></div>
-    <div class="core"></div>
+  <div class="stage">
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="ring r3"></div>
 
-    <!-- logo + yazı -->
-    <div class="brand-wrap">
-      <div>
-        <div class="brand-title">AZURA NOVA</div>
-        <div class="brand-sub">Kullanıcı Paneli Yükleniyor...</div>
-        <div class="progress"><i></i></div>
-      </div>
+    <div class="brand">
+      <div class="glow"></div>
+      AZURA NOVA
+      <div class="sub">Kullanıcı Paneli yükleniyor…</div>
     </div>
   </div>
+  <div class="progress"></div>
 </div>
 
-<!-- Uygulama kabı (Part 3 burada devam edecek) -->
-<div id="app" style="opacity:0; pointer-events:none;"></d etiv>
-  <!-- ========= PANEL / APP STİLLERİ ========= -->
-<style>
-:root{
-  --ui-bg: #0b1511;
-  --ui-bg-2:#0e1c17;
-  --ui-ink:#e8fff7;
-  --ui-ink-dim:#b9f1dc;
-  --ui-accent:#00ffaa;
-  --ui-accent-2:#8affd8;
-  --ui-stroke:rgba(0,255,170,.22);
-  --ui-card: linear-gradient(180deg, rgba(5,18,14,.85), rgba(10,25,19,.85));
-  --ui-shadow: 0 18px 60px rgba(0,0,0,.45);
-}
+<!-- =============== ÜST BAR =============== -->
+<header class="topbar">
+  <div class="logoMark" aria-hidden="true"></div>
+  <div class="brandname">AZURA NOVA — PANEL</div>
 
-/* app kabı (splash kapanınca görünür) */
-#app{
-  min-height:100dvh; display:grid;
-  grid-template-rows: 64px 1fr;
-  background:
-    radial-gradient(1200px 700px at 80% -10%, rgba(0,255,170,.08), transparent 60%),
-    radial-gradient(1200px 700px at 20% 120%, rgba(0,220,150,.06), transparent 70%),
-    var(--ui-bg);
-  color:var(--ui-ink);
-  transition: opacity .6s ease;
-}
-
-/* ==== TOPBAR ==== */
-.topbar{
-  position:sticky; top:0; z-index:20;
-  display:grid; grid-template-columns: 220px 1fr 220px;
-  align-items:center; gap:14px; padding:0 16px; height:64px;
-  background:linear-gradient(180deg, #06130f, #0a1814);
-  border-bottom:1px solid var(--ui-stroke);
-  box-shadow:0 8px 28px rgba(0,0,0,.35);
-}
-.topbar .clock{
-  font-weight:700; letter-spacing:.08em; color:var(--ui-accent-2);
-}
-.topbar .brand{
-  justify-self:center;
-  font-family:Cinzel,serif; font-weight:800; letter-spacing:.2em;
-  background:linear-gradient(90deg, #ccffee, #7dffd0, #ccffee);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 22px rgba(0,255,170,.28);
-}
-.topbar .actions{
-  justify-self:end; display:flex; gap:10px; align-items:center;
-}
-.btn-ghost{
-  appearance:none; border:1px solid var(--ui-stroke); background:rgba(0,0,0,.25);
-  color:var(--ui-ink); padding:8px 12px; border-radius:12px; font-weight:700;
-  cursor:pointer; backdrop-filter:blur(6px);
-}
-.btn-ghost:hover{ box-shadow:0 10px 26px rgba(0,255,170,.18) }
-
-/* ==== SHELL ==== */
-.shell{
-  display:grid; grid-template-columns: 270px 1fr;
-  gap:18px; padding:18px; align-items:start;
-}
-
-/* ==== SIDEBAR ==== */
-.sidebar{
-  position:sticky; top:82px;
-  background:var(--ui-card);
-  border:1px solid var(--ui-stroke);
-  border-radius:16px; box-shadow:var(--ui-shadow);
-  padding:14px;
-}
-.nav{
-  display:flex; flex-direction:column; gap:8px;
-}
-.nav button{
-  text-align:left; width:100%; padding:12px 12px; border-radius:12px;
-  border:1px solid transparent; background:transparent; color:var(--ui-ink);
-  font-weight:700; cursor:pointer; display:flex; gap:10px; align-items:center;
-}
-.nav button .em{ width:26px; text-align:center; filter:drop-shadow(0 0 8px rgba(0,255,170,.25)) }
-.nav button:hover{ background:rgba(0,255,170,.08); border-color:var(--ui-stroke) }
-.nav button.active{
-  background:linear-gradient(180deg, rgba(0,255,170,.14), rgba(0,255,170,.06));
-  border-color:var(--ui-stroke);
-  box-shadow:0 8px 24px rgba(0,255,170,.18) inset;
-}
-
-/* ==== MAIN CONTENT ==== */
-.content{
-  display:grid; gap:18px;
-}
-.section{
-  display:none; /* router açar */
-}
-.section.active{ display:grid; gap:18px }
-
-/* kart */
-.card{
-  background:var(--ui-card);
-  border:1px solid var(--ui-stroke); border-radius:16px; padding:16px;
-  box-shadow:var(--ui-shadow);
-}
-.card h3{
-  margin:0 0 10px; font-family:Cinzel,serif; letter-spacing:.08em;
-  background:linear-gradient(90deg,#eafff6,#b7ffe5); -webkit-background-clip:text;
-  background-clip:text; color:transparent; text-shadow:0 0 16px rgba(0,255,170,.25);
-}
-
-/* Akış: gönderi oluştur */
-.composer{ display:grid; gap:10px }
-.input{
-  background:rgba(0,0,0,.35); border:1px solid var(--ui-stroke); border-radius:12px;
-  padding:12px; color:var(--ui-ink); min-height:76px; outline:none;
-}
-.action-row{ display:flex; gap:10px; align-items:center; justify-content:space-between }
-.row-left{ display:flex; gap:8px }
-.tag{
-  padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px;
-  border:1px solid var(--ui-stroke); background:rgba(0,255,170,.08); color:var(--ui-ink);
-}
-.btn-primary{
-  appearance:none; border:0; border-radius:10px; font-weight:800; letter-spacing:.02em;
-  padding:10px 14px; color:#013222; cursor:pointer;
-  background:linear-gradient(90deg,#00ffaa,#7dffd0);
-  box-shadow:0 12px 36px rgba(0,255,170,.25);
-}
-.btn-primary:active{ transform:translateY(1px) }
-
-/* gönderi kartı */
-.post{
-  display:grid; gap:8px; border-top:1px dashed rgba(0,255,170,.18); padding-top:12px
-}
-.post .meta{ display:flex; gap:10px; align-items:center; color:var(--ui-ink-dim); font-size:12px }
-.post .bubble{
-  background:rgba(0,0,0,.35); border:1px solid var(--ui-stroke); border-radius:12px; padding:12px;
-}
-
-/* Keşfet ızgara */
-.grid-explore{
-  display:grid; gap:12px; grid-template-columns:repeat(12,1fr);
-}
-.tile{
-  grid-column: span 4; min-height:120px; border-radius:14px; border:1px solid var(--ui-stroke);
-  background:
-    radial-gradient(600px 300px at 80% 10%, rgba(0,255,170,.14), transparent 60%),
-    rgba(0,0,0,.25);
-  box-shadow:var(--ui-shadow); padding:12px; display:flex; align-items:end; font-weight:700;
-}
-.tile.big{ grid-column: span 6; min-height:180px }
-
-/* Sağ bilgi kolonları (Topluluk, Kaynak) */
-.info-col{ display:grid; gap:12px; grid-template-columns: 1fr 1fr; }
-.info-card{ min-height:120px }
-
-/* Ayarlar formu */
-.form-grid{ display:grid; gap:12px; grid-template-columns: 1fr 1fr }
-.input-line{
-  display:grid; gap:6px
-}
-.input-line input, .input-line select{
-  height:40px; padding:0 10px; border-radius:10px; border:1px solid var(--ui-stroke);
-  background:rgba(0,0,0,.35); color:var(--ui-ink); outline:none;
-}
-
-/* ====== RESPONSIVE ====== */
-@media (max-width:980px){
-  .shell{ grid-template-columns: 1fr }
-  .sidebar{ position:relative; top:auto }
-  .grid-explore{ grid-template-columns:repeat(6,1fr) }
-  .tile{ grid-column: span 3 }
-  .tile.big{ grid-column: span 6 }
-  .info-col{ grid-template-columns:1fr }
-}
-@media (max-width:560px){
-  .topbar{ grid-template-columns: 1fr auto 1fr }
-  .topbar .brand{ font-size:14px; letter-spacing:.16em }
-  .grid-explore{ grid-template-columns:repeat(4,1fr) }
-  .tile{ grid-column: span 4 }
-}
-</style>
-
-<!-- ========= PANEL / APP İSKELET ========= -->
-<div class="topbar">
-  <div class="clock" id="clock">--:--</div>
-  <div class="brand">AZURA NOVA — PANEL</div>
-  <div class="actions">
-    <button class="btn-ghost" id="openUser">👤 Profil</button>
-    <button class="btn-ghost" id="themeBtn">🌗 Tema</button>
+  <div class="search">
+    🔎
+    <input id="q" placeholder="PANELDE ARA… (ör. ‘rutin’, ‘nezaket’)" />
+    <button class="btn ghost" id="auto">⟳ Otomatik Güncelleme</button>
+    <button class="btn mint" id="save">💾 Kaydet</button>
   </div>
-</div>
+</header>
 
-<div class="shell">
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <nav class="nav" id="nav">
-      <button data-route="home" class="active"><span class="em">🏠</span> Akış</button>
-      <button data-route="explore"><span class="em">🔎</span> Keşfet</button>
-      <button data-route="community"><span class="em">👥</span> Topluluk</button>
-      <button data-route="library"><span class="em">📚</span> Kaynaklar</button>
-      <button data-route="notes"><span class="em">📝</span> Notlar</button>
-      <button data-route="settings"><span class="em">⚙️</span> Ayarlar</button>
-    </nav>
+<!-- =============== SAYFA =============== -->
+<main class="page">
+  <!-- SOL: Menü -->
+  <aside class="left">
+    <ul class="menu">
+      <li class="active"><a href="#" data-tab="feed">🏠 Akış</a></li>
+      <li><a href="#" data-tab="discover">🔍 Keşfet</a></li>
+      <li><a href="#" data-tab="community">👥 Topluluk</a></li>
+      <li><a href="#" data-tab="resources">📚 Kaynaklar</a></li>
+      <li><a href="#" data-tab="notes">🗒️ Notlar</a></li>
+      <li><a href="#" data-tab="settings">⚙️ Ayarlar</a></li>
+    </ul>
   </aside>
 
-  <!-- CONTENT -->
-  <main class="content">
-    <!-- AKIŞ -->
-    <section class="section active" data-route="home">
-      <div class="card">
-        <h3>Yeni Gönderi ✍️</h3>
-        <div class="composer">
-          <div id="composer" class="input" contenteditable="plaintext-only" placeholder="Bugün neler oluyor?"></div>
-          <div class="action-row">
-            <div class="row-left">
-              <span class="tag">#duyuru</span>
-              <span class="tag">#günlük</span>
-              <span class="tag">#soru</span>
-            </div>
-            <button id="sendBtn" class="btn-primary">Yayınla</button>
-          </div>
+  <!-- ORTA: İçerik -->
+  <section class="center">
+    <!-- Tanıtım kartı (link yok) -->
+    <article class="card">
+      <h3>✨ Hoş geldin!</h3>
+      <p>Bu alan ana menüden farklı olarak <strong>kişisel çalışma</strong> bölümün. Soldaki menü sadece <em>tanıtım</em>; gerçek linkler ve aksiyonlar bu panelde.</p>
+      <div class="chips">
+        <span>Tanıtım</span><span>Günlük</span><span>Mini hedef</span>
+      </div>
+      <div class="kb">
+        <span class="badge" data-fill="#günlük">#günlük</span>
+        <span class="badge" data-fill="#rutin">#rutin</span>
+        <span class="badge" data-fill="#nezaket">#nezaket</span>
+      </div>
+    </article>
+
+    <!-- Yeni gönderi -->
+    <article class="card">
+      <h3>✍️ Yeni Gönderi</h3>
+      <textarea class="textarea" id="composer" placeholder="Bugün ne planlıyorsun?"></textarea>
+      <div class="chips" style="margin-top:8px">
+        <span class="badge" data-fill="#duyuru">#duyuru</span>
+        <span class="badge" data-fill="#günlük">#günlük</span>
+        <span class="badge" data-fill="#soru">#soru</span>
+      </div>
+      <div class="post">
+        <button class="btn ghost" id="clear">Temizle</button>
+        <button class="btn mint" id="publish">Yayınla</button>
+      </div>
+    </article>
+
+    <!-- Akış -->
+    <article class="card">
+      <h3>📰 Akış</h3>
+      <div class="feed" id="feed">
+        <!-- örnekler -->
+        <div class="postcard">
+          <div class="meta">🛶 Liman • az önce</div>
+          <div class="bubble">Bugün #disiplin modundayım. 20 dk ağır kaldırış!</div>
+        </div>
+        <div class="postcard">
+          <div class="meta">⚓ Marin • 5 dk</div>
+          <div class="bubble">“Söz verdiğim şeyi takvime yazıyorum.” — küçük not.</div>
         </div>
       </div>
+    </article>
+  </section>
 
-      <div class="card" id="feed">
-        <h3>Akış</h3>
-        <!-- JS gönderi ekleyecek -->
+  <!-- SAĞ: Kısayollar / Durum -->
+  <aside class="right">
+    <div class="kv">
+      <h4>⚡ Hızlı aksiyonlar</h4>
+      <div class="chips">
+        <span>Öncelik</span><span>Rutin</span><span>Nezaket</span><span>Odak</span>
       </div>
-    </section>
+    </div>
 
-    <!-- KEŞFET -->
-    <section class="section" data-route="explore">
-      <div class="card">
-        <h3>Keşfet</h3>
-        <div class="grid-explore" id="exploreGrid">
-          <div class="tile big">Trend: ✨ İlham Köşesi</div>
-          <div class="tile">Proje: Minimal Ritüeller</div>
-          <div class="tile">Topluluk Postu</div>
-          <div class="tile big">Azura Rehberleri</div>
-          <div class="tile">Soru-Cevap</div>
-          <div class="tile">Teknik İpuçları</div>
-        </div>
-      </div>
-    </section>
+    <div class="kv">
+      <h4>📌 Gündem</h4>
+      <p>Bu tarafa mini notlar, bugün listesi, küçük hatırlatmalar düşer.</p>
+    </div>
 
-    <!-- TOPLULUK -->
-    <section class="section" data-route="community">
-      <div class="card">
-        <h3>Topluluk Panosu</h3>
-        <div class="info-col">
-          <div class="card info-card">Yeni Üyeler 🌱</div>
-          <div class="card info-card">Etkinlikler 📅</div>
-          <div class="card info-card">Öne Çıkan Tartışma 💬</div>
-          <div class="card info-card">Takım Notları 🧩</div>
-        </div>
-      </div>
-    </section>
+    <div class="kv">
+      <h4>🔔 Otomatik güncelleme</h4>
+      <p id="autostat">Kapalı</p>
+    </div>
+  </aside>
+</main>
 
-    <!-- KAYNAKLAR -->
-    <section class="section" data-route="library">
-      <div class="card">
-        <h3>Kaynak Kütüphanesi</h3>
-        <div class="grid-explore">
-          <div class="tile big">PDF: Odak Çalışma</div>
-          <div class="tile">Video: Alışkanlık</div>
-          <div class="tile">Okuma Listesi</div>
-          <div class="tile">Şablonlar</div>
-          <div class="tile big">Atölye Kayıtları</div>
-          <div class="tile">Sık Sorulanlar</div>
-        </div>
-      </div>
-    </section>
+<footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
 
-    <!-- NOTLAR -->
-    <section class="section" data-route="notes">
-      <div class="card">
-        <h3>Notlar</h3>
-        <div class="form-grid">
-          <div class="input-line">
-            <label>Başlık</label>
-            <input id="noteTitle" placeholder="Kısa başlık">
-          </div>
-          <div class="input-line">
-            <label>Kategori</label>
-            <select id="noteCat">
-              <option>Genel</option><option>Fikir</option><option>Teknik</option><option>Kişisel</option>
-            </select>
-          </div>
-          <div class="input-line" style="grid-column:1/-1">
-            <label>İçerik</label>
-            <div id="noteBody" class="input" contenteditable="plaintext-only" style="min-height:140px"></div>
-          </div>
-          <div style="grid-column:1/-1; display:flex; justify-content:flex-end">
-            <button id="saveNote" class="btn-primary">Kaydet</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="notesList">
-        <h3>Kayıtlı Notlar</h3>
-        <!-- JS dolduracak -->
-      </div>
-    </section>
-
-    <!-- AYARLAR -->
-    <section class="section" data-route="settings">
-      <div class="card">
-        <h3>Ayarlar</h3>
-        <div class="form-grid">
-          <div class="input-line">
-            <label>Tema</label>
-            <select id="themeSelect">
-              <option value="dark" selected>Koyu</option>
-              <option value="light">Açık</option>
-            </select>
-          </div>
-          <div class="input-line">
-            <label>Bildirimler</label>
-            <select id="notif">
-              <option>Açık</option><option>Yalnızca önemli</option><option>Kapalı</option>
-            </select>
-          </div>
-          <div class="input-line" style="grid-column:1/-1">
-            <label>Hakkımda</label>
-            <div id="aboutMe" class="input" contenteditable="plaintext-only" style="min-height:100px"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-</div>
-
-<!-- ========= PANEL / APP JS ========= -->
+<!-- ================== JS ================== -->
 <script>
-/* ----- Splash kapatma ----- */
-(function(){
+/* Splash */
+window.addEventListener('load', ()=>{
   const splash = document.getElementById('splash');
-  const app    = document.getElementById('app');
-  const bar    = splash.querySelector('.progress > i');
+  setTimeout(()=>{ splash.classList.add('fade'); setTimeout(()=>splash.remove(), 600); }, 1200);
+});
 
-  // Bar animasyonu biter bitmez kapat
-  bar.addEventListener('animationend', closeSplash);
-  // Emniyet kemeri
-  setTimeout(closeSplash, 3200);
-
-  function closeSplash(){
-    if (!splash) return;
-    document.body.classList.add('ready');
-    app.style.opacity = '1';
-    app.style.pointerEvents = 'auto';
-    splash.style.transition = 'opacity .5s ease, transform .5s ease';
-    splash.style.opacity = '0';
-    splash.style.transform = 'scale(1.02)';
-    setTimeout(()=> splash.remove(), 520);
-  }
-})();
-
-/* ----- Saat ----- */
-(function clockTick(){
-  const el = document.getElementById('clock');
-  function fmt(n){ return n<10 ? '0'+n : n }
-  function tick(){
-    const d=new Date();
-    el.textContent = `${fmt(d.getHours())}:${fmt(d.getMinutes())}`;
-  }
-  tick(); setInterval(tick, 1000*15);
-})();
-
-/* ----- Router ----- */
-(function(){
-  const nav = document.getElementById('nav');
-  const sections = [...document.querySelectorAll('.section')];
-  nav.addEventListener('click', (e)=>{
-    const btn = e.target.closest('button[data-route]');
-    if(!btn) return;
-    const route = btn.getAttribute('data-route');
-    for(const b of nav.querySelectorAll('button')) b.classList.toggle('active', b===btn);
-    for(const s of sections) s.classList.toggle('active', s.dataset.route===route);
-    // Yukarı kaydır
-    document.querySelector('.content').scrollTo({top:0, behavior:'smooth'});
+/* Sol menü: sadece görünüm değiştir (link yok) */
+document.querySelectorAll('.menu a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    document.querySelectorAll('.menu li').forEach(li=>li.classList.remove('active'));
+    a.parentElement.classList.add('active');
+    // sadece bilgi amaçlı küçük titreşim
+    if(navigator.vibrate) navigator.vibrate(10);
   });
-})();
+});
 
-/* ----- Tema ----- */
-(function(){
-  const btn = document.getElementById('themeBtn');
-  const sel = document.getElementById('themeSelect');
-  const root = document.documentElement;
-  function setLight(on){
-    if(on){
-      root.style.setProperty('--ui-bg', '#f5fffb');
-      root.style.setProperty('--ui-bg-2','#e9fff7');
-      root.style.setProperty('--ui-ink','#042019');
-      root.style.setProperty('--ui-ink-dim','#0b3d31');
-      root.style.setProperty('--ui-card','linear-gradient(180deg, rgba(240,255,251,.85), rgba(225,255,246,.85))');
-    }else{
-      root.style.removeProperty('--ui-bg');
-      root.style.removeProperty('--ui-bg-2');
-      root.style.removeProperty('--ui-ink');
-      root.style.removeProperty('--ui-ink-dim');
-      root.style.removeProperty('--ui-card');
-    }
-  }
-  btn.addEventListener('click', ()=>{
-    const toLight = sel.value!=='light';
-    sel.value = toLight? 'light':'dark';
-    setLight(toLight);
+/* Etiket kısayolu – editöre ekle */
+document.querySelectorAll('[data-fill]').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    const t = document.getElementById('composer');
+    const tag = b.getAttribute('data-fill');
+    const v = t.value.trim();
+    t.value = v ? (v+' '+tag) : tag;
+    t.focus();
   });
-  sel.addEventListener('change', ()=> setLight(sel.value==='light'));
-})();
+});
 
-/* ----- Composer & Feed ----- */
-(function(){
-  const feed = document.getElementById('feed');
-  const input = document.getElementById('composer');
-  const send  = document.getElementById('sendBtn');
+/* Yayınla */
+const feed = document.getElementById('feed');
+document.getElementById('publish').addEventListener('click', ()=>{
+  const t = document.getElementById('composer');
+  const msg = t.value.trim();
+  if(!msg){ t.focus(); return; }
+  const card = document.createElement('div');
+  card.className='postcard';
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  card.innerHTML = `
+    <div class="meta">🌿 Sen • ${hh}:${mm}</div>
+    <div class="bubble"></div>`;
+  card.querySelector('.bubble').textContent = msg;
+  feed.prepend(card);
+  t.value='';
+  if(navigator.vibrate) navigator.vibrate([6,40,10]);
+});
 
-  const demo = [
-    {user:'Liman', time:'az önce', text:'Bugün #disiplin modundayım. 20 dk ağır kaldırış!'},
-    {user:'Marin', time:'5 dk', text:'“Söz verdiğim şeyi takvime yazıyorum.” — küçük not.'}
+/* Temizle */
+document.getElementById('clear').addEventListener('click', ()=>{
+  const t = document.getElementById('composer'); t.value=''; t.focus();
+});
+
+/* Otomatik güncelleme dummy */
+let auto=false, timer=null;
+const btnAuto = document.getElementById('auto'), stat = document.getElementById('autostat');
+btnAuto.addEventListener('click', ()=>{
+  auto=!auto;
+  stat.textContent = auto ? 'Açık' : 'Kapalı';
+  btnAuto.classList.toggle('mint', auto);
+  if(auto){
+    timer = setInterval(()=>fakeTick(), 5000);
+  }else{
+    clearInterval(timer);
+  }
+});
+function fakeTick(){
+  const tips = [
+    '🧭 Net ajanda: 1 şeyi seç, 20 dk ilerlet.',
+    '🫶 Nezaket: “Talebi yumuşat, net ol.”',
+    '🌬️ 4–6 nefes: 4 sn al, 6 sn ver.',
+    '🛠️ Disiplin min.: “küçük ama zor” bir adım.'
   ];
-  for(const d of demo) addPost(d);
+  const card = document.createElement('div');
+  card.className='postcard';
+  card.innerHTML = `<div class="meta">🔁 Sistem • şimdi</div>
+                    <div class="bubble">${tips[Math.floor(Math.random()*tips.length)]}</div>`;
+  feed.prepend(card);
+}
 
-  send.addEventListener('click', ()=>{
-    const txt = (input.textContent || '').trim();
-    if(!txt) return;
-    addPost({user:'Sen', time:'şimdi', text:txt});
-    input.textContent='';
-  });
-
-  function addPost({user,time,text}){
-    const wrap = document.createElement('div');
-    wrap.className='post';
-    wrap.innerHTML = `
-      <div class="meta">🧭 <strong>${escapeHtml(user)}</strong> • <span>${escapeHtml(time)}</span></div>
-      <div class="bubble">${escapeHtml(text)}</div>
-    `;
-    feed.appendChild(wrap);
-  }
-  function escapeHtml(s){ return s.replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])) }
-})();
-
-/* ----- Notlar (basit yerel) ----- */
-(function(){
-  const list = document.getElementById('notesList');
-  const save = document.getElementById('saveNote');
-  const t = document.getElementById('noteTitle');
-  const c = document.getElementById('noteCat');
-  const b = document.getElementById('noteBody');
-
-  const KEY='azura_notes';
-  const read=()=> JSON.parse(localStorage.getItem(KEY)||'[]');
-  const write=(v)=> localStorage.setItem(KEY, JSON.stringify(v));
-
-  render();
-
-  save.addEventListener('click', ()=>{
-    const v = (b.textContent||'').trim();
-    const title = (t.value||'').trim();
-    if(!v) return;
-    const items = read();
-    items.unshift({title: title||'Başlıksız', cat:c.value, body:v, ts:Date.now()});
-    write(items);
-    t.value=''; b.textContent='';
-    render();
-  });
-
-  function render(){
-    const items = read();
-    list.innerHTML = `<h3>Kayıtlı Notlar</h3>`;
-    if(!items.length){ list.insertAdjacentHTML('beforeend','<div class="bubble">Henüz not yok.</div>'); return; }
-    for(const it of items){
-      const card = document.createElement('div');
-      card.className='post';
-      card.innerHTML = `
-        <div class="meta">📝 <strong>${escapeHtml(it.title)}</strong> • <span>${escapeHtml(it.cat)}</span></div>
-        <div class="bubble">${escapeHtml(it.body)}</div>
-      `;
-      list.appendChild(card);
-    }
-  }
-  function escapeHtml(s){ return s.replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])) }
-})();
-
-/* ----- Profil butonu (dummy overlay) ----- */
-(function(){
-  const btn = document.getElementById('openUser');
-  btn.addEventListener('click', ()=>{
-    // Kısa bir overlay
-    const layer = document.createElement('div');
-    layer.style.cssText = `
-      position:fixed; inset:0; background:rgba(0,0,0,.55);
-      z-index:999; display:grid; place-items:center;
-    `;
-    const box = document.createElement('div');
-    box.className='card';
-    box.style.cssText='max-width:520px; padding:20px';
-    box.innerHTML = `<h3>Profil</h3><div class="bubble">Profil ayarları yakında burada. 🌿</div>
-    <div style="display:flex; justify-content:flex-end; margin-top:12px"><button class="btn-ghost" id="closeProfile">Kapat</button></div>`;
-    layer.appendChild(box);
-    document.body.appendChild(layer);
-    layer.addEventListener('click', (e)=>{ if(e.target===layer||e.target.id==='closeProfile') layer.remove(); });
-  });
-})();
+/* Kaydet (placeholder) */
+document.getElementById('save').addEventListener('click', ()=>{
+  alert('Kaydedildi (placeholder). Gerçek backend bağlanınca buraya yazacağız.');
+});
 </script>
-  </body>
-</html>
+</body>
+  </html>
