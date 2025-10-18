@@ -1,98 +1,132 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AZURA • Kullanıcı Paneli</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZURA • Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:'Cinzel',serif;overflow:hidden}
-canvas{width:100%;height:100%;display:block;position:fixed;inset:0;background:#000;z-index:9998}
-#flash{position:fixed;inset:0;background:#fff;opacity:0;transition:opacity .5s ease;z-index:9997}
-#panel{visibility:hidden;position:relative;z-index:1;min-height:100vh;background:#fff;display:flex;}
+body{margin:0;font-family:'Cinzel',serif;overflow:hidden;background:#000;color:#222;}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block;background:#000;z-index:9998;}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;transition:opacity .6s ease;z-index:9997;}
+#panel{visibility:hidden;position:relative;z-index:1;min-height:100vh;display:flex;}
 
-/* Panel düzeni */
+/* -------- PANEL TASARIMI -------- */
 .sidebar{
-  width:250px;
+  width:270px;
   background:#004d40;
   color:#fff;
-  padding:20px;
+  padding:25px;
   display:flex;
   flex-direction:column;
   gap:15px;
+  border-right:4px solid #aaffc8;
 }
 .sidebar h2{
-  margin:0;
+  margin:0 0 20px;
   text-align:center;
   color:#aaffc8;
+  text-shadow:0 0 8px #00ffcc;
 }
 .sidebar button{
-  background:#00695c;
+  background:linear-gradient(90deg,#00695c,#009688);
   border:none;
-  padding:10px;
+  padding:12px;
   color:#fff;
-  border-radius:8px;
+  border-radius:10px;
+  font-weight:bold;
   cursor:pointer;
-  transition:background .3s;
+  transition:transform .2s,background .4s;
 }
-.sidebar button:hover{background:#00897b}
+.sidebar button:hover{
+  background:linear-gradient(90deg,#00bfa5,#26a69a);
+  transform:scale(1.05);
+}
 
 .main{
   flex:1;
   padding:40px;
-  background:linear-gradient(to bottom right,#fff,#f7f7f7);
+  background:linear-gradient(to bottom right,#ffffff,#f3f7f3);
   overflow-y:auto;
+  animation:fadein 1.2s ease forwards;
 }
-.main h1{color:#004d40}
+@keyframes fadein{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.main h1{
+  color:#00695c;
+  margin-top:0;
+  text-shadow:0 0 10px #aaffc8;
+}
 .card{
   background:#fff;
   border:1px solid #ddd;
-  border-radius:12px;
-  box-shadow:0 0 10px rgba(0,0,0,0.1);
+  border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
   padding:20px;
-  margin-bottom:20px;
+  margin-bottom:25px;
   transition:transform .2s,box-shadow .2s;
 }
-.card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.15)}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+.card h3{color:#004d40;margin-top:0;}
+.card p{color:#333;font-size:16px;}
 </style>
 </head>
-<body>
 
-<!-- Giriş efekti -->
+<body>
+<!-- GİRİŞ EKRANI -->
 <canvas id="snake"></canvas>
 <div id="flash"></div>
 
-<!-- Panel -->
+<!-- PANEL -->
 <div id="panel">
   <div class="sidebar">
-    <h2>AZURA Panel</h2>
-    <button>🏠 Akış</button>
-    <button>🔍 Keşfet</button>
+    <h2>AZURA PANEL</h2>
+    <button>🏠 Ana Sayfa</button>
+    <button>🧭 Keşfet</button>
     <button>👥 Topluluk</button>
-    <button>📚 Kaynaklar</button>
+    <button>📘 Kaynaklar</button>
     <button>📝 Notlar</button>
     <button>⚙️ Ayarlar</button>
   </div>
+
   <div class="main">
-    <h1>Hoş geldin, Kullanıcı!</h1>
-    <div class="card"><h3>🌿 Bugünkü Aktivite</h3><p>Disiplin modundayım. 30 dk çalışma tamamlandı!</p></div>
-    <div class="card"><h3>💡 Günün Sözü</h3><p>"Söz verdiğim şeyi takvime yazıyorum." — Küçük not.</p></div>
-    <div class="card"><h3>🔥 Güncel Gönderiler</h3><ul><li>Yeni tasarım hazır!</li><li>Panel teması geliştirildi.</li><li>Yılan efekti optimize edildi.</li></ul></div>
+    <h1>Hoş Geldin, Kullanıcı 🌿</h1>
+    <div class="card">
+      <h3>📆 Bugünkü Plan</h3>
+      <p>20 dk disiplin çalışması tamamlandı. Günün teması: <b>Netlik ve devamlılık.</b></p>
+    </div>
+    <div class="card">
+      <h3>💡 Günün Sözü</h3>
+      <p>"Söz verdiğim şeyi takvime yazıyorum." — Küçük not.</p>
+    </div>
+    <div class="card">
+      <h3>🔥 Aktiviteler</h3>
+      <ul>
+        <li>Yeni tema sistemi eklendi.</li>
+        <li>Yılan animasyonu optimize edildi.</li>
+        <li>Panel geçiş efekti tamamlandı.</li>
+      </ul>
+    </div>
   </div>
 </div>
 
 <script>
-// CANVAS ANİMASYONU
+// === GİRİŞ ANİMASYONU ===
 const c=document.getElementById("snake"),ctx=c.getContext("2d");
 function fit(){c.width=innerWidth;c.height=innerHeight}
 fit();addEventListener("resize",fit);
 
 let t=0;
-const DOTS=26,TRAIL=14,SPEED=0.045;
+const DOTS=32,TRAIL=18,SPEED=0.04;
 function loop(){
   ctx.clearRect(0,0,c.width,c.height);
-  const R=Math.min(c.width,c.height)*0.18;
+  const R=Math.min(c.width,c.height)*0.20;
   const cx=c.width/2,cy=c.height/2;
 
   // AZURA yazısı
@@ -101,13 +135,13 @@ function loop(){
   ctx.textAlign="center";
   ctx.textBaseline="middle";
   ctx.fillStyle="#fff";
-  ctx.shadowColor="rgba(180,140,255,.5)";
-  ctx.shadowBlur=30;
+  ctx.shadowColor="rgba(0,255,255,.6)";
+  ctx.shadowBlur=40;
   ctx.fillText("AZURA",cx,cy);
   ctx.restore();
 
-  // sabit noktalar
-  ctx.fillStyle="rgba(0,180,255,0.15)";
+  // sabit noktalar (daha aralıklı)
+  ctx.fillStyle="rgba(0,200,255,0.12)";
   for(let i=0;i<DOTS;i++){
     const a=i/DOTS*Math.PI*2;
     const x=cx+Math.cos(a)*R;
@@ -115,18 +149,18 @@ function loop(){
     ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();
   }
 
-  // yılan
+  // yılan (daha uzun kuyruk)
   ctx.globalCompositeOperation="lighter";
   for(let j=0;j<TRAIL;j++){
-    const a=(t-j*0.08)%(Math.PI*2);
+    const a=(t-j*0.1)%(Math.PI*2);
     const x=cx+Math.cos(a)*R;
     const y=cy+Math.sin(a)*R;
     const k=1-(j/TRAIL);
     ctx.beginPath();
-    ctx.fillStyle=`rgba(0,180,255,${0.8*k})`;
+    ctx.fillStyle=`rgba(0,200,255,${0.9*k})`;
     ctx.shadowColor="#00b4ff";
-    ctx.shadowBlur=40*k;
-    ctx.arc(x,y,12*(1-j*0.03),0,Math.PI*2);
+    ctx.shadowBlur=45*k;
+    ctx.arc(x,y,13*(1-j*0.05),0,Math.PI*2);
     ctx.fill();
   }
   ctx.shadowBlur=0;
@@ -145,9 +179,9 @@ setTimeout(()=>{
     c.remove();
     flash.style.opacity=0;
     document.getElementById("panel").style.visibility="visible";
-    setTimeout(()=>flash.remove(),500);
-  },400);
-},4000);
+    setTimeout(()=>flash.remove(),600);
+  },500);
+},4500);
 </script>
 </body>
 </html>
