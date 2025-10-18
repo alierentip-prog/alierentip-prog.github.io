@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AZURA • KADIN</title>
 
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
+  /* Renkler */
   --bg-deep:#110E13;
   --pink-1:#FF9DC3;
   --pink-2:#FFB7D3;
@@ -23,8 +25,10 @@
   --btn-bg:rgba(40,28,45,0.7);
   --btn-bd:rgba(255,160,210,0.22);
   --btn-tx:#EFCFE3;
-  --accent-mor:#B16AD9;
+  --accent-mor:#B16AD9; /* manifesto yazısı */
 }
+
+/* Reset ufak dokunuş */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -32,14 +36,19 @@ body{
   color:var(--text-body); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
   overflow-x:hidden;
 }
+
+/* --- Parçacıklar ve Güneş --- */
 .bg-layer{position:fixed; inset:0; pointer-events:none; z-index:0;}
+/* geniş yumuşak parıltılar */
 .bg-halos{
   position:absolute; inset:0;
   background:
     radial-gradient(900px 550px at 85% 10%, rgba(255,200,230,0.10), rgba(255,160,210,0.06) 40%, transparent 70%),
     radial-gradient(1200px 700px at 15% 115%, rgba(255,120,180,0.08), transparent 75%);
 }
+/* pembe noktacıklar */
 .canvas{position:absolute; inset:0;}
+/* Güneş (geniş gezinti alanı) */
 .sun{
   position:absolute; width:560px; height:560px; border-radius:50%;
   filter:blur(0.2px);
@@ -49,13 +58,16 @@ body{
   animation: sun-walk 42s linear infinite alternate;
 }
 @keyframes sun-walk{
-  0%{transform:translate(46vw, 4vh)}
-  20%{transform:translate(68vw, 12vh)}
-  40%{transform:translate(78vw, 28vh)}
-  60%{transform:translate(60vw, 36vh)}
-  80%{transform:translate(70vw, 14vh)}
-  100%{transform:translate(48vw, 26vh)}
+  /* daha geniş elips */
+  0%   { transform:translate(46vw, 4vh) }
+  20%  { transform:translate(68vw, 12vh) }
+  40%  { transform:translate(78vw, 28vh) }
+  60%  { transform:translate(60vw, 36vh) }
+  80%  { transform:translate(70vw, 14vh) }
+  100% { transform:translate(48vw, 26vh) }
 }
+
+/* Üst menü butonları */
 .top-buttons{position:fixed; inset:0 0 auto 0; height:0; z-index:5;}
 .btn{
   position:absolute; top:12px; padding:8px 12px; border-radius:12px;
@@ -67,6 +79,8 @@ body{
 .btn:hover{box-shadow:0 10px 30px rgba(255,160,210,.18)}
 .btn.left{left:12px}
 .btn.right{right:12px}
+
+/* Hoşgeldin kutusu */
 .welcome{
   position:fixed; top:70px; left:50%; transform:translateX(-50%);
   width:min(720px, calc(100% - 40px));
@@ -86,8 +100,12 @@ body{
 @keyframes wel-in{to{opacity:1; transform:translate(-50%,0)}}
 .fade-out{animation:wel-out .8s ease forwards}
 @keyframes wel-out{to{opacity:0; transform:translate(-50%,-10px)}}
+
+/* Yazıyı geç */
 .skip{position:fixed; top:12px; left:12px; z-index:6; display:none}
 .skip.show{display:inline-block}
+
+/* Manifesto (slayt) */
 .manifesto-wrap{
   position:fixed; inset:0; z-index:3; display:none; pointer-events:none;
 }
@@ -104,10 +122,14 @@ body{
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-shadow:0 0 22px rgba(177,106,217,.45);
   white-space:pre-wrap; text-transform:uppercase;
-  top:100%;
-  animation: slideUp 40s linear forwards;
+  top:100%; /* alttan başla */
+  animation: slideUp 55s linear forwards;  /* ⇐ 55 saniye */
 }
-@keyframes slideUp{to{ top:-300% }}
+@keyframes slideUp{
+  to{ top:-120% }
+}
+
+/* Menü (kartlar) */
 .main{position:relative; z-index:2; padding:90px 18px 64px; display:none;}
 .grid{
   max-width:1100px; margin:0 auto; display:grid; gap:20px;
@@ -133,32 +155,48 @@ body{
   font-weight:600; font-size:12.5px;
 }
 .card-wide{grid-column:1 / -1}
+
 footer{
   max-width:1100px; margin:32px auto 0; text-align:center; color:#E7CCDB;
   opacity:.95; font-size:14px;
+}
+
+/* Küçük ekran uyarlamaları */
+@media (max-width:760px){
+  .grid{grid-template-columns:1fr 1fr;}
+  .card h3{font-size:18px}
+  .card-wide h3{font-size:20px}
+}
+@media (max-width:520px){
+  .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
+<!-- Arkaplan -->
 <div class="bg-layer">
   <div class="bg-halos"></div>
   <canvas class="canvas" id="stars"></canvas>
   <div class="sun" id="sun"></div>
 </div>
 
+<!-- Üst butonlar -->
 <div class="top-buttons">
   <a class="btn left" id="userBtn" href="#">Kullanıcı Paneli</a>
   <a class="btn right" id="homeBtn" href="index.html">Ana Menü</a>
 </div>
 
+<!-- Hoşgeldin -->
 <div class="welcome" id="welcomeBox">
   <h3>Doğanın Işığı’na Hoş Geldin 🌸</h3>
   <p>Sakin bir nefes al; birazdan kısa bir manifesto akacak.</p>
 </div>
 
+<!-- Yazıyı Geç -->
 <a class="btn skip" id="skipBtn">Yazıyı Geç</a>
 
+<!-- Manifesto -->
 <div class="manifesto-wrap" id="mfWrap" aria-hidden="true">
   <div class="manifesto-scrim"></div>
   <div class="manifesto" id="manifesto">
@@ -179,94 +217,122 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
   </div>
 </div>
 
+<!-- Menü (Manifesto bitince görünecek) -->
 <main class="main" id="main">
   <div class="grid">
     <div class="card">
       <h3>🌸 ZARAFET &amp; DENGE</h3>
       <p>Zarafet; yavaşlamayı bilmek, denge ise payına düşeni üstlenmektir. İkisi beraber olduğunda şefkat üretkenliği boğmaz, üretkenlik de şefkati yıpratmaz.</p>
-      <div class="chips"><span>Sadelik</span><span>Nazik sınır</span><span>Ritüel</span></div>
+      <div class="chips">
+        <span>Sadelik</span><span>Nazik sınır</span><span>Ritüel</span>
+      </div>
     </div>
 
     <div class="card">
       <h3>✨ İÇ ISITAN MOTİVASYON</h3>
       <p>Güne minik bir <em>açılış ritüeli</em> koy: 3 derin nefes, bir bardak su, 1 cümle niyet. Niyet cümlesi: “Bugün şunu bitiriyorum: …”</p>
-      <div class="chips"><span>Niyet cümlesi</span><span>Kısa ısınma</span><span>Şefkatli iç ses</span></div>
+      <div class="chips">
+        <span>Niyet cümlesi</span><span>Kısa ısınma</span><span>Şefkatli iç ses</span>
+      </div>
     </div>
 
     <div class="card">
       <h3>🫶 NEZAKET</h3>
       <p>“Sınır koymak kırmak değildir.” Talebi yumuşatan vurgular: “Bunu şu kadar yapabilir miyiz?”, “Bu iki seçeneği görüyorum, hangisi rahat?”</p>
-      <div class="chips"><span>Şeffaflık</span><span>Seçenek</span><span>Rica</span></div>
+      <div class="chips">
+        <span>Şeffaflık</span><span>Seçenek</span><span>Rica</span>
+      </div>
     </div>
 
     <div class="card">
       <h3>🌙 MİNİ ALIŞTIRMA</h3>
       <p>15 dakikalık nazik odak: telefonu sessize al, modunu “pencere” yap; minik notluk. Bitince “Bu anda kendime teşekkür ediyorum çünkü…” yaz.</p>
-      <div class="chips"><span>15 dk odak</span><span>Tek iş</span><span>Şükran cümlesi</span></div>
+      <div class="chips">
+        <span>15 dk odak</span><span>Tek iş</span><span>Şükran cümlesi</span>
+      </div>
     </div>
 
     <div class="card-wide">
       <h3>🌺 KAYNAKLAR</h3>
       <p><strong>Essentialism</strong> (McKeown) — <strong>Rest</strong> (Pang) — <strong>Tiny Habits</strong> (Fogg)</p>
-      <div class="chips"><span>← Ana Menü</span><span>Kanallar</span><span>Alıştırmalar</span></div>
+      <div class="chips">
+        <span>← Ana Menü</span><span>Kanallar</span><span>Alıştırmalar</span>
+      </div>
     </div>
   </div>
+
   <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
 </main>
 
 <script>
+/* ---------- Pembe partiküller ---------- */
 (function(){
-  <script>
-  const welcome   = document.getElementById('welcomeBox');
-  const mfWrap    = document.getElementById('mfWrap');
-  const manifesto = document.getElementById('manifesto');
-  const skipBtn   = document.getElementById('skipBtn');
-  const main      = document.getElementById('main');
-
-  let manifestoTimer = null;
-  let finished = false;            // bir kez çalışsın
-
-  // (Opsiyonel) transform’lu çözümü kullandıysan süreyi metin boyuna göre hesapla:
-  function setScrollDuration(pxPerSec = 140){
-    const totalPx = manifesto.scrollHeight + innerHeight;
-    const durSec  = totalPx / pxPerSec;
-    manifesto.style.setProperty('--dur', durSec + 's');
-    return durSec;
+  const c = document.getElementById('stars');
+  const ctx = c.getContext('2d');
+  function size(){ c.width = innerWidth; c.height = innerHeight }
+  size(); addEventListener('resize', size);
+  const colors = ['#FF9DC3','#FFB7D3','#FF8FB6'];
+  const dots = Array.from({length: 140}, ()=>({
+    x: Math.random()*c.width,
+    y: Math.random()*c.height,
+    r: (Math.random()*2)+1.2,
+    o: 0.55+Math.random()*0.2,
+    c: colors[(Math.random()*colors.length)|0],
+    vy: 0.02 + Math.random()*0.06
+  }));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    for(const d of dots){
+      ctx.globalAlpha = d.o;
+      ctx.fillStyle = d.c;
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill();
+      d.y += d.vy;
+      if(d.y > c.height+8){ d.y = -8; d.x = Math.random()*c.width }
+    }
+    requestAnimationFrame(draw);
   }
+  draw();
+})();
 
-  // Kısa hoşgeldin
-  setTimeout(()=>{
-    welcome.classList.add('fade-out');
-    setTimeout(startManifesto, 600);
-  }, 1600);
+/* ---------- Akış mantığı ---------- */
+const welcome = document.getElementById('welcomeBox');
+const mfWrap  = document.getElementById('mfWrap');
+const manifesto = document.getElementById('manifesto');
+const skipBtn = document.getElementById('skipBtn');
+const main = document.getElementById('main');
 
-  function startManifesto(){
-    mfWrap.style.display = 'block';
-    skipBtn.classList.add('show');
+let manifestoTimer = null;
 
-    // 2× hız örneği (kullanıyorsan):
-    const dur = (manifesto.style.getPropertyValue('--dur'))
-                ? parseFloat(getComputedStyle(manifesto).getPropertyValue('--dur'))
-                : setScrollDuration(140); // transform çözümü yoksa bu satır sorun yaratmaz
+/* Hoşgeldin 2.2sn görünür, sonra manifesto başlar (bekleme kısaltıldı) */
+setTimeout(()=>{
+  welcome.classList.add('fade-out');
+  setTimeout(startManifesto, 600);  // ⇐ bekleme kısaltıldı
+}, 2200);
 
-    // ❶ Animasyon biter bitmez menüye geç
-    manifesto.addEventListener('animationend', showMenu, { once: true });
+function startManifesto(){
+  mfWrap.style.display='block';
+  skipBtn.classList.add('show');
+  /* 55 sn sonra menüye */
+  manifestoTimer = setTimeout(showMenu, 55000); // ⇐ 55.000 ms
+}
 
-    // ❷ Emniyet için yedek zamanlayıcı (animasyon olmasa bile)
-    manifestoTimer = setTimeout(showMenu, (dur || 45) * 1000 + 500);
-  }
+/* Yazıyı geç */
+skipBtn.addEventListener('click', ()=>{
+  if(manifestoTimer){ clearTimeout(manifestoTimer); }
+  showMenu();
+});
 
-  skipBtn.addEventListener('click', ()=>{
-    if (manifestoTimer) clearTimeout(manifestoTimer);
-    showMenu();
-  });
+function showMenu(){
+  mfWrap.style.display='none';
+  skipBtn.classList.remove('show');
+  main.style.display='block';
+}
 
-  function showMenu(){
-    if (finished) return;
-    finished = true;
-    mfWrap.style.display = 'none';
-    skipBtn.classList.remove('show');
-    main.style.display = 'block';
+/* Sol üst Kullanıcı Paneli şimdilik dummy */
+document.getElementById('userBtn').addEventListener('click', (e)=>{
+  e.preventDefault();
+  alert('Kullanıcı Paneli yakında burada 🌸');
+});
 </script>
 </body>
-    </html>
+</html>
