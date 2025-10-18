@@ -1,92 +1,62 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>AZURA • Meydan Okumalar</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!DOCTYPE html><html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Günlük Meydan Okuma</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{ --fg:#eef5ff; --mut:#b9c7db; --bg:#0b1322; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14); --ok:#8ff0b3 }
-*{box-sizing:border-box} html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui}
-.top{position:fixed;inset:0 0 auto 0;height:0;z-index:3}
-.btn{position:absolute;top:12px;padding:9px 12px;border-radius:12px;border:1px solid var(--b);background:var(--glass);color:var(--fg);text-decoration:none;font-weight:700;backdrop-filter:blur(6px)}
-.btn.left{left:12px}.btn.right{right:12px}
-main{max-width:1100px;margin:90px auto 64px;padding:0 18px}
-h1{margin:0 0 8px;font-family:Cinzel,serif;letter-spacing:.08em;background:linear-gradient(180deg,#fff,#dff3ff);-webkit-background-clip:text;color:transparent}
-.lead{color:var(--mut);margin:6px 0 22px}
-.grid{display:grid;gap:18px;grid-template-columns:1fr 1fr 1fr}
-.card{border:1px solid var(--b);background:var(--glass);border-radius:16px;padding:18px;display:flex;flex-direction:column}
-.card h3{margin:0 0 8px}
-.small{color:var(--mut);font-size:13px;margin:0 0 12px}
-.progress{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:auto}
-.fill{height:100%;background:linear-gradient(90deg,#74d69c,var(--ok));width:0%}
-.controls{display:flex;gap:8px;margin-top:10px}
-.controls button{flex:1;padding:8px;border-radius:10px;border:1px solid var(--b);background:rgba(255,255,255,.08);color:var(--fg);cursor:pointer}
-footer{text-align:center;color:#cfd6ea;margin-top:22px}
-@media (max-width:980px){ .grid{grid-template-columns:1fr 1fr}}
-@media (max-width:620px){ .grid{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-<div class="top">
-  <a class="btn left" href="community.html">← Topluluk</a>
-  <a class="btn right" href="index.html">Ana Menü</a>
-</div>
-
-<main>
-  <h1>Meydan Okumalar</h1>
-  <p class="lead">Kısa, net, ölçülebilir hedefler. Her gün 1 tik, ay sonunda büyük fark.</p>
-
-  <div class="grid">
-    <section class="card" data-target="7">
-      <h3>🗓️ 7 Gün • Nezaket</h3>
-      <p class="small">Günlük 1 mesajı “yumuşatma kalıbı”yla yaz.</p>
-      <div class="controls">
-        <button onclick="bump(this,7)">İşaretle</button>
-        <button onclick="reset(this)">Sıfırla</button>
-      </div>
-      <div class="progress"><div class="fill"></div></div>
-    </section>
-
-    <section class="card" data-target="14">
-      <h3>⏱️ 14 Gün • 20+5 Odak</h3>
-      <p class="small">Günlük 20 dk odak + 5 dk yansıtma notu.</p>
-      <div class="controls">
-        <button onclick="bump(this,14)">İşaretle</button>
-        <button onclick="reset(this)">Sıfırla</button>
-      </div>
-      <div class="progress"><div class="fill"></div></div>
-    </section>
-
-    <section class="card" data-target="30">
-      <h3>💧 30 Gün • Tek İş</h3>
-      <p class="small">Her gün bir “tek iş” seç ve bitir.</p>
-      <div class="controls">
-        <button onclick="bump(this,30)">İşaretle</button>
-        <button onclick="reset(this)">Sıfırla</button>
-      </div>
-      <div class="progress"><div class="fill"></div></div>
-    </section>
+:root{--bg:#0B1117;--card:#121A24;--bd:#1c2a3a;--tx:#E6F2FF;--muted:#A9C7E6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui}
+.wrapper{max-width:720px;margin:18px auto;padding:14px}
+.btn{background:#0f1824;border:1px solid var(--bd);color:var(--tx);padding:8px 12px;border-radius:12px;text-decoration:none}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;margin-top:12px}
+h1{margin:8px 0 6px;font-size:18px}
+.badge{display:inline-block;background:#0f1824;border:1px solid var(--bd);padding:6px 10px;border-radius:999px;color:var(--muted);font-weight:600}
+.big{font-size:18px;margin:8px 0 12px}
+</style></head><body>
+<div class="wrapper">
+  <div class="top">
+    <a class="btn" href="male.html">← Geri</a>
+    <span class="badge">⚡ Günlük Challenge</span>
+    <a class="btn" style="float:right" href="index.html">Ana Menü</a>
   </div>
 
-  <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
-</main>
+  <div class="card">
+    <h1>⚡ Bugünün Meydan Okuması</h1>
+    <div id="task" class="big">—</div>
+    <div class="row">
+      <button class="btn" id="roll">Yeni üret</button>
+      <button class="btn" id="lock">Bugüne kilitle</button>
+      <button class="btn" id="done">Tamamlandı</button>
+    </div>
+    <p class="badge" id="status">Durum: beklemede</p>
+  </div>
+</div>
 
 <script>
-function key(el){ const title = el.closest('.card').querySelector('h3').textContent; return 'az_ch_'+title }
-function load(el){
-  const k=key(el); const n=parseInt(localStorage.getItem(k)||'0',10);
-  const target=parseInt(el.dataset.target||el.getAttribute('data-target'),10);
-  const fill=el.querySelector('.fill'); fill.style.width=Math.min(100, (n/target)*100)+'%';
+const list = [
+ '📚 3 dk mikro okuma yap.',
+ '🧹 2 dk masa-toplama.',
+ '🚶 5 dk kısa yürüyüş.',
+ '📝 3 cümle günlük yaz.',
+ '💧 Bir bardak su iç + esneme.',
+ '📦 Gereksiz 1 öğeyi sil/bağışla.',
+ '📨 1 e-postayı yanıtla/arsivle.',
+ '🧘 1 dk gözler kapalı nefes.'
+];
+const task = document.getElementById('task');
+const st = document.getElementById('status');
+const roll=document.getElementById('roll');
+const lock=document.getElementById('lock');
+const done=document.getElementById('done');
+
+function todayKey(){return new Date().toISOString().slice(0,10);}
+function load(){
+  const s=JSON.parse(localStorage.getItem('az_chal')||'{}');
+  if(s.day===todayKey()){ task.textContent=s.text; st.textContent='Durum: '+(s.done?'tamamlandı ✅':'kilitli 🔒'); }
+  else { task.textContent=list[Math.floor(Math.random()*list.length)]; st.textContent='Durum: beklemede'; }
 }
-function bump(btn,target){
-  const card=btn.closest('.card'); const k=key(card); let n=parseInt(localStorage.getItem(k)||'0',10);
-  n=Math.min(target, n+1); localStorage.setItem(k,n); load(card);
-}
-function reset(btn){
-  const card=btn.closest('.card'); const k=key(card); localStorage.removeItem(k); load(card);
-}
-document.querySelectorAll('.card').forEach(load);
+roll.onclick=()=>{ task.textContent=list[Math.floor(Math.random()*list.length)]; st.textContent='Durum: taslak'; };
+lock.onclick=()=>{ localStorage.setItem('az_chal', JSON.stringify({day:todayKey(), text:task.textContent, done:false})); st.textContent='Durum: kilitli 🔒'; };
+done.onclick=()=>{ const s=JSON.parse(localStorage.getItem('az_chal')||'{}'); if(s.day!==todayKey()) return; s.done=true; localStorage.setItem('az_chal', JSON.stringify(s)); st.textContent='Durum: tamamlandı ✅'; };
+load();
 </script>
-</body>
-</html>
+</body></html>
