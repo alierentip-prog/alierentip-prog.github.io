@@ -118,7 +118,7 @@ body{
   text-shadow:0 0 22px rgba(177,106,217,.45);
   white-space:pre-wrap; text-transform:uppercase;
   top:100%;                 /* alttan başlar */
-  /* DİKKAT: Burada ANİMASYON YOK. 'play' sınıfı eklenince başlayacak. */
+  /* Başlangıçta animasyon yok; .play eklendiğinde başlatılacak */
 }
 .manifesto.play{
   animation-name: slideUp;
@@ -294,17 +294,18 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
   draw();
 })();
 
-/* ---------- Akış mantığı (erken geçiş FIX) ---------- */
+/* ---------- Akış mantığı (tam 35sn, bitince menü) ---------- */
 const welcome   = document.getElementById('welcomeBox');
 const mfWrap    = document.getElementById('mfWrap');
 const manifesto = document.getElementById('manifesto');
 const skipBtn   = document.getElementById('skipBtn');
 const main      = document.getElementById('main');
 
-/* Buradan süre ve hız kontrolü */
-const DURATION_MS = 55000;        // slayt toplam süresi (istediğin gibi değiştir)
-const WELCOME_VISIBLE_MS = 2200;  // hoşgeldin görünme
-const AFTER_FADE_WAIT_MS = 600;   // hoşgeldin kayarken bekleme
+/* Süre ve beklemeler */
+const DURATION_MS = 35000;       // ⇐ slayt tam 35sn
+const WELCOME_VISIBLE_MS = 1600; // hoşgeldin görünsün
+const AFTER_FADE_WAIT_MS = 600;  // hoşgeldin kayarken kısa bekleme
+
 let endFallback = null;
 let ended = false;
 
@@ -318,15 +319,15 @@ function startManifesto(){
   mfWrap.style.display='block';
   skipBtn.classList.add('show');
 
-  /* Animasyonu burada başlatıyoruz ki garanti olsun */
+  /* Animasyonu burada başlatıyoruz ve süresini 35sn yapıyoruz */
   manifesto.classList.add('play');
   manifesto.style.animationDuration = DURATION_MS + 'ms';
 
-  /* BİTTİĞİNDE menüye geç (tek sefer) */
+  /* Animasyon bittiyse menüye geç (tek sefer) */
   manifesto.addEventListener('animationend', onManifestoEnd, { once:true });
 
-  /* Aşırı nadir durumlar için güvenlik yedeği (animasyon event kaçarsa) */
-  endFallback = setTimeout(onManifestoEnd, DURATION_MS + 400);
+  /* Ola ki event kaçarsa: yedek zamanlayıcı */
+  endFallback = setTimeout(onManifestoEnd, DURATION_MS + 300);
 }
 
 function onManifestoEnd(){
@@ -354,4 +355,4 @@ document.getElementById('userBtn').addEventListener('click', (e)=>{
 });
 </script>
 </body>
-                                 </html>
+  </html>
