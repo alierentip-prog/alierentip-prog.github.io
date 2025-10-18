@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AZURA • Alıştırmalar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{ --fg:#eef5ff; --mut:#b9c7db; --bg:#0b1322; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14) }
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui}
+.top{position:fixed;inset:0 0 auto 0;height:0;z-index:3}
+.btn{position:absolute;top:12px;padding:9px 12px;border-radius:12px;border:1px solid var(--b);background:var(--glass);color:var(--fg);text-decoration:none;font-weight:700;backdrop-filter:blur(6px)}
+.btn.left{left:12px}.btn.right{right:12px}
+main{max-width:1100px;margin:90px auto 64px;padding:0 18px}
+h1{margin:0 0 8px;font-family:Cinzel,serif;letter-spacing:.08em;background:linear-gradient(180deg,#fff,#e2f0ff); -webkit-background-clip:text; color:transparent}
+.lead{color:var(--mut);margin:6px 0 22px}
+.grid{display:grid;gap:18px;grid-template-columns:1fr 1fr}
+.card{border:1px solid var(--b);background:var(--glass);border-radius:16px;padding:18px}
+.card h3{margin:0 0 8px}
+label{display:block;margin:8px 0 4px;color:#d6e6ff}
+input[type="number"],select,textarea{width:100%;padding:8px;border-radius:10px;border:1px solid var(--b);background:rgba(255,255,255,.06);color:var(--fg)}
+button{padding:10px 12px;border-radius:10px;border:1px solid var(--b);background:rgba(255,255,255,.08);color:var(--fg);cursor:pointer;margin-top:8px}
+.res{margin-top:12px;color:#cfe2ff}
+footer{text-align:center;color:#cfd6ea;margin-top:22px}
+@media (max-width:920px){ .grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="btn left" href="community.html">← Topluluk</a>
+  <a class="btn right" href="index.html">Ana Menü</a>
+</div>
+
+<main>
+  <h1>Alıştırmalar</h1>
+  <p class="lead">Kısa, uygulanabilir pratikler. İlerlemeni hissedeceksin.</p>
+
+  <div class="grid">
+    <section class="card">
+      <h3>⏱️ 20+5 Odak</h3>
+      <label>Odak süresi (dk)</label>
+      <input id="focus" type="number" value="20" min="5" max="60"/>
+      <label>Ardından yansıtma (dk)</label>
+      <input id="reflect" type="number" value="5" min="1" max="30"/>
+      <button onclick="startTimer()">Başlat</button>
+      <div class="res" id="res"></div>
+    </section>
+
+    <section class="card">
+      <h3>📝 Niyet Cümlesi</h3>
+      <label>Bugün bitireceğim tek şey:</label>
+      <textarea id="intent" rows="4" placeholder="Örn: X dokümanın taslağı"></textarea>
+      <button onclick="saveIntent()">Kaydet</button>
+      <div class="res" id="intentRes"></div>
+    </section>
+  </div>
+
+  <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
+</main>
+
+<script>
+let timer=null;
+function startTimer(){
+  const f=parseInt(document.getElementById('focus').value,10);
+  const r=parseInt(document.getElementById('reflect').value,10);
+  const total=(f+r)*60;
+  const res=document.getElementById('res');
+  const t0=Date.now();
+  if(timer) clearInterval(timer);
+  timer=setInterval(()=>{
+    const t=Math.max(0, total - Math.floor((Date.now()-t0)/1000));
+    const mm=String(Math.floor(t/60)).padStart(2,'0');
+    const ss=String(t%60).padStart(2,'0');
+    res.textContent=`Kalan: ${mm}:${ss} (Önce ${f}dk odak, sonra ${r}dk yansıma)`;
+    if(t===0){ clearInterval(timer); res.textContent='Bitti! Harika iş.'; }
+  }, 250);
+}
+function saveIntent(){
+  const v=document.getElementById('intent').value.trim();
+  if(!v){ document.getElementById('intentRes').textContent='Bir cümle yaz :)'; return; }
+  const k='az_intent_'+(new Date).toISOString().slice(0,10);
+  localStorage.setItem(k,v);
+  document.getElementById('intentRes').textContent='Kaydedildi. Gün sonu dönüp tikle!';
+}
+</script>
+</body>
+</html>
