@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AZURA • Kadın Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#110E13;
+  --card1:#52314E; --card2:#342132; --bd:rgba(255,160,210,.16);
+  --fg:#EED4E4; --mut:#E4BFD2;
+  --chip:#2C1D2A; --chipbd:rgba(255,160,210,.28); --chipt:#F6CFE1;
+  --accentA:#FFB7D3; --accentB:#FFD2E8;
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui}
+.wrap{max-width:1180px;margin:28px auto;padding:0 18px}
+.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+a.btn,button.btn{appearance:none;border:1px solid var(--bd);background:rgba(40,28,45,.7);color:#EFCFE3;border-radius:12px;padding:9px 13px;text-decoration:none;font-weight:600}
+a.btn:hover,button.btn:hover{box-shadow:0 10px 24px rgba(255,160,210,.18)}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
+.card{grid-column:span 6;background:linear-gradient(180deg,var(--card1),var(--card2));border:1px solid var(--bd);border-radius:18px;padding:18px;box-shadow:0 12px 34px rgba(17,0,30,.35)}
+.card h3{margin:0 0 8px;font-family:Cinzel,serif;letter-spacing:.05em;font-size:20px;background:linear-gradient(180deg,var(--accentA),#fff 80%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 14px rgba(255,120,180,.35)}
+.card p{margin:6px 0 0}
+.card.small{grid-column:span 4}
+.card.wide{grid-column:1/-1}
+.chips{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
+.chips span{background:var(--chip);border:1px solid var(--chipbd);color:var(--chipt);padding:7px 12px;border-radius:999px;font-weight:600;font-size:12.5px}
+.kv{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}
+.kv strong{font-size:26px;background:linear-gradient(180deg,var(--accentA),var(--accentB));-webkit-background-clip:text;background-clip:text;color:transparent}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px dashed var(--bd);color:#E4BFD2;font-weight:600}
+.list{margin:10px 0 0;padding-left:18px}
+.hr{height:1px;background:linear-gradient(90deg,transparent,rgba(255,160,210,.25),transparent);margin:12px 0}
+.timer{display:flex;gap:10px;align-items:center;margin-top:12px}
+.timer input{width:70px;background:#261b28;border:1px solid var(--bd);border-radius:8px;color:#EFCFE3;padding:6px 8px}
+footer{margin:24px 0 8px;text-align:center;color:#E4BFD2;font-size:13px}
+@media (max-width:960px){.card{grid-column:span 12}.card.small{grid-column:span 6}}
+@media (max-width:620px){.card.small{grid-column:span 12}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <a class="btn" href="female.html">← Geri</a>
+      <div class="badge">🌸 Azura Nova • Kadın Paneli</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" id="refreshBtn">🔄 İçeriği Tazele</button>
+      <a class="btn" href="index.html">🏠 Ana Menü</a>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Günün Ritüeli -->
+    <section class="card" id="ritCard">
+      <h3>🌺 Günün Nazik Ritüeli</h3>
+      <p id="ritText">—</p>
+      <div class="kv">
+        <span class="badge">⏱️ Öneri: <b id="ritDur">10 dk</b></span>
+        <strong id="ritTag">ŞEFKAT</strong>
+      </div>
+      <div class="chips" id="ritChips"></div>
+      <div class="timer">
+        <label>🍵 Zamanlayıcı:</label>
+        <input type="number" id="tmMin" value="10" min="5" max="60"> dk
+        <button class="btn" id="tmStart">Başlat</button>
+        <span id="tmStatus" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <!-- Mikro İyilik -->
+    <section class="card small" id="goodCard">
+      <h3>💗 Mikro İyilik</h3>
+      <p id="goodText">—</p>
+      <div class="chips" id="goodChips"></div>
+    </section>
+
+    <!-- İletişim İnceliği -->
+    <section class="card small" id="gentleCard">
+      <h3>🫶 İletişim İnceliği</h3>
+      <p id="gentleText">—</p>
+      <ul class="list" id="gentleList"></ul>
+    </section>
+
+    <!-- Serbest Yazı / Günlük -->
+    <section class="card small" id="journalCard">
+      <h3>📝 3 Cümle Günlüğü</h3>
+      <p>Bugün için 3 cümle yaz: <em>Gözlem — Duygu — Niyet</em></p>
+      <div class="chips"><span>2 dk</span><span>Yumuşak başlangıç</span></div>
+    </section>
+
+    <!-- Alıntı -->
+    <section class="card wide" id="qCard">
+      <h3>💬 Günün Sözü</h3>
+      <p id="qText">—</p>
+      <div class="chips" id="qChips"></div>
+    </section>
+
+    <!-- Kaynaklar -->
+    <section class="card wide">
+      <h3>📚 Kaynaklar</h3>
+      <p><strong>Essentialism</strong> — <strong>Rest</strong> — <strong>Tiny Habits</strong></p>
+      <div class="chips"><span>Ritüeller</span><span>Şefkatli odak</span><span>Hafif plan</span></div>
+    </section>
+  </div>
+
+  <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
+</div>
+
+<script>
+const DATA = {
+  rit: [
+    { text:"3 derin nefes + 1 bardak su + 1 niyet cümlesi yaz.", dur:10, tag:"ŞEFKAT", chips:["Hafif başla","Nazik tempo"] },
+    { text:"5 dak. esneme + kısa bir teşekkür mesajı gönder.", dur:12, tag:"TEMAS", chips:["Esne","Bağ kur"] },
+    { text:"15 dak. sakin okuma, altına 1 not düş.", dur:15, tag:"SÜREKLİLİK", chips:["Not al","Hafif odak"] },
+  ],
+  good: [
+    { text:"Bugün birine küçük bir iyilik: kapı tut, sıranı ver, minik not bırak.", chips:["Nazik jest","Gülümseme"] },
+    { text:"Kendine sıcak bir içecek hazırlayıp 3 dk dur.", chips:["Durakla","Kendine alan"] },
+    { text:"Bir eşyayı paylaş / ödünç ver.", chips:["Güven","Topluluk"] },
+  ],
+  gentle: [
+    { text:"Yumuşak çerçeve:", list:["“Şunu böyle yapsak rahat olur mu?”","“İki seçenek var, hangisi daha iyi hissettirir?”"]},
+    { text:"Nazik sınır:", list:["“Şu aralıkta yapabilirim.”","“Bunu yapamam ama şunu deneyebilirim.”"]},
+    { text:"Onay ve kapanış:", list:["“Anlaştık mı?”","“Sana uyar mı?”"]},
+  ],
+  quotes: [
+    { q:"“Zarafet, gücün sakin dilidir.”", chips:["Denge","Ilık güç"]},
+    { q:"“Yavaşlık, dikkatin hediyesidir.”", chips:["Farkındalık","Ritüel"]},
+    { q:"“Naziklik hızını kesmez; yönünü düzeltir.”", chips:["İletişim","Netlik"]},
+  ]
+};
+
+const $ = s => document.querySelector(s);
+function pick(arr, seed){ return arr[(seed)%arr.length]; }
+function todaySeed(){ const d=new Date(); return d.getFullYear()*1000 + (d.getMonth()+1)*50 + d.getDate(); }
+
+function setDaily(seed=todaySeed()){
+  const r = pick(DATA.rit, seed);
+  $('#ritText').textContent=r.text; $('#ritDur').textContent=r.dur+' dk'; $('#ritTag').textContent=r.tag;
+  $('#ritChips').innerHTML=r.chips.map(c=>`<span>${c}</span>`).join('');
+
+  const g = pick(DATA.good, seed+1);
+  $('#goodText').textContent=g.text; $('#goodChips').innerHTML=g.chips.map(c=>`<span>${c}</span>`).join('');
+
+  const ge = pick(DATA.gentle, seed+2);
+  $('#gentleText').textContent=ge.text; $('#gentleList').innerHTML=ge.list.map(x=>`<li>${x}</li>`).join('');
+
+  const q = pick(DATA.quotes, seed+3);
+  $('#qText').textContent=q.q; $('#qChips').innerHTML=q.chips.map(c=>`<span>${c}</span>`).join('');
+}
+
+setDaily();
+let rot=0;
+setInterval(()=>{ rot++; setDaily(todaySeed()+rot); }, 25000);
+$('#refreshBtn').addEventListener('click', ()=>{ rot++; setDaily(todaySeed()+rot); });
+
+/* basit zamanlayıcı */
+let tmId=null, left=0;
+function fmt(n){return String(n).padStart(2,'0')}
+$('#tmStart').addEventListener('click', ()=>{
+  const min = Math.max(5, Math.min(60, parseInt($('#tmMin').value)||10));
+  left = min*60;
+  $('#tmStatus').textContent = `⏳ ${fmt(Math.floor(left/60))}:${fmt(left%60)}`;
+  if(tmId) clearInterval(tmId);
+  tmId = setInterval(()=>{
+    left--; $('#tmStatus').textContent = `⏳ ${fmt(Math.floor(left/60))}:${fmt(left%60)}`;
+    if(left<=0){ clearInterval(tmId); tmId=null; $('#tmStatus').textContent='✅ Bitti! Harikasın.'; }
+  },1000);
+});
+</script>
+</body>
+</html>
