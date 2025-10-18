@@ -1,222 +1,256 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AZURA • Erkek Paneli</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
 :root{
-  --bg:#0B1117;
-  --card1:#171E2A; --card2:#0E141F; --bd:rgba(140,200,255,.18);
-  --fg:#DCEAF7; --mut:#A8C6DD;
-  --chip:#111A24; --chipbd:rgba(140,200,255,.28); --chipt:#D6EEFF;
-  --accentA:#9ED7FF; --accentB:#D6F2FF;
+  --sidebar:#0b2b33;           /* koyu lacivert-yeşil */
+  --sidebar-2:#061a1f;
+  --accent-1:#00b4d8;          /* mavi-camgöbeği */
+  --accent-2:#48cae4;
+  --accent-mint:#90e0ef;
+  --ink:#0d1b1e;
+  --muted:#5a6b74;
+  --paper:#ffffff;
+  --paper-2:#f4f8fa;
+  --bd:#d8e1e5;
+  --chip:#eef5f7;
+  --chip-bd:#d7e8ec;
+  --ok:#2bb673;
+  --warn:#f7a84a;
+  --danger:#e85d5d;
+  --shadow:0 12px 40px rgba(4,30,45,.12);
 }
-*{box-sizing:border-box} html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-.wrap{max-width:1180px;margin:28px auto;padding:0 18px}
-.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
-.brand{font-family:Cinzel,serif;letter-spacing:.06em;font-weight:700}
-a.btn,button.btn{appearance:none;border:1px solid var(--bd);background:rgba(15,24,36,.72);color:#E8F4FF;border-radius:12px;padding:9px 13px;text-decoration:none;font-weight:600}
-a.btn:hover,button.btn:hover{box-shadow:0 10px 24px rgba(120,190,255,.18)}
-.grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-.card{grid-column:span 6;background:linear-gradient(180deg,var(--card1),var(--card2));border:1px solid var(--bd);border-radius:18px;padding:18px;box-shadow:0 12px 34px rgba(0,20,40,.35)}
-.card h3{margin:0 0 8px;font-family:Cinzel,serif;letter-spacing:.05em;font-size:20px;background:linear-gradient(180deg,var(--accentA),#fff 80%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 14px rgba(120,190,255,.35)}
-.card p{margin:6px 0 0;color:var(--fg)}
-.card.small{grid-column:span 4}
-.card.wide{grid-column:1/-1}
-.chips{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
-.chips span{background:var(--chip);border:1px solid var(--chipbd);color:var(--chipt);padding:7px 12px;border-radius:999px;font-weight:600;font-size:12.5px}
-.kv{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}
-.kv strong{font-size:26px;background:linear-gradient(180deg,var(--accentA),var(--accentB));-webkit-background-clip:text;background-clip:text;color:transparent}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px dashed var(--bd);color:var(--mut);font-weight:600}
-.list{margin:10px 0 0;padding-left:18px}
-.hr{height:1px;background:linear-gradient(90deg,transparent,rgba(140,200,255,.25),transparent);margin:12px 0}
-.timer{display:flex;gap:10px;align-items:center;margin-top:12px}
-.timer input{width:70px;background:#0f1a24;border:1px solid var(--bd);border-radius:8px;color:#E8F4FF;padding:6px 8px}
-footer{margin:24px 0 8px;text-align:center;color:var(--mut);font-size:13px}
-@media (max-width:960px){.card{grid-column:span 12}.card.small{grid-column:span 6}}
-@media (max-width:620px){.card.small{grid-column:span 12}}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--paper-2); color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+}
+
+.wrap{min-height:100%; display:grid; grid-template-columns: 280px 1fr}
+@media (max-width:960px){ .wrap{grid-template-columns:1fr} }
+
+/* === Sidebar === */
+.sidebar{
+  background: linear-gradient(180deg,var(--sidebar), var(--sidebar-2));
+  color:#e6f6ff; padding:18px; position:relative;
+}
+.sidebar .brand{
+  display:flex; align-items:center; gap:10px; padding:10px 8px 16px;
+  border-bottom:1px dashed rgba(255,255,255,.12);
+}
+.logo-dot{
+  width:36px;height:36px;border-radius:50%;
+  background: radial-gradient(90% 90% at 30% 30%, #fff, #c4f1ff 45%, #8ce3ff 70%, transparent 75%),
+              radial-gradient(120% 120% at 70% 70%, #00b4d866 0,transparent 70%);
+  box-shadow:0 8px 28px rgba(80,200,255,.4), inset 0 0 0 2px rgba(255,255,255,.7);
+}
+.brand h1{
+  margin:0; font:700 18px Cinzel,serif; letter-spacing:.08em;
+  background:linear-gradient(180deg,#ffffff,#b3ecff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 18px rgba(120,200,255,.25)
+}
+.nav{
+  display:flex; flex-direction:column; gap:8px; padding:16px 6px 8px;
+}
+.nav a{
+  text-decoration:none; color:#e6f6ff; display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:12px; font-weight:600;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(255,255,255,.04), rgba(255,255,255,.01));
+  transition:.2s ease;
+}
+.nav a:hover{ transform:translateX(4px); background:rgba(255,255,255,.08) }
+.kit{
+  position:sticky; bottom:12px; margin-top:18px; padding:12px;
+  border-radius:14px; border:1px dashed rgba(255,255,255,.15);
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+  font-size:13px; color:#e6f6ffcc;
+}
+.kit .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+.kit .chips span{
+  padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15)
+}
+
+/* === Main === */
+.main{ background:var(--paper); padding:22px 22px 28px }
+.topbar{display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+.search{
+  flex:1; min-width:260px; display:flex; align-items:center; gap:8px;
+  background:#fff; border:1px solid var(--bd); border-radius:14px; padding:10px 12px;
+  box-shadow:0 6px 18px rgba(0,40,60,.06);
+}
+.search input{border:0; outline:0; flex:1; font:500 14px Inter; color:var(--ink)}
+.btn{
+  appearance:none; border:1px solid var(--bd); background:linear-gradient(180deg,#ffffff,#f0f6f8);
+  border-radius:12px; padding:10px 12px; font-weight:700; color:#0b2b33; cursor:pointer;
+  box-shadow:0 8px 26px rgba(0,60,90,.08); transition:.2s;
+}
+.btn:hover{transform:translateY(-1px); box-shadow:0 12px 34px rgba(0,60,90,.12)}
+.btn.primary{
+  background:linear-gradient(180deg,#00b4d8,#0077b6);
+  color:white; border-color:#00b4d8; text-shadow:0 1px 0 rgba(0,0,0,.25)
+}
+
+.grid{ display:grid; gap:18px; grid-template-columns: repeat(12,1fr); margin-top:18px }
+.card{
+  grid-column: span 12; background:linear-gradient(180deg,#fff,#f7fbfc);
+  border:1px solid var(--bd); border-radius:16px; padding:18px; box-shadow:var(--shadow);
+}
+@media (min-width:860px){
+  .col-6{ grid-column: span 6 }
+  .col-4{ grid-column: span 4 }
+  .col-8{ grid-column: span 8 }
+  .col-12{ grid-column: span 12 }
+}
+.card h3{
+  margin:0 0 6px; font:700 18px Cinzel,serif; letter-spacing:.06em;
+  background:linear-gradient(180deg,#00334d,#0077b6);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.card p{margin:6px 0 0; color:var(--muted)}
+
+.badge{display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12px;
+  padding:6px 10px; border-radius:999px; border:1px solid var(--chip-bd); background:var(--chip); color:#004d61}
+.row{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+
+.kpi{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:14px; border-radius:14px; border:1px dashed var(--bd);
+  background:linear-gradient(180deg,#fff,#f7fcfd);
+}
+.kpi strong{font-size:22px; letter-spacing:.02em; color:#004d61}
+
+.confetti{position:relative; overflow:hidden; border-radius:12px}
+.confetti::after{
+  content:""; position:absolute; inset:auto 0 0 0; height:4px;
+  background:linear-gradient(90deg,var(--accent-1),var(--accent-2),var(--accent-mint));
+  filter:saturate(1.2) blur(.2px); opacity:.9
+}
+
+.alert{
+  border:1px solid #ffd9b5; background:linear-gradient(180deg,#fff9f2,#fff3e6);
+  color:#5a3b00; border-radius:16px; padding:16px; box-shadow:0 10px 30px rgba(255,180,80,.18)
+}
+.alert .tag{background:#fff1da; border:1px solid #ffd9b5; color:#a8641a}
+.card:hover{ transform:translateY(-2px) }
+footer{margin-top:18px; text-align:center; color:#7a8a90; font-size:13px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar">
-    <div style="display:flex;align-items:center;gap:10px">
-      <a class="btn" href="male.html">← Geri</a>
-      <div class="badge">🧭 Azura Nova • Erkek Paneli</div>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn" id="refreshBtn">🔄 İçeriği Tazele</button>
-      <a class="btn" href="index.html">🏠 Ana Menü</a>
-    </div>
-  </div>
 
-  <div class="grid" id="grid">
-    <!-- Günün Odak Hedefi -->
-    <section class="card" id="focusCard">
-      <h3>🎯 Günün Odak Hedefi</h3>
-      <p id="focusText">—</p>
-      <div class="kv"><span class="badge">⏱️ Önerilen süre: <b id="focusDur">20 dk</b></span><strong id="focusTag">ODAK</strong></div>
-      <div class="chips" id="focusChips"></div>
-      <div class="timer">
-        <label>🍅 Pomodoro:</label>
-        <input type="number" id="pomMin" value="20" min="5" max="90"> dk
-        <button class="btn" id="pomStart">Başlat</button>
-        <span id="pomStatus" aria-live="polite"></span>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo-dot"></div>
+      <h1>Azura Nova<br><span style="font:600 11px Inter; letter-spacing:.12em; opacity:.8">Erkek Paneli</span></h1>
+    </div>
+
+    <nav class="nav">
+      <a href="#"><span>🏠</span> Genel Bakış</a>
+      <a href="#"><span>👤</span> Profilim</a>
+      <a href="#"><span>📈</span> İlerleme</a>
+      <a href="#"><span>📚</span> Kaynaklar</a>
+      <a href="#"><span>💬</span> Topluluk</a>
+      <a href="#"><span>⚙️</span> Ayarlar</a>
+    </nav>
+
+    <div class="kit">
+      <div style="font-weight:700; margin-bottom:6px">Hızlı Etiketler</div>
+      <div class="chips">
+        <span>#disiplin</span><span>#odak</span><span>#rutin</span><span>#güç</span>
       </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <div class="search">
+        <span>🔍</span>
+        <input placeholder="Panelde ara… (ör. ‘rutin’, ‘disiplin’, ‘hedef’)">
+      </div>
+      <button class="btn">⟳ Otomatik Güncelleme</button>
+      <button class="btn primary">💾 Kaydet</button>
+    </div>
+
+    <section class="grid">
+      <article class="card col-12 confetti">
+        <span class="badge">⚙️ Hoş geldin!</span>
+        <h3>Günün planı hazır.</h3>
+        <p>Bu panel kişisel gelişim, hedef ve disiplin alanını yönetmek için. Soldan sekmelere geç, kartlardaki mini eylemlerle süreci hızlandır.</p>
+        <div class="row"><span class="badge">Tanıtım</span><span class="badge">Günlük</span><span class="badge">Mini hedef</span></div>
+      </article>
+
+      <article class="card col-6">
+        <span class="badge" style="background:#e9fff9; border-color:#c9ffee; color:#008a74">💪 Odak Bloğu</span>
+        <h3>Bugün 30 dk • Tek İş</h3>
+        <div class="kpi" style="margin-top:8px">
+          <div>Seçilen görev:</div>
+          <strong>“Derin çalışma”</strong>
+          <button class="btn" style="padding:8px 10px">Başlat</button>
+        </div>
+        <div class="row"><span class="badge">Tek pencere</span><span class="badge">Uçak modu</span><span class="badge">Pomodoro 30</span></div>
+      </article>
+
+      <article class="card col-6">
+        <span class="badge">💬 Günün Notu</span>
+        <h3>“Güç, sesi yükseltmek değil; ölçülü olmaktır.”</h3>
+        <p style="margin-top:8px">Bugün iletişimde şu kalıbı dene: <em>“Bu konuyu şu şekilde çözebilir miyiz?”</em></p>
+        <div class="row"><span class="badge">Netlik</span><span class="badge">Saygı</span></div>
+      </article>
+
+      <article class="card col-4">
+        <span class="badge">🗓️ Gündem</span>
+        <h3>Mini Başlıklar</h3>
+        <div class="row"><span class="badge">Rutin</span><span class="badge">Takip</span><span class="badge">Küçük Adım</span></div>
+      </article>
+
+      <article class="card col-4">
+        <span class="badge">📚 Kaynaklar</span>
+        <h3>Okuma Listesi</h3>
+        <ul style="margin:8px 0 0 18px; color:#40555d">
+          <li><strong>Atomic Habits</strong> — Clear</li>
+          <li><strong>Deep Work</strong> — Newport</li>
+          <li><strong>Ego Is the Enemy</strong> — Holiday</li>
+        </ul>
+      </article>
+
+      <article class="card col-4">
+        <span class="badge" style="background:#f0fffa;border-color:#d6fff2;color:#0a9f83">🌬️ Sakinlik</span>
+        <h3>4-6 Nefes • Tek Adım</h3>
+        <p>4 sn al, 6 sn ver. Ardından kendine sor: <em>“Şu an en anlamlı küçük adımım ne?”</em></p>
+      </article>
+
+      <article class="card col-12 alert">
+        <span class="badge tag">Uyarı</span>
+        <h3 style="margin:6px 0">Aşırı Yüklenme Belirtisi</h3>
+        <p>5’ten fazla hedef planladıysan, önce 3’e indir. Fazlası verimi düşürebilir.</p>
+      </article>
     </section>
 
-    <!-- Mikro Meydan Okuma -->
-    <section class="card small" id="microCard">
-      <h3>⚡ Mikro Meydan Okuma</h3>
-      <p id="microText">—</p>
-      <div class="chips" id="microChips"></div>
-    </section>
-
-    <!-- Nezaket / İletişim İpucu -->
-    <section class="card small" id="kindCard">
-      <h3>🤝 İletişim &amp; Nezaket</h3>
-      <p id="kindText">—</p>
-      <ul class="list" id="kindList"></ul>
-    </section>
-
-    <!-- Alışkanlık Serisi -->
-    <section class="card small" id="streakCard">
-      <h3>🔥 Alışkanlık Serisi</h3>
-      <p>Peş peşe gün: <strong id="streakCount">0</strong></p>
-      <div class="chips"><span>🏁 Hedef: Minimum 10 gün</span><span>📌 Günlük işaretle</span></div>
-      <div class="hr"></div>
-      <button class="btn" id="streakMark">Bugünü İşaretle</button>
-      <small id="streakNote" style="display:block;margin-top:8px;color:#A8C6DD"></small>
-    </section>
-
-    <!-- Sakinlik Egzersizi -->
-    <section class="card small" id="calmCard">
-      <h3>🌬️ Sakinlik Egzersizi</h3>
-      <p>4-6 nefes: <em>4 sn al — 6 sn ver</em>. Zihninde tek soru: <strong>“Şu an benden beklenen tek adım ne?”</strong></p>
-      <div class="chips"><span>🪷 2 dakika</span><span>🎧 İstersen sessiz</span></div>
-    </section>
-
-    <!-- Söz / Alıntı -->
-    <section class="card wide" id="quoteCard">
-      <h3>💬 Günün Sözü</h3>
-      <p id="quoteText">—</p>
-      <div class="chips" id="quoteChips"></div>
-    </section>
-
-    <!-- Kaynaklar -->
-    <section class="card wide">
-      <h3>📚 Kaynaklar</h3>
-      <p><strong>Atomic Habits</strong> (Clear) — <strong>Deep Work</strong> (Newport) — <strong>Ego Is the Enemy</strong> (Holiday)</p>
-      <div class="chips"><span>🗂️ Pratikler</span><span>🧩 Mini Alışkanlıklar</span><span>🧠 Netlik</span></div>
-    </section>
-  </div>
-
-  <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
+    <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
+  </main>
 </div>
 
 <script>
-/* ====== Veriler ====== */
-const DATA = {
-  focus: [
-    { text:"Ajandanda bekleyen tek kritik işi bitir.", dur:20, tag:"ODAK", chips:["Net ajanda","Öncelik 1","Bildirim kapalı"] },
-    { text:"Dün yarım kalan dokümanı tamamla, gönder.", dur:25, tag:"TESLİM", chips:["Kısa rapor","Dosya düzeni","Takip"] },
-    { text:"30 dk derin çalışma: telefon uçak modunda.", dur:30, tag:"DERİNLİK", chips:["Tek pencere","Not","Mola"] },
-  ],
-  micro: [
-    { text:"Çalışma alanını 3 dk topla.", chips:["Temiz masa","Sade görünüm"] },
-    { text:"Bugün birine teşekkür mesajı at.", chips:["Nezaket","Şükran"] },
-    { text:"2 bardak su iç, esneme yap.", chips:["Hidrasyon","Esneme"] },
-  ],
-  kind: [
-    { text:"Talep cümleleri:", list:["“Bunu şu şekilde çözebilir miyiz?”","“İki seçenek görüyorum; hangisi rahat?”","“Şu koşulda yapabilirim.”"]},
-    { text:"Geri bildirim kalıbı:", list:["Gözlem → Etki → İstek","Netlik → Seçenek → Onay"]},
-    { text:"Toplantı tonu:", list:["Kısa gündem","Zaman kutusu","Kapanış maddesi"]},
-  ],
-  quotes: [
-    { q:"“Disiplin, özgürlüğün en kısa yoludur.”", chips:["Odak","İrade"]},
-    { q:"“Güç, sessiz kaldığında da anlaşılır.”", chips:["Duruş","Sükûnet"]},
-    { q:"“Her gün küçük; toplamda büyük.”", chips:["İstikrar","İnşa"]},
-  ]
-};
-
-/* ====== Yardımcılar ====== */
-const $ = s => document.querySelector(s);
-function pick(arr, seed){ return arr[(seed)%arr.length]; }
-function todaySeed(){ const d=new Date(); return d.getFullYear()*1000 + (d.getMonth()+1)*50 + d.getDate(); }
-
-/* ====== Günlük içerik ata (tohum + otomatik tazeleme) ====== */
-function setDailyContent(seed=todaySeed()){
-  // Focus
-  const f = pick(DATA.focus, seed);
-  $('#focusText').textContent = f.text;
-  $('#focusDur').textContent = f.dur + ' dk';
-  $('#focusTag').textContent = f.tag;
-  $('#focusChips').innerHTML = f.chips.map(c=>`<span>• ${c}</span>`).join('');
-
-  // Micro
-  const m = pick(DATA.micro, seed+1);
-  $('#microText').textContent = m.text;
-  $('#microChips').innerHTML = m.chips.map(c=>`<span>${c}</span>`).join('');
-
-  // Kind
-  const k = pick(DATA.kind, seed+2);
-  $('#kindText').textContent = k.text;
-  $('#kindList').innerHTML = k.list.map(li=>`<li>${li}</li>`).join('');
-
-  // Quote
-  const q = pick(DATA.quotes, seed+3);
-  $('#quoteText').textContent = q.q;
-  $('#quoteChips').innerHTML = q.chips.map(c=>`<span>${c}</span>`).join('');
-}
-
-/* ====== Otomatik tazeleme (25 sn’de bir farklı kombinasyon) ====== */
-let rot = 0;
-function autoRotate(){
-  rot++;
-  setDailyContent(todaySeed() + rot);
-}
-setDailyContent();
-const autoId = setInterval(autoRotate, 25000);
-$('#refreshBtn').addEventListener('click', autoRotate);
-
-/* ====== Pomodoro ====== */
-let pomId=null, leftSec=0;
-function fmt(n){return String(n).padStart(2,'0')}
-$('#pomStart').addEventListener('click', ()=>{
-  const min = Math.max(5, Math.min(90, parseInt($('#pomMin').value)||20));
-  leftSec = min*60;
-  $('#pomStatus').textContent = `⏳ ${fmt(Math.floor(leftSec/60))}:${fmt(leftSec%60)}`;
-  if(pomId) clearInterval(pomId);
-  pomId = setInterval(()=>{
-    leftSec--;
-    $('#pomStatus').textContent = `⏳ ${fmt(Math.floor(leftSec/60))}:${fmt(leftSec%60)}`;
-    if(leftSec<=0){ clearInterval(pomId); pomId=null; $('#pomStatus').textContent='✅ Bitti! Kısa mola.'; }
-  },1000);
+document.querySelectorAll('.nav a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    const btn = e.currentTarget;
+    btn.style.transform='translateX(6px) scale(1.02)';
+    setTimeout(()=>btn.style.transform='',180);
+  });
 });
-
-/* ====== Streak (localStorage) ====== */
-const KEY='azura_male_streak';
-function readStreak(){
-  try{ return JSON.parse(localStorage.getItem(KEY))||{count:0,last:''} }catch{ return {count:0,last:''} }
-}
-function writeStreak(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
-function todayStr(){ const d=new Date(); return d.toISOString().slice(0,10) }
-function incStreak(){
-  const s=readStreak(); const t=todayStr();
-  if(s.last===t){ $('#streakNote').textContent='Bugünü zaten işaretledin 👌'; return; }
-  const prev = s.last;
-  const y = new Date(prev); const x = new Date(t);
-  const cont = (prev && ((x - y) === 86400000));
-  s.count = cont ? s.count+1 : (s.last ? 1 : 1);
-  s.last = t; writeStreak(s);
-  $('#streakCount').textContent = s.count;
-  $('#streakNote').textContent = cont ? 'Seri korundu 🔥' : 'Seri başlatıldı ✅';
-}
-(function initStreak(){ const s=readStreak(); $('#streakCount').textContent=s.count; })();
-$('#streakMark').addEventListener('click', incStreak);
 </script>
 </body>
-  </html>
+</html>
