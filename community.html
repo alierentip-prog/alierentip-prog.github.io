@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AZURA • Topluluk</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fg:#eaf1ff; --mut:#b9c7db; --bg:#0b1020;
+  --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14);
+  --chip:#17223a; --chip-bd:rgba(160,200,255,.25); --chip-tx:#d7e8ff;
+  --accent:#7ec8ff; --accent-2:#bcdfff;
+}
+.theme-male{ --accent:#63b5ff; --accent-2:#cfe7ff }
+.theme-female{ --accent:#ff9dc3; --accent-2:#ffd3e6 }
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 Inter,system-ui;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg:before{
+  content:"";position:absolute;inset:-10% -10% auto -10%;height:70%;
+  background:
+    radial-gradient(900px 520px at 85% 8%, rgba(126,200,255,.12), transparent 60%),
+    radial-gradient(1000px 600px at 12% 110%, rgba(126,200,255,.08), transparent 70%);
+  filter:blur(34px);
+}
+canvas#dots{position:absolute;inset:0}
+
+.top{position:fixed;inset:0 0 auto 0;height:0;z-index:3}
+.btn{
+  position:absolute;top:12px;padding:9px 12px;border-radius:12px;border:1px solid var(--b);
+  background:var(--glass);color:var(--fg);text-decoration:none;font-weight:700;backdrop-filter:blur(6px)
+}
+.btn.left{left:12px} .btn.right{right:12px}
+main{position:relative;z-index:1;max-width:1100px;margin:90px auto 64px;padding:0 18px}
+h1{
+  margin:0 0 8px;font-family:Cinzel,serif;font-weight:700;letter-spacing:.08em;
+  background:linear-gradient(180deg, #fff, var(--accent-2));-webkit-background-clip:text;color:transparent
+}
+.lead{color:var(--mut);margin:6px 0 22px}
+
+.grid{display:grid;gap:18px;grid-template-columns:2fr 1fr}
+.card{border:1px solid var(--b);background:var(--glass);border-radius:16px;padding:16px 18px}
+.card h3{margin:0 0 8px;font-family:Cinzel,serif;letter-spacing:.04em}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{background:var(--chip);border:1px solid var(--chip-bd);color:var(--chip-tx);padding:8px 12px;border-radius:999px;font-weight:600;font-size:13px}
+
+.list{display:grid;gap:10px}
+.item{padding:12px;border:1px solid var(--b);background:rgba(255,255,255,.04);border-radius:12px}
+.item strong{color:#fff}
+.notice{border-left:4px solid var(--accent);padding-left:12px}
+
+footer{margin:26px 0 0;color:var(--mut);text-align:center}
+@media (max-width:920px){ .grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body class="theme-neutral">
+<div class="bg"><canvas id="dots"></canvas></div>
+
+<div class="top">
+  <a class="btn left" href="#" onclick="alert('Kullanıcı Paneli yakında!')">Kullanıcı Paneli</a>
+  <a class="btn right" href="index.html">Ana Menü</a>
+</div>
+
+<main>
+  <h1>Topluluk</h1>
+  <p class="lead">Birbirimizi yukarı taşıyan, saygı ve nazik sınırlarla ilerleyen bir alan.</p>
+
+  <div class="grid">
+    <section class="card">
+      <h3>📣 Duyurular</h3>
+      <div class="list">
+        <div class="item notice"><strong>Yeni</strong> — 30 Günlük Nezaket Meydan Okuması başladı. #challenges kanalından katıl.</div>
+        <div class="item"><strong>Etkinlik</strong> — Cumartesi 21:00 “Sessiz 20dk + Paylaşım” odak seansı.</div>
+        <div class="item"><strong>Geri Bildirim</strong> — “Günün Sözü” önerilerini #ideas altına bırak.</div>
+      </div>
+    </section>
+
+    <aside class="card">
+      <h3>🧭 Kurallar</h3>
+      <div class="row">
+        <span class="chip">Nazik Dil</span><span class="chip">Varsayım Yok</span><span class="chip">Gizlilik</span>
+        <span class="chip">Kaynak Belirt</span><span class="chip">Yapıcı Ton</span>
+      </div>
+    </aside>
+
+    <section class="card">
+      <h3>💬 Kanallar</h3>
+      <div class="row">
+        <a class="chip" href="etiquette.html">#nezaket-rehberi</a>
+        <a class="chip" href="practices.html">#alıştırmalar</a>
+        <a class="chip" href="challenges.html">#challenges</a>
+        <a class="chip" href="resources.html">#kaynaklar</a>
+        <a class="chip" href="notes.html">#jurnal</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>🌟 Öne Çıkanlar</h3>
+      <div class="list">
+        <div class="item"><strong>Etiket kültürü</strong> — Mesaj sonunda 1 satır “özet” ekle: “Ne istiyorum / Ne öneriyorum”.</div>
+        <div class="item"><strong>Saygı ritüeli</strong> — Yanıtlamadan önce 3 saniye dur, tonu yumuşat.</div>
+      </div>
+    </section>
+  </div>
+
+  <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
+</main>
+
+<script>
+(function(){
+  const c=document.getElementById('dots');const x=c.getContext('2d');
+  function fit(){c.width=innerWidth;c.height=innerHeight} fit(); addEventListener('resize',fit,{passive:true});
+  const D=Math.floor(Math.max(160, c.width*c.height/14000));
+  const pts=Array.from({length:D},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:1+Math.random()*1.6,v:.06+.12*Math.random(),h:210+Math.random()*40}));
+  let t=0; (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    x.globalAlpha=.16; x.lineWidth=1; x.strokeStyle='rgba(180,210,255,.18)';
+    for(let i=0;i<26;i++){ const y=(i/26)*c.height; x.beginPath(); x.moveTo(0,y+Math.sin((t+i)*.03)*5); x.lineTo(c.width,y); x.stroke(); }
+    for(const p of pts){
+      x.globalAlpha=.35; x.fillStyle=`hsla(${p.h},100%,70%,1)`;
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill();
+      p.y+=p.v; if(p.y>c.height+6){p.y=-6;p.x=Math.random()*c.width}
+    }
+    t++; requestAnimationFrame(loop);
+  })();
+})();
+</script>
+</body>
+  </html>
