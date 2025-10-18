@@ -1,61 +1,36 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AZURA • Nezaket Rehberi</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!DOCTYPE html><html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>İletişim & Nezaket</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{ --fg:#f0f5ff; --mut:#b9c7db; --bg:#0f0f1a; --glass:rgba(255,255,255,.06); --b:rgba(255,255,255,.14);
-  --accent:#b16ad9; --chip:#1b1530; --chip-bd:rgba(200,170,255,.25); --chip-tx:#eadbff }
-*{box-sizing:border-box} html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,system-ui}
-.top{position:fixed;inset:0 0 auto 0;height:0;z-index:3}
-.btn{position:absolute;top:12px;padding:9px 12px;border-radius:12px;border:1px solid var(--b);background:var(--glass);color:var(--fg);text-decoration:none;font-weight:700;backdrop-filter:blur(6px)}
-.btn.left{left:12px}.btn.right{right:12px}
-main{max-width:1100px;margin:90px auto 64px;padding:0 18px}
-h1{margin:0 0 8px;font-family:Cinzel,serif;letter-spacing:.08em;background:linear-gradient(180deg,#fff,#e8d7ff);-webkit-background-clip:text;color:transparent}
-.lead{color:var(--mut);margin:6px 0 22px}
-.grid{display:grid;gap:18px;grid-template-columns:1fr 1fr}
-.card{border:1px solid var(--b);background:var(--glass);border-radius:16px;padding:18px}
-.card h3{margin:0 0 8px}
-.ul{display:grid;gap:10px}
-.li{padding:10px 12px;border:1px solid var(--b);background:rgba(255,255,255,.04);border-radius:12px}
-.badge{display:inline-block;background:var(--chip);border:1px solid var(--chip-bd);color:var(--chip-tx);padding:6px 10px;border-radius:999px;font-weight:600;font-size:12px}
-footer{text-align:center;color:#cfd6ea}
-@media (max-width:920px){ .grid{grid-template-columns:1fr} }
-</style>
-</head>
-<body>
-<div class="top">
-  <a class="btn left" href="community.html">← Topluluk</a>
-  <a class="btn right" href="index.html">Ana Menü</a>
-</div>
-<main>
-  <h1>Nezaket Rehberi</h1>
-  <p class="lead">Nazik sınır, temiz dil, açık istek. Kalıpları kısaltıp işimizi kolaylaştıralım.</p>
-
-  <div class="grid">
-    <section class="card">
-      <h3>🗣️ Yumuşatan Kalıplar</h3>
-      <div class="ul">
-        <div class="li"><span class="badge">Talep</span> “Bunu şu iki seçenekten biriyle çözebilir miyiz: A / B?”</div>
-        <div class="li"><span class="badge">Netlik</span> “Şunu doğru anladım mı…?”</div>
-        <div class="li"><span class="badge">Sınır</span> “Şu an X’e odaklanıyorum; Y’yi yarın 16:00’da ele alabilirim.”</div>
-        <div class="li"><span class="badge">Geribildirim</span> “Şu kısım güçlü, şurada ise önerim var…”</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h3>🧩 Zor Anlar</h3>
-      <div class="ul">
-        <div class="li"><span class="badge">Gerginlik</span> “Aynı hedefi istiyoruz; yöntemlerde ayrıştık gibi. Birlikte bakalım mı?”</div>
-        <div class="li"><span class="badge">Erteleme</span> “Bunu 20 dakikalık pencereye alıyorum; bitince not düşeceğim.”</div>
-        <div class="li"><span class="badge">Hayır</span> “Şu an kapasitem dolu; sana haksızlık etmemek için kabul edemiyorum.”</div>
-      </div>
-    </section>
+:root{--bg:#0B1117;--card:#121A24;--bd:#1c2a3a;--tx:#E6F2FF;--muted:#A9C7E6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui}
+.wrapper{max-width:720px;margin:18px auto;padding:14px}
+.btn{background:#0f1824;border:1px solid var(--bd);color:var(--tx);padding:8px 12px;border-radius:12px;text-decoration:none}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;margin-top:12px}
+h1{margin:8px 0 6px;font-size:18px}
+.item{border:1px dashed var(--bd);border-radius:12px;padding:10px;margin-top:8px;display:flex;justify-content:space-between;gap:8px}
+.small{font-size:12px;color:var(--muted)}
+</style></head><body>
+<div class="wrapper">
+  <div class="top">
+    <a class="btn" href="male.html">← Geri</a>
+    <a class="btn" style="margin-left:auto" href="index.html">Ana Menü</a>
   </div>
 
-  <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
-</main>
-</body>
-</html>
+  <div class="card" id="ornekler">
+    <h1>🗣️ Geri Bildirim Kalıbı</h1>
+    <div class="item"><div>• Gözlem → Etki → İstek</div><button class="btn" data-t="Şöyle gözlemledim..., bu şu etkiyi doğurdu..., senden ricam...">Kopyala</button></div>
+    <div class="item"><div>• Netlik — Seçenek — Onay</div><button class="btn" data-t="Şöyle bir netlik sağlayalım..., iki seçenek görüyorum..., hangisi rahat?">Kopyala</button></div>
+    <div class="item"><div>• Rica & Teşekkür</div><button class="btn" data-t="Bunu X zamanına kadar birlikte çözebilir miyiz? Şimdiden teşekkür ederim.">Kopyala</button></div>
+    <p class="small">Butona basınca ifade panoya kopyalanır.</p>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('button[data-t]').forEach(b=>b.onclick=async()=>{
+  const t=b.dataset.t;
+  try{ await navigator.clipboard.writeText(t); b.textContent='Kopyalandı ✅'; setTimeout(()=>b.textContent='Kopyala',1200);}catch(e){ alert(t); }
+});
+</script>
+</body></html>
