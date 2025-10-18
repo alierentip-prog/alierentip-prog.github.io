@@ -7,154 +7,84 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Renk skalası */
-  --bg-white:#ffffff;
   --ink:#0b1117;
   --muted:#5c6b72;
 
-  --blue:#29b6ff;
-  --blue-soft:#b9ecff;
+  --blue:#29b6ff;          /* neon mavi */
+  --blue-dim:rgba(41,182,255,.18);
+  --blue-glow:#8be3ff;
 
-  --green-1:#0e3c2d;   /* sol panel üst */
-  --green-2:#145b43;   /* sol panel alt */
+  --green-1:#0e3c2d;       /* sol panel üst */
+  --green-2:#145b43;       /* sol panel alt */
   --panel-ink:#d8efe4;
 
   --card-border:#e8ece9;
   --card-bg:#ffffff;
-  --cream:#faf7f1;
-
-  --accent:#0f6; /* küçük vurgu */
 }
 
+/* Reset */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
-  color:var(--ink); background:var(--bg-white);
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;color:var(--ink);background:#fff}
 
-/* ===================== SPLASH (YILAN + LOGO) ===================== */
-.splash{
-  position:fixed; inset:0; background:#fff; z-index:9999;
-  display:grid; place-items:center;
-}
-.splash-inner{ position:relative; width:min(760px,92vw); height:min(760px,92vw); }
-#snakeCanvas{ position:absolute; inset:0; }
-.brand-title{
-  position:absolute; inset:0; display:grid; place-items:center;
-  font:700 clamp(52px,11vw,110px) Cinzel,serif; letter-spacing:.25em;
-  color:#111; text-shadow:0 0 18px rgba(0,0,0,.06);
-  will-change:opacity;
-}
+/* ===================== SPLASH (yılan + logo) ===================== */
+.splash{position:fixed;inset:0;background:#fff;z-index:9999}
+#splashCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.flash{position:fixed;inset:0;background:#fff;opacity:0;z-index:9998;transition:opacity .45s ease}
 
-/* Splash bitişte beyaza patlatma */
-.flash{ position:fixed; inset:0; background:#fff; z-index:9998; opacity:0; transition:opacity .45s ease; }
-
-/* ===================== APP LAYOUT ===================== */
-.app{ display:grid; grid-template-columns: 300px 1fr; min-height:100vh; visibility:hidden; }
-
+/* ===================== APP ===================== */
+.app{display:grid;grid-template-columns:300px 1fr;min-height:100vh;visibility:hidden}
 .aside{
   background:linear-gradient(180deg,var(--green-1),var(--green-2));
-  color:var(--panel-ink); padding:22px 16px; position:relative;
-  box-shadow:inset -1px 0 0 rgba(255,255,255,.06);
+  color:var(--panel-ink);padding:22px 16px;position:relative;
+  box-shadow:inset -1px 0 0 rgba(255,255,255,.06)
 }
-.brand{
-  display:flex; align-items:center; gap:12px; margin-bottom:14px;
-}
-.brand .badge{
-  width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,.08);
-  display:grid; place-items:center; font-weight:700; font-size:18px;
-  box-shadow:0 6px 18px rgba(0,0,0,.25);
-}
-.brand h2{ font:700 18px Inter; letter-spacing:.18em; line-height:1.15; }
-.brand small{ display:block; font-weight:600; font-size:12px; opacity:.75; margin-top:2px; }
-.navsec{ margin:14px 0 6px; font-weight:700; font-size:12px; opacity:.6; letter-spacing:.12em; }
-.navlink{
-  display:flex; align-items:center; gap:10px;
-  padding:10px 12px; margin:6px 0; border-radius:10px;
-  color:var(--panel-ink); text-decoration:none;
-  transition:background .18s ease, transform .08s ease;
-}
-.navlink:hover{ background:rgba(255,255,255,.07); transform:translateX(2px) }
-.logout{ position:absolute; bottom:14px; left:16px; right:16px; }
-.logout a{ display:block; text-align:center; padding:10px; border-radius:10px; text-decoration:none; color:#f7fffb; background:rgba(0,0,0,.22) }
-.logout a:hover{ background:rgba(0,0,0,.28) }
+.brand{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.brand .badge{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.08);
+  display:grid;place-items:center;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.brand h2{font:700 18px Inter;letter-spacing:.18em}
+.brand small{display:block;font-weight:600;font-size:12px;opacity:.75;margin-top:2px}
+.navsec{margin:14px 0 6px;font-weight:700;font-size:12px;opacity:.6;letter-spacing:.12em}
+.navlink{display:flex;gap:10px;align-items:center;padding:10px 12px;margin:6px 0;border-radius:10px;
+  color:var(--panel-ink);text-decoration:none;transition:background .18s ease,transform .08s ease}
+.navlink:hover{background:rgba(255,255,255,.07);transform:translateX(2px)}
+.logout{position:absolute;bottom:14px;left:16px;right:16px}
+.logout a{display:block;text-align:center;padding:10px;border-radius:10px;text-decoration:none;color:#f7fffb;background:rgba(0,0,0,.22)}
+.logout a:hover{background:rgba(0,0,0,.28)}
 
-/* MAIN */
-.main{ background:var(--cream); padding:24px; }
-.topbar{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:18px; }
-.topbar h1{
-  font:700 20px Cinzel,serif; letter-spacing:.24em;
-}
-.search{
-  display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:999px;
-  background:#fff; border:1px solid var(--card-border); min-width:240px;
-}
-.search input{ border:none; outline:none; width:220px; font-size:14px; }
-.toolbar{ display:flex; align-items:center; gap:10px; }
-.toolbtn{
-  background:#fff; border:1px solid var(--card-border); border-radius:10px; padding:10px 12px; cursor:pointer;
-}
-.toolbtn:hover{ box-shadow:0 6px 16px rgba(0,0,0,.08) }
+.main{background:#fff;padding:24px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.topbar h1{font:700 20px Cinzel,serif;letter-spacing:.24em}
+.search{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:#fff;border:1px solid var(--card-border);min-width:240px}
+.search input{border:none;outline:none;width:220px;font-size:14px}
+.toolbar{display:flex;gap:10px}
+.toolbtn{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:10px 12px;cursor:pointer}
+.toolbtn:hover{box-shadow:0 6px 16px rgba(0,0,0,.08)}
 
-/* GRID */
-.grid{
-  display:grid; gap:16px;
-  grid-template-columns:repeat(12,1fr);
-}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:18px;box-shadow:0 10px 24px rgba(0,0,0,.06)}
+.card h3{font-weight:700;font-size:16px;letter-spacing:.04em;margin-bottom:8px}
+.card p{color:var(--muted);line-height:1.5}
+.col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-8{grid-column:span 8}.col-12{grid-column:1/-1}
 
-/* Kartlar */
-.card{
-  background:var(--card-bg); border:1px solid var(--card-border);
-  border-radius:16px; padding:18px;
-  box-shadow:0 10px 24px rgba(0,0,0,.06);
-}
-.card h3{ font-weight:700; font-size:16px; letter-spacing:.04em; margin-bottom:8px; }
-.card p{ color:var(--muted); line-height:1.5; }
+.cityCanvas{width:100%;height:220px;display:block;border-radius:12px;border:1px solid var(--card-border)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chips span{border:1px solid var(--card-border);background:#fff;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:600}
 
-.col-6{ grid-column: span 6; }
-.col-4{ grid-column: span 4; }
-.col-8{ grid-column: span 8; }
-.col-12{ grid-column: 1 / -1; }
-
-/* “Gaziantep” kartı görseli (canvas) */
-.cityCanvas{ width:100%; height:220px; display:block; border-radius:12px; border:1px solid var(--card-border) }
-
-/* Küçük chipler */
-.chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-.chips span{
-  border:1px solid var(--card-border); background:#fff; padding:6px 10px;
-  border-radius:999px; font-size:12px; font-weight:600;
-}
-
-/* Basit responsive */
-@media (max-width:1100px){
-  .app{ grid-template-columns: 260px 1fr; }
-  .col-6{ grid-column: span 12; }
-  .col-4{ grid-column: span 6; }
-  .col-8{ grid-column: span 12; }
-}
-@media (max-width:760px){
-  .app{ grid-template-columns: 1fr; }
-  .aside{ position:sticky; top:0; z-index:30 }
-}
+@media (max-width:1100px){.app{grid-template-columns:260px 1fr}.col-6{grid-column:span 12}.col-4{grid-column:span 6}.col-8{grid-column:span 12}}
+@media (max-width:760px){.app{grid-template-columns:1fr}.aside{position:sticky;top:0;z-index:30}}
 </style>
 </head>
 <body>
 
 <!-- ===================== SPLASH ===================== -->
 <div class="splash" id="splash">
-  <div class="splash-inner">
-    <canvas id="snakeCanvas"></canvas>
-    <div class="brand-title" id="brandTitle">AZURA</div>
-  </div>
+  <canvas id="splashCanvas"></canvas>
 </div>
 <div class="flash" id="flash"></div>
 
 <!-- ===================== APP ===================== -->
 <div class="app" id="app">
-  <!-- ASIDE -->
   <aside class="aside">
     <div class="brand">
       <div class="badge">A</div>
@@ -175,20 +105,14 @@ body{
     <a class="navlink" href="#"><span>📈</span>İstatistikler</a>
     <a class="navlink" href="#"><span>🧩</span>Testler</a>
 
-    <div class="logout">
-      <a href="#">Çıkış</a>
-    </div>
+    <div class="logout"><a href="#">Çıkış</a></div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
       <h1>AZURA NOVA — PANEL</h1>
       <div class="toolbar">
-        <div class="search">
-          <span>🔍</span>
-          <input type="search" placeholder="Ara…">
-        </div>
+        <div class="search"><span>🔍</span><input type="search" placeholder="Ara…"></div>
         <button class="toolbtn" id="notifBtn">🔔</button>
         <button class="toolbtn" id="newPostBtn">➕ Yeni</button>
       </div>
@@ -231,77 +155,82 @@ body{
 </div>
 
 <script>
-/* ===================== SPLASH — 26 sabit nokta + mavi “yılan” ===================== */
+/* ===================== SPLASH ÇİZİMİ (AYNISI) ===================== */
 (function(){
-  const c = document.getElementById('snakeCanvas');
+  const c = document.getElementById('splashCanvas');
   const ctx = c.getContext('2d');
   const splash = document.getElementById('splash');
   const flash  = document.getElementById('flash');
   const app    = document.getElementById('app');
-  const title  = document.getElementById('brandTitle');
 
-  function fit(){ c.width = c.clientWidth; c.height = c.clientHeight; }
+  function fit(){ c.width = innerWidth; c.height = innerHeight; }
   fit(); addEventListener('resize', fit);
 
-  const DOTS = 26;              // sabit nokta sayısı
-  const RATIO = 0.42;           // halka yarıçapı (canvas’a göre)
-  const SPEED = 0.025;          // dönüş hızı (daha yavaş = daha sakin)
-  const TRAIL = 8;              // yılan kuyruğu uzunluğu
-  const BASE_R = 4.0;           // sabit noktaların yarıçapı
-  const HEAD_R = 10;            // baş parlama yarıçapı
-  const DURATION = 3600;        // splash toplam (ms) — 3.6sn
+  // Geometri
+  const DOTS = 26;          // sabit nokta sayısı (görünür)
+  const SPEED = 0.035;      // dönüş hızı (daha küçük = daha yavaş)
+  const TRAIL = 7;          // yılanın parlak kuyruğu uzunluğu
+  const DURATION = 3600;    // ms (yaklaşık 3.6 sn)
+  let t = 0;                // açı
 
-  let cx = c.width/2, cy = c.height/2, R = Math.min(c.width,c.height)*RATIO;
-  let pts = [];
-  function layout(){
-    cx = c.width/2; cy = c.height/2; R = Math.min(c.width,c.height)*RATIO;
-    pts.length=0;
-    for(let i=0;i<DOTS;i++){
-      const a = (i/DOTS)*Math.PI*2;
-      pts.push({x:cx+Math.cos(a)*R, y:cy+Math.sin(a)*R});
-    }
-  }
-  layout(); addEventListener('resize', layout);
-
-  let head = 0, raf;
-  function loop(){
+  function draw(){
     ctx.clearRect(0,0,c.width,c.height);
 
-    // sabit noktalar
-    ctx.fillStyle = 'rgba(41,182,255,0.22)';
-    for(const p of pts){ ctx.beginPath(); ctx.arc(p.x,p.y,BASE_R,0,Math.PI*2); ctx.fill(); }
+    // Merkez ve yarıçap
+    const R = Math.min(c.width,c.height)*0.18;    // halka yarıçapı
+    const cx = c.width/2, cy = c.height/2;
 
-    // yılan (glow + lighter)
+    /* 1) AZURA yazısı (beyaz + hafif morumsu glow) */
+    const fs = Math.max(44, R*0.6);
+    ctx.save();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `700 ${fs}px Cinzel, serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(180,140,255,.45)';
+    ctx.shadowBlur = 22;
+    ctx.fillText('AZURA', cx, cy);
+    ctx.restore();
+
+    /* 2) Sabit noktalar */
+    const baseR = 5;                // küçük sabit nokta yarıçapı
+    ctx.fillStyle = 'rgba(41,182,255,0.18)';
+    for(let i=0;i<DOTS;i++){
+      const a = (i/DOTS)*Math.PI*2;
+      const x = cx + Math.cos(a)*R;
+      const y = cy + Math.sin(a)*R;
+      ctx.beginPath(); ctx.arc(x,y,baseR,0,Math.PI*2); ctx.fill();
+    }
+
+    /* 3) Yılan (parlak segment) */
     ctx.globalCompositeOperation = 'lighter';
     for(let j=0;j<TRAIL;j++){
-      const idx = (head - j + DOTS*1000) % DOTS | 0;
-      const p = pts[idx]; const k = 1 - (j/TRAIL);
+      const a = (t - j*0.10) % (Math.PI*2);
+      const x = cx + Math.cos(a)*R;
+      const y = cy + Math.sin(a)*R;
+      const k = 1 - (j/TRAIL);
       ctx.beginPath();
-      ctx.fillStyle = `rgba(139,227,255,${0.62*k})`;
+      ctx.fillStyle = `rgba(41,182,255,${0.72*k})`;
       ctx.shadowColor = '#8be3ff';
-      ctx.shadowBlur = 22*k;
-      ctx.arc(p.x, p.y, HEAD_R*(0.9+(j?j*0.05:0)), 0, Math.PI*2);
+      ctx.shadowBlur = 28*k;
+      ctx.arc(x,y, 12*(0.85 + j*0.05), 0, Math.PI*2);
       ctx.fill();
     }
     ctx.shadowBlur = 0;
     ctx.globalCompositeOperation = 'source-over';
 
-    head += SPEED;
-    if(head >= DOTS) head -= DOTS;
-
-    raf = requestAnimationFrame(loop);
+    t += SPEED;
+    requestAnimationFrame(draw);
   }
-  loop();
+  draw();
 
-  // Bitiş: logo “blink” + beyaz flaş + panel görünür
+  // Bitişte yazıyı birkaç kez blink + beyaz flaş + app görünür
   setTimeout(()=>{
-    cancelAnimationFrame(raf);
-    let n = 0;
-    title.style.transition = 'opacity .1s';
-    const bl = setInterval(()=>{
-      title.style.opacity = (title.style.opacity==='0' ? '1' : '0');
-      if(++n >= 6){
-        clearInterval(bl);
+    let n=0, on=true;
+    const blink = setInterval(()=>{
+      on = !on;
+      c.style.opacity = on ? '1' : '.45';
+      if(++n>5){
+        clearInterval(blink);
         flash.style.opacity = 1;
         setTimeout(()=>{
           splash.remove();
@@ -314,72 +243,39 @@ body{
   }, DURATION);
 })();
 
-/* ===================== GAZİANTEP KART — küçük estetik çizim ===================== */
+/* ===================== GAZİANTEP KART — estetik çizim ===================== */
 (function(){
   const cv = document.getElementById('antepCanvas');
   if(!cv) return;
   const x = cv.getContext('2d');
-
   function fit(){ cv.width = cv.clientWidth; cv.height = cv.clientHeight; }
   fit(); addEventListener('resize', fit);
-
-  let t = 0;
-  (function draw(){
+  let tt=0;
+  (function loop(){
     x.clearRect(0,0,cv.width,cv.height);
-
-    // yumuşak zemin
-    const g = x.createLinearGradient(0,0,cv.width,cv.height);
-    g.addColorStop(0,'#fff');
-    g.addColorStop(1,'#f7fbff');
-    x.fillStyle = g; x.fillRect(0,0,cv.width,cv.height);
-
-    // bakır işlemeyi çağrıştıran dalga hatlar
-    x.lineWidth = 1;
+    const g=x.createLinearGradient(0,0,cv.width,cv.height); g.addColorStop(0,'#fff'); g.addColorStop(1,'#f7fbff');
+    x.fillStyle=g; x.fillRect(0,0,cv.width,cv.height);
+    x.lineWidth=1;
     for(let i=0;i<7;i++){
-      const hue = 25 + i*4; // sıcak tonlar
-      x.strokeStyle = `hsla(${hue},70%,45%,.28)`;
+      x.strokeStyle=`hsla(${25+i*4},70%,45%,.28)`;
       x.beginPath();
-      for(let u=0; u<=cv.width; u+=12){
-        const yy = cv.height*0.55 + Math.sin((u*0.012)+(t*0.8)+i)*18 + i*8;
+      for(let u=0;u<=cv.width;u+=12){
+        const yy=cv.height*0.55+Math.sin((u*0.012)+(tt*0.8)+i)*18+i*8;
         if(u===0) x.moveTo(u,yy); else x.lineTo(u,yy);
-      }
-      x.stroke();
+      } x.stroke();
     }
-
     // baklava sembolü
-    const w = 120, h = 70, cx = cv.width*0.78, cy = cv.height*0.36;
-    x.save();
-    x.translate(cx,cy);
-    x.rotate(Math.PI/4);
-    x.fillStyle = '#ffe8a3';
-    x.strokeStyle = '#caa85a';
-    x.lineWidth = 2;
-    x.beginPath();
-    x.rect(-w/2,-h/2,w,h);
-    x.fill(); x.stroke();
-    x.restore();
-
-    // küçük ışıltılar
-    for(let k=0;k<18;k++){
-      const px = (k*77 + t*30) % cv.width;
-      const py = cv.height*0.18 + (k%5)*14;
-      x.fillStyle = 'rgba(255,200,80,.15)';
-      x.beginPath(); x.arc(px,py,2.3,0,Math.PI*2); x.fill();
-    }
-
-    t += 0.02;
-    requestAnimationFrame(draw);
+    const w=120,h=70,cx=cv.width*0.78,cy=cv.height*0.36;
+    x.save(); x.translate(cx,cy); x.rotate(Math.PI/4);
+    x.fillStyle='#ffe8a3'; x.strokeStyle='#caa85a'; x.lineWidth=2;
+    x.beginPath(); x.rect(-w/2,-h/2,w,h); x.fill(); x.stroke(); x.restore();
+    tt+=0.02; requestAnimationFrame(loop);
   })();
 })();
 
-/* ===================== DİĞER KÜÇÜK ETKİLEŞİMLER ===================== */
-document.getElementById('notifBtn')?.addEventListener('click', ()=>{
-  alert('Bildirimler yakında burada 🔔');
-});
-document.getElementById('newPostBtn')?.addEventListener('click', ()=>{
-  const txt = prompt('Yeni gönderi:');
-  if(txt){ alert('Gönderildi ✅'); }
-});
+/* ufak etkileşimler */
+document.getElementById('notifBtn')?.addEventListener('click',()=>alert('Bildirimler yakında burada 🔔'));
+document.getElementById('newPostBtn')?.addEventListener('click',()=>{const t=prompt('Yeni gönderi:'); if(t) alert('Gönderildi ✅');});
 </script>
 </body>
-                                                        </html>
+</html>
