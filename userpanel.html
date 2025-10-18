@@ -7,104 +7,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --accent-a:#35e0ff;
-  --accent-b:#41f0c8;
-  --ink:#2a1b4a;
-  --dropMs: 900ms;   /* çubuğun düşüş + sekme süresi */
-  --morphMs: 700ms;  /* çubuktan daireye dönüşme */
-  --spinMs: 900ms;   /* spinner süresi */
-  --outMs: 400ms;    /* yanıp sönme + flash */
+  --flashMs: 420ms;   /* beyaza flash süresi */
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0; font-family:system-ui,Inter,Arial}
 
-/* ===== Splash ===== */
+/* ===== SPLASH ===== */
 .splash{
   position:fixed; inset:0; z-index:9999;
-  background: radial-gradient(1200px 900px at 50% 10%, #0d1220, #090f1b);
+  background: radial-gradient(1200px 900px at 50% -20%, #0b1221, #070b14);
   display:grid; place-items:center; overflow:hidden;
   transition:opacity .45s ease, visibility .45s ease;
 }
 .splash.fade{ opacity:0; visibility:hidden }
 
-/* Flash beyaz */
-.flash{
-  position:absolute; inset:0; pointer-events:none; opacity:0;
-  background:#fff;
+.stage{
+  position:relative; width:min(78vmin,520px); aspect-ratio:1/1;
 }
 
-/* Bar/Daire kapsayıcı */
-.logo{
-  position:absolute; left:50%; transform:translateX(-50%);
-  width: 280px; height: 18px; border-radius: 12px;
-  background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
-  box-shadow: 0 10px 40px rgba(53,224,255,.35), 0 6px 20px rgba(65,240,200,.28);
-}
-
-/* 1) Yukarıdan düş + sek */
-@keyframes drop {
-  0%      { top:-20vh; }
-  70%     { top:84vh; }
-  82%     { top:79vh; } /* kısa sekme */
-  100%    { top:82vh; }
-}
-.logo.drop { animation: drop var(--dropMs) cubic-bezier(.2,.9,.2,1); }
-
-/* 2) Merkeze toplan + daireye morf */
-@keyframes morph {
-  0%  { top:82vh; width:280px; height:18px; border-radius:12px; }
-  60% { top:50%;  width:140px; height:140px; border-radius:999px; }
-  100%{ top:50%;  width:200px; height:200px; border-radius:999px; }
-}
-.logo.morph { animation: morph var(--morphMs) ease forwards; }
-
-/* 3) Dairesel spinner görünümü (çevre yayları) */
-.logo.spin{
-  width: 220px; height:220px; border-radius:999px; top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  background:
-    radial-gradient(closest-side, rgba(255,255,255,.04), transparent 70%),
-    conic-gradient(from 0turn,
-      var(--accent-a) 0 12%, transparent 12% 25%,
-      var(--accent-b) 25% 37%, transparent 37% 50%,
-      var(--accent-a) 50% 62%, transparent 62% 75%,
-      var(--accent-b) 75% 87%, transparent 87% 100%);
-  animation: spin var(--spinMs) linear infinite;
-  box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset, 0 30px 80px rgba(50,220,255,.22);
-}
-@keyframes spin { to{ transform:translate(-50%,-50%) rotate(1turn) } }
-
-/* İç metin */
+/* ortadaki yazı */
 .brand{
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  font-family:Cinzel,serif; font-weight:700; letter-spacing:.18em;
-  font-size:clamp(24px, 7vmin, 46px);
-  background:linear-gradient(135deg, #0d0b15, #3a2178 45%, #7b3aff 100%);
+  position:absolute; inset:0; display:grid; place-items:center;
+  font-family:Cinzel,serif; font-weight:700; letter-spacing:.16em;
+  font-size:clamp(28px, 7.8vmin, 56px);
+  background:linear-gradient(135deg, #ffffff, #bba7ff 35%, #6e3bff 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 1px 0 rgba(0,0,0,.25);
-  opacity:0;
+  text-shadow:0 0 14px rgba(150,120,255,.15);
+  user-select:none; pointer-events:none;
 }
-.brand.show{ opacity:1; transition:opacity .4s ease .2s }
 
-/* Yanıp sönme */
-.flicker{
-  animation:flick .4s linear 1;
+/* beyaz flash */
+.flash{
+  position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none;
+  transition:opacity var(--flashMs) ease;
 }
+
+/* yanıp sönme */
+.flicker{ animation:flick 1.1s ease 1 }
 @keyframes flick{
-  0%,100%{ opacity:1; filter:none }
-  25%{ opacity:.1; filter:blur(.5px) }
-  50%{ opacity:1 }
-  75%{ opacity:.2 }
+  0% {opacity:1} 25% {opacity:.25} 40% {opacity:1}
+  60% {opacity:.2} 75% {opacity:1} 90% {opacity:.15} 100% {opacity:1}
 }
 
-/* ===== App (panel) ===== */
+/* ===== PANEL (örnek) ===== */
 .app{opacity:0; transition:opacity .45s ease}
 .app.show{opacity:1}
 .panel{
-  min-height:100vh; display:grid; place-items:center;
-  background:#ffffff;
+  min-height:100vh; display:grid; place-items:center; background:#ffffff;
 }
 .card{
   width:min(960px,92vw); border:1px solid #e9eef4; border-radius:16px;
@@ -119,9 +70,11 @@ body{margin:0; font-family:system-ui,Inter,Arial}
 
 <!-- ===== SPLASH ===== -->
 <div class="splash" id="splash">
-  <div class="flash" id="flash"></div>
-  <div class="logo drop" id="logo"></div>
-  <div class="brand" id="brand">AZURA</div>
+  <div class="stage">
+    <canvas id="ring"></canvas>
+    <div class="brand" id="brand">AZURA</div>
+    <div class="flash" id="flash"></div>
+  </div>
 </div>
 
 <!-- ===== PANEL (içeriğini burada geliştir) ===== -->
@@ -129,56 +82,125 @@ body{margin:0; font-family:system-ui,Inter,Arial}
   <section class="panel">
     <article class="card">
       <h2>AZURA NOVA — Panel</h2>
-      <p>Bu, girişin ardından görünen panel alanı. Kendi menü/akış bileşenlerini burada devam ettirebilirsin.</p>
+      <p>Giriş animasyonu bitti. Buraya gerçek panel/akış bileşenlerini koy.</p>
     </article>
   </section>
 </main>
 
 <script>
-/* Basit zaman çizelgesi: drop → morph → spin → flicker+flash → app */
+/* === Neon mavi noktalı halka: canvas animasyonu === */
 (function(){
-  const logo  = document.getElementById('logo');
+  const cvs = document.getElementById('ring');
+  const parent = cvs.parentElement;
   const brand = document.getElementById('brand');
-  const splash= document.getElementById('splash');
-  const app   = document.getElementById('app');
+  const splash = document.getElementById('splash');
+  const app = document.getElementById('app');
   const flash = document.getElementById('flash');
 
-  // 1) Drop bitti → Morph'a geç
-  logo.addEventListener('animationend', (e)=>{
-    if(e.animationName==='drop'){
-      logo.classList.remove('drop');
-      logo.classList.add('morph');
-    }else if(e.animationName==='morph'){
-      // 2) Morph bitti → Spin + yazıyı göster
-      logo.classList.remove('morph');
-      logo.classList.add('spin');
-      brand.classList.add('show');
+  // Ayarlar
+  const TOTAL_MS = 3600;     // toplam süre (3.6s)
+  const REVOLUTIONS = 3.5;   // 3-4 tur arası
+  const DOTS = 34;           // noktacık sayısı
+  const HEAD_COLOR = [80, 220, 255];   // neon mavi baş
+  const TAIL_COLOR = [20, 140, 255];   // kuyruk mavi
+  const GLOW = 0.55;         // genel parlaklık (0-1)
+  const RING_PORTION = 0.78; // halkanın ne kadarı dolu (0..1)
 
-      // 3) Kısa süre dönsün, sonra çıkış sekansı
-      const spinMs = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spinMs'));
-      setTimeout(exitSequence, spinMs);
+  // Canvas boyutlandırma (retina)
+  function fit(){
+    const size = Math.min(parent.clientWidth, parent.clientHeight);
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    cvs.width = size * dpr; cvs.height = size * dpr;
+    cvs.style.width = cvs.style.height = size + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  const ctx = cvs.getContext('2d');
+  fit(); addEventListener('resize', fit, {passive:true});
+
+  // Yardımcılar
+  const ease = t => t; // lineer
+  const now = () => performance.now();
+
+  // Çizim
+  function draw(progress){
+    const w = cvs.clientWidth, h = cvs.clientHeight;
+    const cx = w/2, cy = h/2;
+    const radius = w*0.34; // halka yarıçapı
+    ctx.clearRect(0,0,w,h);
+
+    // Arka kısma çok hafif dairesel parıltı
+    const bgGrad = ctx.createRadialGradient(cx,cy, radius*0.2, cx,cy, radius*1.2);
+    bgGrad.addColorStop(0, 'rgba(0,180,255,0.05)');
+    bgGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = bgGrad; ctx.beginPath();
+    ctx.arc(cx,cy,radius*1.15,0,Math.PI*2); ctx.fill();
+
+    // Baş açısı (animasyon)
+    const totalAngle = Math.PI*2*REVOLUTIONS;
+    const headAngle = progress*totalAngle;
+
+    // Noktaları çiz
+    const trail = DOTS;
+    const arcSpan = Math.PI*2*RING_PORTION;
+
+    for(let i=0;i<trail;i++){
+      // Kuyruğun baştan geriye doğru sönmesi
+      const t = i/(trail-1); // 0..1
+      const a = headAngle - t*arcSpan/trail; // açı
+
+      const x = cx + radius*Math.cos(a);
+      const y = cy + radius*Math.sin(a);
+
+      // boyut/opaklık
+      const size = (8 - t*5); // px
+      const alpha = (1 - t)*0.9;
+
+      // renk karışımı
+      const r = Math.round(HEAD_COLOR[0]*(1-t) + TAIL_COLOR[0]*t);
+      const g = Math.round(HEAD_COLOR[1]*(1-t) + TAIL_COLOR[1]*t);
+      const b = Math.round(HEAD_COLOR[2]*(1-t) + TAIL_COLOR[2]*t);
+
+      ctx.save();
+      ctx.shadowColor = `rgba(${r},${g},${b},${(0.45+0.35*(1-t))*GLOW})`;
+      ctx.shadowBlur = 18*(1-t)+6;
+      ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+      ctx.beginPath();
+      ctx.arc(x,y,size,0,Math.PI*2);
+      ctx.fill();
+      ctx.restore();
     }
-  });
-
-  function exitSequence(){
-    // Yanıp sönme
-    brand.classList.add('flicker');
-    logo.classList.add('flicker');
-
-    // Beyaz flash
-    flash.style.transition = 'opacity var(--outMs) ease';
-    requestAnimationFrame(()=> flash.style.opacity = 1);
-
-    // Flash biter → splash gizle, app göster
-    const outMs = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--outMs'));
-    setTimeout(()=>{
-      splash.classList.add('fade');
-      app.classList.add('show');
-    }, outMs);
   }
 
-  // Kullanıcı tıklarsa hemen bitir
-  splash.addEventListener('click', exitSequence, {once:true});
+  // Ana zamanlayıcı
+  let start = now(), raf;
+  function tick(){
+    const t = Math.min(1, (now()-start)/TOTAL_MS);
+    draw(ease(t));
+    if(t<1){ raf = requestAnimationFrame(tick); }
+    else   { endSequence(); }
+  }
+  raf = requestAnimationFrame(tick);
+
+  // Kullanıcı dokunursa hemen bitir
+  splash.addEventListener('click', ()=>{ start = now()-TOTAL_MS; }, {once:true});
+
+  // Bitiş: yazı ve halka yavaş yavaş 1 kez daha yanıp sönsün, beyaz flash ve panel
+  function endSequence(){
+    cancelAnimationFrame(raf);
+    // 2-3 kez yavaş flicker (tek animasyonda verdik)
+    document.getElementById('brand').classList.add('flicker');
+    //canvas'ı da hafif sol-yanıp
+    cvs.style.animation = 'flick 1.1s ease 1';
+
+    // beyaz flash
+    requestAnimationFrame(()=>{
+      flash.style.opacity = 1;
+      setTimeout(()=>{
+        splash.classList.add('fade');
+        app.classList.add('show');
+      }, parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--flashMs')));
+    });
+  }
 })();
 </script>
 </body>
