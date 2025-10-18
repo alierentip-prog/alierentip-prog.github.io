@@ -1,301 +1,268 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Azura Nova — Panel</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AZURA • Splash</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0c121b;
-  --panel-bg:#0e171f;
-  --card:#0f1b24;
-  --br:rgba(120,225,255,.16);
-  --txt:#d9e7ff;
-  --accent1:#5ef0ff;
-  --accent2:#58a6ff;
-  --white:#fff;
-}
+  :root{
+    --bg:#070A0F;           /* siyah-mavi arka plan */
+    --dot:#17c8ff;          /* ana neon mavi */
+    --dot-2:#58a6ff;        /* ara mavi */
+    --head:#7fe9ff;         /* yılan başı */
+    --trail:#25aaff;        /* kısa kuyruk */
+    --base-alpha:.32;       /* sabit, loş nokta */
+    --ring-r: 110px;        /* halkanın yarıçapı (mobil için iyi) */
+    --dot-size: 10px;       /* sakin nokta boyu */
+    --head-size: 16px;      /* parlayan başın maksimum boyu */
+    --revolution: 1.8s;     /* 1 tur süresi – istersen değiştir */
+    --show-total: 3800ms;   /* toplam splash süresi */
+  }
 
-/* page reset */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0; background:var(--bg); color:var(--txt);
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
-  overflow:hidden; /* splash esnasında kaydırma yok */
-}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:radial-gradient(1200px 800px at 50% 30%, #0e1522 0%, var(--bg) 55%);
+    color:#cfd9ff; overflow:hidden; font-family:system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+  }
 
-/* ========= SPLASH ========= */
-.splash{
-  position:fixed; inset:0; z-index:999;
-  display:grid; place-items:center;
-  background: radial-gradient(1200px 700px at 50% -20%, rgba(70,120,200,.08), transparent),
-              radial-gradient(900px 600px at 50% 120%, rgba(20,240,220,.06), transparent),
-              radial-gradient(circle at 50% 50%, #0a1019 0%, #0b1017 40%, #091016 100%);
-  transition: opacity .45s ease;
-}
+  /* Splash katmanı */
+  .splash{
+    position:fixed; inset:0; display:grid; place-items:center; z-index:9999;
+    background: radial-gradient(800px 520px at 50% 45%, rgba(12,20,32,.45), rgba(7,10,15,1) 55%);
+  }
+  .inner{position:relative; width: min(440px, 86vw); aspect-ratio:1/1;}
 
-/* merkez grubu */
-.splash-inner{
-  position:relative; width:min(520px,88vw); aspect-ratio:1/1;
-  display:grid; place-items:center;
-  filter:drop-shadow(0 20px 80px rgba(30,220,255,.18));
-}
+  /* ortadaki çok hafif aura */
+  .glow{
+    position:absolute; inset:0; display:grid; place-items:center; pointer-events:none;
+    filter: blur(24px);
+  }
+  .glow::before{
+    content:""; width:65%; aspect-ratio:1/1; border-radius:50%;
+    background: radial-gradient(circle, rgba(23,200,255,.18), transparent 60%);
+  }
 
-/* AZURA yazısı */
-.logo{
-  position:absolute; inset:0; display:grid; place-items:center;
-  pointer-events:none; user-select:none;
-}
-.logo h1{
-  margin:0; font-family:Cinzel,serif; font-weight:700; letter-spacing:.28em;
-  font-size: clamp(38px, 9vw, 72px);
-  background: linear-gradient(180deg, #e8dcff 0%, #c8b6ff 40%, #8a5fff 70%, #5ef0ff 100%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 30px rgba(140,100,255,.22);
-  animation: logoIntro .65s ease-out both;
-}
-@keyframes logoIntro{
-  from{ transform:translateY(8px) scale(.98); opacity:0 }
-  to{   transform:none; opacity:1 }
-}
+  /* LOGO METNİ */
+  .logo{
+    position:absolute; inset:0; display:grid; place-items:center; text-align:center;
+    font-family:Cinzel, serif; letter-spacing:.24em; font-weight:700;
+    font-size: clamp(28px, 6.5vw, 44px);
+    -webkit-text-stroke: .2px rgba(255,255,255,.15);
+    text-shadow: 0 6px 24px rgba(125,160,255,.22), 0 0 24px rgba(105,220,255,.18);
+  }
+  .logo[data-state="loading"]{
+    background: linear-gradient(180deg, #7fd0ff, #3fb2ff 70%, #0aaefc);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation: loadPulse 1.1s ease-in-out infinite;
+  }
+  .logo[data-state="brand"]{
+    background: linear-gradient(180deg, #dad4ff 0%, #c3b7ff 45%, #9a84ff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation: brandPop .6s ease-out forwards;
+  }
+  @keyframes loadPulse{
+    0%,100%{ filter:brightness(1) }
+    50%{ filter:brightness(1.35) }
+  }
+  @keyframes brandPop{
+    0%{ transform:scale(.92); filter:blur(.3px) brightness(.9) }
+    100%{ transform:scale(1); filter:blur(0) brightness(1.1) }
+  }
 
-/* enerji dalgası (başlangıç patlaması) */
-.energy{
-  position:absolute; inset:0; border-radius:50%;
-  background:
-    radial-gradient(closest-side, rgba(120,255,240,.22), rgba(120,255,240,0) 70%),
-    conic-gradient(from 0turn, rgba(120,255,240,.25), rgba(120,255,240,0) 35% 65%, rgba(120,255,240,.25));
-  mix-blend-mode:screen; opacity:.8; filter:blur(2px);
-  transform:scale(.2);
-  animation: energyIn .55s cubic-bezier(.2,.8,.1,1) both;
-}
-@keyframes energyIn{
-  0%{transform:scale(.2); opacity:.0}
-  60%{transform:scale(1.1); opacity:.9}
-  100%{transform:scale(1); opacity:.0}
-}
+  /* Halka noktaları kapsayıcı */
+  .ring{
+    position:absolute; inset:0; display:grid; place-items:center; pointer-events:none;
+  }
+  .ring .dot{
+    position:absolute; width:var(--dot-size); height:var(--dot-size); border-radius:50%;
+    background: var(--dot);
+    opacity: var(--base-alpha);
+    box-shadow:
+      0 0 0.5px rgba(23,200,255,.7),
+      0 0 6px rgba(23,200,255,.32),
+      0 0 18px rgba(23,200,255,.18);
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform .06s linear, opacity .06s linear, background-color .06s linear, box-shadow .06s linear;
+  }
 
-/* shockwave — finalde genişleyen halkalar */
-.wave{
-  position:absolute; inset:0; border-radius:50%; pointer-events:none;
-  border:2px solid rgba(255,255,255,.75);
-  box-shadow:0 0 32px 8px rgba(120,240,255,.35) inset, 0 0 40px rgba(120,240,255,.25);
-  opacity:0; transform:scale(.4);
-}
+  /* altındaki ince, sabit kılavuz halka (çok silik) */
+  .guide{
+    position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; opacity:.12;
+  }
+  .guide::before{
+    content:""; width:calc(var(--ring-r)*2 + 22px); height:calc(var(--ring-r)*2 + 22px); border-radius:50%;
+    border:1px solid #6ecbff;
+    box-shadow:0 0 30px rgba(23,200,255,.25) inset;
+  }
 
-/* beyaz patlama overlay */
-.flash{
-  position:absolute; inset:-2px; background:#fff; opacity:0; pointer-events:none;
-}
+  /* alt yazı (opsiyonel) */
+  .sub{
+    position:absolute; left:50%; transform:translateX(-50%); bottom:-22%;
+    width:60%; height:6px; border-radius:99px;
+    background: linear-gradient(90deg, rgba(35,210,255,.2), rgba(35,210,255,.05));
+    overflow:hidden; box-shadow: 0 6px 30px rgba(10,180,255,.15) inset;
+  }
+  .sub::before{
+    content:""; position:absolute; left:-40%; top:0; bottom:0; width:40%;
+    background: linear-gradient(90deg, rgba(120,255,255,.0), rgba(120,255,255,.7), rgba(120,255,255,.0));
+    filter: blur(1px);
+    animation: sweep var(--revolution) linear infinite;
+  }
+  @keyframes sweep{ to{ transform: translateX(260%) } }
 
-/* ========= PANEL (placeholder) ========= */
-main{
-  display:none; /* splash bitince block olacak */
-  min-height:100%;
-  padding:18px;
-}
-.header{
-  text-align:center; letter-spacing:.28em; margin:8px 0 20px;
-  font-family:Cinzel,serif; color:#bde0ff; opacity:.9;
-}
-.grid{
-  max-width:1100px; margin:0 auto; display:grid; gap:18px;
-  grid-template-columns:repeat(2,1fr);
-}
-.card{
-  background:linear-gradient(180deg, var(--card), #0d1a22);
-  border:1px solid var(--br); border-radius:14px; padding:16px;
-}
-.card h3{
-  margin:0 0 8px; font-family:Cinzel,serif; letter-spacing:.08em;
-  font-size:18px; color:#def2ff;
-}
-.card p{margin:6px 0 0; opacity:.9}
-@media(max-width:720px){ .grid{grid-template-columns:1fr} }
+  /* final beyaz flash */
+  .flash{
+    position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:10000;
+  }
+  .flash.show{ animation: flash .45s ease forwards }
+  @keyframes flash{
+    0%{ opacity:0 }
+    25%{ opacity:1 }
+    100%{ opacity:0 }
+  }
 
-/* helpers */
-.hidden{display:none}
+  /* (opsiyonel) splash kaybolurken fade */
+  .splash.hide{ animation: fadeOut .35s ease forwards }
+  @keyframes fadeOut{ to{ opacity:0; visibility:hidden } }
 
-/* ====== küçük not: panel görünürken kaydırma serbest ====== */
-body.panel-ready{overflow:auto}
+  /* demo panel alanı (splash sonrası) */
+  #app{display:none; color:#dbe7ff; font-family:Inter,system-ui; padding:28px}
 </style>
 </head>
 <body>
 
-<!-- ============== SPLASH ============== -->
+<!-- SPLASH -->
 <div class="splash" id="splash">
-  <div class="splash-inner">
-    <canvas id="ring" style="position:absolute; inset:0;"></canvas>
-    <div class="energy"></div>
-    <div class="logo"><h1>AZURA</h1></div>
-    <div class="wave" id="wave"></div>
-    <div class="flash" id="flash"></div>
+  <div class="inner">
+    <div class="glow"></div>
+
+    <div class="guide"></div>
+
+    <div class="ring" id="ring"></div>
+
+    <div class="logo" id="logo" data-state="loading">LOADING</div>
+
+    <div class="sub"></div>
   </div>
 </div>
 
-<!-- ============== PANEL (örnek içerik) ============== -->
-<main id="panel">
-  <div class="header">AZURA NOVA — PANEL</div>
-  <div class="grid">
-    <div class="card"><h3>Akış</h3><p>Merhaba! Bu kısım gerçek gönderilerle dolacak.</p></div>
-    <div class="card"><h3>Keşfet</h3><p>Kategoriler, etiketler ve arama.</p></div>
-    <div class="card"><h3>Topluluk</h3><p>Gruplar, DM, bildirimler.</p></div>
-    <div class="card"><h3>Notlar</h3><p>Kişisel taslaklar ve yapılacaklar.</p></div>
-  </div>
+<!-- BEYAZ FLASH -->
+<div class="flash" id="flash"></div>
+
+<!-- PANEL / ANA İÇERİK (örnek) -->
+<main id="app">
+  <h1>AZURA NOVA — PANEL</h1>
+  <p>Buraya gerçek panelini yerleştir. Splash bittiğinde bu kısım görünür veya başka sayfaya yönlendirilir.</p>
 </main>
 
 <script>
-/* ===================== CONFIG ===================== */
-const DURATION_MS = 3400;           // toplam intro süresi
-const RING_RADIUS = 120;            // halka yarıçapı (px)
-const DOT_COUNT = 32;               // çevredeki nokta sayısı
-const ACTIVE_LEN = 6;               // “yılan” uzunluğu (kaç nokta)
-const HEAD_SPEED_TURNS = 3.6;       // 3.6 tur tamamlar
-const COLOR_KEYFRAMES = [
-  [180, 1.00, 0.65],   // aqua
-  [210, 0.95, 0.64],   // azur
-  [265, 0.85, 0.70],   // mor
-  [200, 1.00, 0.66]    // geri aqua
-];
+(function(){
+  /* === parametreler === */
+  const DOT_COUNT = 28;                 // halkadaki nokta sayısı (görseldeki yoğunluk)
+  const RADIUS = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--ring-r'));
+  const REV_MS = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--revolution')) * 1000;
+  const TOTAL_MS = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--show-total')); // toplam splash süresi
+  const HEAD_SPAN = Math.PI/6;          // başın etkilediği açı (~30°)
+  const TRAIL_SPAN = Math.PI/3.5;       // kuyruk uzunluğu (~50°)
+  const START_DELAY = 220;              // başlama küçük gecikme
 
-/* ===================== DRAWER ===================== */
-const cvs = document.getElementById('ring');
-const ctx = cvs.getContext('2d', { alpha: true });
-let W=0,H=0,CX=0,CY=0;
+  const ring = document.getElementById('ring');
+  const logo = document.getElementById('logo');
+  const splash = document.getElementById('splash');
+  const flash = document.getElementById('flash');
 
-function fit(){
-  W = cvs.width = Math.floor(cvs.clientWidth * devicePixelRatio);
-  H = cvs.height = Math.floor(cvs.clientHeight * devicePixelRatio);
-  CX = W/2; CY = H/2;
-}
-new ResizeObserver(fit).observe(cvs); fit();
-
-function hsl(h,s,l,a=1){ return `hsla(${h},${(s*100).toFixed(1)}%,${(l*100).toFixed(1)}%,${a})`; }
-function lerp(a,b,t){ return a+(b-a)*t; }
-function lerp3(a,b,t){ return [lerp(a[0],b[0],t), lerp(a[1],b[1],t), lerp(a[2],b[2],t)]; }
-function colorAt(t){
-  const seg = 1/(COLOR_KEYFRAMES.length-1);
-  const i = Math.min(Math.floor(t/seg), COLOR_KEYFRAMES.length-2);
-  const localT = (t - i*seg)/seg;
-  const [h,s,l] = lerp3(COLOR_KEYFRAMES[i], COLOR_KEYFRAMES[i+1], localT);
-  return [h,s,l];
-}
-
-/* ===================== ANIM STATE ===================== */
-const t0 = performance.now();
-const totalTurnsRadians = HEAD_SPEED_TURNS * Math.PI*2;
-
-function draw(now){
-  const t = now - t0;
-  const progress = Math.min(1, t / DURATION_MS);
-
-  // renk döngüsü (0→1)
-  const [hh,hs,hl] = colorAt(progress);
-
-  ctx.clearRect(0,0,W,H);
-
-  // yumuşak merkez ışığı
-  const glow = ctx.createRadialGradient(CX,CY,0, CX,CY,RING_RADIUS*1.35*devicePixelRatio);
-  glow.addColorStop(0, hsl(hh,hs, Math.min(1,hl+0.15), .18));
-  glow.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = glow;
-  ctx.beginPath(); ctx.arc(CX,CY,RING_RADIUS*1.35*devicePixelRatio,0,Math.PI*2); ctx.fill();
-
-  // sabit sönük noktalar
-  const baseR = RING_RADIUS*devicePixelRatio;
-  const baseSize = 3.6*devicePixelRatio;
-  ctx.save();
-  ctx.translate(CX,CY);
-
+  /* noktaları yerleştir */
+  const dots = [];
   for(let i=0;i<DOT_COUNT;i++){
-    const ang = (i/DOT_COUNT)*Math.PI*2;
-    const x = Math.cos(ang)*baseR;
-    const y = Math.sin(ang)*baseR;
-    ctx.fillStyle = hsl(hh,hs,hl, .10);
-    ctx.beginPath(); ctx.arc(x,y, baseSize*.7, 0, Math.PI*2); ctx.fill();
+    const el = document.createElement('div');
+    el.className = 'dot';
+    const ang = (i/DOT_COUNT)*Math.PI*2 - Math.PI/2; // top middle start
+    const x = Math.cos(ang)*RADIUS;
+    const y = Math.sin(ang)*RADIUS;
+    el.style.left = `calc(50% + ${x}px)`;
+    el.style.top  = `calc(50% + ${y}px)`;
+    ring.appendChild(el);
+    dots.push({el, ang});
   }
 
-  // çift yılan (zıt yön)
-  const headAngle1 = progress * totalTurnsRadians;            // saat yönü
-  const headAngle2 = -progress * totalTurnsRadians * 0.92;    // ters, hafif farklı hız
-  renderSnake(headAngle1, 1);
-  renderSnake(headAngle2, -1);
+  /* animasyon döngüsü */
+  let start = null;
+  function tick(ts){
+    if(!start) start = ts + START_DELAY;
+    const t = ts - start;
+    const headAng = ((t % REV_MS) / REV_MS) * Math.PI*2 - Math.PI/2; // sürekli dönen açı
 
-  ctx.restore();
+    for(const d of dots){
+      // açı farkını [-PI, PI] aralığına sar
+      let diff = Math.atan2(Math.sin(d.ang - headAng), Math.cos(d.ang - headAng));
+      diff = Math.abs(diff);
 
-  // Shockwave tetikle (son 600ms)
-  if(progress > 0.82) triggerWave(progress);
+      // varsayılan loş görünüm
+      let op = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--base-alpha'));
+      let size = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--dot-size'));
+      let color = 'var(--dot)';
+      let shadow = '0 0 0.5px rgba(23,200,255,.6), 0 0 6px rgba(23,200,255,.28), 0 0 18px rgba(23,200,255,.15)';
 
-  // Bitti mi?
-  if(progress < 1) requestAnimationFrame(draw);
-  else endSequence();
-}
+      // baş bölgesi
+      if(diff < HEAD_SPAN){
+        const k = 1 - (diff / HEAD_SPAN); // 1..0
+        op = .85 + .15*k;
+        size = size + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--head-size')) - size) * k;
+        color = 'var(--head)';
+        shadow = `0 0 2px rgba(127,233,255,.95),
+                  0 0 12px rgba(127,233,255,.85),
+                  0 0 26px rgba(127,233,255,.70)`;
+      }else if(diff < TRAIL_SPAN){ // kuyruk
+        const k = 1 - (diff - HEAD_SPAN)/(TRAIL_SPAN-HEAD_SPAN); // 1..0
+        op = .45 + .25*k;
+        size = size + 2*k;
+        color = 'var(--trail)';
+        shadow = `0 0 1px rgba(37,170,255,.8),
+                  0 0 10px rgba(37,170,255,.5),
+                  0 0 20px rgba(37,170,255,.35)`;
+      }
 
-function renderSnake(headAngle, dir){
-  const baseR = RING_RADIUS*devicePixelRatio;
-  const baseSize = 3.6*devicePixelRatio;
-  for(let j=0;j<ACTIVE_LEN;j++){
-    const frac = j/(ACTIVE_LEN-1);
-    const decay = 1 - frac;                      // baştan kuyruğa parlaklık azalır
-    const a = headAngle - dir*frac*(Math.PI*2/DOT_COUNT);
-    const x = Math.cos(a)*baseR;
-    const y = Math.sin(a)*baseR;
+      d.el.style.opacity = op;
+      d.el.style.width = d.el.style.height = size + 'px';
+      d.el.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(color.replace('var','--'));
+      d.el.style.boxShadow = shadow;
+    }
 
-    const size = baseSize*(1.1 + decay*0.9);
-    const alpha = .15 + decay*.85;
-    ctx.fillStyle = hsl(...colorAt((performance.now()-t0)/DURATION_MS)[0] ? colorAt((performance.now()-t0)/DURATION_MS) : [200,1,.6], alpha);
-    ctx.beginPath(); ctx.arc(x,y, size, 0, Math.PI*2); ctx.fill();
-
-    // haleye küçük blur
-    const grd = ctx.createRadialGradient(x,y,0, x,y,size*3);
-    grd.addColorStop(0, hsl(hh,hs,hl,.18*alpha));
-    grd.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x,y,size*3,0,Math.PI*2); ctx.fill();
+    if(t < TOTAL_MS) {
+      requestAnimationFrame(tick);
+    }
   }
-}
+  requestAnimationFrame(tick);
 
-const waveEl = document.getElementById('wave');
-let waved = false;
-function triggerWave(progress){
-  if(waved) return;
-  waved = true;
-  waveEl.animate([
-    { transform:'scale(.5)', opacity:.0 },
-    { transform:'scale(1.15)', opacity:.85, offset:.35 },
-    { transform:'scale(1.6)', opacity:.0 }
-  ], { duration: 650, easing:'cubic-bezier(.2,.8,.1,1)', fill:'both' });
-}
+  /* metin akışı: LOADING -> AZURA */
+  setTimeout(()=>{ logo.dataset.state='brand'; logo.textContent='AZURA'; }, 2200);
 
-/* beyaz patlama + panele geçiş */
-const flashEl = document.getElementById('flash');
-const splash = document.getElementById('splash');
-const panel = document.getElementById('panel');
-
-function endSequence(){
-  // kısa “yanıp sönme” efekti
-  flashEl.animate([
-    { opacity:0 }, { opacity:.65 }, { opacity:0 }, { opacity:.75 }, { opacity:0 }
-  ], { duration: 420, easing:'ease-out' });
-
-  // final beyaz patlama + panel
+  /* final: kısa flicker + flash beyaz + panel göster/yönlendir */
   setTimeout(()=>{
-    flashEl.animate([{opacity:0},{opacity:1}],{duration:220,fill:'forwards',easing:'ease-in'});
-    setTimeout(()=>{
-      splash.style.opacity = 0;
-      flashEl.style.opacity = 0;
-      panel.style.display='block';
-      document.body.classList.add('panel-ready');
-      // splash tamamen kapansın
-      setTimeout(()=> splash.remove(), 450);
-    },220);
-  }, 420);
-}
+    // küçük flicker
+    let n=0;
+    const id = setInterval(()=>{
+      logo.style.opacity = (n%2)? 1 : .3;
+      n++;
+      if(n>5){ clearInterval(id); logo.style.opacity=1;
+        flash.classList.add('show');
+        splash.classList.add('hide');
 
-/* start! */
-requestAnimationFrame(draw);
+        // 1) Aynı sayfada paneli göster
+        setTimeout(()=>{
+          document.getElementById('app').style.display='block';
+        }, 180);
+
+        // 2) YA DA başka sayfaya yönlendir:
+        // const PANEL_URL = 'userpanel.html';
+        // setTimeout(()=>{ location.href = PANEL_URL; }, 200);
+      }
+    }, 90);
+  }, 3200); // toplam içinde zamanla
+
+})();
 </script>
 </body>
 </html>
