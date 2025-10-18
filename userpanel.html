@@ -1,331 +1,385 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AZURA NOVA • Panel</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AZURA • Kullanıcı Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* ================= SPLASH (YILAN) ================ */
 :root{
-  /* splash */
-  --s-bg:#0b0f14;
-  --s-dot:#1ea8ff;
-  --s-head:#6ad3ff;
-  --s-text1:#cdb9ff;
-  --s-text2:#7b68ee;
+  /* Renk skalası */
+  --bg-white:#ffffff;
+  --ink:#0b1117;
+  --muted:#5c6b72;
 
-  /* PANEL RENKLERİ (yan panel yeşil / ana beyaz) */
-  --side-green:#0f2a21;
-  --side-green-2:#123429;
-  --side-bd:rgba(120,236,193,.25);
-  --main-bg:#ffffff;
-  --main-text:#111418;
-  --sub-text:#4b5563;
-  --chip-bd:#d1fae5;
-  --chip-bg:#ecfdf5;
-  --chip-tx:#065f46;
-  --accent:#11c58f;
-  --accent-2:#ff4fa2;
-  --r:14px;
-  --max:1200px;
+  --blue:#29b6ff;
+  --blue-soft:#b9ecff;
+
+  --green-1:#0e3c2d;   /* sol panel üst */
+  --green-2:#145b43;   /* sol panel alt */
+  --panel-ink:#d8efe4;
+
+  --card-border:#e8ece9;
+  --card-bg:#ffffff;
+  --cream:#faf7f1;
+
+  --accent:#0f6; /* küçük vurgu */
 }
 
-/* Splash full screen */
-.splash{position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
-  background:radial-gradient(800px 520px at 50% 35%, #0f1822 10%, transparent 70%), var(--s-bg);}
-.splash-inner{position:relative; width:min(520px,82vw); height:min(520px,82vw)}
-#snakeCanvas{position:absolute; inset:0; filter:drop-shadow(0 0 22px rgba(60,200,255,.25))}
-.brand-title{
-  position:absolute; inset:0; display:grid; place-items:center; pointer-events:none;
-  font:700 clamp(28px,6vw,46px) Cinzel,serif; letter-spacing:.28em;
-  background:linear-gradient(180deg,var(--s-text1),var(--s-text2));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 28px rgba(124,108,255,.28);
-}
-.splash-note{position:absolute; left:50%; bottom:8%; transform:translateX(-50%); color:#a6c8ff; letter-spacing:.18em; font-weight:600; opacity:.9; font-size:12px}
-.flash{position:fixed; inset:0; background:#fff; z-index:9998; opacity:0; transition:opacity .45s ease}
-
-/* ================ PANEL (yan panel yeşil / main beyaz) ================ */
+*{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; color:var(--main-text); background:var(--main-bg); overflow-x:hidden}
-.wrap{max-width:var(--max); margin:0 auto; padding:18px; display:grid; grid-template-columns: 270px 1fr; gap:18px}
-@media (max-width:980px){ .wrap{grid-template-columns:1fr} .aside{position:static} }
+body{
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
+  color:var(--ink); background:var(--bg-white);
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
 
-/* aside */
+/* ===================== SPLASH (YILAN + LOGO) ===================== */
+.splash{
+  position:fixed; inset:0; background:#fff; z-index:9999;
+  display:grid; place-items:center;
+}
+.splash-inner{ position:relative; width:min(760px,92vw); height:min(760px,92vw); }
+#snakeCanvas{ position:absolute; inset:0; }
+.brand-title{
+  position:absolute; inset:0; display:grid; place-items:center;
+  font:700 clamp(52px,11vw,110px) Cinzel,serif; letter-spacing:.25em;
+  color:#111; text-shadow:0 0 18px rgba(0,0,0,.06);
+  will-change:opacity;
+}
+
+/* Splash bitişte beyaza patlatma */
+.flash{ position:fixed; inset:0; background:#fff; z-index:9998; opacity:0; transition:opacity .45s ease; }
+
+/* ===================== APP LAYOUT ===================== */
+.app{ display:grid; grid-template-columns: 300px 1fr; min-height:100vh; visibility:hidden; }
+
 .aside{
-  position:sticky; top:16px; align-self:start; border-radius:var(--r);
-  background:linear-gradient(180deg,var(--side-green),var(--side-green-2));
-  color:#e8fff6; padding:14px; border:1px solid var(--side-bd); box-shadow:0 10px 30px rgba(0,0,0,.25)
+  background:linear-gradient(180deg,var(--green-1),var(--green-2));
+  color:var(--panel-ink); padding:22px 16px; position:relative;
+  box-shadow:inset -1px 0 0 rgba(255,255,255,.06);
 }
-.brand{display:flex; align-items:center; gap:10px; padding:10px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08)}
-.brand .logo{width:38px;height:38px;border-radius:50%;
-  background:radial-gradient(circle at 30% 30%, #e8d8ff 0 42%, transparent 43%),
-             conic-gradient(from 0deg,#9a84ff,#11c58f 55%,#ff4fa2 85%,#9a84ff)}
-.brand h1{margin:0; font:700 15px Cinzel,serif; letter-spacing:.22em}
-
-.menu{margin-top:10px; display:grid; gap:8px}
-.menu button{
-  appearance:none; cursor:pointer; padding:10px 12px; border-radius:10px; font-weight:700;
-  border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:#e9fff6; text-align:left
+.brand{
+  display:flex; align-items:center; gap:12px; margin-bottom:14px;
 }
-.menu button:hover{border-color:#9ef3d0; box-shadow:0 6px 18px rgba(17,197,143,.25)}
-.menu button.active{background:linear-gradient(180deg,rgba(17,197,143,.25),rgba(17,197,143,.08)); border-color:#9ef3d0}
+.brand .badge{
+  width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,.08);
+  display:grid; place-items:center; font-weight:700; font-size:18px;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+.brand h2{ font:700 18px Inter; letter-spacing:.18em; line-height:1.15; }
+.brand small{ display:block; font-weight:600; font-size:12px; opacity:.75; margin-top:2px; }
+.navsec{ margin:14px 0 6px; font-weight:700; font-size:12px; opacity:.6; letter-spacing:.12em; }
+.navlink{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; margin:6px 0; border-radius:10px;
+  color:var(--panel-ink); text-decoration:none;
+  transition:background .18s ease, transform .08s ease;
+}
+.navlink:hover{ background:rgba(255,255,255,.07); transform:translateX(2px) }
+.logout{ position:absolute; bottom:14px; left:16px; right:16px; }
+.logout a{ display:block; text-align:center; padding:10px; border-radius:10px; text-decoration:none; color:#f7fffb; background:rgba(0,0,0,.22) }
+.logout a:hover{ background:rgba(0,0,0,.28) }
 
-.quick{margin-top:12px; display:flex; flex-wrap:wrap; gap:8px}
-.chip{border:1px solid var(--chip-bd); background:var(--chip-bg); color:var(--chip-tx); font-weight:700; padding:6px 10px; border-radius:999px; font-size:12px}
+/* MAIN */
+.main{ background:var(--cream); padding:24px; }
+.topbar{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:18px; }
+.topbar h1{
+  font:700 20px Cinzel,serif; letter-spacing:.24em;
+}
+.search{
+  display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:999px;
+  background:#fff; border:1px solid var(--card-border); min-width:240px;
+}
+.search input{ border:none; outline:none; width:220px; font-size:14px; }
+.toolbar{ display:flex; align-items:center; gap:10px; }
+.toolbtn{
+  background:#fff; border:1px solid var(--card-border); border-radius:10px; padding:10px 12px; cursor:pointer;
+}
+.toolbtn:hover{ box-shadow:0 6px 16px rgba(0,0,0,.08) }
 
-/* main white */
-.header{ background:#fff; border:1px solid #edf2f7; border-radius:var(--r); padding:12px 14px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 6px 16px rgba(0,0,0,.06)}
-.header .clock{font-weight:700; letter-spacing:.12em}
-.btn{appearance:none; border-radius:10px; border:1px solid #e5e7eb; background:#fff; color:var(--main-text); font-weight:700; padding:8px 12px; cursor:pointer}
-.btn.green{border-color:#b7f7df; background:#e9fff7}
-.btn.primary{border-color:#ffd1e6; background:#fff1f7}
+/* GRID */
+.grid{
+  display:grid; gap:16px;
+  grid-template-columns:repeat(12,1fr);
+}
 
-.grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:18px}
-@media (max-width:980px){ .grid{grid-template-columns:1fr} }
+/* Kartlar */
+.card{
+  background:var(--card-bg); border:1px solid var(--card-border);
+  border-radius:16px; padding:18px;
+  box-shadow:0 10px 24px rgba(0,0,0,.06);
+}
+.card h3{ font-weight:700; font-size:16px; letter-spacing:.04em; margin-bottom:8px; }
+.card p{ color:var(--muted); line-height:1.5; }
 
-.card{ background:#fff; border:1px solid #eef2f6; border-radius:var(--r); padding:14px; box-shadow:0 10px 22px rgba(0,0,0,.05)}
-.card h3{margin:0 0 10px; font-family:Cinzel,serif; letter-spacing:.12em; font-size:16px}
-.sep{height:1px; background:#f1f5f9; margin:10px 0}
+.col-6{ grid-column: span 6; }
+.col-4{ grid-column: span 4; }
+.col-8{ grid-column: span 8; }
+.col-12{ grid-column: 1 / -1; }
 
-.post-box{display:grid; gap:10px}
-.post-box textarea{width:100%; min-height:90px; resize:vertical; border:1px solid #e5e7eb; border-radius:10px; padding:10px}
-.tags{display:flex; flex-wrap:wrap; gap:8px}
-.tag{border:1px dashed #fecdd3; background:#fff1f2; color:#9f1239; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700}
+/* “Gaziantep” kartı görseli (canvas) */
+.cityCanvas{ width:100%; height:220px; display:block; border-radius:12px; border:1px solid var(--card-border) }
 
-.feed{display:grid; gap:12px; margin-top:12px}
-.post{border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fff}
-.post .meta{display:flex; align-items:center; gap:10px; color:var(--sub-text); font-size:12px; margin-bottom:6px}
-.av{width:26px;height:26px;border-radius:50%; background:radial-gradient(circle at 30% 30%, #ffd3e6 0 42%, transparent 43%), linear-gradient(180deg,#ff7fc1,#ff4fa2)}
+/* Küçük chipler */
+.chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.chips span{
+  border:1px solid var(--card-border); background:#fff; padding:6px 10px;
+  border-radius:999px; font-size:12px; font-weight:600;
+}
 
-.tasks{display:grid; gap:8px}
-.task{display:flex; align-items:center; gap:10px; padding:8px; border-radius:10px; background:#fff; border:1px solid #e5e7eb}
-.task input[type="checkbox"]{width:18px;height:18px; accent-color:var(--accent)}
-.task.done{opacity:.6; text-decoration:line-through}
-.add-task{display:flex; gap:8px}
-.add-task input{flex:1; padding:10px 12px; border-radius:10px; border:1px solid #e5e7eb; background:#fff}
-
-.note{width:100%; min-height:160px; background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:10px; resize:vertical}
-
-.links{display:flex; flex-wrap:wrap; gap:10px}
-.links a{text-decoration:none; color:#0b8263; font-weight:700; border:1px solid #b7f7df; background:#e9fff7; padding:8px 12px; border-radius:10px}
-
-.toast{position:fixed; right:16px; bottom:16px; display:none; background:#e9fff7; border:1px solid #b7f7df; color:#0b5b46; padding:10px 14px; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,.12); z-index:50}
-.toast.show{display:block; animation:tIn .25s ease}
-@keyframes tIn{from{opacity:0; transform:translateY(6px)}}
+/* Basit responsive */
+@media (max-width:1100px){
+  .app{ grid-template-columns: 260px 1fr; }
+  .col-6{ grid-column: span 12; }
+  .col-4{ grid-column: span 6; }
+  .col-8{ grid-column: span 12; }
+}
+@media (max-width:760px){
+  .app{ grid-template-columns: 1fr; }
+  .aside{ position:sticky; top:0; z-index:30 }
+}
 </style>
 </head>
 <body>
 
-<!-- ====== SPLASH (YILAN) ====== -->
-<div class="splash" id="splash" aria-live="polite">
+<!-- ===================== SPLASH ===================== -->
+<div class="splash" id="splash">
   <div class="splash-inner">
     <canvas id="snakeCanvas"></canvas>
     <div class="brand-title" id="brandTitle">AZURA</div>
-    <div class="splash-note" id="sNote">LOADING</div>
   </div>
 </div>
 <div class="flash" id="flash"></div>
 
-<!-- ====== PANEL ====== -->
-<div class="wrap" id="app" style="visibility:hidden">
+<!-- ===================== APP ===================== -->
+<div class="app" id="app">
+  <!-- ASIDE -->
   <aside class="aside">
     <div class="brand">
-      <div class="logo"></div><h1>AZURA NOVA</h1>
+      <div class="badge">A</div>
+      <h2>AZURA<small>Panel</small></h2>
     </div>
-    <div class="menu" id="menu">
-      <button data-tab="feed" class="active">🌀 Akış</button>
-      <button data-tab="tasks">✅ Görevler</button>
-      <button data-tab="notes">📝 Notlar</button>
-      <button data-tab="explore">🔎 Keşfet</button>
-      <button data-tab="resources">📚 Kaynaklar</button>
-      <button data-tab="settings">⚙️ Ayarlar</button>
-    </div>
-    <div class="quick" style="margin-top:12px">
-      <span class="chip">🌿 Dingin</span><span class="chip">⚡ Odak</span><span class="chip">💗 Şefkat</span><span class="chip">🎯 Mini hedef</span>
+
+    <div class="navsec">MENÜ</div>
+    <a class="navlink" href="#"><span>🏠</span>Genel Bakış</a>
+    <a class="navlink" href="#"><span>🧭</span>Hedefler</a>
+    <a class="navlink" href="#"><span>👥</span>Topluluk</a>
+    <a class="navlink" href="#"><span>📰</span>Akış</a>
+    <a class="navlink" href="#"><span>📝</span>Notlar</a>
+    <a class="navlink" href="#"><span>📚</span>Kaynaklar</a>
+    <a class="navlink" href="#"><span>⚙️</span>Ayarlar</a>
+
+    <div class="navsec">KISA YOLLAR</div>
+    <a class="navlink" href="#"><span>✨</span>Bugünün Motivasyonu</a>
+    <a class="navlink" href="#"><span>📈</span>İstatistikler</a>
+    <a class="navlink" href="#"><span>🧩</span>Testler</a>
+
+    <div class="logout">
+      <a href="#">Çıkış</a>
     </div>
   </aside>
 
+  <!-- MAIN -->
   <main class="main">
-    <div class="header">
-      <div class="clock" id="clock">--:--</div>
-      <div style="display:flex; gap:8px">
-        <button class="btn green" id="btnNew">＋ Yeni</button>
-        <button class="btn primary" id="btnNotify">🔔 Bildirim</button>
+    <div class="topbar">
+      <h1>AZURA NOVA — PANEL</h1>
+      <div class="toolbar">
+        <div class="search">
+          <span>🔍</span>
+          <input type="search" placeholder="Ara…">
+        </div>
+        <button class="toolbtn" id="notifBtn">🔔</button>
+        <button class="toolbtn" id="newPostBtn">➕ Yeni</button>
       </div>
     </div>
 
-    <div class="grid">
-      <section class="col">
-        <div class="card" data-tab-panel="feed">
-          <h3>YENİ GÖNDERİ</h3>
-          <div class="post-box">
-            <textarea id="composer" placeholder="Ne düşünüyorsun? (#etiket)"></textarea>
-            <div class="tags"><span class="tag">#günlük</span><span class="tag">#soru</span><span class="tag">#duyuru</span></div>
-            <div style="display:flex; gap:8px; justify-content:flex-end">
-              <button class="btn" id="clearPost">Temizle</button>
-              <button class="btn green" id="publish">Yayınla</button>
-            </div>
-          </div>
-          <div class="sep"></div>
-          <div class="feed" id="feed"></div>
+    <section class="grid">
+      <!-- Gaziantep Kartı -->
+      <article class="card col-8">
+        <h3>🕌 GAZİANTEP — Şehir Notları</h3>
+        <p>Lezzetin başkenti: <strong>baklava</strong>, <strong>kebap</strong>, <strong>katmer</strong>. Zanaat ve tarihin iç içe geçtiği sokaklar…</p>
+        <canvas id="antepCanvas" class="cityCanvas"></canvas>
+        <div class="chips">
+          <span>🥙 Küşleme</span><span>🥘 Ali Nazik</span><span>🥮 Baklava</span>
+          <span>🧿 Bakırcılar</span><span>🏛 Zeugma</span>
         </div>
+      </article>
 
-        <div class="card" data-tab-panel="tasks" hidden>
-          <h3>GÖREVLER</h3>
-          <div class="add-task">
-            <input id="taskInput" placeholder="Bugünün odağı…" />
-            <button class="btn green" id="addTask">Ekle</button>
-          </div>
-          <div class="sep"></div>
-          <div class="tasks" id="tasks"></div>
-        </div>
+      <article class="card col-4">
+        <h3>📌 Hedef</h3>
+        <p>Bugünün tek odak işi: <strong>“Taslakları toparla, yayın planını yaz.”</strong></p>
+        <div class="chips"><span>20 dk blok</span><span>Tek iş</span><span>Takip</span></div>
+      </article>
 
-        <div class="card" data-tab-panel="notes" hidden>
-          <h3>NOTLAR</h3>
-          <textarea class="note" id="noteArea" placeholder="Serbest not alanı…"></textarea>
-          <div style="text-align:right; color:var(--sub-text); margin-top:8px; font-size:12px" id="savedMsg">Otomatik kaydediliyor…</div>
-        </div>
-      </section>
+      <article class="card col-6">
+        <h3>🧭 Duruş &amp; Sorumluluk</h3>
+        <p>Duruş; söze değil, alışkanlığa yazılır. “Söz verdim” cümlesini takvimine yaz.</p>
+      </article>
 
-      <section class="col">
-        <div class="card" data-tab-panel="explore" hidden>
-          <h3>KEŞFET</h3>
-          <p style="margin:0 0 8px; color:var(--sub-text)">Trend etiketler ve mini ipuçları;</p>
-          <div class="links"><a href="#">#odak</a><a href="#">#ritüel</a><a href="#">#nazikliderlik</a><a href="#">#derinçalışma</a><a href="#">#alışkanlık</a></div>
-          <div class="sep"></div>
-          <p style="margin:0">“Söz verdiğin şeyi takvime yaz.” — bugün için mikro kural.</p>
-        </div>
+      <article class="card col-6">
+        <h3>👥 Topluluk</h3>
+        <p>Yeni katılanlar: <strong>@merve</strong>, <strong>@kaan</strong>, <strong>@levent</strong>. Hoş geldiniz!</p>
+      </article>
 
-        <div class="card" data-tab-panel="resources">
-          <h3>KAYNAKLAR</h3>
-          <div class="links"><a href="#">Atomic Habits</a><a href="#">Deep Work</a><a href="#">Tiny Habits</a><a href="#">Ego Is the Enemy</a></div>
-          <div class="sep"></div>
-          <p style="margin:0; color:#0b5b46">Not: Ana menüde link yok; gerçek linkler panelde.</p>
-        </div>
-
-        <div class="card" data-tab-panel="settings" hidden>
-          <h3>AYARLAR</h3>
-          <label style="display:flex; align-items:center; gap:10px">
-            <input id="fxToggle" type="checkbox" checked> Animasyonları açık tut
-          </label>
-          <div class="sep"></div>
-          <button class="btn" id="wipe">Verileri Sıfırla</button>
-        </div>
-      </section>
-    </div>
+      <article class="card col-12">
+        <h3>📚 Kaynaklar</h3>
+        <p><strong>Atomic Habits</strong> (Clear), <strong>Deep Work</strong> (Newport), <strong>Essentialism</strong> (McKeown)</p>
+      </article>
+    </section>
   </main>
 </div>
 
-<div class="toast" id="toast">Yeni bildirim: “Topluluk kuralları güncellendi.”</div>
-
 <script>
-/* -------- SPLASH “YILAN” ------- */
+/* ===================== SPLASH — 26 sabit nokta + mavi “yılan” ===================== */
 (function(){
-  const c=document.getElementById('snakeCanvas'), ctx=c.getContext('2d');
-  const title=document.getElementById('brandTitle');
-  const note=document.getElementById('sNote');
-  const splash=document.getElementById('splash');
-  const flash=document.getElementById('flash');
-  const app=document.getElementById('app');
+  const c = document.getElementById('snakeCanvas');
+  const ctx = c.getContext('2d');
+  const splash = document.getElementById('splash');
+  const flash  = document.getElementById('flash');
+  const app    = document.getElementById('app');
+  const title  = document.getElementById('brandTitle');
 
-  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight }
-  fit(); addEventListener('resize',fit);
+  function fit(){ c.width = c.clientWidth; c.height = c.clientHeight; }
+  fit(); addEventListener('resize', fit);
 
-  const DOTS=26;
-  const R=Math.min(c.width,c.height)*0.35;
-  const cx=c.width/2, cy=c.height/2;
+  const DOTS = 26;              // sabit nokta sayısı
+  const RATIO = 0.42;           // halka yarıçapı (canvas’a göre)
+  const SPEED = 0.025;          // dönüş hızı (daha yavaş = daha sakin)
+  const TRAIL = 8;              // yılan kuyruğu uzunluğu
+  const BASE_R = 4.0;           // sabit noktaların yarıçapı
+  const HEAD_R = 10;            // baş parlama yarıçapı
+  const DURATION = 3600;        // splash toplam (ms) — 3.6sn
 
-  const pts=[];
-  for(let i=0;i<DOTS;i++){
-    const a=(i/DOTS)*Math.PI*2;
-    pts.push({x:cx+Math.cos(a)*R, y:cy+Math.sin(a)*R});
-  }
-
-  let head=0, speed=0.045, laps=0, tId;
-  function draw(){
-    ctx.clearRect(0,0,c.width,c.height);
-    // zayıf arka nokta halkası
+  let cx = c.width/2, cy = c.height/2, R = Math.min(c.width,c.height)*RATIO;
+  let pts = [];
+  function layout(){
+    cx = c.width/2; cy = c.height/2; R = Math.min(c.width,c.height)*RATIO;
+    pts.length=0;
     for(let i=0;i<DOTS;i++){
-      const p=pts[i]; ctx.beginPath(); ctx.fillStyle='rgba(30,168,255,0.18)';
-      ctx.arc(p.x,p.y,3.2,0,Math.PI*2); ctx.fill();
+      const a = (i/DOTS)*Math.PI*2;
+      pts.push({x:cx+Math.cos(a)*R, y:cy+Math.sin(a)*R});
     }
-    // parlayan baş + kuyruk
-    ctx.globalCompositeOperation='lighter';
-    for(let j=0;j<5;j++){
-      const idx=(head-j+DOTS*1000)%DOTS|0, p=pts[idx], k=(1-j/5);
-      const r=6+j*2.2; ctx.beginPath(); ctx.fillStyle=`rgba(106,211,255,${0.55*k})`;
-      ctx.shadowColor='#6ad3ff'; ctx.shadowBlur=16*k; ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
-    }
-    ctx.shadowBlur=0; ctx.globalCompositeOperation='source-over';
-
-    head+=speed; if(head>=DOTS){ head-=DOTS; laps++; }
-    tId=requestAnimationFrame(draw);
   }
-  draw();
+  layout(); addEventListener('resize', layout);
 
-  // “LOADING” kaybolsun, sadece AZURA kalsın
-  setTimeout(()=>note.textContent='', 900);
+  let head = 0, raf;
+  function loop(){
+    ctx.clearRect(0,0,c.width,c.height);
 
-  // toplam ~3.2s sonra blink + flash + panel
+    // sabit noktalar
+    ctx.fillStyle = 'rgba(41,182,255,0.22)';
+    for(const p of pts){ ctx.beginPath(); ctx.arc(p.x,p.y,BASE_R,0,Math.PI*2); ctx.fill(); }
+
+    // yılan (glow + lighter)
+    ctx.globalCompositeOperation = 'lighter';
+    for(let j=0;j<TRAIL;j++){
+      const idx = (head - j + DOTS*1000) % DOTS | 0;
+      const p = pts[idx]; const k = 1 - (j/TRAIL);
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(139,227,255,${0.62*k})`;
+      ctx.shadowColor = '#8be3ff';
+      ctx.shadowBlur = 22*k;
+      ctx.arc(p.x, p.y, HEAD_R*(0.9+(j?j*0.05:0)), 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+    ctx.globalCompositeOperation = 'source-over';
+
+    head += SPEED;
+    if(head >= DOTS) head -= DOTS;
+
+    raf = requestAnimationFrame(loop);
+  }
+  loop();
+
+  // Bitiş: logo “blink” + beyaz flaş + panel görünür
   setTimeout(()=>{
-    cancelAnimationFrame(tId);
-    title.style.transition='opacity .12s ease';
-    let n=0; const bl=setInterval(()=>{ title.style.opacity=(title.style.opacity==='0'?'1':'0'); if(++n>=6){clearInterval(bl);
-      flash.style.opacity=1;
-      setTimeout(()=>{ splash.remove(); app.style.visibility='visible'; flash.style.opacity=0; setTimeout(()=>flash.remove(),450); },180);
-    }},120);
-  }, 3200);
+    cancelAnimationFrame(raf);
+    let n = 0;
+    title.style.transition = 'opacity .1s';
+    const bl = setInterval(()=>{
+      title.style.opacity = (title.style.opacity==='0' ? '1' : '0');
+      if(++n >= 6){
+        clearInterval(bl);
+        flash.style.opacity = 1;
+        setTimeout(()=>{
+          splash.remove();
+          app.style.visibility = 'visible';
+          flash.style.opacity = 0;
+          setTimeout(()=>flash.remove(), 450);
+        }, 180);
+      }
+    }, 120);
+  }, DURATION);
 })();
 
-/* -------- PANEL JS ------- */
-/* saat */
-(function(){ const el=document.getElementById('clock'); function t(){const d=new Date(); el.textContent=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`} t(); setInterval(t,3e4); })();
-
-/* menü */
-(function(){ const btns=document.querySelectorAll('#menu button'); const panels=document.querySelectorAll('[data-tab-panel]');
-  btns.forEach(b=>b.addEventListener('click',()=>{ btns.forEach(x=>x.classList.remove('active')); b.classList.add('active'); const k=b.dataset.tab; panels.forEach(p=>p.hidden=p.getAttribute('data-tab-panel')!==k); })); })();
-
-/* akış */
+/* ===================== GAZİANTEP KART — küçük estetik çizim ===================== */
 (function(){
-  const feed=document.getElementById('feed'), ta=document.getElementById('composer'), pub=document.getElementById('publish'), clr=document.getElementById('clearPost');
-  const KEY='azura_posts_v1';
-  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(_){return[]}};
-  const save=a=>localStorage.setItem(KEY,JSON.stringify(a));
-  const fmt=d=>d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-  const esc=s=>s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  function render(){ feed.innerHTML=''; for(const p of load()){ const card=document.createElement('div'); card.className='post';
-    card.innerHTML=`<div class="meta"><div class="av"></div><div>${p.author} • ${p.time}</div></div><div>${esc(p.text).replace(/#(\w+)/g,'<span class="tag">#$1</span>')}</div>`; feed.prepend(card); } }
-  pub.addEventListener('click',()=>{ const text=ta.value.trim(); if(!text) return; const a=load(); a.push({text,author:'Liman',time:fmt(new Date())}); save(a); ta.value=''; render(); });
-  clr.addEventListener('click',()=>ta.value=''); render();
+  const cv = document.getElementById('antepCanvas');
+  if(!cv) return;
+  const x = cv.getContext('2d');
+
+  function fit(){ cv.width = cv.clientWidth; cv.height = cv.clientHeight; }
+  fit(); addEventListener('resize', fit);
+
+  let t = 0;
+  (function draw(){
+    x.clearRect(0,0,cv.width,cv.height);
+
+    // yumuşak zemin
+    const g = x.createLinearGradient(0,0,cv.width,cv.height);
+    g.addColorStop(0,'#fff');
+    g.addColorStop(1,'#f7fbff');
+    x.fillStyle = g; x.fillRect(0,0,cv.width,cv.height);
+
+    // bakır işlemeyi çağrıştıran dalga hatlar
+    x.lineWidth = 1;
+    for(let i=0;i<7;i++){
+      const hue = 25 + i*4; // sıcak tonlar
+      x.strokeStyle = `hsla(${hue},70%,45%,.28)`;
+      x.beginPath();
+      for(let u=0; u<=cv.width; u+=12){
+        const yy = cv.height*0.55 + Math.sin((u*0.012)+(t*0.8)+i)*18 + i*8;
+        if(u===0) x.moveTo(u,yy); else x.lineTo(u,yy);
+      }
+      x.stroke();
+    }
+
+    // baklava sembolü
+    const w = 120, h = 70, cx = cv.width*0.78, cy = cv.height*0.36;
+    x.save();
+    x.translate(cx,cy);
+    x.rotate(Math.PI/4);
+    x.fillStyle = '#ffe8a3';
+    x.strokeStyle = '#caa85a';
+    x.lineWidth = 2;
+    x.beginPath();
+    x.rect(-w/2,-h/2,w,h);
+    x.fill(); x.stroke();
+    x.restore();
+
+    // küçük ışıltılar
+    for(let k=0;k<18;k++){
+      const px = (k*77 + t*30) % cv.width;
+      const py = cv.height*0.18 + (k%5)*14;
+      x.fillStyle = 'rgba(255,200,80,.15)';
+      x.beginPath(); x.arc(px,py,2.3,0,Math.PI*2); x.fill();
+    }
+
+    t += 0.02;
+    requestAnimationFrame(draw);
+  })();
 })();
 
-/* görevler */
-(function(){
-  const list=document.getElementById('tasks'), input=document.getElementById('taskInput'), add=document.getElementById('addTask');
-  const KEY='azura_tasks_v1';
-  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(_){return[]}};
-  const save=a=>localStorage.setItem(KEY,JSON.stringify(a));
-  const esc=s=>s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  function render(){ list.innerHTML=''; const a=load(); a.forEach((t,i)=>{ const el=document.createElement('label'); el.className='task'+(t.done?' done':''); el.innerHTML=`<input type="checkbox" ${t.done?'checked':''}><span>${esc(t.text)}</span>`;
-    el.querySelector('input').addEventListener('change',e=>{ const b=load(); b[i].done=e.target.checked; save(b); render(); }); list.appendChild(el); }); }
-  add.addEventListener('click',()=>{ const v=input.value.trim(); if(!v) return; const a=load(); a.push({text:v,done:false}); save(a); input.value=''; render(); });
-  input.addEventListener('keydown',e=>{ if(e.key==='Enter') add.click() }); render();
-})();
-
-/* notlar */
-(function(){ const area=document.getElementById('noteArea'), msg=document.getElementById('savedMsg'); const KEY='azura_notes_v1';
-  try{area.value=localStorage.getItem(KEY)||''}catch(_){} let t=null;
-  area.addEventListener('input',()=>{ if(t)clearTimeout(t); msg.textContent='Kaydediliyor…'; t=setTimeout(()=>{ localStorage.setItem(KEY,area.value); msg.textContent='Kaydedildi ✓'; },450); });
-})();
-
-/* toast + wipe + yeni */
-(function(){ const toast=document.getElementById('toast');
-  document.getElementById('btnNotify').addEventListener('click',()=>{ toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2400); });
-  document.getElementById('wipe').addEventListener('click',()=>{ if(confirm('Tüm yerel verileri temizlemek istiyor musun?')){ ['azura_posts_v1','azura_tasks_v1','azura_notes_v1'].forEach(k=>localStorage.removeItem(k)); location.reload(); } });
-  document.getElementById('btnNew').addEventListener('click',()=>{ document.querySelector('#menu button[data-tab="feed"]').click(); document.getElementById('composer').focus(); });
-})();
+/* ===================== DİĞER KÜÇÜK ETKİLEŞİMLER ===================== */
+document.getElementById('notifBtn')?.addEventListener('click', ()=>{
+  alert('Bildirimler yakında burada 🔔');
+});
+document.getElementById('newPostBtn')?.addEventListener('click', ()=>{
+  const txt = prompt('Yeni gönderi:');
+  if(txt){ alert('Gönderildi ✅'); }
+});
 </script>
 </body>
-   </html>
+                                                        </html>
