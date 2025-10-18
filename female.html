@@ -259,6 +259,7 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
 </main>
 
 <script>
+<script>
 /* ---------- Pembe partiküller ---------- */
 (function(){
   const c = document.getElementById('stars');
@@ -297,7 +298,7 @@ const main = document.getElementById('main');
 
 let manifestoTimer = null;
 
-/* Hoşgeldin kısaca görünsün, hemen manifesto başlasın */
+/* Hoşgeldin kısaca görünsün, sonra manifesto başlasın */
 setTimeout(()=>{
   welcome.classList.add('fade-out');
   setTimeout(startManifesto, 600);
@@ -306,13 +307,14 @@ setTimeout(()=>{
 function startManifesto(){
   mfWrap.style.display='block';
   skipBtn.classList.add('show');
-  /* 30 sn sonra menüye */
-  manifestoTimer = setTimeout(showMenu, 60000);
+
+  // Slayt animasyonu bitince menüye geç
+  manifesto.addEventListener('animationend', showMenu);
 }
 
 /* Yazıyı geç */
 skipBtn.addEventListener('click', ()=>{
-  if(manifestoTimer){ clearTimeout(manifestoTimer); }
+  manifesto.removeEventListener('animationend', showMenu);
   showMenu();
 });
 
@@ -322,10 +324,12 @@ function showMenu(){
   main.style.display='block';
 }
 
-/* Sol üst Kullanıcı Paneli (placeholder) */
+/* Kullanıcı Paneli (placeholder) */
 document.getElementById('userBtn').addEventListener('click', (e)=>{
   e.preventDefault();
   alert('Kullanıcı Paneli yakında burada 🌸');
+});
+</script>
 });
 </script>
 </body>
