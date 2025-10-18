@@ -1,577 +1,316 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AZURA • Panel</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azura • Kullanıcı Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* ------------------ TEMEL ------------------ */
-*{box-sizing:border-box}
 :root{
-  --bg:#ffffff;
-  --text:#1a1f22;
-  --muted:#6b7a86;
-  --bd:#e6ecef;
-  --shadow:0 10px 30px rgba(0,0,0,.08);
-
-  /* yan menü */
-  --side-bg:#064e3b;           /* koyu yeşil */
-  --side-ink:#eafff5;
-  --side-accent:#9ff9cf;       /* vurgular */
-
-  /* ana alan */
-  --card-bg:#fff;
-  --card-bd:#e7eef1;
-  --chip:#eef8f2;
-  --chip-ink:#0b3d2c;
-
-  /* vurgu rengi (kullanıcı değiştirir) */
-  --accent:#00bfa5;
-  --accent-ink:#003c34;
-
-  /* üst bar */
-  --top-bg:#0d9488;
-  --top-ink:#eafff9;
-
-  /* geçişler */
-  --tr: .25s cubic-bezier(.2,.8,.2,1);
+  --ink:#0a0d0f;
+  --dark:#03060a;
+  --flash:#ffffff;
+  --ring:#00b2ff;
+  --ring-soft:#8fe3ff;
+  --glow:#00eaff;
+  --side:#0d3a2f;      /* koyu yeşil */
+  --side-ink:#d7efe7;
+  --main:#ffffff;      /* ana alan beyaz */
+  --chip:#eaf4ef;
+  --chip-ink:#114937;
+  --card:#ffffff;
+  --card-bd:#e9eef3;
+  --text:#101419;
+  --muted:#6b7b8b;
 }
 
-/* Dark toggle */
-[data-theme="dark"]{
-  --bg:#0b1117;
-  --text:#eaf2f7;
-  --muted:#a2b1bf;
-  --bd:#1b2630;
-  --shadow:0 12px 38px rgba(0,0,0,.35);
-
-  --side-bg:#0f2e24;
-  --side-ink:#c6ffea;
-  --side-accent:#72ffd0;
-
-  --card-bg:#0f1620;
-  --card-bd:#1c2833;
-  --chip:#102923;
-  --chip-ink:#c6ffee;
-
-  --top-bg:#125e57;
-  --top-ink:#d9fff6;
-}
-
-/* Gövde ve tuval */
+/* ===== Splash (tam ekran) ===== */
 html,body{height:100%}
-body{
-  margin:0; background:#000; color:var(--text);
-  font:15px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  overflow:hidden; /* girişte overflow kapat, panele geçince açıyoruz */
-}
-
-/* ------------------ GİRİŞ (SNAKE) ------------------ */
-canvas#snake{position:fixed; inset:0; z-index:9998; display:block; background:#000;}
-#flash{position:fixed; inset:0; background:#fff; opacity:0; transition:opacity .6s ease; z-index:9997;}
-/* mark */
-#introMark{
-  position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
-  pointer-events:none;
-}
+body{margin:0;background:#000;color:#fff;font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
+#splash{position:fixed;inset:0;background:radial-gradient(1200px 600px at 50% 45%,#071118 0%,#02060b 55%,#000 100%);display:grid;place-items:center;z-index:9999}
+canvas#snake{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#introMark{position:absolute;inset:0;display:grid;place-items:center}
 #introMark .word{
-  font:700 clamp(38px,8vw,108px)/1 Cinzel,serif; letter-spacing:.06em;
-  color:#fff; text-shadow:0 0 30px rgba(0,255,255,.45);
-  opacity:.0; transform:translateY(12px) scale(0.98);
-  animation:markIn .8s ease .6s forwards, markOut .55s ease 3.2s forwards;
+  font-family:Cinzel,serif; font-weight:700; letter-spacing:.16em;
+  font-size:min(16vw, 140px); line-height:1; color:#fff;
+  text-shadow:0 0 30px rgba(0,255,255,.35), 0 8px 50px rgba(0,120,180,.35);
+  opacity:.95; transform:translateY(8px);
 }
-@keyframes markIn{to{opacity:1; transform:none}}
-@keyframes markOut{to{opacity:0; transform:translateY(-10px) scale(1.02)}}
+#flash{position:fixed;inset:0;background:var(--flash);opacity:0;pointer-events:none;transition:opacity .55s ease}
 
-/* ------------------ PANEL YAPI ------------------ */
-#app{position:relative; z-index:1; visibility:hidden; display:grid; grid-template-columns:270px 1fr; height:100vh;}
-
-/* Yan menü */
-.aside{
-  background:var(--side-bg); color:var(--side-ink);
-  border-right:4px solid var(--side-accent);
-  display:flex; flex-direction:column; gap:14px; padding:22px 18px;
+/* ===== App (panel) ===== */
+#app{visibility:hidden}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh;background:var(--main)}
+.sidebar{
+  background:linear-gradient(180deg, #0f4234 0%, var(--side) 60%, #093126 100%);
+  color:var(--side-ink); padding:18px 16px; position:sticky; top:0; height:100vh;
+  box-shadow:inset -1px 0 0 rgba(0,0,0,.18);
 }
-.brand{
-  display:flex; align-items:center; gap:10px; margin-bottom:8px;
+.brand{display:flex;align-items:center;gap:12px;margin:8px 0 18px}
+.brand .dot{width:36px;height:36px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #7fffd8, #0df 60%, #0aa2d9 100%);
+  box-shadow:0 0 22px rgba(0,255,235,.45);
 }
-.brand .dot{
-  width:12px; height:12px; border-radius:50%;
-  background:radial-gradient(circle at 35% 35%, #fff, var(--side-accent) 60%, transparent 70%);
-  box-shadow:0 0 14px var(--side-accent);
+.brand h1{margin:0;font:700 18px/1 Cinzel,serif;letter-spacing:.18em}
+.nav a{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;
+  color:var(--side-ink);text-decoration:none;font-weight:600
 }
-.brand h2{margin:0; font:700 18px/1 Cinzel,serif; letter-spacing:.08em;}
-.nav{
-  display:flex; flex-direction:column; gap:8px; margin-top:8px;
-}
-.nav button{
-  appearance:none; border:none; text-align:left; padding:11px 12px; border-radius:10px;
-  background:linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  color:var(--side-ink); cursor:pointer; font-weight:700;
-  border:1px solid rgba(255,255,255,.08);
-  transition:transform var(--tr), background var(--tr), box-shadow var(--tr);
-}
-.nav button:hover{ transform:translateY(-1px); box-shadow:0 10px 25px rgba(0,0,0,.25) }
-.nav button.active{
-  background:linear-gradient(90deg, rgba(0,255,204,.25), rgba(0,255,204,.08));
-  box-shadow:0 8px 22px rgba(0,255,204,.15);
-  border-color:rgba(0,255,204,.35);
-  color:#002a24;
-}
-
-/* Üst bar */
-.topbar{
-  grid-column:2/3; display:flex; gap:12px; align-items:center;
-  padding:12px 16px; background:var(--top-bg); color:var(--top-ink);
-  position:sticky; top:0; z-index:5;
-}
-.search{
-  flex:1; position:relative;
-}
-.search input{
-  width:100%; padding:10px 12px 10px 36px; border-radius:10px; border:none;
-  outline:none; background:rgba(255,255,255,.15); color:var(--top-ink); font-weight:600;
-}
-.search:before{
-  content:"🔎"; position:absolute; left:10px; top:8px; opacity:.8;
-}
-.top-actions{display:flex; gap:8px; align-items:center}
-.icon-btn{
-  border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.15);
-  color:var(--top-ink); border-radius:10px; padding:8px 10px; cursor:pointer; font-weight:800;
-  transition:transform var(--tr), background var(--tr);
-}
-.icon-btn:hover{ transform:translateY(-1px); background:rgba(255,255,255,.22)}
-
-/* Ana içerik */
-.main{
-  grid-column:2/3; background:var(--bg); color:var(--text);
-  height:calc(100vh - 56px); overflow:auto; padding:20px 22px 40px;
-}
-
-/* Kartlar ve düzen */
-.grid{display:grid; gap:18px}
-.grid.cols-2{grid-template-columns:1fr 1fr}
-.grid.cols-3{grid-template-columns:repeat(3,1fr)}
-@media(max-width:980px){ .grid.cols-3{grid-template-columns:1fr 1fr} }
-@media(max-width:720px){ .grid.cols-2,.grid.cols-3{grid-template-columns:1fr} }
-
+.nav a:hover{background:rgba(255,255,255,.08)}
+.nav a.active{background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tag{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#e9fff7;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
+.main{padding:28px; background:var(--main); color:var(--text)}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.topbar h2{margin:0;font:700 14px/1 Cinzel,serif;letter-spacing:.28em;color:#0d3a2f}
+.controls{display:flex;gap:10px}
+.btn{border:1px solid #dfe7ea;background:#f9fbfc;color:#0b1c27;padding:8px 12px;border-radius:10px;font-weight:700;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
 .card{
-  background:var(--card-bg); border:1px solid var(--card-bd);
-  border-radius:16px; padding:18px; box-shadow:var(--shadow);
-  transition:transform var(--tr), box-shadow var(--tr);
+  grid-column:span 12;background:var(--card);border:1px solid var(--card-bd);border-radius:16px;padding:16px;
+  box-shadow:0 8px 24px rgba(7,22,15,.05)
 }
-.card:hover{ transform:translateY(-3px); box-shadow:0 16px 36px rgba(0,0,0,.12) }
-.card h3{margin:0 0 8px; font-size:18px}
-.muted{color:var(--muted)}
-.kpi{display:flex; gap:14px}
-.kpi .n{font-size:28px; font-weight:800; color:var(--accent)}
-.kpi .d{color:var(--muted)}
-
-/* Chipler */
-.chips{display:flex; flex-wrap:wrap; gap:8px}
-.chip{
-  padding:6px 10px; border-radius:999px; background:var(--chip); color:var(--chip-ink);
-  border:1px solid rgba(0,0,0,.05); font-weight:700;
+@media(min-width:900px){
+  .card.sm6{grid-column:span 6}
+  .card.sm4{grid-column:span 4}
 }
-
-/* Topluluk listesi */
-.post{border-top:1px dashed var(--card-bd); padding-top:14px; margin-top:14px}
-.post:first-child{border-top:none; margin-top:0; padding-top:0}
-.post .meta{display:flex; gap:8px; align-items:center; color:var(--muted); font-size:13px}
-.post .actions{display:flex; gap:10px; margin-top:6px}
-.btn{
-  appearance:none; border:1px solid var(--bd); background:var(--card-bg);
-  color:var(--text); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:800;
-  transition:transform var(--tr), background var(--tr), border-color var(--tr);
-}
-.btn:hover{ transform:translateY(-1px) }
-.btn.acc{ background:linear-gradient(90deg, var(--accent), #59ffd9); border-color:transparent; color:#013d34 }
-
-/* Not editör */
-#note{min-height:140px; border:1px dashed var(--card-bd); border-radius:12px; padding:12px; background:var(--card-bg)}
-
-/* Kısayol yardım katmanı */
-#help{
-  position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:12;
-  align-items:center; justify-content:center; padding:20px;
-}
-#help .box{
-  background:var(--card-bg); color:var(--text); border:1px solid var(--card-bd);
-  border-radius:14px; box-shadow:var(--shadow); max-width:720px; width:100%; padding:20px;
-}
-
-/* küçük animasyonlar */
-.spin{animation:spin 12s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.card h3{margin:0 0 8px;font:700 18px/1.2 Inter,system-ui}
+.card p{margin:6px 0;color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chips span{background:var(--chip);color:var(--chip-ink);border:1px solid #cfe5db;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
+.feed{display:flex;flex-direction:column;gap:10px}
+.post{border:1px solid var(--card-bd);border-radius:12px;padding:12px}
+.post .meta{font-size:12px;color:#7a8a9a;margin-bottom:6px}
+.post .bubble{font-size:15px}
+.editor{display:grid;gap:10px}
+.editor textarea{width:100%;min-height:90px;border:1px solid var(--card-bd);border-radius:12px;padding:12px;font:600 14px Inter}
+.editor .row{display:flex;gap:8px;justify-content:flex-end}
+footer{margin:26px 0 8px;color:#7a8a9a;text-align:center;font-size:13px}
 </style>
 </head>
 <body>
 
-<!-- ======= GİRİŞ - SNAKE + LOGO ======= -->
-<canvas id="snake"></canvas>
-<div id="flash"></div>
-<div id="introMark"><div class="word">AZURA</div></div>
-
-<!-- ======= PANEL ======= -->
-<div id="app" aria-hidden="true">
-  <aside class="aside">
-    <div class="brand">
-      <div class="dot"></div><h2>AZURA NOVA</h2>
-    </div>
-    <div class="nav" id="nav">
-      <button data-view="dash" class="active">🏠 Dashboard</button>
-      <button data-view="explore">🧭 Keşfet</button>
-      <button data-view="community">👥 Topluluk</button>
-      <button data-view="resources">📘 Kaynaklar</button>
-      <button data-view="notes">📝 Notlar</button>
-      <button data-view="settings">⚙️ Ayarlar</button>
-    </div>
-    <div style="margin-top:auto" class="muted">Kısayol: <b>?</b> yardım</div>
-  </aside>
-
-  <header class="topbar">
-    <div class="search"><input id="q" placeholder="Ara: konu, kişi, etiket…" /></div>
-    <div class="top-actions">
-      <button class="icon-btn" id="themeBtn">🌗</button>
-      <button class="icon-btn" id="bell">🔔</button>
-      <button class="icon-btn" id="me">👤</button>
-    </div>
-  </header>
-
-  <main class="main">
-    <!-- DASH -->
-    <section id="view-dash" class="view">
-      <div class="grid cols-3">
-        <div class="card"><h3>📊 Günlük İlerleme</h3><div class="kpi"><div class="n" id="kpi1">12</div><div class="d">Görev tamamlandı</div></div></div>
-        <div class="card"><h3>🔥 Seri</h3><div class="kpi"><div class="n" id="kpi2">5</div><div class="d">Gündür devam</div></div></div>
-        <div class="card"><h3>💬 Bildirim</h3><div class="kpi"><div class="n" id="kpi3">3</div><div class="d">Yeni etkileşim</div></div></div>
-      </div>
-
-      <div class="grid cols-2" style="margin-top:18px">
-        <div class="card">
-          <h3>✨ İpucu Slaytı</h3>
-          <div class="muted" id="tip">Odak için 20 dk kuralını dene.</div>
-          <div style="margin-top:8px" class="chips"><span class="chip">#odak</span><span class="chip">#ritüel</span><span class="chip">#basit</span></div>
-        </div>
-        <div class="card">
-          <h3>✅ Bugün</h3>
-          <label><input type="checkbox" class="todo"> Sabah nefes egzersizi</label><br/>
-          <label><input type="checkbox" class="todo"> 20 dk tek iş</label><br/>
-          <label><input type="checkbox" class="todo"> Kısa rapor yaz</label>
-        </div>
-      </div>
-
-      <div class="grid cols-2" style="margin-top:18px">
-        <div class="card">
-          <h3>📈 Mini Aktivite</h3>
-          <canvas id="miniChart" height="140"></canvas>
-        </div>
-        <div class="card">
-          <h3>🏷️ Trend Etiketler</h3>
-          <div class="chips" id="tags"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- EXPLORE -->
-    <section id="view-explore" class="view" hidden>
-      <div class="grid cols-3">
-        <div class="card"><h3>👤 Takip Önerisi</h3><p>@derinsu — üretkenlik notları</p><button class="btn acc">Takip Et</button></div>
-        <div class="card"><h3>👤 Takip Önerisi</h3><p>@nova — minimal alışkanlıklar</p><button class="btn acc">Takip Et</button></div>
-        <div class="card"><h3>📺 Canlı Odalar</h3><p>“Sakin odak 25” — 12 kişi</p><button class="btn">Katıl</button></div>
-      </div>
-      <div class="card" style="margin-top:18px">
-        <h3>🔎 Arama Sonuçları</h3>
-        <p class="muted">Arama kutusuna yaz; sonuçları burada listeleriz.</p>
-        <div id="searchResults"></div>
-      </div>
-    </section>
-
-    <!-- COMMUNITY -->
-    <section id="view-community" class="view" hidden>
-      <div class="card">
-        <h3>🗣️ Akış</h3>
-        <div class="post">
-          <div class="meta">@atlas • 2s</div>
-          <p>“Söz verdiğim şeyleri takvime yazınca, zihnim hafifledi.”</p>
-          <div class="actions">
-            <button class="btn like">👍 <span>12</span></button>
-            <button class="btn cmt-toggle">💬 Yorum</button>
-          </div>
-          <div class="comments" hidden>
-            <div class="muted">Henüz yorum yok. İlk sen yaz.</div>
-          </div>
-        </div>
-        <div class="post">
-          <div class="meta">@sahil • 5s</div>
-          <p>Mini hedef = dev ivme. “Bugün küçük ama net bir adım.”</p>
-          <div class="actions">
-            <button class="btn like">👍 <span>7</span></button>
-            <button class="btn cmt-toggle">💬 Yorum</button>
-          </div>
-          <div class="comments" hidden>
-            <div class="muted">Bir şeyler yaz…</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- RESOURCES -->
-    <section id="view-resources" class="view" hidden>
-      <div class="grid cols-3">
-        <div class="card"><h3>📘 Atomic Habits</h3><p>Alışkanlıklara bilimsel yaklaşım.</p><button class="btn">Oku</button></div>
-        <div class="card"><h3>📗 Deep Work</h3><p>Derin odaklı üretkenlik.</p><button class="btn">Oku</button></div>
-        <div class="card"><h3>📙 Essentialism</h3><p>Önemsizi ele, öz’e odaklan.</p><button class="btn">Oku</button></div>
-      </div>
-    </section>
-
-    <!-- NOTES -->
-    <section id="view-notes" class="view" hidden>
-      <div class="card">
-        <h3>📝 Hızlı Not</h3>
-        <div id="note" contenteditable="true" placeholder="Bir şeyler yaz…"></div>
-        <div style="margin-top:10px; display:flex; gap:8px">
-          <button class="btn acc" id="saveNote">Kaydet</button>
-          <button class="btn" id="clearNote">Temizle</button>
-        </div>
-        <div class="muted" id="noteInfo" style="margin-top:8px"></div>
-      </div>
-    </section>
-
-    <!-- SETTINGS -->
-    <section id="view-settings" class="view" hidden>
-      <div class="grid cols-2">
-        <div class="card">
-          <h3>🎨 Tema</h3>
-          <p><b>Görünüm:</b></p>
-          <div style="display:flex; gap:8px">
-            <button class="btn" data-theme="light">Açık</button>
-            <button class="btn" data-theme="dark">Koyu</button>
-          </div>
-          <p style="margin-top:10px"><b>Vurgu Rengi:</b></p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap">
-            <button class="btn swatch" data-accent="#00bfa5">Turkuaz</button>
-            <button class="btn swatch" data-accent="#22c55e">Yeşil</button>
-            <button class="btn swatch" data-accent="#f97316">Turuncu</button>
-            <button class="btn swatch" data-accent="#3b82f6">Mavi</button>
-            <button class="btn swatch" data-accent="#e11d48">Kızıl</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>🔐 Gizlilik</h3>
-          <label><input type="checkbox" id="priv1"> Profilimi keşfette öner</label><br/>
-          <label><input type="checkbox" id="priv2" checked> Kaydetmelerimi senkronize et</label><br/>
-          <label><input type="checkbox" id="priv3"> Bildirimleri e-posta ile al</label>
-        </div>
-      </div>
-    </section>
-  </main>
+<!-- =============== S P L A S H =============== -->
+<div id="splash" aria-hidden="true">
+  <canvas id="snake"></canvas>
+  <div id="introMark"><div class="word">AZURA</div></div>
 </div>
+<div id="flash"></div>
 
-<!-- Yardım Katmanı -->
-<div id="help">
-  <div class="box">
-    <h3>⌨️ Kısayollar</h3>
-    <ul>
-      <li><b>G</b> sonra <b>D</b> → Dashboard</li>
-      <li><b>G</b> sonra <b>K</b> → Keşfet</li>
-      <li><b>G</b> sonra <b>T</b> → Topluluk</li>
-      <li><b>G</b> sonra <b>N</b> → Notlar</li>
-      <li><b>?</b> → Bu ekran</li>
-    </ul>
-    <button class="btn" id="closeHelp">Kapat</button>
+<!-- =============== A P P (Panel) =============== -->
+<div id="app">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand"><div class="dot"></div><h1>AZURA NOVA</h1></div>
+      <nav class="nav">
+        <a class="active" href="#akis">🧭 Akış</a>
+        <a href="#kesfet">🔎 Keşfet</a>
+        <a href="#topluluk">👥 Topluluk</a>
+        <a href="#kaynaklar">📚 Kaynaklar</a>
+        <a href="#notlar">🗒️ Notlar</a>
+        <a href="#ayarlar">⚙️ Ayarlar</a>
+      </nav>
+      <div class="tags" style="margin-top:14px">
+        <span class="tag">Öncelik</span><span class="tag">Rutin</span><span class="tag">Nezaket</span>
+        <span class="tag">Odak</span><span class="tag">Mini hedef</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h2>AZURA NOVA — PANEL</h2>
+        <div class="controls">
+          <a class="btn" href="#" id="profileBtn">Profil</a>
+          <a class="btn" href="#" id="themeBtn">Tema</a>
+        </div>
+      </div>
+
+      <section class="grid">
+        <article class="card sm6">
+          <h3>⭐ Hoş Geldin!</h3>
+          <p>Bu alan, gündelik çalışma ve topluluk etkileşimleri için. Solda bölümler, aşağıda akış var. Tanıtım kartları link değil—tüm gerçek aksiyon soldaki menüde.</p>
+          <div class="chips"><span>Tanıtım</span><span>Günlük</span><span>Mini hedef</span></div>
+        </article>
+
+        <article class="card sm6">
+          <h3>⏱️ Bugün 20 dk</h3>
+          <p>Yarım kalan en önemli bir görevi seç ve sadece 20 dk ilerlet.</p>
+          <div class="chips"><span>Odak</span><span>Rutin</span><span>Az ve öz</span></div>
+        </article>
+
+        <article class="card sm4">
+          <h3>💬 Nezaket Hatırlatması</h3>
+          <p>“Sınır koymak kırmak değildir.”</p>
+          <div class="chips"><span>İletişim</span><span>Ölçülülük</span></div>
+        </article>
+
+        <article class="card sm4">
+          <h3>🧱 Şefkatli Disiplin</h3>
+          <p>Küçük ama düzenli ilerleme → güven inşa eder.</p>
+          <div class="chips"><span>Net ajanda</span><span>Takip</span></div>
+        </article>
+
+        <article class="card sm4">
+          <h3>📌 Gündem</h3>
+          <p>Başlıklar tanıtım amaçlıdır; ana menüde link yok. Gerçek linkler sol panelde.</p>
+          <div class="chips"><span>Rutin</span><span>Net Ajanda</span><span>Topluluk</span></div>
+        </article>
+
+        <!-- Editor -->
+        <article class="card sm12" id="akis">
+          <h3>✍️ Yeni Gönderi</h3>
+          <div class="editor">
+            <textarea id="postInput" placeholder="Bugün nasılsın? Kısa not bırak..."></textarea>
+            <div class="row">
+              <button class="btn" id="publish">Yayınla</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Feed -->
+        <article class="card sm12">
+          <h3>📰 Akış</h3>
+          <div class="feed" id="feed">
+            <div class="post">
+              <div class="meta">Liman • az önce</div>
+              <div class="bubble">Bugün #disiplin modundayım. 20 dk ağır kaldırış!</div>
+            </div>
+            <div class="post">
+              <div class="meta">Marin • 5 dk</div>
+              <div class="bubble">“Söz verdiğim şeyi takvime yazıyorum.” — küçük not.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card sm12" id="kaynaklar">
+          <h3>📚 Kaynaklar</h3>
+          <p><strong>Atomic Habits</strong> (Clear), <strong>Deep Work</strong> (Newport), <strong>Ego Is the Enemy</strong> (Holiday)</p>
+          <div class="chips"><span>Pratikler</span><span>Mini alışkanlıklar</span><span>Netlik</span></div>
+        </article>
+      </section>
+
+      <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
+    </main>
   </div>
 </div>
 
 <script>
-/* =================== GİRİŞ • SNAKE =================== */
-const cvs=document.getElementById('snake'), ctx=cvs.getContext('2d');
-function fit(){cvs.width=innerWidth; cvs.height=innerHeight}
-fit(); addEventListener('resize',fit);
+/* ============= SNAKE LOADER (agresif, kuyruklu, delta-time) ============= */
+const splash = document.getElementById('splash');
+const cvs = document.getElementById('snake');
+const ctx = cvs.getContext('2d', { alpha:false });
 
-let T=0;
-const DOTS=28;         // sabit noktalar (seyrek)
-const TRAIL=22;        // kuyruk uzunluğu (daha agresif)
-const SPEED=0.035;     // dönüş hızı (biraz daha yavaş, tok)
-function drawIntro(){
-  ctx.clearRect(0,0,cvs.width,cvs.height);
-  const R=Math.min(cvs.width,cvs.height)*0.24;
-  const cx=cvs.width/2, cy=cvs.height/2;
+function fit(){ cvs.width = innerWidth; cvs.height = innerHeight; }
+addEventListener('resize', fit, {passive:true}); fit();
 
-  // Ortadaki AZURA (büyük ve beyaz)
+const DOTS = 30;              // sabit noktalar (seyrek)
+const TRAIL = 26;             // kuyruk uzunluğu (agresif)
+const RATIO = 0.28;           // çember yarıçap (ekrana göre)
+const ANGULAR_SPEED = 2*Math.PI*0.28; // saniyede ~0.28 tur (daha yavaş)
+const MAX_TURNS = 3.3;        // toplam tur
+const MAX_TIME = 5.0;         // en fazla 5 sn splash
+
+let angle = 0, elapsed = 0, lastTs = 0, ended = false, rafId = 0;
+
+function drawFrame(){
+  const R = Math.min(cvs.width, cvs.height) * RATIO;
+  const cx = cvs.width/2, cy = cvs.height/2;
+
+  // arka plan
+  ctx.fillStyle = "#000"; ctx.fillRect(0,0,cvs.width,cvs.height);
+
+  // AZURA (büyük beyaz, içte)
   ctx.save();
-  ctx.font=`700 ${R*0.85}px Cinzel`;
+  ctx.font = `700 ${R*0.9}px Cinzel, serif`;
   ctx.textAlign="center"; ctx.textBaseline="middle";
-  ctx.fillStyle="#ffffff";
-  ctx.shadowColor="rgba(0,255,255,.45)";
-  ctx.shadowBlur=36;
-  ctx.fillText("AZURA",cx,cy);
+  ctx.fillStyle="#fff";
+  ctx.shadowColor="rgba(0,200,255,.45)"; ctx.shadowBlur=40;
+  ctx.fillText("AZURA", cx, cy);
   ctx.restore();
 
-  // sabit noktalar (daha geniş aralık)
+  // sabit nokta halkası (daha geniş aralık)
   ctx.fillStyle="rgba(255,255,255,0.12)";
+  const dotRad = 4.5;
   for(let i=0;i<DOTS;i++){
-    const a=i/DOTS*Math.PI*2;
-    const x=cx+Math.cos(a)*R;
-    const y=cy+Math.sin(a)*R;
-    ctx.beginPath(); ctx.arc(x,y,4.5,0,Math.PI*2); ctx.fill();
+    const a = i/DOTS * Math.PI*2;
+    const x = cx + Math.cos(a)*R;
+    const y = cy + Math.sin(a)*R;
+    ctx.beginPath(); ctx.arc(x,y,dotRad,0,Math.PI*2); ctx.fill();
   }
 
-  // yılan - daha kuyruklu, parlama güçlü
-  ctx.globalCompositeOperation="lighter";
+  // yılan (kuyruk + sert parıltı)
+  ctx.globalCompositeOperation = "lighter";
   for(let j=0;j<TRAIL;j++){
-    const a=(T-j*0.12)%(Math.PI*2);
-    const rr=R*(1 - (j/TRAIL)*0.04);
-    const x=cx+Math.cos(a)*rr;
-    const y=cy+Math.sin(a)*rr;
-    const k=1-(j/TRAIL);
+    const a = (angle - j*0.14) % (Math.PI*2);
+    const rr = R*(1 - (j/TRAIL)*0.05);
+    const x = cx + Math.cos(a)*rr;
+    const y = cy + Math.sin(a)*rr;
+    const k = 1-(j/TRAIL);
     ctx.beginPath();
-    ctx.fillStyle=`rgba(0,180,255,${0.9*k})`;
-    ctx.shadowColor="#00b2ff";
-    ctx.shadowBlur=50*k;
+    ctx.fillStyle = `rgba(0,180,255,${0.92*k})`;
+    ctx.shadowColor = "#00b2ff";
+    ctx.shadowBlur = 60*k;
     ctx.arc(x,y,12*(1-j*0.055),0,Math.PI*2);
     ctx.fill();
   }
-  ctx.globalCompositeOperation="source-over";
-  T+=SPEED;
-  requestAnimationFrame(drawIntro);
+  ctx.globalCompositeOperation = "source-over";
 }
-drawIntro();
 
-/* Panel geçişi */
-setTimeout(()=>{
-  const flash=document.getElementById('flash');
-  flash.style.opacity=1;
+function loop(ts){
+  if(!lastTs) lastTs = ts;
+  const dt = Math.min(0.05,(ts-lastTs)/1000);
+  lastTs = ts;
+
+  angle += ANGULAR_SPEED * dt;
+  elapsed += dt;
+
+  drawFrame();
+
+  if(!ended && (elapsed >= MAX_TIME || angle >= MAX_TURNS*2*Math.PI)){
+    endSplash(); return;
+  }
+  rafId = requestAnimationFrame(loop);
+}
+function startSplash(){
+  cancelAnimationFrame(rafId);
+  angle=0; elapsed=0; lastTs=0; ended=false;
+  rafId = requestAnimationFrame(loop);
+}
+function endSplash(){
+  ended = true; cancelAnimationFrame(rafId);
+  const flash = document.getElementById('flash');
+  flash.style.opacity = 1;
   setTimeout(()=>{
-    cvs.remove();
-    flash.style.opacity=0;
-    document.getElementById('introMark').remove();
-    const app=document.getElementById('app');
-    app.style.visibility='visible';
+    try{splash.remove();}catch{}
+    document.getElementById('app').style.visibility='visible';
     document.body.style.overflow='auto';
-    setTimeout(()=>flash.remove(),650);
-  },520);
-},4500);
-
-/* =================== PANEL • ROUTER =================== */
-const nav=document.getElementById('nav');
-const views=[...document.querySelectorAll('.view')];
-function show(viewId){
-  views.forEach(v=>v.hidden = (v.id !== 'view-'+viewId));
-  nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b.dataset.view===viewId));
+    flash.style.opacity = 0;
+    setTimeout(()=>flash.remove(), 650);
+  }, 420);
 }
-nav.addEventListener('click',e=>{
-  if(e.target.matches('button[data-view]')) show(e.target.dataset.view);
+addEventListener('click', ()=>!ended && endSplash(), {once:true});
+addEventListener('keydown', e=>{ if(!ended && (e.key==='Enter'||e.key===' ')) endSplash(); });
+
+startSplash();
+
+/* ============= Basit panel davranışları ============= */
+document.getElementById('publish').addEventListener('click', ()=>{
+  const ta = document.getElementById('postInput');
+  const txt = ta.value.trim(); if(!txt) return;
+  const post = document.createElement('div');
+  post.className='post';
+  post.innerHTML = `<div class="meta">Sen • şimdi</div><div class="bubble"></div>`;
+  post.querySelector('.bubble').textContent = txt;
+  document.getElementById('feed').prepend(post);
+  ta.value='';
 });
-show('dash');
-
-/* =================== ÜST BAR =================== */
-const themeBtn=document.getElementById('themeBtn');
-let dark=false;
-themeBtn.addEventListener('click',()=>{
-  dark=!dark;
-  document.documentElement.setAttribute('data-theme', dark?'dark':'light');
-});
-
-/* Arama demo */
-const q=document.getElementById('q'), results=document.getElementById('searchResults');
-q?.addEventListener('input',()=>{
-  const v=q.value.trim();
-  if(!v){ results.innerHTML=''; return; }
-  results.innerHTML = `<div class="post"><div class="meta">Arama</div><p>“${v}” için 3 sonuç bulundu (demo).</p></div>`;
-});
-
-/* =================== DASH İçerik =================== */
-/* İpucu slaytı */
-const tips=[
-  "Odak için 20 dk kuralını dene.",
-  "Zor işi sabaha al, kolay işi öğlene.",
-  "Notlarını tek cümleye indir: çekirdek fikir.",
-  "Kısa rapor → uzun motivasyon.",
-  "Takvim: söz verdiğin şeylerin evi."
-];
-let tipI=0; const tipEl=document.getElementById('tip');
-setInterval(()=>{ tipI=(tipI+1)%tips.length; tipEl.textContent=tips[tipI]; }, 3200);
-
-/* Mini chart (basit çizgi) */
-const mc=document.getElementById('miniChart').getContext('2d');
-function miniChart(){
-  const w=mc.canvas.width=mc.canvas.clientWidth, h=mc.canvas.height=140;
-  const data=[3,5,4,7,6,8,10];
-  mc.clearRect(0,0,w,h);
-  mc.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#00bfa5';
-  mc.lineWidth=2; mc.beginPath();
-  data.forEach((v,i)=>{
-    const x= (i/(data.length-1))* (w-20)+10;
-    const y= h-10 - (v/10)*(h-30);
-    i? mc.lineTo(x,y) : mc.moveTo(x,y);
-  });
-  mc.stroke();
-}
-addEventListener('resize', miniChart); miniChart();
-
-/* Etiketler */
-const tagNames=['#üretkenlik','#odak','#ritüel','#zihin','#basit','#sadelik','#denge','#şefkat','#alışkanlık','#takvim'];
-document.getElementById('tags').innerHTML = tagNames.map(t=>`<span class="chip">${t}</span>`).join('');
-
-/* =================== COMMUNITY Etkileşim =================== */
-document.getElementById('view-community').addEventListener('click', e=>{
-  if(e.target.closest('.like')){
-    const btn=e.target.closest('.like');
-    const span=btn.querySelector('span'); span.textContent = +span.textContent + 1;
-    btn.classList.add('acc'); setTimeout(()=>btn.classList.remove('acc'),400);
-  }
-  if(e.target.closest('.cmt-toggle')){
-    const wrap=e.target.closest('.post'); const cm=wrap.querySelector('.comments');
-    cm.hidden=!cm.hidden;
-  }
-});
-
-/* =================== NOTES =================== */
-const note=document.getElementById('note'), info=document.getElementById('noteInfo');
-const KEY='azura_note';
-note.textContent = localStorage.getItem(KEY) || '';
-document.getElementById('saveNote').addEventListener('click',()=>{
-  localStorage.setItem(KEY, note.textContent);
-  info.textContent='Kaydedildi ✓';
-  setTimeout(()=>info.textContent='',1600);
-});
-document.getElementById('clearNote').addEventListener('click',()=>{
-  note.textContent=''; localStorage.removeItem(KEY);
-  info.textContent='Temizlendi ✓'; setTimeout(()=>info.textContent='',1600);
-});
-
-/* =================== SETTINGS =================== */
-document.querySelectorAll('button[data-theme]').forEach(b=>{
-  b.addEventListener('click',()=> document.documentElement.setAttribute('data-theme', b.dataset.theme));
-});
-document.querySelectorAll('.swatch').forEach(b=>{
-  b.style.borderColor = b.dataset.accent;
-  b.addEventListener('click',()=>{
-    document.documentElement.style.setProperty('--accent', b.dataset.accent);
-  });
-});
-
-/* =================== Yardım Katmanı =================== */
-const help=document.getElementById('help'); const closeHelp=document.getElementById('closeHelp');
-document.addEventListener('keydown', (e)=>{
-  if(e.key==='?'){ help.style.display='flex'; }
-  if(e.key==='Escape'){ help.style.display='none'; }
-});
-closeHelp.addEventListener('click',()=> help.style.display='none');
-
-/* =================== Küçük İnteraktivite =================== */
-/* Todo check → KPI güncellemesi (demo) */
-const kpi1=document.getElementById('kpi1');
-document.querySelectorAll('.todo').forEach(ch=>{
-  ch.addEventListener('change',()=>{
-    const base=12;
-    const done=[...document.querySelectorAll('.todo')].filter(x=>x.checked).length;
-    kpi1.textContent = base + done;
-  });
+document.getElementById('themeBtn').addEventListener('click', ()=>{
+  // minik tematik efekt: ana alanı kısa süre parlat
+  const el = document.querySelector('.main');
+  el.animate([{boxShadow:'0 0 0 rgba(0,0,0,0)'},{boxShadow:'inset 0 0 0 9999px rgba(0,255,200,.06)'}],{duration:260,fill:'forwards'});
+  setTimeout(()=>el.style.boxShadow='none', 560);
 });
 </script>
 </body>
-</html>
+          </html>
