@@ -2,177 +2,300 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AZURA • Panel</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azura Nova — Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --flash: 420ms;            /* beyaza geçiş */
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0; font-family:system-ui,Inter,Arial; background:#0a0f1a}
-  /* SPLASH */
-  .splash{
-    position:fixed; inset:0; z-index:9999;
-    display:grid; place-items:center;
-    background: radial-gradient(900px 600px at 50% -10%, #0f1a2b, #0a0f1a);
-    transition:opacity .4s ease, visibility .4s ease;
-  }
-  .stage{position:relative; width:min(78vmin,520px); aspect-ratio:1/1}
-  .brand{
-    position:absolute; inset:0; display:grid; place-items:center;
-    font-family:Cinzel,serif; letter-spacing:.18em; font-weight:700;
-    font-size:clamp(30px,7.6vmin,56px);
-    background:linear-gradient(135deg,#ffffff 0%,#d9cfff 40%,#7a55ff 100%);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 0 14px rgba(160,130,255,.18);
-    user-select:none; pointer-events:none;
-  }
-  .flash{
-    position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none;
-    transition:opacity var(--flash) ease;
-    z-index:10000;
-  }
-  /* APP (örnek) */
-  #app{opacity:0; transition:opacity .45s ease}
-  #app.show{opacity:1}
-  .panel{min-height:100vh; display:grid; place-items:center; background:#fff}
-  .card{
-    width:min(960px,92vw); border:1px solid #e9eef6; border-radius:16px;
-    box-shadow:0 18px 44px rgba(0,0,0,.08); padding:24px 20px;
-  }
-  .card h2{margin:0 0 10px; font-family:Cinzel,serif; letter-spacing:.08em; color:#273043}
-  .card p{margin:.5rem 0; color:#444}
+:root{
+  --bg:#0c121b;
+  --panel-bg:#0e171f;
+  --card:#0f1b24;
+  --br:rgba(120,225,255,.16);
+  --txt:#d9e7ff;
+  --accent1:#5ef0ff;
+  --accent2:#58a6ff;
+  --white:#fff;
+}
+
+/* page reset */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--txt);
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
+  overflow:hidden; /* splash esnasında kaydırma yok */
+}
+
+/* ========= SPLASH ========= */
+.splash{
+  position:fixed; inset:0; z-index:999;
+  display:grid; place-items:center;
+  background: radial-gradient(1200px 700px at 50% -20%, rgba(70,120,200,.08), transparent),
+              radial-gradient(900px 600px at 50% 120%, rgba(20,240,220,.06), transparent),
+              radial-gradient(circle at 50% 50%, #0a1019 0%, #0b1017 40%, #091016 100%);
+  transition: opacity .45s ease;
+}
+
+/* merkez grubu */
+.splash-inner{
+  position:relative; width:min(520px,88vw); aspect-ratio:1/1;
+  display:grid; place-items:center;
+  filter:drop-shadow(0 20px 80px rgba(30,220,255,.18));
+}
+
+/* AZURA yazısı */
+.logo{
+  position:absolute; inset:0; display:grid; place-items:center;
+  pointer-events:none; user-select:none;
+}
+.logo h1{
+  margin:0; font-family:Cinzel,serif; font-weight:700; letter-spacing:.28em;
+  font-size: clamp(38px, 9vw, 72px);
+  background: linear-gradient(180deg, #e8dcff 0%, #c8b6ff 40%, #8a5fff 70%, #5ef0ff 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 30px rgba(140,100,255,.22);
+  animation: logoIntro .65s ease-out both;
+}
+@keyframes logoIntro{
+  from{ transform:translateY(8px) scale(.98); opacity:0 }
+  to{   transform:none; opacity:1 }
+}
+
+/* enerji dalgası (başlangıç patlaması) */
+.energy{
+  position:absolute; inset:0; border-radius:50%;
+  background:
+    radial-gradient(closest-side, rgba(120,255,240,.22), rgba(120,255,240,0) 70%),
+    conic-gradient(from 0turn, rgba(120,255,240,.25), rgba(120,255,240,0) 35% 65%, rgba(120,255,240,.25));
+  mix-blend-mode:screen; opacity:.8; filter:blur(2px);
+  transform:scale(.2);
+  animation: energyIn .55s cubic-bezier(.2,.8,.1,1) both;
+}
+@keyframes energyIn{
+  0%{transform:scale(.2); opacity:.0}
+  60%{transform:scale(1.1); opacity:.9}
+  100%{transform:scale(1); opacity:.0}
+}
+
+/* shockwave — finalde genişleyen halkalar */
+.wave{
+  position:absolute; inset:0; border-radius:50%; pointer-events:none;
+  border:2px solid rgba(255,255,255,.75);
+  box-shadow:0 0 32px 8px rgba(120,240,255,.35) inset, 0 0 40px rgba(120,240,255,.25);
+  opacity:0; transform:scale(.4);
+}
+
+/* beyaz patlama overlay */
+.flash{
+  position:absolute; inset:-2px; background:#fff; opacity:0; pointer-events:none;
+}
+
+/* ========= PANEL (placeholder) ========= */
+main{
+  display:none; /* splash bitince block olacak */
+  min-height:100%;
+  padding:18px;
+}
+.header{
+  text-align:center; letter-spacing:.28em; margin:8px 0 20px;
+  font-family:Cinzel,serif; color:#bde0ff; opacity:.9;
+}
+.grid{
+  max-width:1100px; margin:0 auto; display:grid; gap:18px;
+  grid-template-columns:repeat(2,1fr);
+}
+.card{
+  background:linear-gradient(180deg, var(--card), #0d1a22);
+  border:1px solid var(--br); border-radius:14px; padding:16px;
+}
+.card h3{
+  margin:0 0 8px; font-family:Cinzel,serif; letter-spacing:.08em;
+  font-size:18px; color:#def2ff;
+}
+.card p{margin:6px 0 0; opacity:.9}
+@media(max-width:720px){ .grid{grid-template-columns:1fr} }
+
+/* helpers */
+.hidden{display:none}
+
+/* ====== küçük not: panel görünürken kaydırma serbest ====== */
+body.panel-ready{overflow:auto}
 </style>
 </head>
 <body>
 
+<!-- ============== SPLASH ============== -->
 <div class="splash" id="splash">
-  <div class="stage">
-    <canvas id="ring"></canvas>
-    <div class="brand" id="brand">AZURA</div>
+  <div class="splash-inner">
+    <canvas id="ring" style="position:absolute; inset:0;"></canvas>
+    <div class="energy"></div>
+    <div class="logo"><h1>AZURA</h1></div>
+    <div class="wave" id="wave"></div>
+    <div class="flash" id="flash"></div>
   </div>
 </div>
-<div class="flash" id="flash"></div>
 
-<main id="app">
-  <section class="panel">
-    <article class="card">
-      <h2>AZURA NOVA — Panel</h2>
-      <p>Giriş animasyonu bitti. Burayı gerçek panel/akış ile doldur.</p>
-    </article>
-  </section>
+<!-- ============== PANEL (örnek içerik) ============== -->
+<main id="panel">
+  <div class="header">AZURA NOVA — PANEL</div>
+  <div class="grid">
+    <div class="card"><h3>Akış</h3><p>Merhaba! Bu kısım gerçek gönderilerle dolacak.</p></div>
+    <div class="card"><h3>Keşfet</h3><p>Kategoriler, etiketler ve arama.</p></div>
+    <div class="card"><h3>Topluluk</h3><p>Gruplar, DM, bildirimler.</p></div>
+    <div class="card"><h3>Notlar</h3><p>Kişisel taslaklar ve yapılacaklar.</p></div>
+  </div>
 </main>
 
 <script>
-/* === Sabit noktalı halka + parlayan “yılan” === */
-(function(){
-  const cvs = document.getElementById('ring');
-  const wrap = cvs.parentElement;
-  const ctx = cvs.getContext('2d');
-  const splash = document.getElementById('splash');
-  const app = document.getElementById('app');
-  const flash = document.getElementById('flash');
+/* ===================== CONFIG ===================== */
+const DURATION_MS = 3400;           // toplam intro süresi
+const RING_RADIUS = 120;            // halka yarıçapı (px)
+const DOT_COUNT = 32;               // çevredeki nokta sayısı
+const ACTIVE_LEN = 6;               // “yılan” uzunluğu (kaç nokta)
+const HEAD_SPEED_TURNS = 3.6;       // 3.6 tur tamamlar
+const COLOR_KEYFRAMES = [
+  [180, 1.00, 0.65],   // aqua
+  [210, 0.95, 0.64],   // azur
+  [265, 0.85, 0.70],   // mor
+  [200, 1.00, 0.66]    // geri aqua
+];
 
-  // ——— Ayarlar (tam istediğin görünüm için burayla oynayabilirsin)
-  const TOTAL_MS     = 3600;  // toplam süre (3.6s) → 3–4 tur
-  const REVOLUTIONS  = 3.6;   // kaç tur dönsün
-  const DOT_COUNT    = 32;    // noktacık sayısı (halka üstünde eşit)
-  const BASE_SIZE    = 3.2;   // tüm noktaların taban yarıçapı (px)
-  const HEAD_BOOST   = 4.4;   // baş ışık noktaya geldiğinde ekstra büyüme
-  const SIGMA        = 0.26;  // parıltının açısal yayılımı (küçük → keskin)
-  const BASE_ALPHA   = 0.18;  // tüm noktaların sabit parlaklığı
-  const COLOR_DIM    = [0, 120, 255];  // sabit mavi (arka)
-  const COLOR_GLOW   = [80, 230, 255]; // tepe parıltı rengi
+/* ===================== DRAWER ===================== */
+const cvs = document.getElementById('ring');
+const ctx = cvs.getContext('2d', { alpha: true });
+let W=0,H=0,CX=0,CY=0;
 
-  // Canvas boyutlandırma
-  function fit(){
-    const size = Math.min(wrap.clientWidth, wrap.clientHeight);
-    const dpr  = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    cvs.width  = size * dpr;
-    cvs.height = size * dpr;
-    cvs.style.width = cvs.style.height = size + 'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-  fit(); addEventListener('resize', fit, {passive:true});
+function fit(){
+  W = cvs.width = Math.floor(cvs.clientWidth * devicePixelRatio);
+  H = cvs.height = Math.floor(cvs.clientHeight * devicePixelRatio);
+  CX = W/2; CY = H/2;
+}
+new ResizeObserver(fit).observe(cvs); fit();
 
-  // Noktaların sabit konumlarını hazırla
-  const dots = []; // {x,y,angle}
-  function buildDots(){
-    dots.length = 0;
-    const w = cvs.clientWidth, h = cvs.clientHeight;
-    const cx = w/2, cy = h/2;
-    const r  = w*0.34;
-    for(let i=0;i<DOT_COUNT;i++){
-      const a = (i / DOT_COUNT) * Math.PI*2 - Math.PI/2; // baş yukarıda
-      dots.push({ x: cx + r*Math.cos(a), y: cy + r*Math.sin(a), a });
-    }
-  }
-  buildDots();
+function hsl(h,s,l,a=1){ return `hsla(${h},${(s*100).toFixed(1)}%,${(l*100).toFixed(1)}%,${a})`; }
+function lerp(a,b,t){ return a+(b-a)*t; }
+function lerp3(a,b,t){ return [lerp(a[0],b[0],t), lerp(a[1],b[1],t), lerp(a[2],b[2],t)]; }
+function colorAt(t){
+  const seg = 1/(COLOR_KEYFRAMES.length-1);
+  const i = Math.min(Math.floor(t/seg), COLOR_KEYFRAMES.length-2);
+  const localT = (t - i*seg)/seg;
+  const [h,s,l] = lerp3(COLOR_KEYFRAMES[i], COLOR_KEYFRAMES[i+1], localT);
+  return [h,s,l];
+}
 
-  // Yardımcılar
-  const lerp = (a,b,t)=>a+(b-a)*t;
-  const mixColor = (c1,c2,t)=>`rgba(${Math.round(lerp(c1[0],c2[0],t))},${Math.round(lerp(c1[1],c2[1],t))},${Math.round(lerp(c1[2],c2[2],t))},`;
-  const now = ()=>performance.now();
+/* ===================== ANIM STATE ===================== */
+const t0 = performance.now();
+const totalTurnsRadians = HEAD_SPEED_TURNS * Math.PI*2;
 
-  // Çizim
-  function draw(headAngle){
-    const w = cvs.clientWidth, h = cvs.clientHeight;
-    ctx.clearRect(0,0,w,h);
+function draw(now){
+  const t = now - t0;
+  const progress = Math.min(1, t / DURATION_MS);
 
-    // çok hafif aura
-    const cx = w/2, cy = h/2; const r = w*0.36;
-    const g = ctx.createRadialGradient(cx,cy,r*0.1, cx,cy,r*1.1);
-    g.addColorStop(0, 'rgba(40,140,255,.07)');
-    g.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+  // renk döngüsü (0→1)
+  const [hh,hs,hl] = colorAt(progress);
 
-    // sabit noktalar + parıltı
-    for(const d of dots){
-      // açısal mesafe (0..π)
-      let diff = Math.abs(Math.atan2(Math.sin(d.a-headAngle), Math.cos(d.a-headAngle)));
-      // gauss benzeri tepki
-      const influence = Math.exp(- (diff/SIGMA) * (diff/SIGMA)); // 0..1
-      const size = BASE_SIZE + influence*HEAD_BOOST;
-      const col  = mixColor(COLOR_DIM, COLOR_GLOW, influence);
-      const alpha= BASE_ALPHA + influence*0.9;
+  ctx.clearRect(0,0,W,H);
 
-      ctx.save();
-      ctx.shadowColor = `rgba(80,230,255,${0.35+0.35*influence})`;
-      ctx.shadowBlur  = 12 + 18*influence;
-      ctx.fillStyle   = `${col}${alpha})`;
-      ctx.beginPath(); ctx.arc(d.x, d.y, size, 0, Math.PI*2); ctx.fill();
-      ctx.restore();
-    }
+  // yumuşak merkez ışığı
+  const glow = ctx.createRadialGradient(CX,CY,0, CX,CY,RING_RADIUS*1.35*devicePixelRatio);
+  glow.addColorStop(0, hsl(hh,hs, Math.min(1,hl+0.15), .18));
+  glow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath(); ctx.arc(CX,CY,RING_RADIUS*1.35*devicePixelRatio,0,Math.PI*2); ctx.fill();
+
+  // sabit sönük noktalar
+  const baseR = RING_RADIUS*devicePixelRatio;
+  const baseSize = 3.6*devicePixelRatio;
+  ctx.save();
+  ctx.translate(CX,CY);
+
+  for(let i=0;i<DOT_COUNT;i++){
+    const ang = (i/DOT_COUNT)*Math.PI*2;
+    const x = Math.cos(ang)*baseR;
+    const y = Math.sin(ang)*baseR;
+    ctx.fillStyle = hsl(hh,hs,hl, .10);
+    ctx.beginPath(); ctx.arc(x,y, baseSize*.7, 0, Math.PI*2); ctx.fill();
   }
 
-  // Animasyon döngüsü
-  let start = now();
-  function loop(){
-    const t = Math.min(1, (now()-start)/TOTAL_MS);
-    const head = -Math.PI/2 + t * (Math.PI*2*REVOLUTIONS); // saat yönü
-    draw(head);
-    if(t<1) requestAnimationFrame(loop);
-    else finish();
+  // çift yılan (zıt yön)
+  const headAngle1 = progress * totalTurnsRadians;            // saat yönü
+  const headAngle2 = -progress * totalTurnsRadians * 0.92;    // ters, hafif farklı hız
+  renderSnake(headAngle1, 1);
+  renderSnake(headAngle2, -1);
+
+  ctx.restore();
+
+  // Shockwave tetikle (son 600ms)
+  if(progress > 0.82) triggerWave(progress);
+
+  // Bitti mi?
+  if(progress < 1) requestAnimationFrame(draw);
+  else endSequence();
+}
+
+function renderSnake(headAngle, dir){
+  const baseR = RING_RADIUS*devicePixelRatio;
+  const baseSize = 3.6*devicePixelRatio;
+  for(let j=0;j<ACTIVE_LEN;j++){
+    const frac = j/(ACTIVE_LEN-1);
+    const decay = 1 - frac;                      // baştan kuyruğa parlaklık azalır
+    const a = headAngle - dir*frac*(Math.PI*2/DOT_COUNT);
+    const x = Math.cos(a)*baseR;
+    const y = Math.sin(a)*baseR;
+
+    const size = baseSize*(1.1 + decay*0.9);
+    const alpha = .15 + decay*.85;
+    ctx.fillStyle = hsl(...colorAt((performance.now()-t0)/DURATION_MS)[0] ? colorAt((performance.now()-t0)/DURATION_MS) : [200,1,.6], alpha);
+    ctx.beginPath(); ctx.arc(x,y, size, 0, Math.PI*2); ctx.fill();
+
+    // haleye küçük blur
+    const grd = ctx.createRadialGradient(x,y,0, x,y,size*3);
+    grd.addColorStop(0, hsl(hh,hs,hl,.18*alpha));
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x,y,size*3,0,Math.PI*2); ctx.fill();
   }
-  requestAnimationFrame(loop);
+}
 
-  // Erken geçmek isterse tık
-  splash.addEventListener('click', ()=>{ start = now()-TOTAL_MS; }, {once:true});
+const waveEl = document.getElementById('wave');
+let waved = false;
+function triggerWave(progress){
+  if(waved) return;
+  waved = true;
+  waveEl.animate([
+    { transform:'scale(.5)', opacity:.0 },
+    { transform:'scale(1.15)', opacity:.85, offset:.35 },
+    { transform:'scale(1.6)', opacity:.0 }
+  ], { duration: 650, easing:'cubic-bezier(.2,.8,.1,1)', fill:'both' });
+}
 
-  // Bitince: ekran beyaza, sonra panel
-  function finish(){
-    // önce arka plan beyaz olsun (flash)
-    flash.style.opacity = 1;
+/* beyaz patlama + panele geçiş */
+const flashEl = document.getElementById('flash');
+const splash = document.getElementById('splash');
+const panel = document.getElementById('panel');
+
+function endSequence(){
+  // kısa “yanıp sönme” efekti
+  flashEl.animate([
+    { opacity:0 }, { opacity:.65 }, { opacity:0 }, { opacity:.75 }, { opacity:0 }
+  ], { duration: 420, easing:'ease-out' });
+
+  // final beyaz patlama + panel
+  setTimeout(()=>{
+    flashEl.animate([{opacity:0},{opacity:1}],{duration:220,fill:'forwards',easing:'ease-in'});
     setTimeout(()=>{
-      splash.style.opacity = 0; splash.style.visibility='hidden';
-      document.body.style.background = '#fff';
-      flash.style.opacity = 0;
-      app.classList.add('show');
-    }, parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--flash')));
-  }
-})();
+      splash.style.opacity = 0;
+      flashEl.style.opacity = 0;
+      panel.style.display='block';
+      document.body.classList.add('panel-ready');
+      // splash tamamen kapansın
+      setTimeout(()=> splash.remove(), 450);
+    },220);
+  }, 420);
+}
+
+/* start! */
+requestAnimationFrame(draw);
 </script>
 </body>
 </html>
