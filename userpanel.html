@@ -1,325 +1,566 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Azura • Kullanıcı Paneli</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZURA • Kullanıcı Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* ------- Tema ------- */
-  --green-900:#0C3A32;    /* sol şerit */
-  --green-700:#135C4F;
-  --cream-50:#F8F3EB;     /* arkaplan */
-  --cream-100:#F3EBDD;
-  --stone-600:#5D6368;    /* metin */
-  --ink:#0D151A;
-
-  /* Neon / Loader */
-  --neon:#59FFD9;         /* ana neon (yeşil-cyan) */
-  --neon2:#C8FFE9;        /* dış parıltı */
-  --dot:#8FFFE7;          /* parçacık */
+  /* Tema */
+  --bg:#0e1412;
+  --panel:#0b100f;
+  --card:#111816;
+  --muted:#bcd3ca;
+  --text:#e8f5ef;
+  --brand:#23d18b;      /* koyu yeşil/aqua hat */
+  --brand-2:#9ee1c2;    /* krem-yeşil */
+  --accent:#ff5252;     /* kırmızı vurgular */
+  --chip:#17211d;
+  --chip-bd:#21342d;
+  --glass:rgba(255,255,255,.06);
+  --bd:rgba(255,255,255,.12);
+  --shadow:0 10px 40px rgba(0,0,0,.45);
 }
 
-/* RESET mini */
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial; color:var(--ink); background:var(--cream-50);}
-
-/* =================== LOADER =================== */
-#loader{
-  position:fixed; inset:0; z-index:9999; overflow:hidden;
-  background:
-    radial-gradient(1200px 900px at 50% -20%, rgba(0,0,0,.08), transparent 60%),
-    var(--cream-50);
-  display:grid; place-items:center;
-  transition:opacity .6s ease, visibility .6s ease;
-}
-#loader.hide{opacity:0; visibility:hidden; pointer-events:none}
-
-/* hafif scanline + parıltı */
-#loader:after{
-  content:"";
-  position:absolute; inset:0;
-  background:
-    repeating-linear-gradient(180deg, rgba(0,0,0,.04) 0 2px, transparent 2px 6px);
-  mix-blend-mode:multiply; pointer-events:none;
-  opacity:.35;
+body{
+  margin:0; background:
+    radial-gradient(1200px 900px at 80% -20%, rgba(35,209,139,.08), transparent 60%),
+    radial-gradient(900px 700px at -10% 120%, rgba(158,225,194,.08), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  font:15px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto;
+  overflow:hidden;
 }
 
-/* Parçacık kanvası */
-#load-canvas{position:absolute; inset:0;}
-
-/* Logo kapsayıcı */
-.logo-wrap{
-  position:relative; width:min(80vmin,520px); aspect-ratio:1/1;
-  display:grid; place-items:center;
-  filter: drop-shadow(0 0 24px rgba(0,0,0,.18));
+/* ====== YÜKLENİYOR: Dijital AZURA ====== */
+#boot{
+  position:fixed; inset:0; display:grid; place-items:center; background:#ffffff; z-index:9999;
 }
-
-/* Neon halka (dönen çizgili) */
+.boot-wrap{position:relative; width:min(720px,86vw); aspect-ratio:3/1; display:grid; place-items:center}
+.azura{
+  font:900 clamp(32px,10vw,110px)/1 Cinzel,serif; letter-spacing:.18em;
+  background:conic-gradient(from 20deg, #2bffb1, #b2ffd4, #78ffe6, #2bffb1);
+  background-size:200% 200%; -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 10px 40px rgba(43,255,177,.35)) drop-shadow(0 0 18px rgba(0,0,0,.2));
+  animation: hue 3.2s linear infinite;
+}
+@keyframes hue{to{background-position:200% 0}}
 .ring{
-  position:absolute; inset:0; border-radius:50%;
-  box-shadow:
-    0 0 18px var(--neon),
-    inset 0 0 18px var(--neon);
-  background:
-    conic-gradient(from 0deg, rgba(0,0,0,0) 0 60%, rgba(0,0,0,.12) 60% 100%);
-  -webkit-mask:
-    radial-gradient(closest-side, transparent calc(50% - 70px), #000 0);
-          mask:
-    radial-gradient(closest-side, transparent calc(50% - 70px), #000 0);
-  animation: spin 3.8s linear infinite;
+  position:absolute; inset:-18% -6%; border-radius:24px;
+  box-shadow:inset 0 0 0 12px #ffffff, 0 0 70px rgba(0,0,0,.15);
+  transform:scale(.7); opacity:.98;
+  animation:ringZoom 1.6s ease-in forwards .9s;
 }
-.ring::before{
-  content:"";
-  position:absolute; inset:18px; border-radius:50%;
-  box-shadow:0 0 34px 10px var(--neon2) inset;
-  opacity:.45;
-}
+@keyframes ringZoom{to{transform:scale(14); opacity:1}}
+.boot-fade{animation:bootFade .8s ease forwards 2.5s}
+@keyframes bootFade{to{opacity:0; visibility:hidden}}
 
-/* İç halka (ters yön) */
-.ring2{
-  position:absolute; inset:36px; border-radius:50%;
-  background:
-    conic-gradient(from 0deg, rgba(0,0,0,.18) 0 22%, transparent 22% 100%);
-  -webkit-mask:
-    radial-gradient(closest-side, transparent calc(50% - 45px), #000 0);
-          mask:
-    radial-gradient(closest-side, transparent calc(50% - 45px), #000 0);
-  animation: spinRev 2.6s linear infinite;
-  filter: blur(.2px);
+/* ====== TOPBAR ====== */
+.topbar{
+  position:fixed; inset:0 0 auto 0; height:85px; display:flex; align-items:center; gap:16px;
+  padding:0 16px; background:#0a1210cc; backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--bd); z-index:20;
 }
-
-/* AZURA yazısı */
 .logo{
-  position:relative;
-  display:grid; place-items:center;
-  width:220px; height:220px; border-radius:50%;
-  background:radial-gradient(circle at 50% 42%, rgba(255,255,255,.90), rgba(255,255,255,.55) 60%, rgba(255,255,255,.0) 70%);
-  box-shadow:0 0 0 8px #fff, 0 0 28px 10px rgba(255,255,255,.65);
-  animation:pulse 1.6s ease-in-out infinite;
+  display:flex; align-items:center; gap:10px; margin-right:4px;
+  font:800 18px/1 Cinzel,serif; letter-spacing:.14em;
 }
-.logo h1{
-  margin:0; font-family:Cinzel,serif; letter-spacing:.38em;
-  font-weight:700; font-size:28px;
-  color:transparent;
-  background:linear-gradient(180deg, #1E6F61 0%, #0D3E36 90%);
-  -webkit-background-clip:text; background-clip:text;
-  text-shadow:
-    0 0 12px var(--neon),
-    0 0 26px var(--neon2);
-  transform:translateY(2px);
-}
-
-/* “Yükleniyor…” metni */
-.load-note{
-  position:absolute; bottom:-52px; left:50%; transform:translateX(-50%);
-  font-weight:600; letter-spacing:.12em; font-size:12px; text-transform:uppercase;
-  color:#1A4139; opacity:.85;
-}
-.load-note .dots{display:inline-block; width:24px; text-align:left}
-.load-note .dots:after{
-  content:""; display:inline-block; width:1ch; animation:dots 1.2s steps(3,end) infinite;
-}
-@keyframes dots{0%{content:""}33%{content:"."}66%{content:".."}100%{content:"..."}}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes spinRev{to{transform:rotate(-360deg)}}
-@keyframes pulse{
-  0%,100%{box-shadow:0 0 0 8px #fff, 0 0 26px 8px rgba(255,255,255,.55)}
-  50%{box-shadow:0 0 0 10px #fff, 0 0 36px 14px rgba(255,255,255,.75)}
-}
-
-/* =================== APP (Panel) =================== */
-.app{opacity:0; visibility:hidden; transition:opacity .5s ease .2s, visibility .5s ease .2s;}
-.app.show{opacity:1; visibility:visible}
-
-/* Layout */
-.shell{display:grid; grid-template-columns:260px 1fr; min-height:100vh;}
-.aside{
-  background:linear-gradient(180deg, #0F3F35, #0B2F29);
-  color:#E8FFF8; padding:18px 14px; position:relative;
-}
-.brand{display:flex; align-items:center; gap:10px; font-weight:700}
-.brand .dot{width:34px; height:34px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #63F7D7, #0D3E36); box-shadow:0 0 16px #61ffd6}
-.brand small{opacity:.7}
-.nav{margin-top:16px; display:flex; flex-direction:column; gap:8px}
-.nav a{
-  text-decoration:none; color:#CFFBEF; font-weight:600;
-  background:rgba(255,255,255,.04); border:1px solid rgba(97,255,214,.18);
-  padding:10px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;
-}
-.nav a:hover{background:rgba(255,255,255,.08)}
-.pills{position:absolute; left:14px; right:14px; bottom:16px; display:flex; gap:8px; flex-wrap:wrap}
-.pills span{
-  font-size:12px; color:#CFFBEF; border:1px solid rgba(97,255,214,.24); padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.04)
-}
-
-.main{background:
-  radial-gradient(800px 520px at 30% 0%, rgba(19,92,79,.08), transparent 70%),
-  var(--cream-50);
-  padding:18px 16px 40px;
-}
-.toolbar{
-  display:flex; gap:10px; align-items:center; justify-content:space-between; margin-bottom:14px
-}
+.logo-badge{width:12px;height:12px;border-radius:50%;background:linear-gradient(180deg,var(--brand),var(--brand-2)); box-shadow:0 0 0 4px #0a1210;}
 .search{
-  flex:1; display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #E6E0D5;
-  padding:10px 12px; border-radius:12px; color:#566;
+  flex:1; display:flex; align-items:center; gap:8px;
+  background:var(--glass); border:1px solid var(--bd); border-radius:14px; padding:8px 12px;
 }
+.search input{
+  outline:none; border:none; background:transparent; color:var(--text); flex:1; font:600 14px Inter;
+}
+.icon-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:12px; border:1px solid var(--bd);
+  background:var(--glass); cursor:pointer;
+}
+.icon-btn:hover{box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.avatar{
+  width:38px;height:38px;border-radius:12px;background:linear-gradient(160deg,#7affc3,#23d18b); border:1px solid var(--bd);
+}
+
+/* ====== LAYOUT ====== */
+.wrap{position:fixed; inset:85px 0 0 0; display:grid; grid-template-columns:280px 1fr 340px; gap:16px; padding:16px; overflow:hidden}
+.col{overflow:auto; padding-right:4px}
+.col::-webkit-scrollbar{height:10px;width:10px}
+.col::-webkit-scrollbar-thumb{background:#1a2622;border-radius:10px}
+.sidebar{
+  background:var(--panel); border:1px solid var(--bd); border-radius:16px; box-shadow:var(--shadow);
+  padding:14px;
+}
+.side-item{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; cursor:pointer; user-select:none;
+}
+.side-item:hover{background:#101a16}
+.side-item.active{background:#13211c; border:1px solid var(--chip-bd)}
+.side-item .dot{width:8px; height:8px; border-radius:50%; background:var(--brand)}
+.side-head{font:800 13px/1 Inter; letter-spacing:.1em; text-transform:uppercase; opacity:.8; margin:6px 6px 10px}
+
+.main{
+  background:var(--panel); border:1px solid var(--bd); border-radius:16px; box-shadow:var(--shadow);
+  padding:0; position:relative;
+}
+.right{
+  background:var(--panel); border:1px solid var(--bd); border-radius:16px; box-shadow:var(--shadow); padding:14px;
+}
+
+/* ====== COMPOSER ====== */
+.composer{
+  padding:14px; border-bottom:1px solid var(--bd); background:linear-gradient(180deg,#0f1614,#0d1412);
+}
+.compose-row{display:flex; gap:12px}
+.compose-ava{width:42px;height:42px;border-radius:12px;background:linear-gradient(160deg,#7affc3,#23d18b); flex:0 0 42px}
+textarea{
+  resize:none; width:100%; min-height:64px; max-height:220px;
+  border:1px solid var(--bd); background:#0a1210; color:var(--text); border-radius:12px; padding:10px 12px; outline:none;
+}
+.actions{display:flex; justify-content:space-between; align-items:center; margin-top:8px}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chip{background:var(--chip); border:1px solid var(--chip-bd); color:var(--muted); padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px}
 .btn{
-  border:1px solid #E6E0D5; background:var(--cream-100); color:#183B33;
-  font-weight:700; padding:10px 12px; border-radius:12px;
+  appearance:none; border:1px solid var(--bd); background:linear-gradient(180deg,#12201a,#0f1a15);
+  color:var(--text); padding:10px 14px; border-radius:12px; font-weight:800; cursor:pointer;
 }
-.btn:hover{filter:brightness(0.98)}
-.grid{display:grid; gap:14px}
+.btn.primary{border-color:#33e39f; background:linear-gradient(180deg,#1e3a2e,#143326)}
+.btn.warn{border-color:var(--accent); background:linear-gradient(180deg,#2a1414,#1b0c0c)}
 
-/* Kartlar */
-.card{
-  background:#FFFFFF; border:1px solid #E7E1D8; border-radius:16px;
-  padding:14px 14px 12px; box-shadow:0 10px 22px rgba(18,24,20,.06);
+/* ====== FEED CARDS ====== */
+  border-bottom:1px solid var(--bd); padding:16px 14px; background:linear-gradient(180deg,#0f1715,#0f1614);
 }
-.card h3{margin:0 0 8px; font-family:Cinzel,serif; letter-spacing:.04em}
-.card p{margin:0 0 12px; color:#46504B}
-.badges{display:flex; gap:8px; flex-wrap:wrap}
-.badges span{
-  font-size:12px; border:1px solid #E7E1D8; padding:6px 10px; border-radius:999px; background:#FAF6EF; font-weight:700; color:#3B463F
+.post-head{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+.post-ava{width:36px;height:36px;border-radius:10px;background:linear-gradient(160deg,#a4ffd7,#23d18b); flex:0 0 36px}
+.post-user{font-weight:800}
+.post-meta{font-size:12px; opacity:.65}
+.post-text{white-space:pre-wrap; margin:8px 0}
+.post-acts{display:flex; gap:10px}
+.act{
+  display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; border:1px solid var(--bd); background:var(--glass); cursor:pointer; user-select:none;
 }
+.act:hover{box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.count{opacity:.8; font-weight:700}
 
-/* Responsive */
-@media (max-width:880px){
-  .shell{grid-template-columns:1fr}
-  .aside{position:sticky; top:0; z-index:5}
-}
+/* ====== VIEWS (SPA) ====== */
+.view{display:none}
+.view.active{display:block}
+.view-pad{padding-bottom:200px}
+
+/* ====== RIGHT WIDGETS ====== */
+.widget{border:1px solid var(--bd); background:#0e1513; border-radius:14px; padding:12px; margin-bottom:14px}
+.widget h4{margin:0 0 8px; font-weight:900; letter-spacing:.06em}
+.quote{display:flex; gap:10px; align-items:flex-start}
+.quote .ico,.fact .ico{font-size:22px}
+.fact{display:flex; gap:10px; align-items:flex-start}
+
+/* ====== PROFILE ====== */
+.banner{height:140px; border-bottom:1px solid var(--bd); background:
+  radial-gradient(800px 500px at 80% -20%, rgba(35,209,139,.18), transparent 60%),
+  linear-gradient(90deg,#0e1815,#0a1411)}
+.profile-box{display:flex; align-items:flex-end; gap:12px; padding:0 14px 14px}
+.profile-ava{width:80px;height:80px;border-radius:18px;background:linear-gradient(160deg,#9beecf,#23d18b); border:2px solid #0c1412}
+.stats{display:flex; gap:14px; opacity:.9}
+.stat b{display:block; font-size:18px}
+.edit-btn{margin-left:auto}
+  
+/* ====== MODAL ====== */
+.modal{position:fixed; inset:0; background:#0008; display:none; align-items:center; justify-content:center; z-index:50}
+.modal.active{display:flex}
+.modal-card{width:min(520px,92vw); background:#0f1614; border:1px solid var(--bd); border-radius:16px; padding:14px; box-shadow:var(--shadow)}
+.row{display:flex; gap:10px; margin:8px 0}
+.row label{flex:0 0 130px; opacity:.75; font-weight:700}
+.row input,.row textarea{flex:1; border:1px solid var(--bd); background:#0a1210; color:var(--text); border-radius:10px; padding:10px}
+.modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:10px}
+
+/* ====== TOAST ====== */
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:18px; background:#0a1210; border:1px solid var(--bd); padding:10px 14px; border-radius:12px; box-shadow:var(--shadow); display:none; z-index:60}
+.toast.show{display:block}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width:1100px){ .wrap{grid-template-columns:260px 1fr;}.right{display:none}}
+@media (max-width:760px){ .wrap{grid-template-columns:1fr}.sidebar{display:none}.topbar{gap:8px}.logo{display:none}}
 </style>
 </head>
 <body>
 
-<!-- =================== LOADER =================== -->
-<div id="loader" role="status" aria-label="Yükleniyor">
-  <canvas id="load-canvas"></canvas>
-
-  <div class="logo-wrap">
+<!-- BOOT -->
+<div id="boot" class="boot-fade">
+  <div class="boot-wrap">
+    <div class="azura">AZURA</div>
     <div class="ring"></div>
-    <div class="ring2"></div>
-    <div class="logo">
-      <h1>AZURA</h1>
-      <div class="load-note">Yükleniyor<span class="dots"></span></div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo"><span class="logo-badge"></span><span>AZURA NOVA</span></div>
+  <div class="search" role="search">
+    <span>🔎</span>
+    <input id="q" placeholder="Ara: kişi, etiket, gönderi…">
+    <button class="btn" id="themeBtn" title="Tema">Tema</button>
+  </div>
+  <button class="icon-btn" id="bell" title="Bildirimler">🔔</button>
+  <div class="avatar" id="me" title="Profil"></div>
+</header>
+
+<div class="wrap">
+  <!-- SIDEBAR -->
+  <aside class="sidebar col" id="nav">
+    <div class="side-head">Menü</div>
+    <div class="side-item active" data-go="feed"><span class="dot"></span> Akış</div>
+    <div class="side-item" data-go="explore"><span class="dot"></span> Keşfet</div>
+    <div class="side-item" data-go="notifs"><span class="dot"></span> Bildirimler</div>
+    <div class="side-item" data-go="messages"><span class="dot"></span> Mesajlar</div>
+    <div class="side-item" data-go="profile"><span class="dot"></span> Profilim</div>
+    <div class="side-item" data-go="settings"><span class="dot"></span> Ayarlar</div>
+    <div class="side-head">Kısayollar</div>
+    <div class="side-item" id="newIdea"><span class="dot"></span> ✨ Fikir Gönder</div>
+    <div class="side-item" id="logout"><span class="dot"></span> 🚪 Çıkış</div>
+  </aside>
+  
+  <!-- MAIN -->
+  <main class="main col" id="main">
+
+    <!-- FEED -->
+    <section class="view active" data-view="feed">
+      <div class="composer">
+        <div class="compose-row">
+          <div class="compose-ava"></div>
+          <textarea id="compose" placeholder="Ne düşünüyorsun? #nezaket #motivasyon"></textarea>
+        </div>
+        <div class="actions">
+          <div class="chips">
+            <span class="chip">#nezaket</span><span class="chip">#zarafet</span><span class="chip">#disiplin</span>
+          </div>
+          <div style="display:flex; gap:8px">
+            <button class="btn" id="clearBtn">Temizle</button>
+            <button class="btn primary" id="postBtn">Yayınla</button>
+          </div>
+        </div>
+      </div>
+      <div id="feed" class="view-pad"></div>
+    </section>
+
+    <!-- EXPLORE -->
+    <section class="view" data-view="explore">
+      <div class="card">
+        <h3>Trend Etiketler</h3>
+        <div id="trends" class="chips"></div>
+      </div>
+      <div class="card">
+        <h3>Önerilen Kişiler</h3>
+        <div id="people" style="display:grid; gap:10px"></div>
+      </div>
+    </section>
+
+    <!-- NOTIFICATIONS -->
+    <section class="view" data-view="notifs">
+      <div id="notifList" class="view-pad"></div>
+    </section>
+
+    <!-- MESSAGES -->
+    <section class="view" data-view="messages">
+      <div class="card"><h3>Mesajlar</h3><p>Mesaj sistemi çok yakında. Bu arada, birilerine nezaketle selam ver 🙂</p></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="view" data-view="profile">
+      <div class="banner"></div>
+      <div class="profile-box">
+        <div class="profile-ava"></div>
+        <div>
+          <div style="font-weight:900; font-size:18px" id="pName">Azura Üyesi</div>
+          <div class="stats">
+            <div class="stat"><b id="pPosts">0</b><small>Gönderi</small></div>
+            <div class="stat"><b id="pFllw">128</b><small>Takipçi</small></div>
+            <div class="stat"><b id="pFing">98</b><small>Takip</small></div>
+          </div>
+        </div>
+        <button class="btn edit-btn" id="editProfile">Profili Düzenle</button>
+      </div>
+      <div class="card"><h3>Hakkımda</h3><p id="pBio">Merhaba! Nezaket, zarafet ve disiplinle ilerliyorum.</p></div>
+      <div id="myPosts"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" data-view="settings">
+      <div class="card">
+        <h3>Görünüm</h3>
+        <div class="row"><label>Tema</label>
+          <div style="display:flex; gap:8px">
+            <button class="btn" data-theme="dark">Koyu</button>
+            <button class="btn" data-theme="light">Açık</button>
+            <button class="btn" data-theme="amoled">AMOLED</button>
+          </div>
+        </div>
+        <div class="row"><label>Akış</label>
+          <div>
+            <label><input id="autoNew" type="checkbox"> Yeni gönderiler otomatik eklensin</label>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Gizlilik</h3>
+        <div class="row"><label>Hesap</label><div><label><input id="privateAcc" type="checkbox"> Hesabımı gizli yap</label></div></div>
+        <div class="row"><label>Bildirim</label><div><label><input id="notifSound" type="checkbox"> Sesli bildirim</label></div></div>
+      </div>
+    </section>
+
+  </main>
+    <!-- RIGHT -->
+  <aside class="right col">
+    <div class="widget">
+      <h4>💡 Günün Sözü</h4>
+      <div class="quote"><div class="ico">💡</div><div>
+        <div id="quoteText">Nezaket, gücün sesidir.</div>
+        <small id="quoteAuth" style="opacity:.7">— Azura Nova</small>
+      </div></div>
+    </div>
+    <div class="widget">
+      <h4>🧠 İlginç Bilgi</h4>
+      <div class="fact"><div class="ico">🧠</div><div id="factText">Beyin, gün içinde 20W civarı enerji tüketir.</div></div>
+    </div>
+    <div class="widget">
+      <h4>🔎 Hızlı Kısayollar</h4>
+      <div class="chips" id="quickLinks"></div>
+    </div>
+  </aside>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <h3 style="margin:0 0 8px">Profili Düzenle</h3>
+    <div class="row"><label>İsim</label><input id="mName" placeholder="Ad Soyad"></div>
+    <div class="row"><label>Biyografi</label><textarea id="mBio" rows="4" placeholder="Kendini kısa anlat…"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn" id="mCancel">İptal</button>
+      <button class="btn primary" id="mSave">Kaydet</button>
     </div>
   </div>
 </div>
 
-<!-- =================== APP =================== -->
-<div class="app" id="app">
-  <div class="shell">
-    <aside class="aside">
-      <div class="brand">
-        <div class="dot"></div>
-        <div>AZURA <small>• Kullanıcı Paneli</small></div>
-      </div>
-
-      <nav class="nav" aria-label="Panel menü">
-        <a href="overview.html">📊 Genel Bakış</a>
-        <a href="profile.html">👤 Profil</a>
-        <a href="progress.html">📈 İlerleme</a>
-        <a href="resources.html">📚 Kaynaklar</a>
-        <a href="community.html">🌐 Topluluk</a>
-        <a href="settings.html">⚙️ Ayarlar</a>
-      </nav>
-
-      <div class="pills">
-        <span>🧭 Odak</span><span>⏱ Rutine Dön</span><span>🧘‍♂️ Sakinlik</span>
-        <span>📒 Notlar</span><span>🎯 Mini Hedef</span>
-      </div>
-    </aside>
-
-    <main class="main">
-      <div class="toolbar">
-        <div class="search">🔎 Panele ara… (ör. “rutin”, “nezaket”)</div>
-        <button class="btn" id="autoRefresh">🔄 Otomatik Güncelleme</button>
-        <button class="btn">💾 Kaydet</button>
-      </div>
-
-      <section class="grid">
-        <article class="card">
-          <h3>✨ Hoş Geldin!</h3>
-          <p>Bu alan ana menüden farklı olarak <b>kişisel çalışma</b> bölümün. Soldaki menüden dilediğin sekmeye geç.</p>
-          <div class="badges"><span>Tanıtım</span><span>Günlük</span><span>Mini hedef</span></div>
-        </article>
-
-        <article class="card">
-          <h3>⏳ Bugün 20 dk • Tek İş</h3>
-          <p>Yarım kalan en önemli <b>1</b> görevi seç ve sadece 20 dk ilerlet.</p>
-          <div class="badges"><span>Öncelik</span><span>Net Ajanda</span><span>Odak</span></div>
-        </article>
-
-        <article class="card">
-          <h3>💬 Nazik Hatırlatma</h3>
-          <p>“Sınır koymak kırmak değildir.” Talebi yumuşat: “Bu iki seçenekten hangisi rahat?”</p>
-          <div class="badges"><span>Nezaket</span><span>Şefkatli Disiplin</span></div>
-        </article>
-
-        <article class="card" style="border-color:#FFD8D6;background:#FFF6F5">
-          <h3>🚨 Aşırı Yüklenme Belirtisi</h3>
-          <p>Bugün 5’ten fazla hedef eklediysen önce 3’e indir. Fazlası motivasyonu düşürür.</p>
-          <div class="badges"><span>Uyarı</span><span>Denge</span></div>
-        </article>
-      </section>
-      <p style="text-align:center;color:#6b736f;margin-top:18px;">© 2025 Azura Nova — Tüm Hakları Saklıdır.</p>
-    </main>
-  </div>
-</div>
+<div class="toast" id="toast">Kaydedildi ✔️</div>
 
 <script>
-/* ----------------- Loader Parçacıkları ----------------- */
-(function(){
-  const cvs = document.getElementById('load-canvas');
-  const ctx = cvs.getContext('2d');
-  function size(){ cvs.width=innerWidth; cvs.height=innerHeight }
-  size(); addEventListener('resize', size);
-
-  const dots = Array.from({length: 120}, ()=>({
-    x: Math.random()*cvs.width,
-    y: Math.random()*cvs.height,
-    r: Math.random()*1.8 + 0.6,
-    a: Math.random()*0.6 + 0.3,
-    v: (Math.random()*0.3 + 0.15)
-  }));
-
-  function loop(){
-    ctx.clearRect(0,0,cvs.width,cvs.height);
-    for(const d of dots){
-      ctx.globalAlpha = d.a;
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dot').trim() || '#8FFFE7';
-      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill();
-      d.y -= d.v; if(d.y < -5){ d.y = cvs.height + 5; d.x = Math.random()*cvs.width }
-    }
-    requestAnimationFrame(loop);
-  }
-  loop();
-})();
-
-/* ----------------- Loader → App Geçiş ----------------- */
-const LOADER_MS = 3200; // süren burada
-const loader = document.getElementById('loader');
-const app    = document.getElementById('app');
-
-function showApp(){
-  loader.classList.add('hide');
-  app.classList.add('show');
+/* =================== HELPERS =================== */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const store = {
+  get(k, v){ try{const x=localStorage.getItem(k); return x? JSON.parse(x): v}catch{return v}},
+  set(k, v){ localStorage.setItem(k, JSON.stringify(v)) }
+};
+const timeAgo = ts => {
+  const d = (Date.now()-ts)/1000;
+  if(d<60) return `${Math.floor(d)}sn`;
+  if(d<3600) return `${Math.floor(d/60)}dk`;
+  if(d<86400) return `${Math.floor(d/3600)}sa`;
+  return `${Math.floor(d/86400)}g`;
 }
+const toast = (msg) => { const t=$("#toast"); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1500); }
 
-// Sayfa hızla yüklenirse yine min 3.2s loader göster
-window.addEventListener('load', ()=> setTimeout(showApp, LOADER_MS));
+/* =================== THEME =================== */
+const themes={
+  dark:{'--bg':'#0e1412','--panel':'#0b100f','--card':'#111816'},
+  light:{'--bg':'#f5fbf8','--panel':'#ffffff','--card':'#ffffff','--text':'#0d1412','--muted':'#2b4238','--bd':'rgba(0,0,0,.12)','--glass':'rgba(0,0,0,.04)'},
+  amoled:{'--bg':'#000','--panel':'#050705','--card':'#050807'}
+};
+function applyTheme(name){
+  const t=themes[name]; if(!t) return;
+  for(const k in t) document.documentElement.style.setProperty(k,t[k]);
+  store.set('theme',name);
+}
+applyTheme(store.get('theme','dark'));
+$("#themeBtn").onclick=()=>{ const order=['dark','light','amoled']; const cur=store.get('theme','dark'); const nxt=order[(order.indexOf(cur)+1)%order.length]; applyTheme(nxt); toast(`Tema: ${nxt}`); };
 
-/* Fake “Otomatik Güncelleme” düğmesi — sadece görsel */
-document.getElementById('autoRefresh').addEventListener('click', function(){
-  this.textContent = '✅ Otomatik Güncelleme Açık';
-  this.disabled = true;
-  setTimeout(()=>{ this.textContent='🔄 Otomatik Güncelleme'; this.disabled=false; }, 2500);
+/* =================== ROUTER =================== */
+function go(view){
+  $$(".side-item").forEach(n=>n.classList.toggle('active', n.dataset.go===view));
+  $$(".view").forEach(v=>v.classList.toggle('active', v.dataset.view===view));
+  history.replaceState({}, '', `#${view}`);
+}
+$("#nav").addEventListener('click',e=>{
+  const n=e.target.closest('.side-item'); if(!n) return;
+  const g=n.dataset.go; if(!g) return;
+  e.preventDefault(); go(g);
 });
+window.addEventListener('load',()=>{ go(location.hash.replace('#','')||'feed'); });
+  /* =================== FEED DATA =================== */
+let POSTS = store.get('posts', [
+  {id:1, user:'Nova', txt:'Nezaket, gücün sessiz hâlidir. #nezaket', ts:Date.now()-600000, like:6, cmt:2, share:1},
+  {id:2, user:'Ada',  txt:'Güne 20 dk fokus, sonra ödül: kısa yürüyüş. #disiplin', ts:Date.now()-3600000, like:12, cmt:1, share:0},
+  {id:3, user:'Efe',  txt:'Söz verdiysen takvime yaz. “Yarın” değil, “10:00”. #sorumluluk', ts:Date.now()-7200000, like:8, cmt:0, share:0},
+]);
+let lastId = POSTS.reduce((m,p)=>Math.max(m,p.id),0);
+
+/* =================== RENDER FEED =================== */
+const feedEl=$("#feed"), myPostsEl=$("#myPosts"), pPosts=$("#pPosts");
+function renderPosts(){
+  const card = p => `
+    <article class="card" data-id="${p.id}">
+      <div class="post-head">
+        <div class="post-ava"></div>
+        <div><div class="post-user">${p.user}</div>
+        <div class="post-meta">${timeAgo(p.ts)} • #azura</div></div>
+      </div>
+      <div class="post-text">${(p.txt||'').replace(/[<>&]/g, s=>({ '<':'&lt;','>':'&gt;','&':'&amp;' }[s]))}</div>
+      <div class="post-acts">
+        <div class="act like">❤️ <span class="count">${p.like||0}</span></div>
+        <div class="act cmt">💬 <span class="count">${p.cmt||0}</span></div>
+        <div class="act share">🔗 <span class="count">${p.share||0}</span></div>
+      </div>
+    </article>`;
+  feedEl.innerHTML = POSTS.sort((a,b)=>b.ts-a.ts).map(card).join("");
+  myPostsEl.innerHTML = POSTS.filter(p=>p.user==='Ben').map(card).join("")||'<div class="card"><em>Henüz paylaşım yok.</em></div>';
+  pPosts.textContent = POSTS.filter(p=>p.user==='Ben').length;
+}
+renderPosts();
+
+/* Post actions */
+feedEl.addEventListener('click', e=>{
+  const art=e.target.closest('article'); if(!art) return;
+  const id=+art.dataset.id; const p=POSTS.find(x=>x.id===id); if(!p) return;
+  if(e.target.closest('.like')) p.like=(p.like||0)+1;
+  if(e.target.closest('.cmt'))  p.cmt =(p.cmt ||0)+1;
+  if(e.target.closest('.share'))p.share=(p.share||0)+1;
+  store.set('posts',POSTS); renderPosts();
+});
+
+/* Composer */
+const ta=$("#compose");
+ta.addEventListener('input',()=>{ ta.style.height='auto'; ta.style.height=Math.min(220, ta.scrollHeight)+'px'; });
+$("#postBtn").onclick=()=>{
+  const txt=ta.value.trim(); if(!txt) return toast('Boş paylaşım olmaz 🙂');
+  POSTS.push({id:++lastId, user:'Ben', txt, ts:Date.now(), like:0,cmt:0,share:0});
+  ta.value=''; ta.style.height='64px'; store.set('posts',POSTS); renderPosts(); toast('Paylaşıldı ✔️');
+};
+$("#clearBtn").onclick=()=>{ ta.value=''; ta.style.height='64px' };
+
+/* Auto new posts */
+const autoChk=$("#autoNew");
+autoChk.checked = store.get('autoNew', true);
+autoChk.onchange = ()=> store.set('autoNew', autoChk.checked);
+
+setInterval(()=>{
+  if(!autoChk.checked) return;
+  const samples=[
+    'Bugün birine nazikçe kapı tut 🟢',
+    'Kendine not: küçük adım da adımdır.',
+    'Sessiz güç: Gerektiğinde susmak.',
+    'Rutin: 10 dk yaz – 10 dk yürüyüş.'
+  ];
+  POSTS.push({id:++lastId, user:['Ada','Efe','Nova','Mira'][Math.floor(Math.random()*4)],
+    txt:samples[Math.floor(Math.random()*samples.length)], ts:Date.now(), like:0,cmt:0,share:0});
+  store.set('posts',POSTS); renderPosts();
+}, 12000);
+
+/* =================== EXPLORE =================== */
+const TREND = ['#nezaket','#zarafet','#disiplin','#fokus','#minimalsöz','#ritüel','#şükran'];
+$("#trends").innerHTML = TREND.map(t=>`<span class="chip">${t}</span>`).join("");
+const people = [
+  {n:'Mira', bio:'Zarafet & denge'},
+  {n:'Kerem', bio:'Disiplin notları'},
+  {n:'Zey', bio:'Nazik iletişim'},
+  {n:'Onur', bio:'Rutin & odak'}
+];
+$("#people").innerHTML = people.map(p=>`
+  <div style="display:flex;gap:10px;align-items:center">
+    <div class="post-ava"></div>
+    <div style="flex:1">
+      <div style="font-weight:800">${p.n}</div>
+      <small style="opacity:.7">${p.bio}</small>
+    </div>
+    <button class="btn">Takip</button>
+  </div>`).join("");
+
+/* =================== NOTIFICATIONS =================== */
+const notifBox=$("#notifList");
+function addNotif(txt){
+  const el=document.createElement('div');
+  el.className='card'; el.innerHTML=`<div>🔔 ${txt}</div>`;
+  notifBox.prepend(el);
+  if(store.get('notifSound',false)){
+    try{ new AudioContext() }catch{}
+  }
+}
+setInterval(()=>addNotif('Yeni öneri hazır: #nezaket'), 30000);
+  /* =================== SEARCH =================== */
+const q=$("#q");
+let qTimer=null;
+q.addEventListener('input',()=>{
+  clearTimeout(qTimer);
+  qTimer=setTimeout(()=>{
+    const term=q.value.toLowerCase().trim();
+    if(!term){ renderPosts(); return; }
+    const filtered=POSTS.filter(p=>p.txt.toLowerCase().includes(term));
+    feedEl.innerHTML=filtered.map(p=>`
+      <article class="card"><div class="post-text">${p.txt}</div>
+      <small class="post-meta">${timeAgo(p.ts)}</small></article>`).join("") || '<div class="card"><em>Sonuç yok.</em></div>';
+  },200);
+});
+
+/* =================== PROFILE EDIT =================== */
+const modal=$("#modal");
+$("#editProfile").onclick=()=>{
+  $("#mName").value = store.get('pName','Azura Üyesi');
+  $("#mBio").value  = store.get('pBio','Merhaba! Nezaket, zarafet ve disiplinle ilerliyorum.');
+  modal.classList.add('active');
+}
+$("#mCancel").onclick=()=>modal.classList.remove('active');
+$("#mSave").onclick=()=>{
+  const name=$("#mName").value.trim()||'Azura Üyesi';
+  const bio=$("#mBio").value.trim()||'';
+  store.set('pName',name); store.set('pBio',bio);
+  $("#pName").textContent=name; $("#pBio").textContent=bio;
+  modal.classList.remove('active'); toast('Profil güncellendi');
+};
+$("#pName").textContent = store.get('pName','Azura Üyesi');
+$("#pBio").textContent  = store.get('pBio','Merhaba! Nezaket, zarafet ve disiplinle ilerliyorum.');
+
+/* =================== SETTINGS =================== */
+$("#notifSound").checked = store.get('notifSound',false);
+$("#notifSound").onchange = e=> store.set('notifSound', e.target.checked);
+$("#privateAcc").checked = store.get('privateAcc',false);
+$("#privateAcc").onchange = e=> store.set('privateAcc', e.target.checked);
+$$('[data-theme]').forEach(b=> b.onclick=()=> applyTheme(b.dataset.theme));
+
+/* =================== RIGHT ROTATORS =================== */
+const QUOTES=[
+  ['Nazik ol. Herkes görünmeyen bir savaş veriyor.','Plato (?)'],
+  ['Disiplin özgürlüktür.','Jocko W.'],
+  ['Zarafet, sade olanı seçmektir.','Azura Nova'],
+  ['Güç, sakin kalabilmektir.','Azura Nova']
+];
+const FACTS=[
+  'Derin nefes, kalp ritmini saniyeler içinde düşürür.',
+  'Yazılan hedefler %42 daha çok başarılır (çeşitli çalışmalar).',
+  'Beyin dinlenirken bile varsayılan ağ aktif.',
+  'Günde 1% iyileşme, yılda ~37x ilerleme demek.'
+];
+let qi=0, fi=0;
+setInterval(()=>{
+  qi=(qi+1)%QUOTES.length; $("#quoteText").textContent=QUOTES[qi][0]; $("#quoteAuth").textContent='— '+QUOTES[qi][1];
+  fi=(fi+1)%FACTS.length; $("#factText").textContent=FACTS[fi];
+}, 10000);
+$("#quickLinks").innerHTML=['Akış','Keşfet','Profil','Ayarlar'].map(k=>`<span class="chip ql" data-go="${k.toLowerCase()}">${k}</span>`).join("");
+$("#quickLinks").addEventListener('click', e=>{ const t=e.target.closest('.ql'); if(t) go(t.dataset.go); });
+  /* =================== MISC =================== */
+$("#bell").onclick=()=>go('notifs');
+$("#me").onclick=()=>go('profile');
+$("#logout").onclick=()=>toast('Çıkış (simülasyon)');
+$("#newIdea").onclick=()=>{
+  const idea=prompt('Fikrini yaz:'); if(!idea) return;
+  POSTS.push({id:++lastId, user:'Ben', txt:'💡 '+idea, ts:Date.now(), like:0,cmt:0,share:0});
+  store.set('posts',POSTS); renderPosts(); go('feed'); toast('Fikir eklendi');
+};
+
+/* Güvenlik: olası hataları bastırıp kullanıcıyı koru */
+window.addEventListener('error', e=>{ console.warn('Yakalanan hata:', e.message) }, true);
 </script>
 </body>
 </html>
