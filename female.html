@@ -105,9 +105,9 @@ body{
   text-shadow:0 0 22px rgba(177,106,217,.45);
   white-space:pre-wrap; text-transform:uppercase;
   top:100%;
-  animation: slideUp 120s linear forwards;
+  animation: slideUp 40s linear forwards;
 }
-@keyframes slideUp{to{ top:-120% }}
+@keyframes slideUp{to{ top:-300% }}
 .main{position:relative; z-index:2; padding:90px 18px 64px; display:none;}
 .grid{
   max-width:1100px; margin:0 auto; display:grid; gap:20px;
@@ -216,29 +216,58 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
 
 <script>
 (function(){
-  const c=document.getElementById('stars');
-  const ctx=c.getContext('2d');
-  function size(){c.width=innerWidth;c.height=innerHeight}
-  size();addEventListener('resize',size);
-  const colors=['#FF9DC3','#FFB7D3','#FF8FB6'];
-  const dots=Array.from({length:140},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:(Math.random()*2)+1.2,o:0.55+Math.random()*0.2,c:colors[(Math.random()*colors.length)|0],vy:0.02+Math.random()*0.06}));
-  function draw(){ctx.clearRect(0,0,c.width,c.height);for(const d of dots){ctx.globalAlpha=d.o;ctx.fillStyle=d.c;ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();d.y+=d.vy;if(d.y>c.height+8){d.y=-8;d.x=Math.random()*c.width}}requestAnimationFrame(draw);}
-  draw();
-})();
-const welcome=document.getElementById('welcomeBox');
-const mfWrap=document.getElementById('mfWrap');
-const skipBtn=document.getElementById('skipBtn');
-const main=document.getElementById('main');
-let manifestoTimer=null;
-setTimeout(()=>{welcome.classList.add('fade-out');setTimeout(startManifesto,600);},2200);
-function startManifesto(){
-  mfWrap.style.display='block';
-  skipBtn.classList.add('show');
-  manifestoTimer=setTimeout(showMenu,120000);
-}
-skipBtn.addEventListener('click',()=>{if(manifestoTimer){clearTimeout(manifestoTimer);}showMenu();});
-function showMenu(){mfWrap.style.display='none';skipBtn.classList.remove('show');main.style.display='block';}
-document.getElementById('userBtn').addEventListener('click',e=>{e.preventDefault();alert('Kullanıcı Paneli yakında burada 🌸');});
+  <script>
+  const welcome   = document.getElementById('welcomeBox');
+  const mfWrap    = document.getElementById('mfWrap');
+  const manifesto = document.getElementById('manifesto');
+  const skipBtn   = document.getElementById('skipBtn');
+  const main      = document.getElementById('main');
+
+  let manifestoTimer = null;
+  let finished = false;            // bir kez çalışsın
+
+  // (Opsiyonel) transform’lu çözümü kullandıysan süreyi metin boyuna göre hesapla:
+  function setScrollDuration(pxPerSec = 140){
+    const totalPx = manifesto.scrollHeight + innerHeight;
+    const durSec  = totalPx / pxPerSec;
+    manifesto.style.setProperty('--dur', durSec + 's');
+    return durSec;
+  }
+
+  // Kısa hoşgeldin
+  setTimeout(()=>{
+    welcome.classList.add('fade-out');
+    setTimeout(startManifesto, 600);
+  }, 1600);
+
+  function startManifesto(){
+    mfWrap.style.display = 'block';
+    skipBtn.classList.add('show');
+
+    // 2× hız örneği (kullanıyorsan):
+    const dur = (manifesto.style.getPropertyValue('--dur'))
+                ? parseFloat(getComputedStyle(manifesto).getPropertyValue('--dur'))
+                : setScrollDuration(140); // transform çözümü yoksa bu satır sorun yaratmaz
+
+    // ❶ Animasyon biter bitmez menüye geç
+    manifesto.addEventListener('animationend', showMenu, { once: true });
+
+    // ❷ Emniyet için yedek zamanlayıcı (animasyon olmasa bile)
+    manifestoTimer = setTimeout(showMenu, (dur || 45) * 1000 + 500);
+  }
+
+  skipBtn.addEventListener('click', ()=>{
+    if (manifestoTimer) clearTimeout(manifestoTimer);
+    showMenu();
+  });
+
+  function showMenu(){
+    if (finished) return;
+    finished = true;
+    mfWrap.style.display = 'none';
+    skipBtn.classList.remove('show');
+    main.style.display = 'block';
+  }
 </script>
 </body>
     </html>
