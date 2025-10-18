@@ -113,10 +113,14 @@ body{
 }
 .card p, .card-wide p{margin:6px 0 0; color:var(--text-body)}
 .chips{margin-top:12px; display:flex; flex-wrap:wrap; gap:8px}
+/* chip linkleri span gibi görünsün */
+.chips a.chip,
 .chips span{
   background:var(--chip-bg); color:var(--chip-text);
-  border:1px solid var(--chip-border); padding:7px 12px; border-radius:999px;
+  border:1px solid var(--chip-border);
+  padding:7px 12px; border-radius:999px;
   font-weight:600; font-size:12.5px;
+  text-decoration:none; display:inline-block;
 }
 .card-wide{grid-column:1 / -1}
 footer{
@@ -185,7 +189,15 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
     <div class="card-wide">
       <h3>📚 KAYNAKLAR</h3>
       <p><strong>Atomic Habits</strong> (Clear) — <strong>Deep Work</strong> (Newport) — <strong>Ego Is the Enemy</strong> (Holiday)</p>
-      <div class="chips"><span>← Ana Menü</span><span>Kanallar</span><span>Alıştırmalar</span></div>
+      <!-- ⤵️ Hızlı gezinme: yeni sayfalara linkler -->
+      <div class="chips">
+        <a class="chip" href="community.html?theme=male">Topluluk</a>
+        <a class="chip" href="etiquette.html?theme=male">Nezaket Rehberi</a>
+        <a class="chip" href="practices.html?theme=male">Alıştırmalar</a>
+        <a class="chip" href="challenges.html?theme=male">Meydan Okumalar</a>
+        <a class="chip" href="resources.html?theme=male">Kaynaklar</a>
+        <a class="chip" href="notes.html?theme=male">Jurnal</a>
+      </div>
     </div>
   </div>
   <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
@@ -208,9 +220,8 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
   const main      = document.getElementById('main');
 
   let manifestoTimer = null;
-  let finished = false;            // bir kez çalışsın
+  let finished = false;
 
-  // (Opsiyonel) transform’lu çözümü kullandıysan süreyi metin boyuna göre hesapla:
   function setScrollDuration(pxPerSec = 140){
     const totalPx = manifesto.scrollHeight + innerHeight;
     const durSec  = totalPx / pxPerSec;
@@ -218,7 +229,6 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
     return durSec;
   }
 
-  // Kısa hoşgeldin
   setTimeout(()=>{
     welcome.classList.add('fade-out');
     setTimeout(startManifesto, 600);
@@ -227,16 +237,11 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
   function startManifesto(){
     mfWrap.style.display = 'block';
     skipBtn.classList.add('show');
-
-    // 2× hız örneği (kullanıyorsan):
     const dur = (manifesto.style.getPropertyValue('--dur'))
                 ? parseFloat(getComputedStyle(manifesto).getPropertyValue('--dur'))
-                : setScrollDuration(140); // transform çözümü yoksa bu satır sorun yaratmaz
+                : setScrollDuration(140);
 
-    // ❶ Animasyon biter bitmez menüye geç
     manifesto.addEventListener('animationend', showMenu, { once: true });
-
-    // ❷ Emniyet için yedek zamanlayıcı (animasyon olmasa bile)
     manifestoTimer = setTimeout(showMenu, (dur || 45) * 1000 + 500);
   }
 
@@ -254,30 +259,20 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
   }
 </script>
 
-
-  <!-- 🎧 Arka Plan Müziği -->
+<!-- 🎧 Arka Plan Müziği -->
 <audio id="bgMusic" src="yenidosya.mp3" preload="auto" loop></audio>
 
 <script>
-// Müzik dosyasını al
 const music = document.getElementById('bgMusic');
-music.volume = 0.45; // %45 ses
-
-// 1️⃣ Sayfa yüklenir yüklenmez çalmayı dene
+music.volume = 0.45;
 window.addEventListener('load', () => {
   music.play().catch(() => {
     console.log("Tarayıcı otomatik çalmayı engelledi, dokununca çalacak.");
   });
 });
-
-// 2️⃣ Eğer engellenirse, ilk dokunuşta kesin başlat
 document.addEventListener('click', () => {
-  if (music.paused) {
-    music.play().catch(() => {});
-  }
+  if (music.paused) { music.play().catch(() => {}); }
 });
-
-// 3️⃣ (İsteğe bağlı) Yumuşak fade-in efekti
 function fadeIn(targetVol = 0.45, ms = 1500){
   music.volume = 0;
   const step = targetVol / (ms/50);
@@ -287,6 +282,6 @@ function fadeIn(targetVol = 0.45, ms = 1500){
   }, 50);
 }
 music.addEventListener('playing', () => fadeIn(), {once:true});
-                         </script>
+</script>
 </body>
-</html>
+  </html>
