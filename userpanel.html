@@ -1,207 +1,209 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AZURA • Kullanıcı Paneli</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Azura • Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    /* Süreler (oynamak istersen) */
-    --intro-ms: 2200;   /* halka+logo sahnesi (ms) ~2.2s */
-    --wipe-ms:   500;   /* beyaza geçiş (ms)        0.5s */
-    --neon: rgba(70,190,255,.75);
-    --logo-grad: linear-gradient(90deg,#6be0ff 0%, #49f1a6 100%);
-  }
+/* =============== Temel =============== */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:#ffffff; color:#0b0b0f; font-family:system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+  overflow-x:hidden;
+}
 
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; background:#ffffff; color:#0b1220;
-    font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
-    overflow:hidden; /* intro sırasında kaydırma yok */
-  }
+/* =============== Splash =============== */
+:root{
+  --ink:#0a0710;        /* siyah */
+  --vio:#7b3aff;        /* mor */
+  --mint:#2ee6b9;       /* neonimsi vurgular */
+  --halo:#edf4ff;       /* yumuşak parıltı */
+  --dur: 2600ms;        /* splash toplam görünme süresi */
+  --ring-w: 22px;       /* halka kalınlığı */
+}
 
-  /* ====== INTRO WRAP ====== */
-  .intro{
-    position:fixed; inset:0; z-index:1000; display:grid; place-items:center;
-    background:#fff;
-  }
+/* Kapsayıcı */
+.splash{
+  position:fixed; inset:0; display:grid; place-items:center; z-index:9999;
+  background:#fff;
+  transition:opacity .45s ease, visibility .45s ease;
+}
+.splash.fade{ opacity:0; visibility:hidden }
 
-  /* Merkez küme */
-  .core{
-    position:relative; width:min(78vmin,760px); aspect-ratio:1/1;
-    display:grid; place-items:center;
-  }
+/* Ortadaki logo + halkalar */
+.logoStage{
+  position:relative; width:min(78vmin, 560px); aspect-ratio:1/1;
+  filter: drop-shadow(0 18px 38px rgba(12,8,40,.12));
+}
 
-  /* Logo */
-  .logo{
-    position:relative; z-index:3;
-    font-family:Cinzel,serif; font-weight:900;
-    letter-spacing:.20em; text-align:center;
-    font-size:clamp(34px,10vw,120px);
-    background:var(--logo-grad);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:
-      0 0 10px rgba(80,220,255,.25),
-      0 0 24px rgba(90,240,200,.25);
-    transform:translateZ(0);
-    animation: logoPop calc(var(--intro-ms)*.9ms) ease-out both;
-  }
+/* AZURA yazısı (siyah→mor gradyent) */
+.brand{
+  position:absolute; inset:0; display:grid; place-items:center; z-index:3;
+  font-family:Cinzel, serif; font-weight:700; letter-spacing:.16em;
+  font-size:clamp(28px, 7.2vmin, 48px);
+  background:linear-gradient(145deg, var(--ink) 0%, #2a1a38 30%, var(--vio) 95%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 1px 0 rgba(0,0,0,.06), 0 18px 36px rgba(79,27,170,.18);
+}
 
-  @keyframes logoPop{
-    0%{opacity:0; transform:scale(.92)}
-    30%{opacity:1; transform:scale(1.06)}
-    70%{transform:scale(.98)}
-    100%{transform:scale(1.02)}
-  }
+/* Halka altyapısı: kesik yaylar + dairesel maske ile kalınlık */
+.ring{
+  position:absolute; inset:0; margin:auto; border-radius:50%;
+  /* segment üretimi: eşit dilimler, dilimin %66'sı dolu, %34'ü boş */
+  --parts: 3;                                  /* parça sayısı (override ile 2/3/4) */
+  --step: calc(360deg/var(--parts));
+  --arc: calc(var(--step)*0.66);               /* görünür yay uzunluğu */
+  /* kesikleri oluşturan tekrar eden konik gradyan */
+  -webkit-mask:
+    radial-gradient(closest-side,
+      transparent calc(50% - var(--ring-w)),
+      #000 calc(50% - var(--ring-w)) calc(50% - 1px),
+      transparent calc(50% - 0px)
+    ),
+    repeating-conic-gradient(from var(--rot),
+      #000 0 var(--arc),
+      transparent var(--arc) var(--step)
+    );
+          mask:
+    radial-gradient(closest-side,
+      transparent calc(50% - var(--ring-w)),
+      #000 calc(50% - var(--ring-w)) calc(50% - 1px),
+      transparent calc(50% - 0px)
+    ),
+    repeating-conic-gradient(from var(--rot),
+      #000 0 var(--arc),
+      transparent var(--arc) var(--step)
+    );
+  background:
+    radial-gradient(closest-side, var(--halo) 0 87%, transparent 88% 100%),
+    linear-gradient(135deg, #35c8ff 0%, var(--mint) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.04),
+    0 22px 60px rgba(18, 210, 170, .20);
+}
 
-  /* ARC’ler için ortak stil (SVG) */
-  .rings{
-    position:absolute; inset:0; z-index:2;
-    filter: drop-shadow(0 4px 14px rgba(50,190,255,.18))
-            drop-shadow(0 0 22px rgba(100,240,200,.12));
-    will-change: transform;
-  }
-  svg{width:100%; height:100%; display:block}
+/* Üç halka: 2 / 3 / 4 parçalı, farklı yön/sürat ve farklı çaplar */
+.r1{ --parts:2; --ring-w:20px; --rot:0deg;     transform:scale(.46); animation:spin-cw 2400ms linear infinite; }
+.r2{ --parts:3; --ring-w:22px; --rot:6deg;     transform:scale(.70); animation:spin-ccw 2900ms linear infinite; }
+.r3{ --parts:4; --ring-w:22px; --rot:-8deg;    transform:scale(.92); animation:spin-cw 3400ms linear infinite; }
 
-  /* Her arc farklı kalınlık & stroke deseni (yay görünümü için dash) */
-  .arc{ fill:none; stroke-linecap:round }
+/* İnce neon yol (yörünge çizgisi) — çok hafif */
+.orbit{
+  position:absolute; inset:0; border-radius:50%; pointer-events:none; z-index:2;
+  border:1px solid rgba(53, 232, 210, .25);
+  filter:drop-shadow(0 0 10px rgba(53,232,210,.18));
+}
+.o1{ transform:scale(.46) }
+.o2{ transform:scale(.70) }
+.o3{ transform:scale(.92) }
 
-  /* Neonimsi stroke */
-  .arc--inner{ stroke:url(#strokeGrad); stroke-width:12; stroke-dasharray: 180 260; }
-  .arc--mid  { stroke:url(#strokeGrad); stroke-width:14; stroke-dasharray: 220 300; }
-  .arc--outer{ stroke:url(#strokeGrad); stroke-width:12; stroke-dasharray: 260 360; }
+/* Alt tarafta ince yükleniyor çizgisi (estetik) */
+.loadbarWrap{
+  position:absolute; left:50%; bottom:-52px; transform:translateX(-50%);
+  width:min(56vmin, 420px); height:6px; border-radius:99px;
+  background:linear-gradient(180deg, #e9f7ff, #ecfffa);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.04), 0 6px 20px rgba(14,160,130,.22);
+  overflow:hidden;
+}
+.loadbar{
+  height:100%; width:40%; border-radius:inherit;
+  background:linear-gradient(90deg, #30d6ff, #2ee6b9);
+  animation: sweep 1400ms ease-in-out infinite;
+}
 
-  /* İnce yörünge izi (arka planda çok hafif) */
-  .orbit{
-    fill:none; stroke:rgba(60,180,255,.22); stroke-width:2;
-    stroke-dasharray: 8 10; stroke-linecap:round;
-  }
+/* Animasyonlar */
+@keyframes spin-cw  { to{ transform:rotate(360deg) scale(var(--scale,1)) } }
+@keyframes spin-ccw { to{ transform:rotate(-360deg) scale(var(--scale,1)) } }
+@keyframes sweep    { 0%{transform:translateX(-120%)} 100%{transform:translateX(220%)} }
 
-  /* Dönüş animasyonları */
-  .spin-in   { animation: spinCW   calc(var(--intro-ms)*1ms) linear infinite; }
-  .spin-mid  { animation: spinCCW  calc(var(--intro-ms)*.9ms) linear infinite; }
-  .spin-out  { animation: spinCW   calc(var(--intro-ms)*.8ms) linear infinite; }
+/* Hareketi azalt tercihi */
+@media (prefers-reduced-motion:reduce){
+  .r1,.r2,.r3{animation:none}
+  .loadbar{animation:none}
+}
 
-  @keyframes spinCW { to{ transform:rotate(360deg) } }
-  @keyframes spinCCW{ to{ transform:rotate(-360deg) } }
+/* =============== Uygulama alanı =============== */
+.app{ opacity:0; transition:opacity .45s ease }
+.app.show{ opacity:1 }
 
-  /* Beyaza wipe */
-  .wipe{
-    position:fixed; inset:0; background:#fff; z-index:999; pointer-events:none;
-    opacity:0; transform:scale(1.03);
-    transition: opacity calc(var(--wipe-ms)*1ms) ease, transform calc(var(--wipe-ms)*1ms) ease;
-  }
-  .wipe.show{ opacity:1; transform:scale(1) }
-
-  /* Intro bittikten sonra intro kapat */
-  .intro.hide{ animation: introOut 300ms ease forwards }
-  @keyframes introOut{ to{ opacity:0; visibility:hidden } }
-
-  /* Motion azaltma tercihine saygı */
-  @media (prefers-reduced-motion: reduce){
-    .spin-in,.spin-mid,.spin-out{ animation-duration: calc(var(--intro-ms)*2ms) }
-    .logo{ animation-duration: calc(var(--intro-ms)*1.3ms) }
-  }
-
-  /* ====== PANEL (placeholder) ====== */
-  .panel{
-    position:relative; z-index:1; height:100vh; overflow:auto;
-    display:grid; grid-template-rows:auto 1fr;
-  }
-  .topbar{
-    height:64px; display:flex; align-items:center; gap:12px; padding:0 16px;
-    border-bottom:1px solid #e9eef5; background:#ffffff;
-    position:sticky; top:0; z-index:5;
-  }
-  .topbar .brand{
-    font-weight:800; letter-spacing:.08em;
-    background:var(--logo-grad); -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .content{
-    padding:24px; max-width:1100px; margin:0 auto; color:#1a2433;
-  }
-  .card{
-    border:1px solid #e7edf6; background:#fff; border-radius:16px; padding:18px 20px;
-    box-shadow:0 8px 28px rgba(15,40,80,.06); margin-bottom:16px;
-  }
+/* Demo içerik (silinebilir) */
+.demo{
+  min-height:100vh; display:grid; place-items:center;
+  background: radial-gradient(1000px 700px at 50% 10%, #f7fbff, transparent 70%) #ffffff;
+  color:#0c1a14;
+}
+.democard{
+  max-width:860px; width:92vw; padding:28px 22px;
+  border-radius:18px;
+  background:#ffffff;
+  box-shadow:0 24px 70px rgba(16,48,54,.14), inset 0 0 0 1px rgba(0,0,0,.06);
+  border:1px solid rgba(0,0,0,.04);
+}
+.democard h2{
+  margin:0 0 10px; font-family:Cinzel,serif; letter-spacing:.08em;
+  background:linear-gradient(135deg, #0d1320 0%, #6a2ddc 85%); -webkit-background-clip:text; color:transparent;
+}
+.democard p{margin:.35rem 0; line-height:1.6}
 </style>
 </head>
 <body>
 
-<!-- ========== INTRO ========== -->
-<div class="intro" id="intro">
-  <div class="core">
-    <!-- Dönen arc’ler -->
-    <div class="rings spin-in" style="inset:10%"><svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <!-- Neonimsi stroke gradyenti -->
-        <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%"  stop-color="#6be0ff"/>
-          <stop offset="100%" stop-color="#49f1a6"/>
-        </linearGradient>
-      </defs>
-      <!-- İnce orbit izleri -->
-      <circle class="orbit" cx="50" cy="50" r="33"/>
-      <!-- Yay: dash ile -->
-      <circle class="arc arc--inner" cx="50" cy="50" r="33"/>
-    </svg></div>
+<!-- =============== SPLASH =============== -->
+<div class="splash" id="splash">
+  <div class="logoStage">
+    <!-- Neon yörüngeler -->
+    <div class="orbit o1"></div>
+    <div class="orbit o2"></div>
+    <div class="orbit o3"></div>
 
-    <div class="rings spin-mid" style="inset:0%"><svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-      <use href="#strokeGrad" />
-      <circle class="orbit" cx="50" cy="50" r="44"/>
-      <circle class="arc arc--mid"   cx="50" cy="50" r="44"/>
-    </svg></div>
+    <!-- Kesik halkalar -->
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="ring r3"></div>
 
-    <div class="rings spin-out" style="inset:-8%"><svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-      <circle class="orbit" cx="50" cy="50" r="55"/>
-      <circle class="arc arc--outer" cx="50" cy="50" r="55"/>
-    </svg></div>
+    <!-- Marka -->
+    <div class="brand">AZURA</div>
 
-    <!-- Logo -->
-    <div class="logo">AZURA</div>
+    <!-- İnce yükleniyor çizgisi -->
+    <div class="loadbarWrap"><div class="loadbar"></div></div>
   </div>
 </div>
 
-<!-- Beyaz wipe -->
-<div class="wipe" id="wipe"></div>
-
-<!-- ========== PANEL (içeriğini sen doldur) ========== -->
-<div class="panel" id="panel" style="display:none">
-  <div class="topbar">
-    <div class="brand">AZURA PANEL</div>
-  </div>
-  <div class="content">
-    <div class="card"><strong>Hoş geldin!</strong> Burası senin kullanıcı panelin. (İçeriği burada kuracağız.)</div>
-    <div class="card">Örnek: Akış, bildirimler, arkadaşlar, grup ve canlı etkinlik bölümleri…</div>
-  </div>
-</div>
+<!-- =============== APP =============== -->
+<main class="app" id="app">
+  <!-- Buraya gerçek panelini koyacaksın -->
+  <section class="demo">
+    <div class="democard">
+      <h2>AZURA NOVA — PANEL</h2>
+      <p>Bu alan, senin gerçek panel içeriğin için placeholder. Splash kapanınca burası görünür.</p>
+      <p>Panel HTML’ini buraya yerleştir: sol menü, akış, mesajlar… ne istersen.</p>
+    </div>
+  </section>
+</main>
 
 <script>
-  // Zamanlayıcılar
-  const INTRO_MS = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--intro-ms')) || 2200;
-  const WIPE_MS  = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--wipe-ms')) || 500;
+/* Splash → App geçiş kontrolü (2.6s) */
+(function(){
+  const splash = document.getElementById('splash');
+  const app    = document.getElementById('app');
 
-  const intro = document.getElementById('intro');
-  const wipe  = document.getElementById('wipe');
-  const panel = document.getElementById('panel');
+  // 2.6s sonra splash’i gizle, paneli göster
+  const T = getComputedStyle(document.documentElement).getPropertyValue('--dur').trim() || '2600ms';
+  const ms = T.endsWith('ms') ? parseFloat(T) : parseFloat(T)*1000;
 
-  // Akış: intro → wipe → panel
-  setTimeout(() => {
-    // Beyaza yumuşak geç
-    wipe.classList.add('show');
+  setTimeout(()=>{
+    splash.classList.add('fade');
+    app.classList.add('show');
+  }, ms);
 
-    // Wipe bitince intro’yu kaldır ve paneli aç
-    setTimeout(() => {
-      intro.classList.add('hide');
-      panel.style.display = 'grid';
-      // çok az gecikme ile wipe’ı geri al
-      setTimeout(() => wipe.classList.remove('show'), 60);
-    }, WIPE_MS);
-
-  }, INTRO_MS);
+  // Kullanıcı erken geçmek isterse (dokunma)
+  splash.addEventListener('click', ()=>{
+    splash.classList.add('fade');
+    app.classList.add('show');
+  }, { once:true });
+})();
 </script>
-
 </body>
-  </html>
+</html>
