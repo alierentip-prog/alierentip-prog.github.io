@@ -93,9 +93,7 @@ body{
   top:100%;
   animation: slideUp 30s linear forwards;
 }
-/* yazı uzun olduğundan -350% hedefi bırakıldı */
 @keyframes slideUp{to{ top:-350% }}
-
 .main{position:relative; z-index:2; padding:90px 18px 64px; display:none;}
 .grid{
   max-width:1100px; margin:0 auto; display:grid; gap:20px;
@@ -115,34 +113,40 @@ body{
 }
 .card p, .card-wide p{margin:6px 0 0; color:var(--text-body)}
 .chips{margin-top:12px; display:flex; flex-wrap:wrap; gap:8px}
-/* chip’leri linke uyarladık */
-.chips a.chip,
 .chips span{
   background:var(--chip-bg); color:var(--chip-text);
   border:1px solid var(--chip-border); padding:7px 12px; border-radius:999px;
-  font-weight:600; font-size:12.5px; text-decoration:none;
+  font-weight:600; font-size:12.5px;
 }
-.chips a.chip:hover{filter:brightness(1.08)}
 .card-wide{grid-column:1 / -1}
 footer{
   max-width:1100px; margin:32px auto 0; text-align:center; color:#CFE2F5;
   opacity:.95; font-size:14px;
 }
+
+/* Ana menüdeki linkleri devre dışı bırak */
+.main .grid a{
+  pointer-events:none;
+  cursor:default;
+  text-decoration:none;
+  color:inherit;
+}
 </style>
 </head>
 <body>
+
 <div class="bg-layer">
   <div class="bg-halos"></div>
   <canvas class="canvas" id="stars"></canvas>
 </div>
 
-<!-- butonlar -->
+<!-- ÜST BUTONLAR -->
 <div class="top-buttons">
-  <!-- artık direkt bu sayfaya götürüyor -->
-  <a class="btn left" id="userBtn" href="male.html">Kullanıcı Paneli</a>
-  <a class="btn right" id="homeBtn" href="index.html">Ana Menü</a>
+  <button class="btn left" id="userBtn" type="button">Kullanıcı Paneli</button>
+  <a class="btn right" href="index.html">Ana Menü</a>
 </div>
 
+<!-- HOŞGELDİN -->
 <div class="welcome" id="welcomeBox">
   <h3>Derin Sular’a Hoş Geldin ⚙️</h3>
   <p>Birazdan kısa bir manifesto alttan akacak. Dilersen “Yazıyı Geç” ile menüye geçebilirsin.</p>
@@ -150,6 +154,7 @@ footer{
 
 <a class="btn skip" id="skipBtn">Yazıyı Geç</a>
 
+<!-- MANİFESTO -->
 <div class="manifesto-wrap" id="mfWrap" aria-hidden="true">
   <div class="manifesto-scrim"></div>
   <div class="manifesto" id="manifesto">
@@ -172,65 +177,45 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
   </div>
 </div>
 
+<!-- ANA MENÜ -->
 <main class="main" id="main">
   <div class="grid">
     <div class="card">
       <h3>🧭 DURUŞ &amp; SORUMLULUK</h3>
       <p>Duruş; söze değil, alışkanlığa yazılır. Rutinlerini sadeleştir; “söz verdim” cümlesini takvimde somutlaştır.</p>
-      <div class="chips">
-        <a class="chip" href="focus.html">🕒 Net ajanda</a>
-        <a class="chip" href="focus.html#tekhedef">🎯 Öncelik 3</a>
-        <a class="chip" href="practices.html">✅ Takip alışkanlığı</a>
-      </div>
+      <div class="chips"><span>Net ajanda</span><span>Öncelik 3</span><span>Takip alışkanlığı</span></div>
     </div>
 
     <div class="card">
       <h3>🤝 NEZAKET • GÜÇ</h3>
-      <p>Güç, sesi yükseltmek değildir. İhtiyacı doğru anlamak, net ve nazik talepte bulunmaktır: “Bunu şu şekilde çözebilir miyiz?”</p>
-      <div class="chips">
-        <a class="chip" href="etiquette.html">🗣️ Netlik</a>
-        <a class="chip" href="etiquette.html#ornekler">🤝 Ölçülülük</a>
-        <a class="chip" href="etiquette.html#alternatif">🔁 Alternatif</a>
-      </div>
+      <p>Güç, sesi yükseltmek değildir. İhtiyacı doğru anlamak, net ve nazik talepte bulunmaktır.</p>
+      <div class="chips"><span>Netlik</span><span>Ölçülülük</span><span>Alternatif</span></div>
     </div>
 
     <div class="card">
       <h3>🛠️ DİSİPLİN</h3>
       <p>Her gün 20 dakikalık “ağır kaldırış”: zor ama küçük bir iş. Bitince kısa not: “Bugün kendime saygım arttı çünkü…”</p>
-      <div class="chips">
-        <a class="chip" href="focus.html#20dk">⏱️ 20 dk blok</a>
-        <a class="chip" href="practices.html#tekhedef">🎯 Tek hedef</a>
-        <a class="chip" href="notes.html#kisarapor">📝 Kısa rapor</a>
-      </div>
+      <div class="chips"><span>20 dk blok</span><span>Tek hedef</span><span>Kısa rapor</span></div>
     </div>
 
     <div class="card">
       <h3>🌬️ SAKİNLİK EGZERSİZİ</h3>
       <p>4-6 nefes (4 sn al, 6 sn ver). Gözlem cümlesi: “Şu an benden beklenen tek adım ne?”</p>
-      <div class="chips">
-        <a class="chip" href="breath.html">🌬️ Nefes 4–6</a>
-        <a class="chip" href="focus.html#tekadim">🧭 Tek adım</a>
-        <a class="chip" href="notes.html#gozlem">👁️ Gözlem</a>
-      </div>
+      <div class="chips"><span>Nefes 4-6</span><span>Tek adım</span><span>Gözlem</span></div>
     </div>
 
     <div class="card-wide">
       <h3>📚 KAYNAKLAR</h3>
-      <p><strong>Atomic Habits</strong> (Clear) — <strong>Deep Work</strong> (Newport) — <strong>Ego Is the Enemy</strong> (Holiday)</p>
-      <div class="chips">
-        <a class="chip" href="index.html">← Ana Menü</a>
-        <a class="chip" href="community.html">👥 Kanallar</a>
-        <a class="chip" href="practices.html">🏋️ Alıştırmalar</a>
-        <a class="chip" href="resources.html">📚 Kaynaklar</a>
-        <a class="chip" href="challenges.html">⚡ Meydan Okuma</a>
-      </div>
+      <p><strong>Atomic Habits</strong> — <strong>Deep Work</strong> — <strong>Ego Is the Enemy</strong></p>
+      <div class="chips"><span>Tanıtım</span><span>Felsefe</span><span>Motivasyon</span></div>
     </div>
   </div>
+
   <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
 </main>
 
 <script>
-/* arka plan yıldızlar */
+// Arkaplan parçacıkları
 (function(){
   const c=document.getElementById('stars');const ctx=c.getContext('2d');
   function size(){c.width=innerWidth;c.height=innerHeight}
@@ -241,72 +226,49 @@ GÜÇ, SESSİZLİĞİNİ KORUYABİLDİĞİN ANDA BAŞLAR.
   draw();
 })();
 
-/* akış */
-const welcome   = document.getElementById('welcomeBox');
-const mfWrap    = document.getElementById('mfWrap');
-const manifesto = document.getElementById('manifesto');
-const skipBtn   = document.getElementById('skipBtn');
-const main      = document.getElementById('main');
-
-let manifestoTimer = null;
-let finished = false;
-
-function setScrollDuration(pxPerSec = 140){
-  const totalPx = manifesto.scrollHeight + innerHeight;
-  const durSec  = totalPx / pxPerSec;
-  manifesto.style.setProperty('--dur', durSec + 's');
-  return durSec;
-}
+// Manifesto geçişi
+const welcome=document.getElementById('welcomeBox');
+const mfWrap=document.getElementById('mfWrap');
+const manifesto=document.getElementById('manifesto');
+const skipBtn=document.getElementById('skipBtn');
+const main=document.getElementById('main');
+const DURATION_MS=35000; // 35 saniye slayt süresi
+let endFallback=null; let ended=false;
 
 setTimeout(()=>{
   welcome.classList.add('fade-out');
-  setTimeout(startManifesto, 600);
-}, 1600);
+  setTimeout(startManifesto,600);
+},1600);
 
 function startManifesto(){
-  mfWrap.style.display = 'block';
+  mfWrap.style.display='block';
   skipBtn.classList.add('show');
-
-  const dur = (manifesto.style.getPropertyValue('--dur'))
-              ? parseFloat(getComputedStyle(manifesto).getPropertyValue('--dur'))
-              : setScrollDuration(140);
-
-  manifesto.addEventListener('animationend', showMenu, { once: true });
-  manifestoTimer = setTimeout(showMenu, (dur || 45) * 1000 + 500);
+  manifesto.classList.add('play');
+  manifesto.style.animationDuration=DURATION_MS+'ms';
+  manifesto.addEventListener('animationend',onManifestoEnd,{once:true});
+  endFallback=setTimeout(onManifestoEnd,DURATION_MS+400);
 }
 
-skipBtn.addEventListener('click', ()=>{
-  if (manifestoTimer) clearTimeout(manifestoTimer);
+function onManifestoEnd(){
+  if(ended)return;
+  ended=true;
+  if(endFallback)clearTimeout(endFallback);
   showMenu();
-});
+}
+
+skipBtn.addEventListener('click',()=>onManifestoEnd());
 
 function showMenu(){
-  if (finished) return;
-  finished = true;
-  mfWrap.style.display = 'none';
+  mfWrap.style.display='none';
   skipBtn.classList.remove('show');
-  main.style.display = 'block';
+  main.style.display='block';
 }
+
+// Kullanıcı Paneli butonu
+document.getElementById('userBtn').addEventListener('click',()=>{
+  window.location.href='userpanel.html';
+});
 </script>
 
-<!-- 🎧 Arka Plan Müziği -->
-<audio id="bgMusic" src="yenidosya.mp3" preload="auto" loop></audio>
-<script>
-const music = document.getElementById('bgMusic');
-music.volume = 0.45;
-window.addEventListener('load', () => {
-  music.play().catch(() => { console.log("Otomatik çalma engellendi."); });
-});
-document.addEventListener('click', () => { if (music.paused) music.play().catch(()=>{}); });
-function fadeIn(targetVol = 0.45, ms = 1500){
-  music.volume = 0;
-  const step = targetVol / (ms/50);
-  const id = setInterval(() => {
-    music.volume = Math.min(targetVol, music.volume + step);
-    if (music.volume >= targetVol) clearInterval(id);
-  }, 50);
-}
-music.addEventListener('playing', () => fadeIn(), {once:true});
-</script>
 </body>
-          </html>
+  </html>
