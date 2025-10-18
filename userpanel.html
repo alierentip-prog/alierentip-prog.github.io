@@ -5,111 +5,120 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AZURA NOVA • Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
-/* =========================
-   0) SPLASH (YILAN LOADER)
-   ========================= */
+/* ================= SPLASH (YILAN) ================ */
 :root{
-  --s-bg:#0b0f14;         /* splash koyu zemin */
-  --s-dot:#1ea8ff;        /* temel nokta rengi */
-  --s-head:#6ad3ff;       /* yılan başı parıltı */
-  --s-text1:#bfa8ff;      /* AZURA yazısı gradient */
+  /* splash */
+  --s-bg:#0b0f14;
+  --s-dot:#1ea8ff;
+  --s-head:#6ad3ff;
+  --s-text1:#cdb9ff;
   --s-text2:#7b68ee;
 
-  /* panel paleti */
-  --bg-deep:#0e1312; --bg-green:#0f2a21; --cream-100:#fffaf4; --text:#e9f2ee; --text-dim:#b7c5c0;
-  --card-top:rgba(20,36,31,.75); --card-bot:rgba(13,26,23,.75); --card-bd:rgba(120,236,193,.08);
-  --glass:rgba(255,255,255,.04); --r:16px; --max:1100px;
+  /* PANEL RENKLERİ (yan panel yeşil / ana beyaz) */
+  --side-green:#0f2a21;
+  --side-green-2:#123429;
+  --side-bd:rgba(120,236,193,.25);
+  --main-bg:#ffffff;
+  --main-text:#111418;
+  --sub-text:#4b5563;
+  --chip-bd:#d1fae5;
+  --chip-bg:#ecfdf5;
+  --chip-tx:#065f46;
+  --accent:#11c58f;
+  --accent-2:#ff4fa2;
+  --r:14px;
+  --max:1200px;
 }
-*{box-sizing:border-box}
 
-/* Tam ekran splash */
-.splash{
-  position:fixed; inset:0; background: radial-gradient(700px 400px at 50% 35%, #0f1822, transparent),
-             linear-gradient(#0b0f14,#0b0f14); z-index:9999; display:grid; place-items:center;
-}
-.splash-inner{ position:relative; width:min(520px, 82vw); height:min(520px,82vw); }
-#snakeCanvas{ position:absolute; inset:0; filter: drop-shadow(0 0 22px rgba(60,200,255,.25)); }
+/* Splash full screen */
+.splash{position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
+  background:radial-gradient(800px 520px at 50% 35%, #0f1822 10%, transparent 70%), var(--s-bg);}
+.splash-inner{position:relative; width:min(520px,82vw); height:min(520px,82vw)}
+#snakeCanvas{position:absolute; inset:0; filter:drop-shadow(0 0 22px rgba(60,200,255,.25))}
 .brand-title{
-  position:absolute; inset:0; display:grid; place-items:center; text-align:center; pointer-events:none;
+  position:absolute; inset:0; display:grid; place-items:center; pointer-events:none;
   font:700 clamp(28px,6vw,46px) Cinzel,serif; letter-spacing:.28em;
   background:linear-gradient(180deg,var(--s-text1),var(--s-text2));
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow: 0 0 28px rgba(124,108,255,.25);
+  text-shadow:0 0 28px rgba(124,108,255,.28);
 }
-.splash-note{
-  position:absolute; left:50%; bottom:8%; transform:translateX(-50%);
-  color:#a6c8ff; font-weight:600; letter-spacing:.18em; opacity:.8; font-size:12px;
-}
+.splash-note{position:absolute; left:50%; bottom:8%; transform:translateX(-50%); color:#a6c8ff; letter-spacing:.18em; font-weight:600; opacity:.9; font-size:12px}
+.flash{position:fixed; inset:0; background:#fff; z-index:9998; opacity:0; transition:opacity .45s ease}
 
-/* beyaz flash */
-.flash{
-  position:fixed; inset:0; background:#ffffff; z-index:9998; pointer-events:none; opacity:0;
-  transition:opacity .45s ease;
-}
-
-/* =========================
-   1) PANEL (önceki sürüm)
-   ========================= */
+/* ================ PANEL (yan panel yeşil / main beyaz) ================ */
 html,body{height:100%}
-body{
-  margin:0; color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:
-    radial-gradient(1000px 700px at 10% 0%, rgba(17,197,143,.12), transparent 70%),
-    radial-gradient(1200px 800px at 80% 120%, rgba(255,182,213,.08), transparent 75%),
-    linear-gradient(180deg, var(--bg-deep), var(--bg-green) 65%, #0a1512 100%);
-  overflow-x:hidden;
+body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; color:var(--main-text); background:var(--main-bg); overflow-x:hidden}
+.wrap{max-width:var(--max); margin:0 auto; padding:18px; display:grid; grid-template-columns: 270px 1fr; gap:18px}
+@media (max-width:980px){ .wrap{grid-template-columns:1fr} .aside{position:static} }
+
+/* aside */
+.aside{
+  position:sticky; top:16px; align-self:start; border-radius:var(--r);
+  background:linear-gradient(180deg,var(--side-green),var(--side-green-2));
+  color:#e8fff6; padding:14px; border:1px solid var(--side-bd); box-shadow:0 10px 30px rgba(0,0,0,.25)
 }
-.canvas{position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;}
-.app{ position:relative; z-index:1; display:grid; grid-template-columns: 260px 1fr; gap:18px; max-width: 1400px; margin:0 auto; padding:20px; }
-.aside{ position:sticky; top:16px; align-self:start; background:linear-gradient(180deg,var(--card-top),var(--card-bot)); border:1px solid var(--card-bd); border-radius:var(--r); box-shadow:0 12px 40px rgba(0,0,0,.35); padding:14px;}
-.brand{ display:flex; align-items:center; gap:10px; padding:10px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.05);}
-.brand .logo{ width:38px; height:38px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #e8d8ff 0 40%, transparent 42%), conic-gradient(from 0deg, #9a84ff, #11c58f 55%, #ff4fa2 85%, #9a84ff);}
-.brand h1{ margin:0; font:700 16px Cinzel,serif; letter-spacing:.22em; background:linear-gradient(180deg,#e7ddff,#bfa8ff 60%,#9a84ff); -webkit-background-clip:text; background-clip:text; color:transparent; }
-.menu{margin-top:10px; display:grid; gap:6px}
-.menu button{ appearance:none; border:1px solid rgba(255,255,255,.06); background:var(--glass); color:var(--text); border-radius:12px; padding:10px 12px; text-align:left; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:10px;}
-.menu button:hover{ box-shadow:0 8px 24px rgba(17,197,143,.15); border-color: rgba(120,236,193,.22) }
-.menu button.active{ background:linear-gradient(180deg, rgba(17,197,143,.18), rgba(17,197,143,.08)); border-color: rgba(120,236,193,.45); }
-.quick{ margin-top:14px; display:flex; flex-wrap:wrap; gap:8px}
-.chip{ border:1px solid rgba(120,236,193,.28); color:#ccffef; padding:7px 12px; border-radius:999px; font-weight:700; font-size:12px; background:linear-gradient(180deg, rgba(17,197,143,.16), rgba(17,197,143,.05)); }
-.main{display:grid; gap:18px;}
-.header{ background:linear-gradient(180deg,var(--card-top),var(--card-bot)); border:1px solid var(--card-bd); border-radius:var(--r); box-shadow:0 12px 40px rgba(0,0,0,.35); padding:14px 16px; display:flex; align-items:center; justify-content:space-between;}
-.header .clock{font-weight:700; letter-spacing:.12em; opacity:.9}
-.header .actions{display:flex; gap:8px}
-.btn{ appearance:none; background: var(--glass); border:1px solid rgba(255,255,255,.06); color:var(--text); font-weight:700; border-radius:10px; padding:8px 12px; cursor:pointer;}
-.btn.green{ background:linear-gradient(180deg, rgba(17,197,143,.22), rgba(17,197,143,.08)); border-color: rgba(120,236,193,.45); color:#dbfff3; box-shadow: 0 8px 24px rgba(17,197,143,.18);}
-.btn.primary{ background:linear-gradient(180deg, rgba(255,182,213,.22), rgba(255,182,213,.08)); border-color: rgba(255,182,213,.45); color:#ffe7f1; box-shadow:0 8px 24px rgba(255,182,213,.18);}
-.grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:18px}
-.card{ background:linear-gradient(180deg,var(--card-top),var(--card-bot)); border:1px solid var(--card-bd); border-radius:var(--r); padding:16px; box-shadow:0 12px 40px rgba(0,0,0,.35); position:relative; overflow:hidden;}
-.card h3{ margin:0 0 10px; font-family:Cinzel,serif; letter-spacing:.14em; font-size:16px; background:linear-gradient(180deg,#f8f5ff,#e5dfff 60%,#cbbaff); -webkit-background-clip:text; background-clip:text; color:transparent; }
-.sep{height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent); margin:10px 0}
+.brand{display:flex; align-items:center; gap:10px; padding:10px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08)}
+.brand .logo{width:38px;height:38px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #e8d8ff 0 42%, transparent 43%),
+             conic-gradient(from 0deg,#9a84ff,#11c58f 55%,#ff4fa2 85%,#9a84ff)}
+.brand h1{margin:0; font:700 15px Cinzel,serif; letter-spacing:.22em}
+
+.menu{margin-top:10px; display:grid; gap:8px}
+.menu button{
+  appearance:none; cursor:pointer; padding:10px 12px; border-radius:10px; font-weight:700;
+  border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:#e9fff6; text-align:left
+}
+.menu button:hover{border-color:#9ef3d0; box-shadow:0 6px 18px rgba(17,197,143,.25)}
+.menu button.active{background:linear-gradient(180deg,rgba(17,197,143,.25),rgba(17,197,143,.08)); border-color:#9ef3d0}
+
+.quick{margin-top:12px; display:flex; flex-wrap:wrap; gap:8px}
+.chip{border:1px solid var(--chip-bd); background:var(--chip-bg); color:var(--chip-tx); font-weight:700; padding:6px 10px; border-radius:999px; font-size:12px}
+
+/* main white */
+.header{ background:#fff; border:1px solid #edf2f7; border-radius:var(--r); padding:12px 14px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 6px 16px rgba(0,0,0,.06)}
+.header .clock{font-weight:700; letter-spacing:.12em}
+.btn{appearance:none; border-radius:10px; border:1px solid #e5e7eb; background:#fff; color:var(--main-text); font-weight:700; padding:8px 12px; cursor:pointer}
+.btn.green{border-color:#b7f7df; background:#e9fff7}
+.btn.primary{border-color:#ffd1e6; background:#fff1f7}
+
+.grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:18px}
+@media (max-width:980px){ .grid{grid-template-columns:1fr} }
+
+.card{ background:#fff; border:1px solid #eef2f6; border-radius:var(--r); padding:14px; box-shadow:0 10px 22px rgba(0,0,0,.05)}
+.card h3{margin:0 0 10px; font-family:Cinzel,serif; letter-spacing:.12em; font-size:16px}
+.sep{height:1px; background:#f1f5f9; margin:10px 0}
+
 .post-box{display:grid; gap:10px}
-.post-box textarea{ width:100%; min-height:90px; resize:vertical; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); border-radius:12px; color:var(--text); padding:12px;}
+.post-box textarea{width:100%; min-height:90px; resize:vertical; border:1px solid #e5e7eb; border-radius:10px; padding:10px}
 .tags{display:flex; flex-wrap:wrap; gap:8px}
-.tag{ border:1px dashed rgba(255,255,255,.15); padding:6px 10px; border-radius:999px; font-size:12px; color:#fcecff; background:linear-gradient(180deg, rgba(255,79,162,.2), rgba(255,79,162,.06)); }
+.tag{border:1px dashed #fecdd3; background:#fff1f2; color:#9f1239; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700}
+
 .feed{display:grid; gap:12px; margin-top:12px}
-.post{ border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:12px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)); box-shadow: inset 0 1px 0 rgba(255,255,255,.04), inset 0 -1px 0 rgba(0,0,0,.25); }
-.post .meta{display:flex; align-items:center; gap:10px; color:var(--text-dim); font-size:12px; margin-bottom:6px}
-.av{ width:26px; height:26px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #ffd3e6 0 42%, transparent 43%), linear-gradient(180deg, #ff7fc1, #ff4fa2); box-shadow:0 2px 10px rgba(255,79,162,.4);}
+.post{border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fff}
+.post .meta{display:flex; align-items:center; gap:10px; color:var(--sub-text); font-size:12px; margin-bottom:6px}
+.av{width:26px;height:26px;border-radius:50%; background:radial-gradient(circle at 30% 30%, #ffd3e6 0 42%, transparent 43%), linear-gradient(180deg,#ff7fc1,#ff4fa2)}
+
 .tasks{display:grid; gap:8px}
-.task{display:flex; align-items:center; gap:10px; padding:8px; border-radius:10px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06)}
-.task input[type="checkbox"]{width:18px; height:18px; accent-color:#11c58f}
-.task.done{opacity:.6; text-decoration: line-through}
+.task{display:flex; align-items:center; gap:10px; padding:8px; border-radius:10px; background:#fff; border:1px solid #e5e7eb}
+.task input[type="checkbox"]{width:18px;height:18px; accent-color:var(--accent)}
+.task.done{opacity:.6; text-decoration:line-through}
 .add-task{display:flex; gap:8px}
-.add-task input{ flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.04); color:var(--text); }
-.note{ width:100%; min-height:160px; background:rgba(255,255,255,.04); color:var(--text); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:12px; resize:vertical; }
+.add-task input{flex:1; padding:10px 12px; border-radius:10px; border:1px solid #e5e7eb; background:#fff}
+
+.note{width:100%; min-height:160px; background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:10px; resize:vertical}
+
 .links{display:flex; flex-wrap:wrap; gap:10px}
-.links a{ text-decoration:none; color:#ffe7f3; font-weight:700; border:1px solid rgba(255,182,213,.35); background:linear-gradient(180deg, rgba(255,182,213,.22), rgba(255,182,213,.08)); padding:8px 12px; border-radius:12px; box-shadow:0 8px 24px rgba(255,182,213,.15); }
-.toast{ position:fixed; right:16px; bottom:16px; z-index:3; display:none; background:linear-gradient(180deg, rgba(17,197,143,.22), rgba(17,197,143,.08)); border:1px solid rgba(120,236,193,.5); color:#dbfff5; padding:10px 14px; border-radius:12px; box-shadow:0 12px 30px rgba(17,197,143,.25);}
+.links a{text-decoration:none; color:#0b8263; font-weight:700; border:1px solid #b7f7df; background:#e9fff7; padding:8px 12px; border-radius:10px}
+
+.toast{position:fixed; right:16px; bottom:16px; display:none; background:#e9fff7; border:1px solid #b7f7df; color:#0b5b46; padding:10px 14px; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,.12); z-index:50}
 .toast.show{display:block; animation:tIn .25s ease}
 @keyframes tIn{from{opacity:0; transform:translateY(6px)}}
-@media (max-width:980px){ .app{grid-template-columns:1fr} .aside{position:static} .grid{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
 
-<!-- ===== SPLASH ===== -->
+<!-- ====== SPLASH (YILAN) ====== -->
 <div class="splash" id="splash" aria-live="polite">
   <div class="splash-inner">
     <canvas id="snakeCanvas"></canvas>
@@ -119,10 +128,8 @@ body{
 </div>
 <div class="flash" id="flash"></div>
 
-<!-- ===== PANEL ===== -->
-<canvas class="canvas" id="bgFx" aria-hidden="true"></canvas>
-
-<div class="app" id="app" style="visibility:hidden">
+<!-- ====== PANEL ====== -->
+<div class="wrap" id="app" style="visibility:hidden">
   <aside class="aside">
     <div class="brand">
       <div class="logo"></div><h1>AZURA NOVA</h1>
@@ -135,205 +142,190 @@ body{
       <button data-tab="resources">📚 Kaynaklar</button>
       <button data-tab="settings">⚙️ Ayarlar</button>
     </div>
-    <div class="quick">
+    <div class="quick" style="margin-top:12px">
       <span class="chip">🌿 Dingin</span><span class="chip">⚡ Odak</span><span class="chip">💗 Şefkat</span><span class="chip">🎯 Mini hedef</span>
     </div>
   </aside>
 
-  <section class="main">
+  <main class="main">
     <div class="header">
       <div class="clock" id="clock">--:--</div>
-      <div class="actions">
+      <div style="display:flex; gap:8px">
         <button class="btn green" id="btnNew">＋ Yeni</button>
         <button class="btn primary" id="btnNotify">🔔 Bildirim</button>
       </div>
     </div>
 
     <div class="grid">
-      <div class="col">
+      <section class="col">
         <div class="card" data-tab-panel="feed">
           <h3>YENİ GÖNDERİ</h3>
           <div class="post-box">
             <textarea id="composer" placeholder="Ne düşünüyorsun? (#etiket)"></textarea>
             <div class="tags"><span class="tag">#günlük</span><span class="tag">#soru</span><span class="tag">#duyuru</span></div>
-            <div style="display:flex; gap:8px; justify-content:flex-end"><button class="btn" id="clearPost">Temizle</button><button class="btn green" id="publish">Yayınla</button></div>
+            <div style="display:flex; gap:8px; justify-content:flex-end">
+              <button class="btn" id="clearPost">Temizle</button>
+              <button class="btn green" id="publish">Yayınla</button>
+            </div>
           </div>
-          <div class="sep"></div><div class="feed" id="feed"></div>
+          <div class="sep"></div>
+          <div class="feed" id="feed"></div>
         </div>
 
         <div class="card" data-tab-panel="tasks" hidden>
           <h3>GÖREVLER</h3>
-          <div class="add-task"><input id="taskInput" placeholder="Bugünün odağı…"/><button class="btn green" id="addTask">Ekle</button></div>
-          <div class="sep"></div><div class="tasks" id="tasks"></div>
+          <div class="add-task">
+            <input id="taskInput" placeholder="Bugünün odağı…" />
+            <button class="btn green" id="addTask">Ekle</button>
+          </div>
+          <div class="sep"></div>
+          <div class="tasks" id="tasks"></div>
         </div>
 
         <div class="card" data-tab-panel="notes" hidden>
           <h3>NOTLAR</h3>
           <textarea class="note" id="noteArea" placeholder="Serbest not alanı…"></textarea>
-          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px"><span style="opacity:.7; font-size:12px" id="savedMsg">Otomatik kaydediliyor…</span></div>
+          <div style="text-align:right; color:var(--sub-text); margin-top:8px; font-size:12px" id="savedMsg">Otomatik kaydediliyor…</div>
         </div>
-      </div>
+      </section>
 
-      <div class="col">
+      <section class="col">
         <div class="card" data-tab-panel="explore" hidden>
           <h3>KEŞFET</h3>
-          <p style="margin:0 0 8px; color:var(--text-dim)">Trend etiketler ve mini ipuçları;</p>
+          <p style="margin:0 0 8px; color:var(--sub-text)">Trend etiketler ve mini ipuçları;</p>
           <div class="links"><a href="#">#odak</a><a href="#">#ritüel</a><a href="#">#nazikliderlik</a><a href="#">#derinçalışma</a><a href="#">#alışkanlık</a></div>
-          <div class="sep"></div><p style="opacity:.9">“Söz verdiğin şeyi takvime yaz.” — bugün için mikro kural.</p>
+          <div class="sep"></div>
+          <p style="margin:0">“Söz verdiğin şeyi takvime yaz.” — bugün için mikro kural.</p>
         </div>
 
         <div class="card" data-tab-panel="resources">
           <h3>KAYNAKLAR</h3>
           <div class="links"><a href="#">Atomic Habits</a><a href="#">Deep Work</a><a href="#">Tiny Habits</a><a href="#">Ego Is the Enemy</a></div>
-          <div class="sep"></div><p style="color:#ffe7f1">Not: Ana menüde link yok; gerçek linkler panelde.</p>
+          <div class="sep"></div>
+          <p style="margin:0; color:#0b5b46">Not: Ana menüde link yok; gerçek linkler panelde.</p>
         </div>
 
         <div class="card" data-tab-panel="settings" hidden>
           <h3>AYARLAR</h3>
-          <label style="display:flex; align-items:center; gap:10px"><input id="fxToggle" type="checkbox" checked/> Arkaplan efektleri</label>
-          <div class="sep"></div><button class="btn" id="wipe">Verileri Sıfırla</button>
+          <label style="display:flex; align-items:center; gap:10px">
+            <input id="fxToggle" type="checkbox" checked> Animasyonları açık tut
+          </label>
+          <div class="sep"></div>
+          <button class="btn" id="wipe">Verileri Sıfırla</button>
         </div>
-      </div>
+      </section>
     </div>
-  </section>
+  </main>
 </div>
 
 <div class="toast" id="toast">Yeni bildirim: “Topluluk kuralları güncellendi.”</div>
 
 <script>
-/* =========================
-   A) SPLASH: YILAN DİNAMİĞİ
-   ========================= */
+/* -------- SPLASH “YILAN” ------- */
 (function(){
-  const c = document.getElementById('snakeCanvas');
-  const ctx = c.getContext('2d');
-  const title = document.getElementById('brandTitle');
-  const note = document.getElementById('sNote');
-  const splash = document.getElementById('splash');
-  const flash = document.getElementById('flash');
-  const app = document.getElementById('app');
+  const c=document.getElementById('snakeCanvas'), ctx=c.getContext('2d');
+  const title=document.getElementById('brandTitle');
+  const note=document.getElementById('sNote');
+  const splash=document.getElementById('splash');
+  const flash=document.getElementById('flash');
+  const app=document.getElementById('app');
 
   function fit(){ c.width=c.clientWidth; c.height=c.clientHeight }
-  fit(); addEventListener('resize', fit);
+  fit(); addEventListener('resize',fit);
 
-  const DOTS = 26;                   // sabit nokta
-  const R = Math.min(c.width,c.height)*0.35;
-  const cx = c.width/2, cy = c.height/2;
+  const DOTS=26;
+  const R=Math.min(c.width,c.height)*0.35;
+  const cx=c.width/2, cy=c.height/2;
 
-  // noktaların sabit konumları
-  const pts = [];
+  const pts=[];
   for(let i=0;i<DOTS;i++){
-    const a = (i/DOTS)*Math.PI*2;
+    const a=(i/DOTS)*Math.PI*2;
     pts.push({x:cx+Math.cos(a)*R, y:cy+Math.sin(a)*R});
   }
 
-  let t=0, head=0;                   // baş index
-  const speed = 0.045;               // dönüş hızı
-  const lapsTarget = 3;              // tur sayısı
-  let laps=0;
-
+  let head=0, speed=0.045, laps=0, tId;
   function draw(){
     ctx.clearRect(0,0,c.width,c.height);
-
-    // temel halkayı çok silik çiz
-    ctx.globalCompositeOperation='lighter';
+    // zayıf arka nokta halkası
     for(let i=0;i<DOTS;i++){
-      const p = pts[i];
-      ctx.beginPath();
-      ctx.fillStyle = 'rgba(30,168,255,0.18)';
+      const p=pts[i]; ctx.beginPath(); ctx.fillStyle='rgba(30,168,255,0.18)';
       ctx.arc(p.x,p.y,3.2,0,Math.PI*2); ctx.fill();
     }
-
-    // kafa + kuyruk parıltısı
+    // parlayan baş + kuyruk
+    ctx.globalCompositeOperation='lighter';
     for(let j=0;j<5;j++){
-      const idx = (head - j + DOTS*1000) % DOTS;
-      const p = pts[Math.floor(idx)];
-      const k = (1 - j/5);                         // sönüm
-      const r = 6 + j*2.2;
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(106,211,255,${0.55*k})`;
-      ctx.shadowColor = '#6ad3ff';
-      ctx.shadowBlur = 16*k;
-      ctx.arc(p.x, p.y, r, 0, Math.PI*2); ctx.fill();
+      const idx=(head-j+DOTS*1000)%DOTS|0, p=pts[idx], k=(1-j/5);
+      const r=6+j*2.2; ctx.beginPath(); ctx.fillStyle=`rgba(106,211,255,${0.55*k})`;
+      ctx.shadowColor='#6ad3ff'; ctx.shadowBlur=16*k; ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
     }
-    ctx.shadowBlur=0;
+    ctx.shadowBlur=0; ctx.globalCompositeOperation='source-over';
 
-    head += speed;
-    if(head>=DOTS){ head-=DOTS; laps++; }
-
-    t = requestAnimationFrame(draw);
+    head+=speed; if(head>=DOTS){ head-=DOTS; laps++; }
+    tId=requestAnimationFrame(draw);
   }
   draw();
 
-  // Metin geçişi: önce LOADING, sonra AZURA büyütme
-  setTimeout(()=>{ note.textContent=''; }, 900);
+  // “LOADING” kaybolsun, sadece AZURA kalsın
+  setTimeout(()=>note.textContent='', 900);
 
-  // Toplam splash süresi ≈ 3.2s + flash
+  // toplam ~3.2s sonra blink + flash + panel
   setTimeout(()=>{
-    cancelAnimationFrame(t);
-    // hızlı “AZURA” yanıp sönme
+    cancelAnimationFrame(tId);
     title.style.transition='opacity .12s ease';
-    let blinks=0;
-    const id = setInterval(()=>{
-      title.style.opacity = (title.style.opacity==='0'?'1':'0');
-      if(++blinks>=6){ clearInterval(id);
-        // beyaz flash ve panel
-        flash.style.opacity=1;
-        setTimeout(()=>{
-          splash.remove();
-          app.style.visibility='visible';
-          flash.style.opacity=0;
-          setTimeout(()=>flash.remove(),450);
-        },180);
-      }
-    },120);
+    let n=0; const bl=setInterval(()=>{ title.style.opacity=(title.style.opacity==='0'?'1':'0'); if(++n>=6){clearInterval(bl);
+      flash.style.opacity=1;
+      setTimeout(()=>{ splash.remove(); app.style.visibility='visible'; flash.style.opacity=0; setTimeout(()=>flash.remove(),450); },180);
+    }},120);
   }, 3200);
 })();
 
-/* =========================
-   B) PANEL: Efekt + işlevler
-   ========================= */
-// arka plan noktacık
+/* -------- PANEL JS ------- */
+/* saat */
+(function(){ const el=document.getElementById('clock'); function t(){const d=new Date(); el.textContent=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`} t(); setInterval(t,3e4); })();
+
+/* menü */
+(function(){ const btns=document.querySelectorAll('#menu button'); const panels=document.querySelectorAll('[data-tab-panel]');
+  btns.forEach(b=>b.addEventListener('click',()=>{ btns.forEach(x=>x.classList.remove('active')); b.classList.add('active'); const k=b.dataset.tab; panels.forEach(p=>p.hidden=p.getAttribute('data-tab-panel')!==k); })); })();
+
+/* akış */
 (function(){
-  const c = document.getElementById('bgFx'); const ctx=c.getContext('2d');
-  function size(){ c.width=innerWidth; c.height=innerHeight } size(); addEventListener('resize',size);
-  const dots=[]; for(let i=0;i<90;i++) dots.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.6+.6,o:.22+Math.random()*.25,vy:.02+Math.random()*.05,c:Math.random()<.65?'#49e0b266':'#ffb6d566'});
-  function draw(){ ctx.clearRect(0,0,c.width,c.height); for(const d of dots){ ctx.globalAlpha=d.o; ctx.fillStyle=d.c; ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill(); d.y+=d.vy; if(d.y>c.height+8){ d.y=-8; d.x=Math.random()*c.width } } requestAnimationFrame(draw) } draw();
-  const fxToggle=document.getElementById('fxToggle'); fxToggle?.addEventListener('change',()=>{ c.style.display=fxToggle.checked?'block':'none' });
-})();
-
-// saat
-(function(){ const el=document.getElementById('clock'); function t(){ const n=new Date(); el.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}` } t(); setInterval(t,3e4) })();
-
-// menü
-(function(){ const btns=document.querySelectorAll('#menu button'); const panels=document.querySelectorAll('[data-tab-panel]'); btns.forEach(b=>b.addEventListener('click',()=>{ btns.forEach(x=>x.classList.remove('active')); b.classList.add('active'); const t=b.dataset.tab; panels.forEach(p=>p.hidden=p.getAttribute('data-tab-panel')!==t); })); })();
-
-// akış
-(function(){
-  const feed=document.getElementById('feed'),ta=document.getElementById('composer'),pub=document.getElementById('publish'),clr=document.getElementById('clearPost'); const KEY='azura_posts_v1';
-  function load(){ try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(_){return[]} }
-  function save(a){ localStorage.setItem(KEY,JSON.stringify(a)) }
-  function fmt(d){ return d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}) }
-  function render(){ feed.innerHTML=''; for(const p of load()){ const card=document.createElement('div'); card.className='post'; card.innerHTML=`<div class="meta"><div class="av"></div><div>${p.author} • ${p.time}</div></div><div class="body">${escapeHtml(p.text).replace(/#(\w+)/g,'<span class="tag">#$1</span>')}</div>`; feed.prepend(card);} }
+  const feed=document.getElementById('feed'), ta=document.getElementById('composer'), pub=document.getElementById('publish'), clr=document.getElementById('clearPost');
+  const KEY='azura_posts_v1';
+  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(_){return[]}};
+  const save=a=>localStorage.setItem(KEY,JSON.stringify(a));
+  const fmt=d=>d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+  const esc=s=>s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  function render(){ feed.innerHTML=''; for(const p of load()){ const card=document.createElement('div'); card.className='post';
+    card.innerHTML=`<div class="meta"><div class="av"></div><div>${p.author} • ${p.time}</div></div><div>${esc(p.text).replace(/#(\w+)/g,'<span class="tag">#$1</span>')}</div>`; feed.prepend(card); } }
   pub.addEventListener('click',()=>{ const text=ta.value.trim(); if(!text) return; const a=load(); a.push({text,author:'Liman',time:fmt(new Date())}); save(a); ta.value=''; render(); });
   clr.addEventListener('click',()=>ta.value=''); render();
-  function escapeHtml(s){ return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
 })();
 
-// görevler
+/* görevler */
 (function(){
-  const list=document.getElementById('tasks'),input=document.getElementById('taskInput'),addBtn=document.getElementById('addTask'); const KEY='azura_tasks_v1';
-  function load(){ try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(_){return[]} } function save(a){ localStorage.setItem(KEY,JSON.stringify(a)) }
-  function render(){ list.innerHTML=''; const arr=load(); arr.forEach((t,i)=>{ const el=document.createElement('label'); el.className='task'+(t.done?' done':''); el.innerHTML=`<input type="checkbox" ${t.done?'checked':''}> <span>${escapeHtml(t.text)}</span>`; el.querySelector('input').addEventListener('change',(e)=>{ const a=load(); a[i].done=e.target.checked; save(a); render(); }); list.appendChild(el); }); }
-  addBtn.addEventListener('click',()=>{ const v=input.value.trim(); if(!v) return; const a=load(); a.push({text:v,done:false}); save(a); input.value=''; render(); }); input.addEventListener('keydown',e=>{ if(e.key==='Enter') addBtn.click() }); render();
-  function escapeHtml(s){ return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
+  const list=document.getElementById('tasks'), input=document.getElementById('taskInput'), add=document.getElementById('addTask');
+  const KEY='azura_tasks_v1';
+  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(_){return[]}};
+  const save=a=>localStorage.setItem(KEY,JSON.stringify(a));
+  const esc=s=>s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  function render(){ list.innerHTML=''; const a=load(); a.forEach((t,i)=>{ const el=document.createElement('label'); el.className='task'+(t.done?' done':''); el.innerHTML=`<input type="checkbox" ${t.done?'checked':''}><span>${esc(t.text)}</span>`;
+    el.querySelector('input').addEventListener('change',e=>{ const b=load(); b[i].done=e.target.checked; save(b); render(); }); list.appendChild(el); }); }
+  add.addEventListener('click',()=>{ const v=input.value.trim(); if(!v) return; const a=load(); a.push({text:v,done:false}); save(a); input.value=''; render(); });
+  input.addEventListener('keydown',e=>{ if(e.key==='Enter') add.click() }); render();
 })();
 
-// notlar
-(function(){ const area=document.getElementById('noteArea'),msg=document.getElementById('savedMsg'); const KEY='azura_notes_v1'; try{area.value=localStorage.getItem(KEY)||''}catch(_){} let t=null; area.addEventListener('input',()=>{ if(t)clearTimeout(t); msg.textContent='Kaydediliyor…'; t=setTimeout(()=>{ localStorage.setItem(KEY,area.value); msg.textContent='Kaydedildi ✓'; },450); });})();
+/* notlar */
+(function(){ const area=document.getElementById('noteArea'), msg=document.getElementById('savedMsg'); const KEY='azura_notes_v1';
+  try{area.value=localStorage.getItem(KEY)||''}catch(_){} let t=null;
+  area.addEventListener('input',()=>{ if(t)clearTimeout(t); msg.textContent='Kaydediliyor…'; t=setTimeout(()=>{ localStorage.setItem(KEY,area.value); msg.textContent='Kaydedildi ✓'; },450); });
+})();
 
-// toast & wipe & new
-(function(){ const toast=document.getElementById('toast'); document.getElementById('btnNotify').addEventListener('click',()=>{ toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2400); }); document.getElementById('wipe').addEventListener('click',()=>{ if(confirm('Tüm yerel verileri temizlemek istiyor musun?')){ ['azura_posts_v1','azura_tasks_v1','azura_notes_v1'].forEach(k=>localStorage.removeItem(k)); location.reload(); } }); document.getElementById('btnNew').addEventListener('click',()=>{ document.querySelector('#menu button[data-tab="feed"]').click(); document.getElementById('composer').focus(); });})();
+/* toast + wipe + yeni */
+(function(){ const toast=document.getElementById('toast');
+  document.getElementById('btnNotify').addEventListener('click',()=>{ toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2400); });
+  document.getElementById('wipe').addEventListener('click',()=>{ if(confirm('Tüm yerel verileri temizlemek istiyor musun?')){ ['azura_posts_v1','azura_tasks_v1','azura_notes_v1'].forEach(k=>localStorage.removeItem(k)); location.reload(); } });
+  document.getElementById('btnNew').addEventListener('click',()=>{ document.querySelector('#menu button[data-tab="feed"]').click(); document.getElementById('composer').focus(); });
+})();
 </script>
 </body>
-</html>
+   </html>
