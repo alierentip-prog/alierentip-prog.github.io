@@ -1,316 +1,237 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Azura • Kullanıcı Paneli</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AZURA • Panel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
+/* ============ GENEL ============ */
 :root{
-  --ink:#0a0d0f;
-  --dark:#03060a;
-  --flash:#ffffff;
-  --ring:#00b2ff;
-  --ring-soft:#8fe3ff;
-  --glow:#00eaff;
-  --side:#0d3a2f;      /* koyu yeşil */
-  --side-ink:#d7efe7;
-  --main:#ffffff;      /* ana alan beyaz */
-  --chip:#eaf4ef;
-  --chip-ink:#114937;
-  --card:#ffffff;
-  --card-bd:#e9eef3;
-  --text:#101419;
-  --muted:#6b7b8b;
+  --s-bg:#0b0f14;         /* Splash arka plan */
+  --s-dot:#29b6ff;        /* zayıf nokta */
+  --s-head:#8be3ff;       /* baş parlak */
+  --green:#0e3c2d;        /* sol panel koyu yeşil */
+  --green-2:#145b43;
+  --cream:#faf7f1;        /* ana zemin beyaz/krem */
+  --ink:#071b13;          /* koyu yazı */
+  --chip:#e8efe9;
+}
+/* Sıfırlama ufak */
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0; font-family:Inter,system-ui; color:var(--ink); background:var(--cream)}
+
+/* ============ SPLASH (YILAN) ============ */
+.splash{
+  position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
+  background:
+    radial-gradient(900px 600px at 50% 35%, #0f1822 10%, transparent 70%),
+    var(--s-bg);
+}
+.splash-inner{ position:relative; width:min(720px, 90vw); height:min(720px, 90vw); }
+#snakeCanvas{ position:absolute; inset:0; filter:drop-shadow(0 0 26px rgba(60,200,255,.28)) }
+
+/* MERKEZ LOGO — YILANIN İÇİNDE */
+.brand-title{
+  position:absolute; inset:0; display:grid; place-items:center; pointer-events:none;
+  font:700 clamp(46px, 11vw, 92px) Cinzel,serif; letter-spacing:.28em;
+  color:#fff; text-shadow:0 0 36px rgba(140,200,255,.38);
 }
 
-/* ===== Splash (tam ekran) ===== */
-html,body{height:100%}
-body{margin:0;background:#000;color:#fff;font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
-#splash{position:fixed;inset:0;background:radial-gradient(1200px 600px at 50% 45%,#071118 0%,#02060b 55%,#000 100%);display:grid;place-items:center;z-index:9999}
-canvas#snake{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-#introMark{position:absolute;inset:0;display:grid;place-items:center}
-#introMark .word{
-  font-family:Cinzel,serif; font-weight:700; letter-spacing:.16em;
-  font-size:min(16vw, 140px); line-height:1; color:#fff;
-  text-shadow:0 0 30px rgba(0,255,255,.35), 0 8px 50px rgba(0,120,180,.35);
-  opacity:.95; transform:translateY(8px);
-}
-#flash{position:fixed;inset:0;background:var(--flash);opacity:0;pointer-events:none;transition:opacity .55s ease}
+.flash{position:fixed; inset:0; background:#fff; z-index:9998; opacity:0; transition:opacity .45s ease}
 
-/* ===== App (panel) ===== */
-#app{visibility:hidden}
-.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh;background:var(--main)}
-.sidebar{
-  background:linear-gradient(180deg, #0f4234 0%, var(--side) 60%, #093126 100%);
-  color:var(--side-ink); padding:18px 16px; position:sticky; top:0; height:100vh;
-  box-shadow:inset -1px 0 0 rgba(0,0,0,.18);
+/* ============ PANEL ============ */
+.app{ display:grid; grid-template-columns: 300px 1fr; min-height:100dvh; visibility:hidden }
+
+/* Sol — koyu yeşil */
+.nav{
+  background:linear-gradient(180deg, var(--green), var(--green-2));
+  color:#d9efe6; padding:22px 16px; position:sticky; top:0; height:100dvh;
+  box-shadow:inset -1px 0 0 rgba(255,255,255,.06);
 }
-.brand{display:flex;align-items:center;gap:12px;margin:8px 0 18px}
-.brand .dot{width:36px;height:36px;border-radius:50%;
-  background:radial-gradient(circle at 30% 30%, #7fffd8, #0df 60%, #0aa2d9 100%);
-  box-shadow:0 0 22px rgba(0,255,235,.45);
-}
-.brand h1{margin:0;font:700 18px/1 Cinzel,serif;letter-spacing:.18em}
+.brand{display:flex; align-items:center; gap:12px; margin-bottom:22px}
+.badge{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);display:grid;place-items:center;font-weight:700}
+.brand h2{margin:0; font:700 18px Inter,system-ui; letter-spacing:.18em}
+
 .nav a{
-  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;
-  color:var(--side-ink);text-decoration:none;font-weight:600
+  display:flex; align-items:center; gap:10px; padding:10px 12px; margin-bottom:6px;
+  color:#d9efe6; text-decoration:none; border-radius:10px;
 }
-.nav a:hover{background:rgba(255,255,255,.08)}
-.nav a.active{background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
-.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.tag{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#e9fff7;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
-.main{padding:28px; background:var(--main); color:var(--text)}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.topbar h2{margin:0;font:700 14px/1 Cinzel,serif;letter-spacing:.28em;color:#0d3a2f}
-.controls{display:flex;gap:10px}
-.btn{border:1px solid #dfe7ea;background:#f9fbfc;color:#0b1c27;padding:8px 12px;border-radius:10px;font-weight:700;text-decoration:none}
-.btn:active{transform:translateY(1px)}
-.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.nav a:hover{ background:rgba(255,255,255,.06) }
+.nav .sec{ margin:16px 8px 8px; font-weight:600; opacity:.8 }
+
+/* Sağ — beyaz/krem içerik */
+.main{ padding:24px clamp(12px,3vw,32px); background:var(--cream) }
+.header{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:18px; gap:8px;
+}
+.header h1{ font:700 20px Cinzel,serif; letter-spacing:.24em; margin:0; color:#0c1f18 }
+.pill{
+  background:#fff; border:1px solid #e8ece9; padding:10px 14px; border-radius:999px;
+  box-shadow:0 6px 16px rgba(0,0,0,.04);
+}
+
+/* Kartlar */
+.grid{ display:grid; grid-template-columns: repeat(12,1fr); gap:16px }
 .card{
-  grid-column:span 12;background:var(--card);border:1px solid var(--card-bd);border-radius:16px;padding:16px;
-  box-shadow:0 8px 24px rgba(7,22,15,.05)
+  grid-column: span 12;
+  background:#ffffff; border:1px solid #e8ece9; border-radius:16px; padding:16px 18px;
+  box-shadow:0 8px 24px rgba(0,0,0,.06);
 }
-@media(min-width:900px){
-  .card.sm6{grid-column:span 6}
-  .card.sm4{grid-column:span 4}
+.card h3{ margin:0 0 6px; font:700 16px/1.2 Inter; letter-spacing:.04em }
+.card p{ margin:4px 0 10px; color:#355246 }
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chips span{ background:var(--chip); padding:8px 12px; border-radius:999px; font-weight:600; font-size:12px }
+
+@media (min-width:920px){
+  .card.half{ grid-column: span 6 }
+  .card.third{ grid-column: span 4 }
 }
-.card h3{margin:0 0 8px;font:700 18px/1.2 Inter,system-ui}
-.card p{margin:6px 0;color:var(--muted)}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.chips span{background:var(--chip);color:var(--chip-ink);border:1px solid #cfe5db;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
-.feed{display:flex;flex-direction:column;gap:10px}
-.post{border:1px solid var(--card-bd);border-radius:12px;padding:12px}
-.post .meta{font-size:12px;color:#7a8a9a;margin-bottom:6px}
-.post .bubble{font-size:15px}
-.editor{display:grid;gap:10px}
-.editor textarea{width:100%;min-height:90px;border:1px solid var(--card-bd);border-radius:12px;padding:12px;font:600 14px Inter}
-.editor .row{display:flex;gap:8px;justify-content:flex-end}
-footer{margin:26px 0 8px;color:#7a8a9a;text-align:center;font-size:13px}
 </style>
 </head>
 <body>
 
-<!-- =============== S P L A S H =============== -->
-<div id="splash" aria-hidden="true">
-  <canvas id="snake"></canvas>
-  <div id="introMark"><div class="word">AZURA</div></div>
+<!-- ================= SPLASH ================= -->
+<div class="splash" id="splash">
+  <div class="splash-inner">
+    <canvas id="snakeCanvas"></canvas>
+    <div class="brand-title" id="brandTitle">AZURA</div>
+  </div>
 </div>
-<div id="flash"></div>
+<div class="flash" id="flash"></div>
 
-<!-- =============== A P P (Panel) =============== -->
-<div id="app">
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="brand"><div class="dot"></div><h1>AZURA NOVA</h1></div>
-      <nav class="nav">
-        <a class="active" href="#akis">🧭 Akış</a>
-        <a href="#kesfet">🔎 Keşfet</a>
-        <a href="#topluluk">👥 Topluluk</a>
-        <a href="#kaynaklar">📚 Kaynaklar</a>
-        <a href="#notlar">🗒️ Notlar</a>
-        <a href="#ayarlar">⚙️ Ayarlar</a>
-      </nav>
-      <div class="tags" style="margin-top:14px">
-        <span class="tag">Öncelik</span><span class="tag">Rutin</span><span class="tag">Nezaket</span>
-        <span class="tag">Odak</span><span class="tag">Mini hedef</span>
-      </div>
-    </aside>
+<!-- ================= APP / PANEL ================= -->
+<div class="app" id="app">
+  <aside class="nav">
+    <div class="brand">
+      <div class="badge">A</div>
+      <h2>AZURA<br><span style="opacity:.7;font-weight:600;letter-spacing:.14em">Kullanıcı Paneli</span></h2>
+    </div>
+    <div class="sec">MENÜ</div>
+    <a href="#"><span>🏠</span> Genel Bakış</a>
+    <a href="#"><span>🧭</span> Hedefler</a>
+    <a href="#"><span>👥</span> Topluluk</a>
+    <a href="#"><span>📚</span> Kaynaklar</a>
+    <a href="#"><span>📝</span> Notlar</a>
+    <a href="#"><span>⚙️</span> Ayarlar</a>
+  </aside>
 
-    <main class="main">
-      <div class="topbar">
-        <h2>AZURA NOVA — PANEL</h2>
-        <div class="controls">
-          <a class="btn" href="#" id="profileBtn">Profil</a>
-          <a class="btn" href="#" id="themeBtn">Tema</a>
-        </div>
-      </div>
+  <main class="main">
+    <div class="header">
+      <h1>AZURA NOVA — PANEL</h1>
+      <div class="pill">🔍 Panele ara…</div>
+    </div>
 
-      <section class="grid">
-        <article class="card sm6">
-          <h3>⭐ Hoş Geldin!</h3>
-          <p>Bu alan, gündelik çalışma ve topluluk etkileşimleri için. Solda bölümler, aşağıda akış var. Tanıtım kartları link değil—tüm gerçek aksiyon soldaki menüde.</p>
-          <div class="chips"><span>Tanıtım</span><span>Günlük</span><span>Mini hedef</span></div>
-        </article>
-
-        <article class="card sm6">
-          <h3>⏱️ Bugün 20 dk</h3>
-          <p>Yarım kalan en önemli bir görevi seç ve sadece 20 dk ilerlet.</p>
-          <div class="chips"><span>Odak</span><span>Rutin</span><span>Az ve öz</span></div>
-        </article>
-
-        <article class="card sm4">
-          <h3>💬 Nezaket Hatırlatması</h3>
-          <p>“Sınır koymak kırmak değildir.”</p>
-          <div class="chips"><span>İletişim</span><span>Ölçülülük</span></div>
-        </article>
-
-        <article class="card sm4">
-          <h3>🧱 Şefkatli Disiplin</h3>
-          <p>Küçük ama düzenli ilerleme → güven inşa eder.</p>
-          <div class="chips"><span>Net ajanda</span><span>Takip</span></div>
-        </article>
-
-        <article class="card sm4">
-          <h3>📌 Gündem</h3>
-          <p>Başlıklar tanıtım amaçlıdır; ana menüde link yok. Gerçek linkler sol panelde.</p>
-          <div class="chips"><span>Rutin</span><span>Net Ajanda</span><span>Topluluk</span></div>
-        </article>
-
-        <!-- Editor -->
-        <article class="card sm12" id="akis">
-          <h3>✍️ Yeni Gönderi</h3>
-          <div class="editor">
-            <textarea id="postInput" placeholder="Bugün nasılsın? Kısa not bırak..."></textarea>
-            <div class="row">
-              <button class="btn" id="publish">Yayınla</button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Feed -->
-        <article class="card sm12">
-          <h3>📰 Akış</h3>
-          <div class="feed" id="feed">
-            <div class="post">
-              <div class="meta">Liman • az önce</div>
-              <div class="bubble">Bugün #disiplin modundayım. 20 dk ağır kaldırış!</div>
-            </div>
-            <div class="post">
-              <div class="meta">Marin • 5 dk</div>
-              <div class="bubble">“Söz verdiğim şeyi takvime yazıyorum.” — küçük not.</div>
-            </div>
-          </div>
-        </article>
-
-        <article class="card sm12" id="kaynaklar">
-          <h3>📚 Kaynaklar</h3>
-          <p><strong>Atomic Habits</strong> (Clear), <strong>Deep Work</strong> (Newport), <strong>Ego Is the Enemy</strong> (Holiday)</p>
-          <div class="chips"><span>Pratikler</span><span>Mini alışkanlıklar</span><span>Netlik</span></div>
-        </article>
+    <div class="grid">
+      <section class="card half">
+        <h3>🚀 Yeni Gönderi</h3>
+        <p>Düşünceni, hedefini veya kısa bir günlüğü paylaş.</p>
+        <div class="chips"><span>#duyuru</span><span>#günlük</span><span>#soru</span></div>
       </section>
 
-      <footer>© 2025 Azura Nova — Tüm Hakları Saklıdır.</footer>
-    </main>
-  </div>
+      <section class="card half">
+        <h3>🧭 Günün Odak Hedefi</h3>
+        <p>30 dk derin çalışma; telefon uçak modunda.</p>
+        <div class="chips"><span>Tek pencere</span><span>İlk iş</span><span>Pomodoro</span></div>
+      </section>
+
+      <section class="card third">
+        <h3>📈 İlerleme</h3>
+        <p>Son 7 gün: 4/7 odak, 3/7 egzersiz.</p>
+        <div class="chips"><span>Rutin</span><span>Takvim</span></div>
+      </section>
+
+      <section class="card third">
+        <h3>🫶 Nezaket</h3>
+        <p>“Sınır koymak kırmak değildir.”</p>
+        <div class="chips"><span>Şeffaflık</span><span>Seçenek</span></div>
+      </section>
+
+      <section class="card third">
+        <h3>🌬️ Sakinlik</h3>
+        <p>4–6 nefes; tek soru: “Şu an benden beklenen tek adım?”</p>
+        <div class="chips"><span>Nefes 4–6</span><span>Tek adım</span></div>
+      </section>
+
+      <section class="card">
+        <h3>📚 Kaynaklar</h3>
+        <p><strong>Atomic Habits</strong>, <strong>Deep Work</strong>, <strong>Ego Is the Enemy</strong></p>
+        <div class="chips"><span>Pratikler</span><span>Mini alışkanlıklar</span><span>Notluk</span></div>
+      </section>
+    </div>
+  </main>
 </div>
 
 <script>
-/* ============= SNAKE LOADER (agresif, kuyruklu, delta-time) ============= */
-const splash = document.getElementById('splash');
-const cvs = document.getElementById('snake');
-const ctx = cvs.getContext('2d', { alpha:false });
+/* ========= SPLASH “YILAN” (büyük, merkezde AZURA) ========= */
+(function(){
+  const c = document.getElementById('snakeCanvas'), ctx=c.getContext('2d');
+  const splash = document.getElementById('splash');
+  const flash  = document.getElementById('flash');
+  const app    = document.getElementById('app');
+  const title  = document.getElementById('brandTitle');
 
-function fit(){ cvs.width = innerWidth; cvs.height = innerHeight; }
-addEventListener('resize', fit, {passive:true}); fit();
+  function fit(){ c.width=c.clientWidth; c.height=c.clientHeight }
+  fit(); addEventListener('resize', fit);
 
-const DOTS = 30;              // sabit noktalar (seyrek)
-const TRAIL = 26;             // kuyruk uzunluğu (agresif)
-const RATIO = 0.28;           // çember yarıçap (ekrana göre)
-const ANGULAR_SPEED = 2*Math.PI*0.28; // saniyede ~0.28 tur (daha yavaş)
-const MAX_TURNS = 3.3;        // toplam tur
-const MAX_TIME = 5.0;         // en fazla 5 sn splash
+  // Ayarlar
+  const DOTS=26;             // toplam nokta tam görünür
+  const RATIO=0.42;          // çember yarıçapı
+  const SPEED=0.030;         // dönüş hızı (küçült = yavaş)
+  const TRAIL=8;             // baştan sonraki parlama sayısı
+  const BASE_R=4.2;          // küçük nokta yarıçapı
+  const HEAD_R=10;           // baş yarıçapı
+  const DURATION=3600;       // toplam splash ms
 
-let angle = 0, elapsed = 0, lastTs = 0, ended = false, rafId = 0;
-
-function drawFrame(){
-  const R = Math.min(cvs.width, cvs.height) * RATIO;
-  const cx = cvs.width/2, cy = cvs.height/2;
-
-  // arka plan
-  ctx.fillStyle = "#000"; ctx.fillRect(0,0,cvs.width,cvs.height);
-
-  // AZURA (büyük beyaz, içte)
-  ctx.save();
-  ctx.font = `700 ${R*0.9}px Cinzel, serif`;
-  ctx.textAlign="center"; ctx.textBaseline="middle";
-  ctx.fillStyle="#fff";
-  ctx.shadowColor="rgba(0,200,255,.45)"; ctx.shadowBlur=40;
-  ctx.fillText("AZURA", cx, cy);
-  ctx.restore();
-
-  // sabit nokta halkası (daha geniş aralık)
-  ctx.fillStyle="rgba(255,255,255,0.12)";
-  const dotRad = 4.5;
-  for(let i=0;i<DOTS;i++){
-    const a = i/DOTS * Math.PI*2;
-    const x = cx + Math.cos(a)*R;
-    const y = cy + Math.sin(a)*R;
-    ctx.beginPath(); ctx.arc(x,y,dotRad,0,Math.PI*2); ctx.fill();
+  let cx,cy,R,pts=[];
+  function layout(){
+    R=Math.min(c.width,c.height)*RATIO;
+    cx=c.width/2; cy=c.height/2; pts.length=0;
+    for(let i=0;i<DOTS;i++){
+      const a=(i/DOTS)*Math.PI*2;
+      pts.push({x:cx+Math.cos(a)*R, y:cy+Math.sin(a)*R});
+    }
   }
+  layout(); addEventListener('resize',layout);
 
-  // yılan (kuyruk + sert parıltı)
-  ctx.globalCompositeOperation = "lighter";
-  for(let j=0;j<TRAIL;j++){
-    const a = (angle - j*0.14) % (Math.PI*2);
-    const rr = R*(1 - (j/TRAIL)*0.05);
-    const x = cx + Math.cos(a)*rr;
-    const y = cy + Math.sin(a)*rr;
-    const k = 1-(j/TRAIL);
-    ctx.beginPath();
-    ctx.fillStyle = `rgba(0,180,255,${0.92*k})`;
-    ctx.shadowColor = "#00b2ff";
-    ctx.shadowBlur = 60*k;
-    ctx.arc(x,y,12*(1-j*0.055),0,Math.PI*2);
-    ctx.fill();
+  let head=0, raf;
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+
+    // zayıf halka
+    ctx.fillStyle='rgba(41,182,255,0.22)';
+    for(let i=0;i<DOTS;i++){ const p=pts[i]; ctx.beginPath(); ctx.arc(p.x,p.y,BASE_R,0,Math.PI*2); ctx.fill(); }
+
+    // baş + kuyruk (light add)
+    ctx.globalCompositeOperation='lighter';
+    for(let j=0;j<TRAIL;j++){
+      const idx=(head-j+DOTS*1000)%DOTS|0, p=pts[idx], k=(1-j/TRAIL);
+      ctx.beginPath();
+      ctx.fillStyle=`rgba(139,227,255,${0.62*k})`;
+      ctx.shadowColor='#8be3ff'; ctx.shadowBlur=22*k;
+      ctx.arc(p.x,p.y, HEAD_R*(0.88+(j?j*0.05:0)), 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.shadowBlur=0; ctx.globalCompositeOperation='source-over';
+
+    head+=SPEED; if(head>=DOTS) head-=DOTS;
+    raf=requestAnimationFrame(draw);
   }
-  ctx.globalCompositeOperation = "source-over";
-}
+  draw();
 
-function loop(ts){
-  if(!lastTs) lastTs = ts;
-  const dt = Math.min(0.05,(ts-lastTs)/1000);
-  lastTs = ts;
-
-  angle += ANGULAR_SPEED * dt;
-  elapsed += dt;
-
-  drawFrame();
-
-  if(!ended && (elapsed >= MAX_TIME || angle >= MAX_TURNS*2*Math.PI)){
-    endSplash(); return;
-  }
-  rafId = requestAnimationFrame(loop);
-}
-function startSplash(){
-  cancelAnimationFrame(rafId);
-  angle=0; elapsed=0; lastTs=0; ended=false;
-  rafId = requestAnimationFrame(loop);
-}
-function endSplash(){
-  ended = true; cancelAnimationFrame(rafId);
-  const flash = document.getElementById('flash');
-  flash.style.opacity = 1;
+  // Süre bitince blink + beyaz flash + panel
   setTimeout(()=>{
-    try{splash.remove();}catch{}
-    document.getElementById('app').style.visibility='visible';
-    document.body.style.overflow='auto';
-    flash.style.opacity = 0;
-    setTimeout(()=>flash.remove(), 650);
-  }, 420);
-}
-addEventListener('click', ()=>!ended && endSplash(), {once:true});
-addEventListener('keydown', e=>{ if(!ended && (e.key==='Enter'||e.key===' ')) endSplash(); });
-
-startSplash();
-
-/* ============= Basit panel davranışları ============= */
-document.getElementById('publish').addEventListener('click', ()=>{
-  const ta = document.getElementById('postInput');
-  const txt = ta.value.trim(); if(!txt) return;
-  const post = document.createElement('div');
-  post.className='post';
-  post.innerHTML = `<div class="meta">Sen • şimdi</div><div class="bubble"></div>`;
-  post.querySelector('.bubble').textContent = txt;
-  document.getElementById('feed').prepend(post);
-  ta.value='';
-});
-document.getElementById('themeBtn').addEventListener('click', ()=>{
-  // minik tematik efekt: ana alanı kısa süre parlat
-  const el = document.querySelector('.main');
-  el.animate([{boxShadow:'0 0 0 rgba(0,0,0,0)'},{boxShadow:'inset 0 0 0 9999px rgba(0,255,200,.06)'}],{duration:260,fill:'forwards'});
-  setTimeout(()=>el.style.boxShadow='none', 560);
-});
+    cancelAnimationFrame(raf);
+    // büyük logo kısa kısa yanıp sönsün
+    let n=0; title.style.transition='opacity .10s';
+    const bl=setInterval(()=>{ title.style.opacity=(title.style.opacity==='0'?'1':'0'); if(++n>=6){ clearInterval(bl);
+      flash.style.opacity=1;
+      setTimeout(()=>{ splash.remove(); app.style.visibility='visible'; flash.style.opacity=0; setTimeout(()=>flash.remove(),450); },160);
+    }},120);
+  }, DURATION);
+})();
 </script>
 </body>
-          </html>
+</html>
