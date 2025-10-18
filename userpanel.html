@@ -1,281 +1,153 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>AZURA • Kullanıcı Paneli</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet" />
 <style>
-:root{
-  --ink:#0b1117;
-  --muted:#5c6b72;
+*{box-sizing:border-box}
+body{margin:0;font-family:'Cinzel',serif;overflow:hidden}
+canvas{width:100%;height:100%;display:block;position:fixed;inset:0;background:#000;z-index:9998}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;transition:opacity .5s ease;z-index:9997}
+#panel{visibility:hidden;position:relative;z-index:1;min-height:100vh;background:#fff;display:flex;}
 
-  --blue:#29b6ff;          /* neon mavi */
-  --blue-dim:rgba(41,182,255,.18);
-  --blue-glow:#8be3ff;
-
-  --green-1:#0e3c2d;       /* sol panel üst */
-  --green-2:#145b43;       /* sol panel alt */
-  --panel-ink:#d8efe4;
-
-  --card-border:#e8ece9;
-  --card-bg:#ffffff;
+/* Panel düzeni */
+.sidebar{
+  width:250px;
+  background:#004d40;
+  color:#fff;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
 }
-
-/* Reset */
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;color:var(--ink);background:#fff}
-
-/* ===================== SPLASH (yılan + logo) ===================== */
-.splash{position:fixed;inset:0;background:#fff;z-index:9999}
-#splashCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.flash{position:fixed;inset:0;background:#fff;opacity:0;z-index:9998;transition:opacity .45s ease}
-
-/* ===================== APP ===================== */
-.app{display:grid;grid-template-columns:300px 1fr;min-height:100vh;visibility:hidden}
-.aside{
-  background:linear-gradient(180deg,var(--green-1),var(--green-2));
-  color:var(--panel-ink);padding:22px 16px;position:relative;
-  box-shadow:inset -1px 0 0 rgba(255,255,255,.06)
+.sidebar h2{
+  margin:0;
+  text-align:center;
+  color:#aaffc8;
 }
-.brand{display:flex;gap:12px;align-items:center;margin-bottom:14px}
-.brand .badge{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.08);
-  display:grid;place-items:center;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
-.brand h2{font:700 18px Inter;letter-spacing:.18em}
-.brand small{display:block;font-weight:600;font-size:12px;opacity:.75;margin-top:2px}
-.navsec{margin:14px 0 6px;font-weight:700;font-size:12px;opacity:.6;letter-spacing:.12em}
-.navlink{display:flex;gap:10px;align-items:center;padding:10px 12px;margin:6px 0;border-radius:10px;
-  color:var(--panel-ink);text-decoration:none;transition:background .18s ease,transform .08s ease}
-.navlink:hover{background:rgba(255,255,255,.07);transform:translateX(2px)}
-.logout{position:absolute;bottom:14px;left:16px;right:16px}
-.logout a{display:block;text-align:center;padding:10px;border-radius:10px;text-decoration:none;color:#f7fffb;background:rgba(0,0,0,.22)}
-.logout a:hover{background:rgba(0,0,0,.28)}
+.sidebar button{
+  background:#00695c;
+  border:none;
+  padding:10px;
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
+  transition:background .3s;
+}
+.sidebar button:hover{background:#00897b}
 
-.main{background:#fff;padding:24px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
-.topbar h1{font:700 20px Cinzel,serif;letter-spacing:.24em}
-.search{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:#fff;border:1px solid var(--card-border);min-width:240px}
-.search input{border:none;outline:none;width:220px;font-size:14px}
-.toolbar{display:flex;gap:10px}
-.toolbtn{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:10px 12px;cursor:pointer}
-.toolbtn:hover{box-shadow:0 6px 16px rgba(0,0,0,.08)}
-
-.grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:18px;box-shadow:0 10px 24px rgba(0,0,0,.06)}
-.card h3{font-weight:700;font-size:16px;letter-spacing:.04em;margin-bottom:8px}
-.card p{color:var(--muted);line-height:1.5}
-.col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-8{grid-column:span 8}.col-12{grid-column:1/-1}
-
-.cityCanvas{width:100%;height:220px;display:block;border-radius:12px;border:1px solid var(--card-border)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.chips span{border:1px solid var(--card-border);background:#fff;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:600}
-
-@media (max-width:1100px){.app{grid-template-columns:260px 1fr}.col-6{grid-column:span 12}.col-4{grid-column:span 6}.col-8{grid-column:span 12}}
-@media (max-width:760px){.app{grid-template-columns:1fr}.aside{position:sticky;top:0;z-index:30}}
+.main{
+  flex:1;
+  padding:40px;
+  background:linear-gradient(to bottom right,#fff,#f7f7f7);
+  overflow-y:auto;
+}
+.main h1{color:#004d40}
+.card{
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:12px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+  padding:20px;
+  margin-bottom:20px;
+  transition:transform .2s,box-shadow .2s;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.15)}
 </style>
 </head>
 <body>
 
-<!-- ===================== SPLASH ===================== -->
-<div class="splash" id="splash">
-  <canvas id="splashCanvas"></canvas>
-</div>
-<div class="flash" id="flash"></div>
+<!-- Giriş efekti -->
+<canvas id="snake"></canvas>
+<div id="flash"></div>
 
-<!-- ===================== APP ===================== -->
-<div class="app" id="app">
-  <aside class="aside">
-    <div class="brand">
-      <div class="badge">A</div>
-      <h2>AZURA<small>Panel</small></h2>
-    </div>
-
-    <div class="navsec">MENÜ</div>
-    <a class="navlink" href="#"><span>🏠</span>Genel Bakış</a>
-    <a class="navlink" href="#"><span>🧭</span>Hedefler</a>
-    <a class="navlink" href="#"><span>👥</span>Topluluk</a>
-    <a class="navlink" href="#"><span>📰</span>Akış</a>
-    <a class="navlink" href="#"><span>📝</span>Notlar</a>
-    <a class="navlink" href="#"><span>📚</span>Kaynaklar</a>
-    <a class="navlink" href="#"><span>⚙️</span>Ayarlar</a>
-
-    <div class="navsec">KISA YOLLAR</div>
-    <a class="navlink" href="#"><span>✨</span>Bugünün Motivasyonu</a>
-    <a class="navlink" href="#"><span>📈</span>İstatistikler</a>
-    <a class="navlink" href="#"><span>🧩</span>Testler</a>
-
-    <div class="logout"><a href="#">Çıkış</a></div>
-  </aside>
-
-  <main class="main">
-    <div class="topbar">
-      <h1>AZURA NOVA — PANEL</h1>
-      <div class="toolbar">
-        <div class="search"><span>🔍</span><input type="search" placeholder="Ara…"></div>
-        <button class="toolbtn" id="notifBtn">🔔</button>
-        <button class="toolbtn" id="newPostBtn">➕ Yeni</button>
-      </div>
-    </div>
-
-    <section class="grid">
-      <!-- Gaziantep Kartı -->
-      <article class="card col-8">
-        <h3>🕌 GAZİANTEP — Şehir Notları</h3>
-        <p>Lezzetin başkenti: <strong>baklava</strong>, <strong>kebap</strong>, <strong>katmer</strong>. Zanaat ve tarihin iç içe geçtiği sokaklar…</p>
-        <canvas id="antepCanvas" class="cityCanvas"></canvas>
-        <div class="chips">
-          <span>🥙 Küşleme</span><span>🥘 Ali Nazik</span><span>🥮 Baklava</span>
-          <span>🧿 Bakırcılar</span><span>🏛 Zeugma</span>
-        </div>
-      </article>
-
-      <article class="card col-4">
-        <h3>📌 Hedef</h3>
-        <p>Bugünün tek odak işi: <strong>“Taslakları toparla, yayın planını yaz.”</strong></p>
-        <div class="chips"><span>20 dk blok</span><span>Tek iş</span><span>Takip</span></div>
-      </article>
-
-      <article class="card col-6">
-        <h3>🧭 Duruş &amp; Sorumluluk</h3>
-        <p>Duruş; söze değil, alışkanlığa yazılır. “Söz verdim” cümlesini takvimine yaz.</p>
-      </article>
-
-      <article class="card col-6">
-        <h3>👥 Topluluk</h3>
-        <p>Yeni katılanlar: <strong>@merve</strong>, <strong>@kaan</strong>, <strong>@levent</strong>. Hoş geldiniz!</p>
-      </article>
-
-      <article class="card col-12">
-        <h3>📚 Kaynaklar</h3>
-        <p><strong>Atomic Habits</strong> (Clear), <strong>Deep Work</strong> (Newport), <strong>Essentialism</strong> (McKeown)</p>
-      </article>
-    </section>
-  </main>
+<!-- Panel -->
+<div id="panel">
+  <div class="sidebar">
+    <h2>AZURA Panel</h2>
+    <button>🏠 Akış</button>
+    <button>🔍 Keşfet</button>
+    <button>👥 Topluluk</button>
+    <button>📚 Kaynaklar</button>
+    <button>📝 Notlar</button>
+    <button>⚙️ Ayarlar</button>
+  </div>
+  <div class="main">
+    <h1>Hoş geldin, Kullanıcı!</h1>
+    <div class="card"><h3>🌿 Bugünkü Aktivite</h3><p>Disiplin modundayım. 30 dk çalışma tamamlandı!</p></div>
+    <div class="card"><h3>💡 Günün Sözü</h3><p>"Söz verdiğim şeyi takvime yazıyorum." — Küçük not.</p></div>
+    <div class="card"><h3>🔥 Güncel Gönderiler</h3><ul><li>Yeni tasarım hazır!</li><li>Panel teması geliştirildi.</li><li>Yılan efekti optimize edildi.</li></ul></div>
+  </div>
 </div>
 
 <script>
-/* ===================== SPLASH ÇİZİMİ (AYNISI) ===================== */
-(function(){
-  const c = document.getElementById('splashCanvas');
-  const ctx = c.getContext('2d');
-  const splash = document.getElementById('splash');
-  const flash  = document.getElementById('flash');
-  const app    = document.getElementById('app');
+// CANVAS ANİMASYONU
+const c=document.getElementById("snake"),ctx=c.getContext("2d");
+function fit(){c.width=innerWidth;c.height=innerHeight}
+fit();addEventListener("resize",fit);
 
-  function fit(){ c.width = innerWidth; c.height = innerHeight; }
-  fit(); addEventListener('resize', fit);
+let t=0;
+const DOTS=26,TRAIL=14,SPEED=0.045;
+function loop(){
+  ctx.clearRect(0,0,c.width,c.height);
+  const R=Math.min(c.width,c.height)*0.18;
+  const cx=c.width/2,cy=c.height/2;
 
-  // Geometri
-  const DOTS = 26;          // sabit nokta sayısı (görünür)
-  const SPEED = 0.035;      // dönüş hızı (daha küçük = daha yavaş)
-  const TRAIL = 7;          // yılanın parlak kuyruğu uzunluğu
-  const DURATION = 3600;    // ms (yaklaşık 3.6 sn)
-  let t = 0;                // açı
+  // AZURA yazısı
+  ctx.save();
+  ctx.font=`700 ${R*0.9}px Cinzel`;
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillStyle="#fff";
+  ctx.shadowColor="rgba(180,140,255,.5)";
+  ctx.shadowBlur=30;
+  ctx.fillText("AZURA",cx,cy);
+  ctx.restore();
 
-  function draw(){
-    ctx.clearRect(0,0,c.width,c.height);
-
-    // Merkez ve yarıçap
-    const R = Math.min(c.width,c.height)*0.18;    // halka yarıçapı
-    const cx = c.width/2, cy = c.height/2;
-
-    /* 1) AZURA yazısı (beyaz + hafif morumsu glow) */
-    const fs = Math.max(44, R*0.6);
-    ctx.save();
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.font = `700 ${fs}px Cinzel, serif`;
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = 'rgba(180,140,255,.45)';
-    ctx.shadowBlur = 22;
-    ctx.fillText('AZURA', cx, cy);
-    ctx.restore();
-
-    /* 2) Sabit noktalar */
-    const baseR = 5;                // küçük sabit nokta yarıçapı
-    ctx.fillStyle = 'rgba(41,182,255,0.18)';
-    for(let i=0;i<DOTS;i++){
-      const a = (i/DOTS)*Math.PI*2;
-      const x = cx + Math.cos(a)*R;
-      const y = cy + Math.sin(a)*R;
-      ctx.beginPath(); ctx.arc(x,y,baseR,0,Math.PI*2); ctx.fill();
-    }
-
-    /* 3) Yılan (parlak segment) */
-    ctx.globalCompositeOperation = 'lighter';
-    for(let j=0;j<TRAIL;j++){
-      const a = (t - j*0.10) % (Math.PI*2);
-      const x = cx + Math.cos(a)*R;
-      const y = cy + Math.sin(a)*R;
-      const k = 1 - (j/TRAIL);
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(41,182,255,${0.72*k})`;
-      ctx.shadowColor = '#8be3ff';
-      ctx.shadowBlur = 28*k;
-      ctx.arc(x,y, 12*(0.85 + j*0.05), 0, Math.PI*2);
-      ctx.fill();
-    }
-    ctx.shadowBlur = 0;
-    ctx.globalCompositeOperation = 'source-over';
-
-    t += SPEED;
-    requestAnimationFrame(draw);
+  // sabit noktalar
+  ctx.fillStyle="rgba(0,180,255,0.15)";
+  for(let i=0;i<DOTS;i++){
+    const a=i/DOTS*Math.PI*2;
+    const x=cx+Math.cos(a)*R;
+    const y=cy+Math.sin(a)*R;
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();
   }
-  draw();
 
-  // Bitişte yazıyı birkaç kez blink + beyaz flaş + app görünür
+  // yılan
+  ctx.globalCompositeOperation="lighter";
+  for(let j=0;j<TRAIL;j++){
+    const a=(t-j*0.08)%(Math.PI*2);
+    const x=cx+Math.cos(a)*R;
+    const y=cy+Math.sin(a)*R;
+    const k=1-(j/TRAIL);
+    ctx.beginPath();
+    ctx.fillStyle=`rgba(0,180,255,${0.8*k})`;
+    ctx.shadowColor="#00b4ff";
+    ctx.shadowBlur=40*k;
+    ctx.arc(x,y,12*(1-j*0.03),0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.shadowBlur=0;
+  ctx.globalCompositeOperation="source-over";
+
+  t+=SPEED;
+  requestAnimationFrame(loop);
+}
+loop();
+
+// GEÇİŞ
+setTimeout(()=>{
+  const flash=document.getElementById("flash");
+  flash.style.opacity=1;
   setTimeout(()=>{
-    let n=0, on=true;
-    const blink = setInterval(()=>{
-      on = !on;
-      c.style.opacity = on ? '1' : '.45';
-      if(++n>5){
-        clearInterval(blink);
-        flash.style.opacity = 1;
-        setTimeout(()=>{
-          splash.remove();
-          app.style.visibility = 'visible';
-          flash.style.opacity = 0;
-          setTimeout(()=>flash.remove(), 450);
-        }, 180);
-      }
-    }, 120);
-  }, DURATION);
-})();
-
-/* ===================== GAZİANTEP KART — estetik çizim ===================== */
-(function(){
-  const cv = document.getElementById('antepCanvas');
-  if(!cv) return;
-  const x = cv.getContext('2d');
-  function fit(){ cv.width = cv.clientWidth; cv.height = cv.clientHeight; }
-  fit(); addEventListener('resize', fit);
-  let tt=0;
-  (function loop(){
-    x.clearRect(0,0,cv.width,cv.height);
-    const g=x.createLinearGradient(0,0,cv.width,cv.height); g.addColorStop(0,'#fff'); g.addColorStop(1,'#f7fbff');
-    x.fillStyle=g; x.fillRect(0,0,cv.width,cv.height);
-    x.lineWidth=1;
-    for(let i=0;i<7;i++){
-      x.strokeStyle=`hsla(${25+i*4},70%,45%,.28)`;
-      x.beginPath();
-      for(let u=0;u<=cv.width;u+=12){
-        const yy=cv.height*0.55+Math.sin((u*0.012)+(tt*0.8)+i)*18+i*8;
-        if(u===0) x.moveTo(u,yy); else x.lineTo(u,yy);
-      } x.stroke();
-    }
-    // baklava sembolü
-    const w=120,h=70,cx=cv.width*0.78,cy=cv.height*0.36;
-    x.save(); x.translate(cx,cy); x.rotate(Math.PI/4);
-    x.fillStyle='#ffe8a3'; x.strokeStyle='#caa85a'; x.lineWidth=2;
-    x.beginPath(); x.rect(-w/2,-h/2,w,h); x.fill(); x.stroke(); x.restore();
-    tt+=0.02; requestAnimationFrame(loop);
-  })();
-})();
-
-/* ufak etkileşimler */
-document.getElementById('notifBtn')?.addEventListener('click',()=>alert('Bildirimler yakında burada 🔔'));
-document.getElementById('newPostBtn')?.addEventListener('click',()=>{const t=prompt('Yeni gönderi:'); if(t) alert('Gönderildi ✅');});
+    c.remove();
+    flash.style.opacity=0;
+    document.getElementById("panel").style.visibility="visible";
+    setTimeout(()=>flash.remove(),500);
+  },400);
+},4000);
 </script>
 </body>
 </html>
