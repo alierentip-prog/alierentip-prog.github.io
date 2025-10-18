@@ -5,12 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AZURA • KADIN</title>
 
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  /* Renkler */
   --bg-deep:#110E13;
   --pink-1:#FF9DC3;
   --pink-2:#FFB7D3;
@@ -28,6 +26,7 @@
   --accent-mor:#B16AD9; /* manifesto yazısı */
 }
 
+/* Reset */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -36,7 +35,7 @@ body{
   overflow-x:hidden;
 }
 
-/* --- Parçacıklar ve Güneş --- */
+/* --- Arka plan --- */
 .bg-layer{position:fixed; inset:0; pointer-events:none; z-index:0;}
 .bg-halos{
   position:absolute; inset:0;
@@ -62,7 +61,7 @@ body{
   100% { transform:translate(48vw, 26vh) }
 }
 
-/* Üst menü butonları */
+/* Üst butonlar */
 .top-buttons{position:fixed; inset:0 0 auto 0; height:0; z-index:5;}
 .btn{
   position:absolute; top:12px; padding:8px 12px; border-radius:12px;
@@ -75,7 +74,7 @@ body{
 .btn.left{left:12px}
 .btn.right{right:12px}
 
-/* Hoşgeldin kutusu */
+/* Hoşgeldin */
 .welcome{
   position:fixed; top:70px; left:50%; transform:translateX(-50%);
   width:min(720px, calc(100% - 40px));
@@ -96,11 +95,11 @@ body{
 .fade-out{animation:wel-out .8s ease forwards}
 @keyframes wel-out{to{opacity:0; transform:translate(-50%,-10px)}}
 
-/* Yazıyı geç */
+/* Yazıyı Geç */
 .skip{position:fixed; top:12px; left:12px; z-index:6; display:none}
 .skip.show{display:inline-block}
 
-/* Manifesto (slayt) */
+/* Manifesto */
 .manifesto-wrap{
   position:fixed; inset:0; z-index:3; display:none; pointer-events:none;
 }
@@ -117,17 +116,9 @@ body{
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-shadow:0 0 22px rgba(177,106,217,.45);
   white-space:pre-wrap; text-transform:uppercase;
-  top:100%;                 /* alttan başlar */
-  /* Başlangıçta animasyon yok; .play eklendiğinde başlatılacak */
+  top:100%; /* alttan başla */
 }
-.manifesto.play{
-  animation-name: slideUp;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-}
-@keyframes slideUp{
-  to{ top:-120% }
-}
+@keyframes slideUp{ to{ top:-120% } }
 
 /* Menü (kartlar) */
 .main{position:relative; z-index:2; padding:90px 18px 64px; display:none;}
@@ -161,7 +152,7 @@ footer{
   opacity:.95; font-size:14px;
 }
 
-/* Küçük ekran uyarlamaları */
+/* Responsive */
 @media (max-width:760px){
   .grid{grid-template-columns:1fr 1fr;}
   .card h3{font-size:18px}
@@ -294,22 +285,22 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
   draw();
 })();
 
-/* ---------- Akış mantığı (tam 35sn, bitince menü) ---------- */
+/* ---------- Akış mantığı (erken geçişi durdur) ---------- */
 const welcome   = document.getElementById('welcomeBox');
 const mfWrap    = document.getElementById('mfWrap');
 const manifesto = document.getElementById('manifesto');
 const skipBtn   = document.getElementById('skipBtn');
 const main      = document.getElementById('main');
 
-/* Süre ve beklemeler */
-const DURATION_MS = 35000;       // ⇐ slayt tam 35sn
-const WELCOME_VISIBLE_MS = 1600; // hoşgeldin görünsün
-const AFTER_FADE_WAIT_MS = 600;  // hoşgeldin kayarken kısa bekleme
+/* Süre: 35 saniye (35000ms) */
+const DURATION_MS = 35000;
+const WELCOME_VISIBLE_MS = 2200;
+const AFTER_FADE_WAIT_MS = 600;
 
-let endFallback = null;
-let ended = false;
+let finished = false;
+let fallbackTimer = null;
 
-/* Hoşgeldin → Manifesto başlat */
+/* Hoşgeldin → Manifesto */
 setTimeout(()=>{
   welcome.classList.add('fade-out');
   setTimeout(startManifesto, AFTER_FADE_WAIT_MS);
@@ -319,30 +310,30 @@ function startManifesto(){
   mfWrap.style.display='block';
   skipBtn.classList.add('show');
 
-  /* Animasyonu burada başlatıyoruz ve süresini 35sn yapıyoruz */
-  manifesto.classList.add('play');
-  manifesto.style.animationDuration = DURATION_MS + 'ms';
+  /* Animasyonu tek satırda kur: isim + süre + timing + fill */
+  manifesto.style.animation = `slideUp ${DURATION_MS}ms linear forwards`;
 
-  /* Animasyon bittiyse menüye geç (tek sefer) */
-  manifesto.addEventListener('animationend', onManifestoEnd, { once:true });
+  /* Sadece slideUp biterse menüye geç */
+  manifesto.addEventListener('animationend', onAnimEnd, { once:true });
 
-  /* Ola ki event kaçarsa: yedek zamanlayıcı */
-  endFallback = setTimeout(onManifestoEnd, DURATION_MS + 300);
+  /* Yedek: tam süre + 300ms */
+  fallbackTimer = setTimeout(showMenu, DURATION_MS + 300);
 }
 
-function onManifestoEnd(){
-  if(ended) return;
-  ended = true;
-  if(endFallback) clearTimeout(endFallback);
+function onAnimEnd(e){
+  if(e.animationName !== 'slideUp') return; /* yanlış event gelirse görmezden gel */
   showMenu();
 }
 
 /* Yazıyı geç */
 skipBtn.addEventListener('click', ()=>{
-  onManifestoEnd();
+  showMenu();
 });
 
 function showMenu(){
+  if(finished) return;
+  finished = true;
+  if(fallbackTimer) clearTimeout(fallbackTimer);
   mfWrap.style.display='none';
   skipBtn.classList.remove('show');
   main.style.display='block';
