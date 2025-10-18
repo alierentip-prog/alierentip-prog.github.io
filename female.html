@@ -10,7 +10,6 @@
 
 <style>
 :root{
-  /* Renkler */
   --bg-deep:#110E13;
   --pink-1:#FF9DC3;
   --pink-2:#FFB7D3;
@@ -28,7 +27,6 @@
   --accent-mor:#B16AD9; /* manifesto yazısı */
 }
 
-/* Reset ufak dokunuş */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -39,16 +37,13 @@ body{
 
 /* --- Parçacıklar ve Güneş --- */
 .bg-layer{position:fixed; inset:0; pointer-events:none; z-index:0;}
-/* geniş yumuşak parıltılar */
 .bg-halos{
   position:absolute; inset:0;
   background:
     radial-gradient(900px 550px at 85% 10%, rgba(255,200,230,0.10), rgba(255,160,210,0.06) 40%, transparent 70%),
     radial-gradient(1200px 700px at 15% 115%, rgba(255,120,180,0.08), transparent 75%);
 }
-/* pembe noktacıklar */
 .canvas{position:absolute; inset:0;}
-/* Güneş (geniş gezinti alanı) */
 .sun{
   position:absolute; width:560px; height:560px; border-radius:50%;
   filter:blur(0.2px);
@@ -58,7 +53,6 @@ body{
   animation: sun-walk 42s linear infinite alternate;
 }
 @keyframes sun-walk{
-  /* daha geniş elips */
   0%   { transform:translate(46vw, 4vh) }
   20%  { transform:translate(68vw, 12vh) }
   40%  { transform:translate(78vw, 28vh) }
@@ -122,8 +116,8 @@ body{
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-shadow:0 0 22px rgba(177,106,217,.45);
   white-space:pre-wrap; text-transform:uppercase;
-  top:100%; /* alttan başla */
-  animation: slideUp 55s linear forwards;  /* ⇐ 55 saniye */
+  top:100%;                 /* alttan başla */
+  animation: slideUp 50s linear forwards;  /* ⇒ 30 saniye */
 }
 @keyframes slideUp{
   to{ top:-120% }
@@ -217,7 +211,7 @@ KENDİNİ BİLEN, ZATEN SENİ ANLAYACAKTIR. — AZURA NOVA
   </div>
 </div>
 
-<!-- Menü (Manifesto bitince görünecek) -->
+<!-- Menü -->
 <main class="main" id="main">
   <div class="grid">
     <div class="card">
@@ -303,17 +297,17 @@ const main = document.getElementById('main');
 
 let manifestoTimer = null;
 
-/* Hoşgeldin 2.2sn görünür, sonra manifesto başlar (bekleme kısaltıldı) */
+/* Hoşgeldin kısaca görünsün, hemen manifesto başlasın */
 setTimeout(()=>{
   welcome.classList.add('fade-out');
-  setTimeout(startManifesto, 600);  // ⇐ bekleme kısaltıldı
+  setTimeout(startManifesto, 600);
 }, 2200);
 
 function startManifesto(){
   mfWrap.style.display='block';
   skipBtn.classList.add('show');
-  /* 55 sn sonra menüye */
-  manifestoTimer = setTimeout(showMenu, 55000); // ⇐ 55.000 ms
+  /* 30 sn sonra menüye */
+  manifestoTimer = setTimeout(showMenu, 30000);
 }
 
 /* Yazıyı geç */
@@ -328,7 +322,7 @@ function showMenu(){
   main.style.display='block';
 }
 
-/* Sol üst Kullanıcı Paneli şimdilik dummy */
+/* Sol üst Kullanıcı Paneli (placeholder) */
 document.getElementById('userBtn').addEventListener('click', (e)=>{
   e.preventDefault();
   alert('Kullanıcı Paneli yakında burada 🌸');
